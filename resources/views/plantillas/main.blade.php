@@ -13,6 +13,8 @@
 	    {!! Html::style('archivosLTE/dist/css/AdminLTE.min.css') !!}
 	    {!! Html::style('archivosLTE/dist/css/skins/_all-skins.min.css') !!}
 	    {!! Html::style('archivosLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') !!}
+      <link rel="stylesheet" href="{{ asset ('css/main.css') }}">
+
 	</head>
 
 	<body class="hold-transition skin-blue sidebar-mini">
@@ -84,10 +86,14 @@
 	    {!! Html::script('archivosLTE/plugins/slimScroll/jquery.slimscroll.min.js') !!}
 	    {!! Html::script('archivosLTE/plugins/fastclick/fastclick.js') !!}
 	    {!! Html::script('archivosLTE/dist/js/app.min.js') !!}
+      {!! Html::script('js/credito/pinterest_grid.js')!!}
+
 
       	<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
      	<script>
         	$.widget.bridge('uibutton', $.ui.button);
       	</script>
-   	</body>
+      <script src="{{ asset('js/credito/pinterest_grid.js') }}"></script>
+    </body>
+
 </html>

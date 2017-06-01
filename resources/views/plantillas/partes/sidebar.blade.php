@@ -187,6 +187,7 @@
       <ul class="treeview-menu">
          <li><a href="{!! url('credito'); !!}"><i class="fa fa-circle-o"></i> Lista de Planes</a></li>
          <li><a href="{!! url('credito/create'); !!}"><i class="fa fa-circle-o"></i> Crear Nuevo</a></li>
+         <li><a href="{!! url('credito/show'); !!}"><i class="fa fa-circle-o"></i> Catalogo de Planes</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE CRÉDITOS -->

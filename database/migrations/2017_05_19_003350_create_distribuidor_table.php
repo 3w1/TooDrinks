@@ -36,7 +36,7 @@ class CreateDistribuidorTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')
-      			  ->references('id')->on('user')
+      			  ->references('id')->on('users')
       			  ->onDelete('restrict')
       			  ->onUpdate('cascade');
 

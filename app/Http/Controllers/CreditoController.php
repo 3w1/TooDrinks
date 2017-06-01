@@ -17,7 +17,7 @@ class CreditoController extends Controller
     
     public function index()
     {
-        $creditos=Credito::paginate(1);
+        $creditos=Credito::paginate(10);
         return view ('credito.index')->with (compact('creditos'));
     }
 
@@ -36,7 +36,9 @@ class CreditoController extends Controller
 
     public function show($id)
     {
-        //
+       $credito = Credito::all();
+        //dd($credito);
+        return view ('credito.show')->with(compact('credito'));
     }
 
     public function edit($id)

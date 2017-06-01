@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Pais;
 use Faker\Factory as Faker;
 
-class PaisTableSeeder extends Seeder
+class ProvinciaRegionTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,22 +13,16 @@ class PaisTableSeeder extends Seeder
      */
     public function run()
     {
-    	$faker = Faker::create();
-
-	    	for($i = 0; $i < 50; $i ++) 
+        $faker = Faker::create();
+        for($i = 0; $i < 50; $i ++) 
 	    	{
-	    $id =	\DB::table('pais')->insertGetId(array( 
-		           	'pais'			=> $faker->state,
-					'continente'	=> $faker->randomElement(['AF','AM','AS','EU','OC'])
-		            ));
-
 	    		\DB::table('provincia_region')->insert(array( 
 	            	'provincia'=> $faker->state,
 	            	'region'=> $faker->stateAbbr,
-	            	'pais_id'=> $id 
+	            	'pais_id'=> '1' 
 	            		
 	            	));
 	    	}
-
-    }
+	}
 }
+    

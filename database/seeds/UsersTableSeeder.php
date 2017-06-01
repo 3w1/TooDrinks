@@ -22,25 +22,22 @@ class UsersTableSeeder extends Seeder
 			     \DB::table('users')->insert(array(
 			           'name' => $faker->unique()->userName,
 			           'email'  => $faker->unique()->freeEmail,
-			           'password'  =>\Hash::make('1234'),
+			           'password'  => '1234',
 			           'nombre'  => $faker->firstNameMale,
 			           'apellido' => $faker->lastName,
 			           'direccion' => $faker->address,
+			          	'telefono' => $faker->e164PhoneNumber, 
 			           'codigo_postal' => $faker->postcode,
-			           'pais_id' => $pais => Pais::find('pais') 
-			           'provincia_region_id' => 
-			           'estado_datos' => $faker->randomElement(['Actualizados', 'Sin Actualizar']),
-			          	'avatar' => '21',
+			           'pais_id' => '1', 
+			           'provincia_region_id' =>'1', 
+			          	'avatar' => '54643123123123123123',
+			           'estado_datos' => $faker->randomElement(['false', 'true'])
 
 			    ));
 			}
     }
 }
 
-
- 
-
-            
         
 
                         
