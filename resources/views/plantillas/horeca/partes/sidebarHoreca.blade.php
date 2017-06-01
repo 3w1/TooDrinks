@@ -4,11 +4,11 @@
    </div>
    <div class="pull-left info">
       <p>{{ $horeca->nombre }}</p>
-      <a href="#"><i class="fa fa-circle text-danger"></i> Horeca</a>
+      <a href="{{ route('horeca.edit', $horeca->id) }}"><i class="fa fa-edit text-info"></i> Editar Perfil</a>
    </div>
 </div>
 <ul class="sidebar-menu">
-   <li class="header">Opciones</li>
+   <li class="header">HORECA</li>
 
    <!-- SECCIÓN DE  OFERTAS -->
    <li class="treeview">

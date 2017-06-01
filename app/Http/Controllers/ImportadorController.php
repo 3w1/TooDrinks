@@ -23,11 +23,6 @@ class ImportadorController extends Controller
         return view('importador.index')->with(compact('importadores'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {   
         $paises = DB::table('pais')
@@ -43,12 +38,6 @@ class ImportadorController extends Controller
         return view('importador.create')->with(compact('paises','provincias'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $file = $request->file('logo');
@@ -68,12 +57,6 @@ class ImportadorController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $importador = Importador::find($id);
@@ -111,12 +94,6 @@ class ImportadorController extends Controller
         return view('importador.show')->with(compact('importador', 'cont', 'cont2', 'cont3', 'cont4'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $importador = Importador::find($id);
@@ -134,28 +111,31 @@ class ImportadorController extends Controller
        return view('importador.edit')->with(compact('importador', 'paises', 'provincias'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $importador = Importador::find($id);
         $importador->fill($request->all());
         $importador->save();
 
-        return redirect()->action('ImportadorController@index');
+        $url = 'importador/'.$id.'/edit';
+       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function updateAvatar(Request $request){
+        $imagen = $request->file('logo');
+
+        $nombre = 'importador_'.time().'.'.$imagen->getClientOriginalExtension();
+        $path = public_path() . '/imagenes/importadores';
+        $imagen->move($path, $nombre);
+
+        $actualizacion = DB::table('importador')
+                            ->where('id', '=', $request->id)
+                            ->update(['logo' => $nombre ]);
+       
+       $url = 'importador/'.$request->id.'/edit';
+       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');
+    }
+
     public function destroy($id)
     {
         $importador = Importador::find($id);

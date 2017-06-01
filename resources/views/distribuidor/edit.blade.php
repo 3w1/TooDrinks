@@ -1,4 +1,4 @@
-@extends('plantillas.main')
+@extends('plantillas.distribuidor.mainDistribuidor')
 @section('title', 'Modificar Producto '.$distribuidor->nombre)
 @section('content-left')
 

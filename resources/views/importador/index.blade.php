@@ -1,4 +1,4 @@
-@extends('plantillas.main')
+@extends('plantillas.importador.mainImportador')
 @section('title', 'Importadores')
 @section('content-left')
 	<div class="box">

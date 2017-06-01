@@ -1,5 +1,5 @@
-@extends('plantillas.main')
-@section('title', 'Modificar Producto '.$productor->nombre)
+@extends('plantillas.productor.mainProductor')
+@section('title', 'Modificar Productor '.$productor->nombre)
 @section('content-left')
 
 	{!! Html::script('js/productores/edit.js') !!}

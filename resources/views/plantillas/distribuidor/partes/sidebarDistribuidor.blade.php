@@ -4,11 +4,11 @@
    </div>
    <div class="pull-left info">
       <p>{{ $distribuidor->nombre }}</p>
-      <a href="#"><i class="fa fa-circle text-warning"></i> Distribuidor</a>
+      <a href="{{ route('distribuidor.edit', $distribuidor->id) }}"><i class="fa fa-edit text-info"></i> Editar Perfil</a>
    </div>
 </div>
 <ul class="sidebar-menu">
-   <li class="header">Opciones</li>
+   <li class="header">DISTRIBUIDOR</li>
    
 
    <!-- SECCIÓN DE MARCAS -->

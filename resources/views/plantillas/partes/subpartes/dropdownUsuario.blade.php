@@ -9,7 +9,6 @@
       <!-- User image -->
       <li class="user-header">
          <img src="{{ asset('imagenes/usuarios/')}}/{{ Auth::user()->avatar }}" class="img-circle" alt="{{ Auth::user()->avatar }}">
-
          <p>
             {{ Auth::User()->nombre }} {{ Auth::User()->apellido }}
             <small>Miembro desde {{ Auth::User()->created_at->format('d-m-Y') }}</small>
@@ -35,7 +34,7 @@
       <!-- INICIO DEL MENU DEL FOOTER DE CUENTA DE USUARIO-->
       <li class="user-footer">
          <div class="pull-left">
-            <a href="#" class="btn btn-default btn-flat">Perfil</a>
+            <a href="{{ route('usuario.edit', Auth::user()->id) }}" class="btn btn-default btn-flat">Perfil</a>
          </div>
          <div class="pull-right">
             <a href="{{ route('logout') }}" class="btn btn-default btn-flat" onclick="event.preventDefault();

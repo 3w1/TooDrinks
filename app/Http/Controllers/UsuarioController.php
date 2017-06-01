@@ -8,6 +8,7 @@ use App\Models\Pais;
 use App\Models\Provincia_Region;
 use DB;
 use Auth;
+use Input;
 
 class UsuarioController extends Controller
 {
@@ -102,13 +103,6 @@ class UsuarioController extends Controller
        return view('usuario.edit')->with(compact('usuario', 'paises', 'provincias'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         
@@ -116,8 +110,24 @@ class UsuarioController extends Controller
         $usuario->fill($request->all());
         $usuario->save();
 
-        return redirect()->action('UsuarioController@index');
-        
+        $url = 'usuario/'.Auth::user()->id.'/edit';
+        return redirect($url)->with('status', 'Sus datos han sido actualizados con éxito');
+    }
+
+    public function updateAvatar(Request $request){
+
+        $imagen = $request->file('avatar');
+
+        $nombre = 'usuario_'.time().'.'.$imagen->getClientOriginalExtension();
+        $path = public_path() . '/imagenes/usuarios';
+        $imagen->move($path, $nombre);
+
+        $actualizacion = DB::table('users')
+                            ->where('id', '=', Auth::user()->id)
+                            ->update(['avatar' => $nombre ]);
+       
+       $url = 'usuario/'.Auth::user()->id.'/edit';
+       return redirect($url)->with('status', 'Su imagen de perfil ha sido cambiada con éxito');
     }
 
     /**

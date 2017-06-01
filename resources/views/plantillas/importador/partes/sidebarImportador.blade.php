@@ -4,11 +4,11 @@
    </div>
    <div class="pull-left info">
       <p>{{ $importador->nombre }}</p>
-      <a href="#"><i class="fa fa-circle text-success"></i> Importador</a>
+      <a href="{{ route('importador.edit', $importador->id) }}"><i class="fa fa-edit text-success"></i> Editar Perfil</a>
    </div>
 </div>
 <ul class="sidebar-menu">
-   <li class="header">Opciones</li>
+   <li class="header">IMPORTADOR</li>
    
 
    <!-- SECCIÓN DE DISTRIBUIDORES -->

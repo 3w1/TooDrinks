@@ -3,12 +3,12 @@
       <img src="{{ asset('imagenes/productores/')}}/{{ $productor->logo }}" class="img-circle" alt="User Image">
    </div>
    <div class="pull-left info">
-      <p>{{ $productor->nombre }}</p>
-      <a href="#"><i class="fa fa-circle text-info"></i> Productor</a>
+      <p>{{ $productor->nombre }} </p>
+      <a href="{{ route('productor.edit', $productor->id) }}"><i class="fa fa-edit text-info"></i> Editar Perfil</a>
    </div>
 </div>
 <ul class="sidebar-menu">
-   <li class="header">Opciones</li>
+   <li class="header">PRODUCTOR</li>
    
 
    <!-- SECCIÓN DE IMPORTADORES -->

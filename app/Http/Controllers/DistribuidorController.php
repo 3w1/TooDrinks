@@ -22,11 +22,6 @@ class DistribuidorController extends Controller
         return view('distribuidor.index')->with(compact('distribuidores'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $paises = DB::table('pais')
@@ -42,12 +37,6 @@ class DistribuidorController extends Controller
         return view('distribuidor.create')->with(compact('paises','provincias'));
      }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $file = $request->file('logo');
@@ -67,12 +56,6 @@ class DistribuidorController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $distribuidor = Distribuidor::find($id);
@@ -96,12 +79,6 @@ class DistribuidorController extends Controller
         return view('distribuidor.show')->with(compact('distribuidor', 'cont', 'cont2'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $distribuidor = Distribuidor::find($id);
@@ -119,28 +96,31 @@ class DistribuidorController extends Controller
        return view('distribuidor.edit')->with(compact('distribuidor', 'paises', 'provincias')); 
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $distribuidor = Distribuidor::find($id);
         $distribuidor->fill($request->all());
         $distribuidor->save();
 
-        return redirect()->action('DistribuidorController@index');
+        $url = 'distribuidor/'.$id.'/edit';
+       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function updateAvatar(Request $request){
+        $imagen = $request->file('logo');
+
+        $nombre = 'distribuidor_'.time().'.'.$imagen->getClientOriginalExtension();
+        $path = public_path() . '/imagenes/distribuidores';
+        $imagen->move($path, $nombre);
+
+        $actualizacion = DB::table('distribuidor')
+                            ->where('id', '=', $request->id)
+                            ->update(['logo' => $nombre ]);
+       
+       $url = 'distribuidor/'.$request->id.'/edit';
+       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');
+    }
+
     public function destroy($id)
     {
         $distribuidor = Distribuidor::find($id);

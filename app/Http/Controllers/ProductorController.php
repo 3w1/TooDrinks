@@ -114,7 +114,23 @@ class ProductorController extends Controller
         /*response()->json([
             "mensaje" => "Listo"
         ]);*/
-        return redirect()->action('ProductorController@index');
+        $url = 'productor/'.$id.'/edit';
+        return redirect($url)->with('msj', 'Sus datos se han actualizado con éxito');
+    }
+
+    public function updateAvatar(Request $request){
+        $imagen = $request->file('logo');
+
+        $nombre = 'productor_'.time().'.'.$imagen->getClientOriginalExtension();
+        $path = public_path() . '/imagenes/productores';
+        $imagen->move($path, $nombre);
+
+        $actualizacion = DB::table('productor')
+                            ->where('id', '=', $request->id)
+                            ->update(['logo' => $nombre ]);
+       
+       $url = 'productor/'.$request->id.'/edit';
+       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');
     }
 
     public function destroy($id)

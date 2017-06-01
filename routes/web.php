@@ -27,28 +27,45 @@ Route::get('usuario/registrar-importador', 'UsuarioController@registrar_importad
 Route::get('usuario/registrar-distribuidor', 'UsuarioController@registrar_distribuidor')->name('usuario.registrar-distribuidor');
 Route::get('usuario/registrar-horeca', 'UsuarioController@registrar_horeca')->name('usuario.registrar-horeca');
 
+Route::post('usuario/updateAvatar', 'UsuarioController@updateAvatar')->name('usuario.updateAvatar');
+
 Route::resource('usuario','UsuarioController');
 
-// ./RUTAS PARA LOS USUARIOS
+// ./RUTAS PARA LOS USUARIOS./
+
+// RUTAS PARA LOS PRODUCTORES
+Route::post('productor/updateAvatar', 'ProductorController@updateAvatar')->name('productor.updateAvatar');
 
 Route::resource('productor','ProductorController');
-Route::get('productor/ingresar/{id}', 'ProductorController@ingresar')->name('productor.ingresar');
+
+// ./RUTAS PARA LOS PRODUCTORES ./
+
+// RUTAS PARA LOS IMPORTADORES
+Route::post('importador/updateAvatar', 'ImportadorController@updateAvatar')->name('importador.updateAvatar');
+
+Route::resource('importador','ImportadorController');
+
+// ./RUTAS PARA LOS IMPORTADORES ./
+
+// RUTAS PARA LOS DISTRIBUIDORES
+Route::post('distribuidor/updateAvatar', 'DistribuidorController@updateAvatar')->name('distribuidor.updateAvatar');
+
+Route::resource('distribuidor','DistribuidorController');
+// ./RUTAS PARA LOS DISTRIBUIDORES ./
+
+// RUTAS PARA LOS HORECAS
+Route::post('horeca/updateAvatar', 'HorecaController@updateAvatar')->name('horeca.updateAvatar');
+
+Route::resource('horeca','HorecaController');
+// ./RUTAS PARA LOS HORECAS ./
 
 Route::resource('producto','ProductoController');
 
 Route::resource('marca','MarcaController');
 
-
-
 Route::resource('credito','CreditoController');
 
 Route::resource('bebida','BebidaController');
-
-Route::resource('horeca','HorecaController');
-
-Route::resource('importador','ImportadorController');
-
-Route::resource('distribuidor','DistribuidorController');
 
 Route::resource('oferta','OfertaController');
 

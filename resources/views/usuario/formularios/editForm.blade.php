@@ -1,9 +1,24 @@
+@include('usuario.modales.modalAvatar')
+	
+@if (Session::has('status'))
+	<div class="alert alert-success alert-dismissable">
+  		<button type="button" class="close" data-dismiss="alert">&times;</button>
+  		<strong>¡Enhorabuena!</strong> {{Session::get('status')}}.
+	</div>
+@endif
+
+	<div class="row">
+  		<div class="col-sm-6 col-md-3">
+    		<a href="" class="thumbnail" data-toggle='modal' data-target='#myModal'><img src="{{ asset('imagenes/usuarios/') }}/{{ $usuario->avatar }}" alt="..."></a>
+  		</div>
+	</div>
+
 {!! Form::open(['route' => ['usuario.update', $usuario->id], 'method' => 'PUT']) !!}
 		
 	{!! Form::hidden('pais_hidden', $usuario->pais_id, ['id' => 'pais_hidden']) !!}
 	{!! Form::hidden('provincia_hidden', $usuario->provincia_region_id, ['id' => 'provincia_hidden']) !!}
 	{!! Form::hidden('datos_hidden', $usuario->estado_datos, ['id' => 'datos_hidden']) !!}
-
+		
 		<div class="form-group">
 			{!! Form::label('name', 'Nombre de Usuario') !!}
 			{!! Form::text('name', $usuario->name, ['class' => 'form-control'] ) !!}
@@ -65,11 +80,6 @@
 		<div class="form-group">
 			{!! Form::label('telefono_opcional', 'Teléfono') !!}
 			{!! Form::text('telefono_opcional', $usuario->telefono_opcional, ['class' => 'form-control'] ) !!}
-		</div>
-
-		<div class="form-group">
-			{!! Form::label('avatar', 'Imagen / Avatar') !!}
-			{!! Form::file('avatar', ['class' => 'form-control', 'required'] ) !!}
 		</div>
 
 		<div class="form-group">

@@ -25,11 +25,6 @@ class HorecaController extends Controller
         return view('horeca.index')->with(compact('horecas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $paises = DB::table('pais')
@@ -45,12 +40,6 @@ class HorecaController extends Controller
         return view('horeca.create')->with(compact('paises', 'provincias'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $file = $request->file('logo');
@@ -75,12 +64,6 @@ class HorecaController extends Controller
         $telefono->save();*/
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $horeca = Horeca::find($id);
@@ -88,12 +71,6 @@ class HorecaController extends Controller
         return view('horeca.show')->with(compact('horeca'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
        $paises = DB::table('pais')
@@ -111,28 +88,31 @@ class HorecaController extends Controller
         return view('horeca.edit')->with(compact('horeca', 'paises', 'provincias'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $horeca = Horeca::find($id);
         $horeca->fill($request->all());
         $horeca->save();
 
-        return redirect()->action('HorecaController@index');
+        $url = 'horeca/'.$id.'/edit';
+       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function updateAvatar(Request $request){
+        $imagen = $request->file('logo');
+
+        $nombre = 'horeca_'.time().'.'.$imagen->getClientOriginalExtension();
+        $path = public_path() . '/imagenes/horecas';
+        $imagen->move($path, $nombre);
+
+        $actualizacion = DB::table('horeca')
+                            ->where('id', '=', $request->id)
+                            ->update(['logo' => $nombre ]);
+       
+       $url = 'horeca/'.$request->id.'/edit';
+       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');
+    }
+
     public function destroy($id)
     {
         $horeca = Horeca::find($id);

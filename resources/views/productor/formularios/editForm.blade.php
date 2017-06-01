@@ -1,7 +1,30 @@
+
+@if (Session::has('msj'))
+	<div class="alert alert-success alert-dismissable">
+  		<button type="button" class="close" data-dismiss="alert">&times;</button>
+  		<strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+	</div>
+@endif
+
+@section('title-header')
+	<span><h3>Editar Perfil</h3></span>
+@endsection
+
+@include('productor.modales.modalAvatar')
+
+
+<div class="row">
+  		<div class="col-sm-6 col-md-3">
+    		<a href="" class="thumbnail" data-toggle='modal' data-target='#myModal'><img src="{{ asset('imagenes/productores/') }}/{{ $productor->logo }}" alt="..."></a>
+  		</div>
+	</div>
+
+
+	
 {!! Form::open(['route' => ['productor.update', $productor->id], 'method' => 'PUT']) !!}
 	
-	{!! Form::hidden('user_id', '1') !!}
-	{!! Form::hidden('saldo', '0') !!}
+	{!! Form::hidden('user_id', Auth::user()->id) !!}
+	{!! Form::hidden('saldo', $productor->saldo) !!}
 	{!! Form::hidden('pais_hidden', $productor->pais_id, ['id' => 'pais_hidden']) !!}
 	{!! Form::hidden('provincia_hidden', $productor->provincia_region_id, ['id' => 'provincia_hidden']) !!}
 	{!! Form::hidden('reclamada_hidden', $productor->reclamada, ['id' => 'reclamada_hidden']) !!}
@@ -46,11 +69,6 @@
 				<option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
 			@endforeach
 		</select>
-	</div>
-
-	<div class="form-group">
-		{!! Form::label('logo', 'Logo / Avatar') !!}
-		{!! Form::file('logo', ['class' => 'form-control', 'required'] ) !!}
 	</div>
 	
 	<div class="form-group">
