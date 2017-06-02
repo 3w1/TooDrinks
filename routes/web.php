@@ -11,10 +11,15 @@
 |
 */
 
+//RUTAS DE INICIO Y AUTENTICACIÓN
+Auth::routes();
+
+Route::get('/home', 'UsuarioController@index')->name('dashboard');
 
 Route::get('/', function () {
     return redirect()->action('UsuarioController@index');
 });
+// ./RUTAS DE INICIO Y AUTENTICACIÓN ./
 
 //  RUTAS PARA LOS USUARIOS
 Route::get('usuario/{id}/mis-productores', 'UsuarioController@ver_productores')->name('usuario.productores');
@@ -36,6 +41,12 @@ Route::resource('usuario','UsuarioController');
 // RUTAS PARA LOS PRODUCTORES
 Route::post('productor/updateAvatar', 'ProductorController@updateAvatar')->name('productor.updateAvatar');
 
+Route::get('productor/registrar-distribuidor', 'ProductorController@registrar_distribuidor')->name('productor.registrar-distribuidor');
+Route::get('productor/registrar-importador', 'ProductorController@registrar_importador')->name('productor.registrar-importador');
+
+Route::get('productor/mis-importadores', 'ProductorController@ver_importadores')->name('productor.importadores');
+Route::get('productor/mis-distribuidores', 'ProductorController@ver_distribuidores')->name('productor.distribuidores');
+
 Route::resource('productor','ProductorController');
 
 // ./RUTAS PARA LOS PRODUCTORES ./
@@ -44,7 +55,6 @@ Route::resource('productor','ProductorController');
 Route::post('importador/updateAvatar', 'ImportadorController@updateAvatar')->name('importador.updateAvatar');
 
 Route::resource('importador','ImportadorController');
-
 // ./RUTAS PARA LOS IMPORTADORES ./
 
 // RUTAS PARA LOS DISTRIBUIDORES
@@ -58,6 +68,8 @@ Route::post('horeca/updateAvatar', 'HorecaController@updateAvatar')->name('horec
 
 Route::resource('horeca','HorecaController');
 // ./RUTAS PARA LOS HORECAS ./
+
+Route::get('credito/compra','CreditoController@compra')->name('compra');
 
 Route::resource('producto','ProductoController');
 
@@ -80,6 +92,3 @@ Route::resource('suscripcion', 'SuscripcionController');
 Route::resource('opinion','OpinionController');
 
 
-Auth::routes();
-
-Route::get('/home', 'UsuarioController@index')->name('dashboard');

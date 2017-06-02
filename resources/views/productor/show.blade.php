@@ -1,7 +1,18 @@
 @extends('plantillas.productor.mainProductor')
 @section('title', 'Dashboard Productor')
 
+
+
 @section('items')
+    
+        @if (Session::has('msj'))
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+        </div>
+        @endif
+
+    
 	<div class="col-lg-3 col-xs-6">
         <div class="small-box bg-aqua">
             <div class="inner">
@@ -31,9 +42,9 @@
 	          	<i class="ion ion-stats-bars"></i>
 	        </div>
 	         @if ($cont2 > 0) 
-            	<a href="" class="small-box-footer">Ver Mis Importadores <i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="{{  route('productor.importadores') }}" class="small-box-footer">Ver Mis Importadores <i class="fa fa-arrow-circle-right"></i></a>
             @else
-            	<a href="" class="small-box-footer">Agregar Importador <i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="{{ route('productor.registrar-importador') }}" class="small-box-footer">Agregar Importador <i class="fa fa-arrow-circle-right"></i></a>
             @endif
 	    </div>
     </div>
@@ -48,9 +59,9 @@
 	           	<i class="ion ion-person-add"></i>
 	        </div>
              @if ($cont3 > 0) 
-            	<a href="" class="small-box-footer">Ver Mis Distribuidores <i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="{{  route('productor.distribuidores') }}" class="small-box-footer">Ver Mis Distribuidores <i class="fa fa-arrow-circle-right"></i></a>
             @else
-            	<a href="" class="small-box-footer">Agregar Distribuidor<i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="{{ route('productor.registrar-distribuidor') }}" class="small-box-footer">Agregar Distribuidor<i class="fa fa-arrow-circle-right"></i></a>
             @endif
         </div>
     </div>

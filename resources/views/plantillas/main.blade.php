@@ -87,13 +87,13 @@
 	    {!! Html::script('archivosLTE/plugins/fastclick/fastclick.js') !!}
 	    {!! Html::script('archivosLTE/dist/js/app.min.js') !!}
       {!! Html::script('js/credito/pinterest_grid.js')!!}
+      {!! Html::script('js/credito/main.js')!!}
 
 
       	<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
      	<script>
         	$.widget.bridge('uibutton', $.ui.button);
       	</script>
-      <script src="{{ asset('js/credito/pinterest_grid.js') }}"></script>
     </body>
 
 </html>

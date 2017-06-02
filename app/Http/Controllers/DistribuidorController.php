@@ -51,8 +51,10 @@ class DistribuidorController extends Controller
 
          if ($request->who == 'U'){
              return redirect()->action('UsuarioController@index'); 
-        }elseif ($request->who == 'D'){
-            return redirect()->action('DistribuidorController@index');
+        }elseif ($request->who == 'P'){
+            $distribuidor->productores()->attach(session('productorId'));
+            $url = 'productor/'.session('productorId');
+            return redirect($url)->with('msj', 'Se ha registrado exitosamente su Importador');
         }
     }
 

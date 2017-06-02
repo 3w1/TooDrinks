@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreditoCreateRequest;
 use App\Http\Requests\CreditoUpdateRequest;
 use App\Models\Credito;
+use App\Models\User;
 use DB;
 
 class CreditoController extends Controller
@@ -37,7 +39,6 @@ class CreditoController extends Controller
     public function show($id)
     {
        $credito = Credito::all();
-        //dd($credito);
         return view ('credito.show')->with(compact('credito'));
     }
 
@@ -63,6 +64,33 @@ class CreditoController extends Controller
         $credito->delete();
 
         return redirect()->action('CreditoController@index');
+    }
+
+    public function compra()
+    {   
+        $idusuario = Auth::id(); 
+        
+        $productores = DB::table('productor')
+                        ->orderBy('nombre')
+                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
+                        ->where('user_id', $idusuario)
+                        ->paginate(10);
+        $distribuidores = DB::table('distribuidor')
+                        ->orderBy('nombre')
+                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
+                        ->where('user_id', $idusuario)
+                        ->paginate(10);
+        $importador = DB::table('importador')
+                        ->orderBy('nombre')
+                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
+                        ->where('user_id', $idusuario)
+                        ->paginate(10);
+
+        
+        $lista = array($productores, $distribuidores, $importador);
+
+        return view('credito.lista')->with(compact('lista'));
+        //dd($lista)
     }
 }
 

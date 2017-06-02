@@ -51,11 +51,7 @@ class ProductorController extends Controller
         $productor->user_id = Auth::user()->id;
         $productor->save();
 
-        if ($request->who == 'U'){
-             return redirect()->action('UsuarioController@index'); 
-        }elseif ($request->who == 'P'){
-            return redirect()->action('ProductorController@index');
-        }
+        return redirect()->action('UsuarioController@index'); 
     }
 
     public function show($id)
@@ -77,6 +73,10 @@ class ProductorController extends Controller
         foreach($productor->demandas_distribuidores as $demandasDistribuidor)
             $cont4++;
 
+        session(['productorId' => $id]);
+        session(['productorNombre' => $productor->nombre]);
+        session(['productorLogo' => $productor->logo]);
+
         return view('productor.show')->with(compact('productor', 'cont', 'cont2', 'cont3', 'cont4'));
     }
 
@@ -96,10 +96,6 @@ class ProductorController extends Controller
 
        return view('productor.edit')->with(compact('productor','paises', 'provincias'));
 
-        /*$productor = Productor::find($id);
-        return response()->json(
-            $productor->toArray()
-        );*/
     }
 
     public function update(Request $request, $id)
@@ -108,12 +104,6 @@ class ProductorController extends Controller
         $productor->fill($request->all());
         $productor->save();
 
-        //Session::flash('message','Your message');
-        //return Redirect::to('/usuario/mis-productores');
-        
-        /*response()->json([
-            "mensaje" => "Listo"
-        ]);*/
         $url = 'productor/'.$id.'/edit';
         return redirect($url)->with('msj', 'Sus datos se han actualizado con éxito');
     }
@@ -139,5 +129,58 @@ class ProductorController extends Controller
         $productor->delete();
 
         return redirect()->action('ProductorController@index');
+    }
+
+    //FUNCION QUE LE PERMITE AL PRODUCTOR REGISTRAR UN IMPORTADOR DE SU PROPIEDAD
+    public function registrar_importador(){
+        $perfil = 'I';
+
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->select('id', 'pais')
+                        ->get();
+
+        $provincias = DB::table('provincia_region')
+                        ->orderBy('provincia')
+                        ->select('id', 'provincia')
+                        ->get();
+
+        return view('productor.registrarPerfil')->with(compact('perfil', 'paises', 'provincias'));
+    }
+
+    //FUNCION QUE LE PERMITE AL PRODUCTOR REGISTRAR UN DISTRIBUIDOR DE SU PROPIEDAD
+    public function registrar_distribuidor(){
+        $perfil = 'D';
+
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->select('id', 'pais')
+                        ->get();
+
+        $provincias = DB::table('provincia_region')
+                        ->orderBy('provincia')
+                        ->select('id', 'provincia')
+                        ->get();
+
+        return view('productor.registrarPerfil')->with(compact('perfil', 'paises', 'provincias'));
+    }
+
+    //FUNCION QUE PERMITE VER LOS IMPORTADORES ASOCIADOS A UN PRODUCTOR
+    public function ver_importadores(){
+        
+        $importadores = Productor::find(session('productorId'))
+                                    ->importadores()
+                                    ->paginate(8);
+
+        return view('productor.listados.importadores')->with(compact('importadores'));
+    }
+
+    //FUNCION QUE PERMITE VER LOS DISTRIBUIDORES ASOCIADOS A UN PRODUCTOR
+    public function ver_distribuidores(){
+        $distribuidores = Productor::find(session('productorId'))
+                                    ->distribuidores()
+                                    ->paginate(8);
+
+        return view('productor.listados.distribuidores')->with(compact('distribuidores'));
     }
 }

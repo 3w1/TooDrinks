@@ -52,8 +52,10 @@ class ImportadorController extends Controller
 
         if ($request->who == 'U'){
              return redirect()->action('UsuarioController@index'); 
-        }elseif ($request->who == 'I'){
-            return redirect()->action('ImportadorController@index');
+        }elseif ($request->who == 'P'){
+            $importador->productores()->attach(session('productorId'));
+            $url = 'productor/'.session('productorId');
+            return redirect($url)->with('msj', 'Se ha registrado exitosamente su Importador');
         }
     }
 

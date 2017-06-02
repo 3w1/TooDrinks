@@ -116,5 +116,5 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::submit('Agregar Distribuidor', ['class' => 'btn btn-primary']) !!}
+		{!! Form::submit('Agregar Importador', ['class' => 'btn btn-primary']) !!}
 	</div>
