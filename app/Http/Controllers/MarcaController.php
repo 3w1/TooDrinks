@@ -50,16 +50,22 @@ class MarcaController extends Controller
         $path = public_path() . '/imagenes/marcas';
         $file->move($path, $nombre);
 
-
         $marca=new Marca($request->all());
         $marca->logo = $nombre;
         $marca->save();
-        return redirect()->action('MarcaController@index');
+
+        if ($request->who == 'P'){
+            $url = 'productor/'.session('productorId');
+            return redirect($url)->with('msj', 'Su marca se ha agregado con exito');
+        }else{
+            return redirect()->action('MarcaController@index');
+        }
+        
     }
 
     public function show($id)
     {
-        //
+       
     }
 
     public function edit($id)
@@ -87,5 +93,27 @@ class MarcaController extends Controller
         $marca->delete();
 
         return redirect()->action('MarcaController@index');
+    }
+
+    public function agregar_producto($id){
+
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->select('id', 'pais')
+                        ->get();
+
+        $provincias = DB::table('provincia_region')
+                        ->orderBy('provincia')
+                        ->select('id', 'provincia')
+                        ->get();
+
+        $marca = DB::table('marca')
+                    ->select('id', 'nombre')
+                    ->where('id', $id)
+                    ->get()
+                    ->first();
+
+        if ( session('perfil') == 'P')
+            return view('productor.registrarProducto')->with(compact('paises', 'provincias', 'marca'));
     }
 }

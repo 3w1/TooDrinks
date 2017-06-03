@@ -41,11 +41,17 @@ Route::resource('usuario','UsuarioController');
 // RUTAS PARA LOS PRODUCTORES
 Route::post('productor/updateAvatar', 'ProductorController@updateAvatar')->name('productor.updateAvatar');
 
-Route::get('productor/registrar-distribuidor', 'ProductorController@registrar_distribuidor')->name('productor.registrar-distribuidor');
 Route::get('productor/registrar-importador', 'ProductorController@registrar_importador')->name('productor.registrar-importador');
+Route::get('productor/registrar-distribuidor', 'ProductorController@registrar_distribuidor')->name('productor.registrar-distribuidor');
 
 Route::get('productor/mis-importadores', 'ProductorController@ver_importadores')->name('productor.importadores');
 Route::get('productor/mis-distribuidores', 'ProductorController@ver_distribuidores')->name('productor.distribuidores');
+
+Route::get('productor/mis-marcas', 'ProductorController@ver_marcas')->name('productor.marcas');
+Route::get('productor/registrar-marca', 'ProductorController@registrar_marca')->name('productor.registrar-marca');
+
+Route::get('productor/{id}-{marca}/productos', 'ProductorController@ver_productos')->name('productor.productos');
+Route::get('productor/{id}-{marca}/registrar-producto', 'ProductorController@registrar_producto')->name('productor.registrar-producto');
 
 Route::resource('productor','ProductorController');
 
@@ -69,11 +75,17 @@ Route::post('horeca/updateAvatar', 'HorecaController@updateAvatar')->name('horec
 Route::resource('horeca','HorecaController');
 // ./RUTAS PARA LOS HORECAS ./
 
+// RUTAS PARA LAS MARCAS 
+Route::get('marca/{id}/registrar-producto', 'MarcaController@registrar_producto')->name('marca.registrar-producto');
+
+Route::resource('marca','MarcaController');
+// ./RUTAS PARA LAS MARCAS ./
+
 Route::get('credito/compra','CreditoController@compra')->name('compra');
 
 Route::resource('producto','ProductoController');
 
-Route::resource('marca','MarcaController');
+
 
 Route::resource('credito','CreditoController');
 

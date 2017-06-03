@@ -19,6 +19,7 @@ class UsuarioController extends Controller
 
     public function index()
     {
+        session(['perfil' => 'U']);
         $user = User::find(Auth::user()->id);
         $cont=0;
         $cont2=0;
@@ -35,9 +36,6 @@ class UsuarioController extends Controller
             $cont4++;
 
         return view('usuario.index')->with(compact('user', 'cont', 'cont2', 'cont3', 'cont4'));
-        //$usuarios = User::paginate(5);
-        //return view('usuario.index')->with(compact('usuarios'));
-
     }
 
     public function create()
@@ -145,58 +143,6 @@ class UsuarioController extends Controller
 
     }
 
-    //FUNCION QUE PERMITE VER LOS PRODUCTORES PERTENECIENTES A U USUARIO
-    public function ver_productores($id){
-        $usuario = User::find($id);
-
-        $productores = DB::table('productor')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', $id)
-                        ->paginate(4);
-
-        return view('usuario.listados.productores')->with(compact('usuario', 'productores'));
-    }
-
-    //FUNCION QUE PERMITE VER LOS IMPORTADORES PERTENECIENTES A U USUARIO
-    public function ver_importadores($id){
-        $usuario = User::find($id);
-
-        $importadores = DB::table('importador')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', $id)
-                        ->paginate(8);
-
-        return view('usuario.listados.importadores')->with(compact('usuario', 'importadores'));
-    }
-
-    //FUNCION QUE PERMITE VER LOS DISTRIBUIDORES PERTENECIENTES A U USUARIO
-    public function ver_distribuidores($id){
-        $usuario = User::find($id);
-
-        $distribuidores = DB::table('distribuidor')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', $id)
-                        ->paginate(8);
-
-        return view('usuario.listados.distribuidores')->with(compact('usuario', 'distribuidores'));
-    }
-
-    //FUNCION QUE PERMITE VER LOS HORECAS PERTENECIENTES A U USUARIO
-    public function ver_horecas($id){
-        $usuario = User::find($id);
-
-        $horecas = DB::table('horeca')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', $id)
-                        ->paginate(8);
-
-        return view('usuario.listados.horecas')->with(compact('usuario', 'horecas'));
-    }
-
     //FUNCION QUE LE PERMITE AL USUARIO REGISTRAR UN PRODUCTOR DE SU PROPIEDAD
     public function registrar_productor(){
         $perfil = 'P';
@@ -212,6 +158,19 @@ class UsuarioController extends Controller
                         ->get();
 
         return view('usuario.registrarPerfil')->with(compact('perfil', 'paises', 'provincias'));
+    }
+
+    //FUNCION QUE PERMITE VER LOS PRODUCTORES PERTENECIENTES A U USUARIO
+    public function ver_productores($id){
+        $usuario = User::find($id);
+
+        $productores = DB::table('productor')
+                        ->orderBy('nombre')
+                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
+                        ->where('user_id', $id)
+                        ->paginate(4);
+
+        return view('usuario.listados.productores')->with(compact('usuario', 'productores'));
     }
 
     //FUNCION QUE LE PERMITE AL USUARIO REGISTRAR UN IMPORTADOR DE SU PROPIEDAD
@@ -231,6 +190,19 @@ class UsuarioController extends Controller
         return view('usuario.registrarPerfil')->with(compact('perfil', 'paises', 'provincias'));
     }
 
+    //FUNCION QUE PERMITE VER LOS IMPORTADORES PERTENECIENTES A U USUARIO
+    public function ver_importadores($id){
+        $usuario = User::find($id);
+
+        $importadores = DB::table('importador')
+                        ->orderBy('nombre')
+                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
+                        ->where('user_id', $id)
+                        ->paginate(8);
+
+        return view('usuario.listados.importadores')->with(compact('usuario', 'importadores'));
+    }
+
     //FUNCION QUE LE PERMITE AL USUARIO REGISTRAR UN DISTRIBUIDOR DE SU PROPIEDAD
     public function registrar_distribuidor(){
         $perfil = 'D';
@@ -248,6 +220,19 @@ class UsuarioController extends Controller
         return view('usuario.registrarPerfil')->with(compact('perfil', 'paises', 'provincias'));
     }
 
+    //FUNCION QUE PERMITE VER LOS DISTRIBUIDORES PERTENECIENTES A U USUARIO
+    public function ver_distribuidores($id){
+        $usuario = User::find($id);
+
+        $distribuidores = DB::table('distribuidor')
+                        ->orderBy('nombre')
+                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
+                        ->where('user_id', $id)
+                        ->paginate(8);
+
+        return view('usuario.listados.distribuidores')->with(compact('usuario', 'distribuidores'));
+    }
+
     //FUNCION QUE LE PERMITE AL USUARIO REGISTRAR UN HORECA DE SU PROPIEDAD
     public function registrar_horeca(){
         $perfil = 'H';
@@ -263,5 +248,18 @@ class UsuarioController extends Controller
                         ->get();
 
         return view('usuario.registrarPerfil')->with(compact('perfil', 'paises', 'provincias'));
+    }
+
+    //FUNCION QUE PERMITE VER LOS HORECAS PERTENECIENTES A U USUARIO
+    public function ver_horecas($id){
+        $usuario = User::find($id);
+
+        $horecas = DB::table('horeca')
+                        ->orderBy('nombre')
+                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
+                        ->where('user_id', $id)
+                        ->paginate(8);
+
+        return view('usuario.listados.horecas')->with(compact('usuario', 'horecas'));
     }
 }

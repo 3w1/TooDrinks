@@ -1,3 +1,6 @@
+	{!! Form::hidden('user_id', Auth::user()->id) !!}	
+	{!! Form::hidden('reclamada', '1') !!}
+	{!! Form::hidden('estado_datos', '1') !!}
 	{!! Form::hidden('saldo', '0') !!}
 
 	<div class="form-group">
@@ -82,13 +85,6 @@
 	</div>
 
 	<div class="form-group">
-		<select name="reclamada" class="form-control">
-			<option value="0">No</option>
-			<option value="1">Si</option>
-		</select>
-	</div>
-
-	<div class="form-group">
 		{!! Form::label('latitud', 'Latitud') !!}
 		{!! Form::text('latitud', null, ['class' => 'form-control', 'placeholder' => 'Latitud'] ) !!}
 	</div>
@@ -96,13 +92,6 @@
 	<div class="form-group">
 		{!! Form::label('longitud', 'Longitud') !!}
 		{!! Form::text('longitud', null, ['class' => 'form-control', 'placeholder' => 'Longitud'] ) !!}
-	</div>
-
-	<div class="form-group">
-		<select name="estado_datos" class="form-control">
-			<option value="0">Sin Actualizar</option>
-			<option value="1">Actualizados</option>
-		</select>
 	</div>
 
 	<div class="form-group">

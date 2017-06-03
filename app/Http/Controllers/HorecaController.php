@@ -49,19 +49,9 @@ class HorecaController extends Controller
 
         $horeca = new Horeca($request->all());
         $horeca->logo = $nombre;
-        $horeca->user_id = Auth::user()->id;
         $horeca->save();
 
-         if ($request->who == 'U'){
-             return redirect()->action('UsuarioController@index'); 
-        }elseif ($request->who == 'H'){
-            return redirect()->action('HorecaController@index');
-        }
-
-        /*$telefono = new Telefono_Horeca();
-        $telefono->telefono = $request->telefono;
-        $telefono->horeca()->associate($horeca);
-        $telefono->save();*/
+        return redirect('usuario')->with('msj', 'Se ha registrado exitosamente su horeca');
     }
 
     public function show($id)

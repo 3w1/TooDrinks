@@ -5,13 +5,47 @@
 
 @section('items')
     
-        @if (Session::has('msj'))
+    @if (Session::has('msj'))
         <div class="alert alert-success alert-dismissable">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
         </div>
-        @endif
+    @endif
+    
+     <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3>{{ $cont2 }}</h3>
+                <p>Importadores</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+            </div>
+             @if ($cont2 > 0) 
+                <a href="{{  route('productor.importadores') }}" class="small-box-footer">Ver Mis Importadores <i class="fa fa-arrow-circle-right"></i></a>
+            @else
+                <a href="{{ route('productor.registrar-importador') }}" class="small-box-footer">Agregar Importador <i class="fa fa-arrow-circle-right"></i></a>
+            @endif
+        </div>
+    </div>
 
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-yellow">
+            <div class="inner">
+                <h3>{{ $cont3 }}</h3>
+                <p>Distribuidores</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-person-add"></i>
+            </div>
+             @if ($cont3 > 0) 
+                <a href="{{  route('productor.distribuidores') }}" class="small-box-footer">Ver Mis Distribuidores <i class="fa fa-arrow-circle-right"></i></a>
+            @else
+                <a href="{{ route('productor.registrar-distribuidor') }}" class="small-box-footer">Agregar Distribuidor<i class="fa fa-arrow-circle-right"></i></a>
+            @endif
+        </div>
+    </div>
     
 	<div class="col-lg-3 col-xs-6">
         <div class="small-box bg-aqua">
@@ -23,49 +57,14 @@
              	<i class="ion ion-bag"></i>
             </div>
             @if ($cont > 0) 
-            	<a href="" class="small-box-footer">Ver Mis Marcas <i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="{{ route('productor.marcas') }}" class="small-box-footer">Ver Mis Marcas <i class="fa fa-arrow-circle-right"></i></a>
             @else
-            	<a href="" class="small-box-footer">Agregar Marca <i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="{{ route('productor.registrar-marca') }}" class="small-box-footer">Agregar Marca <i class="fa fa-arrow-circle-right"></i></a>
             @endif
             
         </div>
     </div>
       
-    <div class="col-lg-3 col-xs-6">
-       	<!-- small box -->
-        <div class="small-box bg-green">
-	        <div class="inner">
-	        	<h3>{{ $cont2 }}</h3>
-	        	<p>Importadores</p>
-	      	</div>
-	        <div class="icon">
-	          	<i class="ion ion-stats-bars"></i>
-	        </div>
-	         @if ($cont2 > 0) 
-            	<a href="{{  route('productor.importadores') }}" class="small-box-footer">Ver Mis Importadores <i class="fa fa-arrow-circle-right"></i></a>
-            @else
-            	<a href="{{ route('productor.registrar-importador') }}" class="small-box-footer">Agregar Importador <i class="fa fa-arrow-circle-right"></i></a>
-            @endif
-	    </div>
-    </div>
-
-    <div class="col-lg-3 col-xs-6">
-	    <div class="small-box bg-yellow">
-	        <div class="inner">
-	           	<h3>{{ $cont3 }}</h3>
-	            <p>Distribuidores</p>
-	        </div>
-	        <div class="icon">
-	           	<i class="ion ion-person-add"></i>
-	        </div>
-             @if ($cont3 > 0) 
-            	<a href="{{  route('productor.distribuidores') }}" class="small-box-footer">Ver Mis Distribuidores <i class="fa fa-arrow-circle-right"></i></a>
-            @else
-            	<a href="{{ route('productor.registrar-distribuidor') }}" class="small-box-footer">Agregar Distribuidor<i class="fa fa-arrow-circle-right"></i></a>
-            @endif
-        </div>
-    </div>
-
     <div class="col-lg-3 col-xs-6">
         <!-- small box -->
         <div class="small-box bg-red">

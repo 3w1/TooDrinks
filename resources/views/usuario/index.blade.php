@@ -2,6 +2,13 @@
 @section('title', 'Usuario '.$user->name)
 
 @section('items')
+	@if (Session::has('msj'))
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+        </div>
+    @endif
+    
 	<div class="col-lg-3 col-xs-6">
         <div class="small-box bg-aqua">
             <div class="inner">

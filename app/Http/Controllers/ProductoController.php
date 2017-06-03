@@ -58,7 +58,10 @@ class ProductoController extends Controller
         $producto = new Producto($request->all());
         $producto->imagen = $nombre;
         $producto->save();
-        return redirect()->action('ProductoController@index');
+
+        if ($request->who == 'P')
+            $url = 'productor/'.$request->marca_id.'-'.$request->marca_nombre.'/productos';
+            return redirect($url)->with('msj', 'Su producto ha sido agregado con éxito');
     }
 
     public function show($id)

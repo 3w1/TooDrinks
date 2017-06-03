@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Productor;
 use App\Models\Pais;
 use App\Models\Telefono_Productor;
+use App\Models\Marca;
 use DB;
 use Auth;
 use Session;
@@ -47,11 +48,10 @@ class ProductorController extends Controller
         $file->move($path, $nombre);
 
         $productor = new Productor($request->all());
-        $productor->logo = $nombre;
-        $productor->user_id = Auth::user()->id;
+        $productor->logo = $nombre; 
         $productor->save();
 
-        return redirect()->action('UsuarioController@index'); 
+        return redirect('usuario')->with('msj', 'Su productor se ha agregado con éxito');
     }
 
     public function show($id)
@@ -183,4 +183,61 @@ class ProductorController extends Controller
 
         return view('productor.listados.distribuidores')->with(compact('distribuidores'));
     }
+
+    //FUNCION QUE LE PERMITE AL PRODUCTOR REGISTRAR UN DISTRIBUIDOR DE SU PROPIEDAD
+    public function registrar_marca(){
+
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->select('id', 'pais')
+                        ->get();
+
+        $provincias = DB::table('provincia_region')
+                        ->orderBy('provincia')
+                        ->select('id', 'provincia')
+                        ->get();
+
+        return view('productor.registrarMarca')->with(compact('paises', 'provincias'));
+    }
+    
+     //FUNCION QUE PERMITE VER LAS MARCAS DE UN PRODUCTOR
+    public function ver_marcas(){
+        $marcas = Productor::find(session('productorId'))
+                                    ->marcas()
+                                    ->paginate(8);
+
+        return view('productor.listados.marcas')->with(compact('marcas'));
+    }
+
+     //FUNCION QUE LE PERMITE AL PRODUCTOR REGISTRAR UN PRODUCTO ASOCIADO A SU MARCA 
+    public function registrar_producto($id, $marca){
+
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->select('id', 'pais')
+                        ->get();
+
+        $provincias = DB::table('provincia_region')
+                        ->orderBy('provincia')
+                        ->select('id', 'provincia')
+                        ->get();
+
+        $bebidas = DB::table('clase_bebida')
+                        ->orderBy('clase')
+                        ->select('id', 'clase')
+                        ->get();
+
+        return view('productor.registrarProducto')->with(compact('id', 'marca', 'paises', 'provincias', 'bebidas'));
+    }
+
+    //FUNCION QUE PERMITE VER LOS IMPORTADORES ASOCIADOS A UN PRODUCTOR
+    public function ver_productos($id, $marca){
+        
+        $productos = Marca::find($id)
+                            ->productos()
+                            ->paginate(8);
+
+        return view('productor.listados.productos')->with(compact('productos', 'marca'));
+    }
+
 }

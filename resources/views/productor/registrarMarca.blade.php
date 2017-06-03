@@ -1,3 +1,22 @@
+@extends('plantillas.productor.mainProductor')
+@section('title', 'Registrar Narca')
+
+@section('items')
+@endsection
+
+@section('content-left')
+
+	@section('title-header')
+		<h3><b>Registrar Marca</h3>
+	@endsection
+		
+	{!! Form::open(['route'=>'marca.store', 'method'=>'POST', 'enctype' => 'multipart/form-data']) !!}
+		{!! Form::hidden('who', 'P') !!}
+		{!! Form::hidden ('tipo_creador','P') !!}
+		{!! Form::hidden('creador_id', session('productorId')) !!}
+		{!! Form::hidden('productor_id', session('productorId')) !!}
+		{!! Form::hidden('reclamada', '1') !!}
+		
 	<div class="form-group">
 		{!! Form::label ('nombre','Nombre') !!}
 		{!! Form::text ('nombre',null,['class'=>'form-control','placeholder'=>'Ej. Polar', 'required']) !!}
@@ -11,13 +30,6 @@
 	<div class="form-group">
 		{!! Form::label ('descripcion','Descripcion') !!}
 		{!! Form::text ('descripcion',null,['class'=>'form-control','placeholder'=>'Ej. ', 'required']) !!}
-	</div>
-
-	<div class="form-group">
-		<select name="reclamada" class="form-control">
-			<option value="0">No</option>
-			<option value="1">Si</option>
-		</select>	
 	</div>
 	
 	<div class="form-group">
@@ -37,15 +49,6 @@
 			@endforeach
 		</select>
 	</div>
-	
-	<div class="form-group">
-		{!! Form::label ('productor_id','Productor') !!}
-		<select name="productor_id" class="form-control">
-			@foreach($productores as $productor)
-				<option value="{{ $productor->id }}">{{ $productor->nombre }}</option>
-			@endforeach
-		</select>
-	</div>
 
 	<div class="form-group">
 		{!! Form::label ('logo', 'Logo') !!}
@@ -53,3 +56,6 @@
 	</div>
 
 	{!! Form::submit ('Agregar',['class'=>'btn btn-primary']) !!}
+	{!! Form::close() !!}
+
+@endsection

@@ -1,4 +1,3 @@
-{!! Form::open(['route' => 'producto.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 		<div class="form-group">
 			{!! Form::label('nombre', 'Nombre') !!}
 			{!! Form::text('nombre', null, ['class' => 'form-control', 'required', 'placeholder' => 'Nombre del Producto'] ) !!}
@@ -35,14 +34,6 @@
 			<select name="clase_bebida_id" class="form-control">
 				@foreach ($bebidas as $bebida )
 					<option value="{{ $bebida->id }}">{{ $bebida->clase }}</option>
-				@endforeach
-			</select>
-		</div>
-
-		<div class="form-group">
-			<select name="marca_id" class="form-control">
-				@foreach ($marcas as $marca )
-					<option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
 				@endforeach
 			</select>
 		</div>

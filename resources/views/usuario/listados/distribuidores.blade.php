@@ -1,4 +1,4 @@
-@extends('plantillas.usuario.mainUsuario')
+@extends('plantillas.main')
 @section('title', 'Listado de Distribuidores')
 
 @section('items')

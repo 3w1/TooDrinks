@@ -47,12 +47,11 @@ class ImportadorController extends Controller
 
         $importador = new Importador($request->all());
         $importador->logo = $nombre;
-        $importador->user_id = Auth::user()->id;
         $importador->save();
 
-        if ($request->who == 'U'){
-             return redirect()->action('UsuarioController@index'); 
-        }elseif ($request->who == 'P'){
+        if ( $request->who == 'U'){
+             return redirect('usuario')->with('msj', 'Se ha registrado exitosamente su Importador');
+        }else{
             $importador->productores()->attach(session('productorId'));
             $url = 'productor/'.session('productorId');
             return redirect($url)->with('msj', 'Se ha registrado exitosamente su Importador');

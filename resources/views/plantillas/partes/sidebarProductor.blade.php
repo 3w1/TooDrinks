@@ -1,10 +1,10 @@
 <div class="user-panel">
    <div class="pull-left image">
-      <img src="{{ asset('imagenes/productores/')}}/{{ session('productorLogo') }}" class="img-circle" alt="User Image">
+      <img src="{{ asset('imagenes/productores/')}}/{{ session('perfilLogo') }}" class="img-circle" alt="User Image">
    </div>
    <div class="pull-left info">
-      <p>{{ session('productorNombre') }} </p>
-      <a href="{{ route('productor.edit', session('productorId')) }}"><i class="fa fa-edit text-info"></i> Editar Perfil</a>
+      <p>{{ session('perfilNombre') }} </p>
+      <a href="{{ route('productor.edit', session('perfilId')) }}"><i class="fa fa-edit text-info"></i> Editar Perfil</a>
    </div>
 </div>
 <ul class="sidebar-menu">
@@ -21,7 +21,7 @@
       </a>
       <ul class="treeview-menu">
          <li><a href=""><i class="fa fa-circle-o"></i> Listado</a></li>
-         <li><a href="{{ route('productor.registrar-importador') }}"><i class="fa fa-circle-o"></i> Crear Nuevo</a></li>
+         <li><a href="{{ route('importador.create') }}"><i class="fa fa-circle-o"></i> Crear Nuevo</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE IMPORTADORES -->

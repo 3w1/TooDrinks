@@ -1,4 +1,4 @@
-@extends('plantillas.usuario.mainUsuario')
+@extends('plantillas.main')
 @section('title', 'Listado de Productores')
 
 @section('title-header')
@@ -33,7 +33,7 @@
               				<li class="active"><a><stron>Correo: </stron> {{ $productor->email }} </a></li>
               				<li class="active"><a><stron>Teléfono: </stron> {{ $productor->telefono }} </a></li>
               				<li class="active"><a><stron>Créditos Disponibles: </stron> {{ $productor->saldo }} </a></li>
-			                <li class="active"><a href="{{ route('productor.show', $productor->id) }}"><strong>Ingresar al perfil</strong> </a></li>
+			                <li class="active"><a href="{{ route('productor.show', $productor->id) }}" ><strong>Ingresar al perfil</strong> </a></li>
 			            </ul>
             		</div>
          		</div>

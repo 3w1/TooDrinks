@@ -46,15 +46,14 @@ class DistribuidorController extends Controller
 
         $distribuidor = new Distribuidor($request->all());
         $distribuidor->logo = $nombre;
-        $distribuidor->user_id = Auth::user()->id;
         $distribuidor->save();
 
-         if ($request->who == 'U'){
-             return redirect()->action('UsuarioController@index'); 
+        if ($request->who == 'U'){
+             return redirect('usuario')->with('msj', 'Se ha registrado exitosamente su distribuidor');
         }elseif ($request->who == 'P'){
             $distribuidor->productores()->attach(session('productorId'));
             $url = 'productor/'.session('productorId');
-            return redirect($url)->with('msj', 'Se ha registrado exitosamente su Importador');
+            return redirect($url)->with('msj', 'Se ha registrado exitosamente su distribuidor');
         }
     }
 

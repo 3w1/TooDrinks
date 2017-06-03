@@ -12,7 +12,6 @@
 			<h3><b>Registrar Productor</b></h3>
 		@endsection
 		{!! Form::open(['route' => 'productor.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
-			{!! Form::hidden('who', 'U') !!}
 			@include('productor.formularios.createForm')
 		{!! Form::close() !!}
 
@@ -42,7 +41,6 @@
 			<h3><b>Registrar Horeca</b></h3>
 		@endsection
 		{!! Form::open(['route' => 'horeca.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
-			{!! Form::hidden('who', 'U') !!}
 			@include('horeca.formularios.createForm')
 		{!! Form::close() !!}
 
