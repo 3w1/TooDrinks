@@ -148,6 +148,16 @@ class ProductorController extends Controller
         return view('productor.registrarPerfil')->with(compact('perfil', 'paises', 'provincias'));
     }
 
+    //FUNCION QUE PERMITE VER LOS IMPORTADORES ASOCIADOS A UN PRODUCTOR
+    public function ver_importadores(){
+        
+        $importadores = Productor::find(session('productorId'))
+                                    ->importadores()
+                                    ->paginate(8);
+
+        return view('productor.listados.importadores')->with(compact('importadores'));
+    }
+
     //FUNCION QUE LE PERMITE AL PRODUCTOR REGISTRAR UN DISTRIBUIDOR DE SU PROPIEDAD
     public function registrar_distribuidor(){
         $perfil = 'D';
@@ -163,16 +173,6 @@ class ProductorController extends Controller
                         ->get();
 
         return view('productor.registrarPerfil')->with(compact('perfil', 'paises', 'provincias'));
-    }
-
-    //FUNCION QUE PERMITE VER LOS IMPORTADORES ASOCIADOS A UN PRODUCTOR
-    public function ver_importadores(){
-        
-        $importadores = Productor::find(session('productorId'))
-                                    ->importadores()
-                                    ->paginate(8);
-
-        return view('productor.listados.importadores')->with(compact('importadores'));
     }
 
     //FUNCION QUE PERMITE VER LOS DISTRIBUIDORES ASOCIADOS A UN PRODUCTOR
@@ -238,6 +238,32 @@ class ProductorController extends Controller
                             ->paginate(8);
 
         return view('productor.listados.productos')->with(compact('productos', 'marca'));
+    }
+
+    public function registrar_oferta($id, $producto){
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->select('id', 'pais')
+                        ->get();
+
+        $provincias = DB::table('provincia_region')
+                        ->orderBy('provincia')
+                        ->select('id', 'provincia')
+                        ->get();
+
+        return view('productor.registrarOferta')->with(compact('id', 'producto', 'paises', 'provincias'));
+    }
+
+     //FUNCION QUE PERMITE VER LAS OFERTAS DE UN PRODUCTOR
+    public function ver_ofertas(){
+        $ofertas = DB::table('oferta')
+                    ->where([
+                        ['tipo_creador', '=', 'P'],
+                        ['creador_id', '=', session('productorId')],
+                    ])
+                    ->paginate(4);
+
+        return view('productor.listados.ofertas')->with(compact('ofertas'));
     }
 
 }

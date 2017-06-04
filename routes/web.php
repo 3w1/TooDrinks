@@ -53,6 +53,9 @@ Route::get('productor/registrar-marca', 'ProductorController@registrar_marca')->
 Route::get('productor/{id}-{marca}/productos', 'ProductorController@ver_productos')->name('productor.productos');
 Route::get('productor/{id}-{marca}/registrar-producto', 'ProductorController@registrar_producto')->name('productor.registrar-producto');
 
+Route::get('productor/mis-ofertas', 'ProductorController@ver_ofertas')->name('productor.ofertas');
+Route::get('productor/{id}-{producto}/registrar-oferta', 'ProductorController@registrar_oferta')->name('productor.registrar-oferta');
+
 Route::resource('productor','ProductorController');
 
 // ./RUTAS PARA LOS PRODUCTORES ./

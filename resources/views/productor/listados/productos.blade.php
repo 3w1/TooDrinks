@@ -46,7 +46,7 @@
                   </ul>
                   <p>
                      <a href="#" class="btn btn-primary" role="button">Ver Más</a>
-                     <a href="#" class="btn btn-info" role="button">Ofertar</a>
+                     <a href="{{ route('productor.registrar-oferta', [$producto->id, $producto->nombre]) }}" class="btn btn-info" role="button">Ofertar</a>
                   </p>
                </div>
             </div>

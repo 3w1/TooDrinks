@@ -1,20 +1,3 @@
-{!! Form::open(['route' => 'oferta.store', 'method' => 'POST']) !!}
-
-	{!! Form::hidden('tipo_creador', 'D') !!}
-	{!! Form::hidden('creador_id', '1') !!}
-	{!! Form::hidden('visible_importadores', '1') !!}
-	{!! Form::hidden('visible_distribuidores', '1') !!}
-	{!! Form::hidden('visible_horecas', '1') !!}
-
-	<div class="form-group">
-		{!! Form::label('producto_id', 'Seleccione el producto') !!}
-		<select name="producto_id" class="form-control">
-			@foreach ($productos as $producto) 
-				<option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
-			@endforeach
-		</select>
-	</div>
-
 	<div class="form-group">
 		{!! Form::label('titulo', 'Título') !!}
 		{!! Form::text('titulo', null, ['class' => 'form-control', 'placeholder' => 'Título'] ) !!}
@@ -51,6 +34,7 @@
 	</div>
 
 	<div class="form-group">
+		{!! Form::label('envio', 'Envío Disponible') !!}
 		<select name="envio" class="form-control">
 			<option value="1">Si</option>
 			<option value="2">No</option>
@@ -63,8 +47,45 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::submit('Registrar', ['class' => 'btn btn-primary']) !!}
+		{!! Form::label('visible_importadores', 'Visible para Importadores') !!}
+		<select name="visible_importadores" class="form-control">
+			<option value="1">Si</option>
+			<option value="2">No</option>
+		</select>
 	</div>
-		
-		
-	{!! Form::close() !!}
+
+	<div class="form-group">
+		{!! Form::label('visible_distribuidores', 'Visible para Importadores') !!}
+		<select name="visible_distribuidores" class="form-control">
+			<option value="1">Si</option>
+			<option value="2">No</option>
+		</select>
+	</div>
+
+	<div class="form-group">
+		{!! Form::label('visible_horecas', 'Visible para Importadores') !!}
+		<select name="visible_horecas" class="form-control">
+			<option value="1">Si</option>
+			<option value="2">No</option>
+		</select>
+	</div>
+
+	<div class="form-group">
+		<select name="pais_id" class="form-control">
+			@foreach ($paises as $pais )
+				<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
+			@endforeach
+		</select>
+	</div>
+
+	<div class="form-group">
+		<select name="provincia_region_id" class="form-control">
+			@foreach ($provincias as $provincia )
+				<option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
+			@endforeach
+		</select>
+	</div>
+
+	<div class="form-group">
+		{!! Form::submit('Crear Oferta', ['class' => 'btn btn-primary']) !!}
+	</div>

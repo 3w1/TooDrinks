@@ -56,24 +56,18 @@
    </li>
    <!-- FIN DE SECCIÓN DE MARCAS -->
 
-   <!-- SECCIÓN DE PRODUCTOS -->
+   <!-- SECCIÓN DE  OFERTAS -->
    <li class="treeview">
       <a href="#">
-         <i class="fa fa-user"></i> <span>Productos</span>
+         <i class="fa fa-user"></i> <span>Ofertas</span>
          <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href=""><i class="fa fa-circle-o"></i> Listado</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i>Crear Nuevo</a></li>
+         <li><a href="{{ route('productor.ofertas') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
+         <li><a href=""><i class="fa fa-circle-o"></i>Crear Nueva</a></li>
       </ul>
-   </li>
-   <!-- FIN DE SECCIÓN DE PRODUCTOS -->
-
-   <!-- SECCIÓN DE  OFERTAS -->
-   <li class="treeview">
-      <a href=""><i class="fa fa-circle-o text-yellow"></i> <span>Crear Oferta</span></a>
    </li>
    <!-- FIN DE SECCIÓN DE OFERTAS -->
 

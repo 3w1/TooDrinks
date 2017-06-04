@@ -11,9 +11,9 @@ class Destino_Oferta extends Model
      protected $fillable = [
     	'oferta_id', 'pais_id', 'provincia_region_id',
     ]; 
-ic function oferta(){
+    
+    public function oferta(){
         return $this->belongsTo('App\Models\Oferta');
-    publ
     }
 
     public function pais(){

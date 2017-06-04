@@ -10,7 +10,7 @@ class Producto extends Model
 
      protected $fillable = [
         'nombre', 'nombre_seo', 'descripcion', 'pais_id', 'provincia_region_id', 'clase_bebida_id', 'marca_id', 
-        'imagen', 'ano_produccion',
+        'imagen', 'ano_produccion', 'tipo_creador', 'creador_id', 'publicado', 'confirmado',
     ];
 
     public function pais(){

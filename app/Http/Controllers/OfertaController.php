@@ -7,6 +7,7 @@ use App\Models\Oferta;
 use App\Models\Producto;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
+use App\Models\Destino_Oferta;
 use DB;
 
 
@@ -49,7 +50,19 @@ class OfertaController extends Controller
     {
         $oferta = new Oferta($request->all());
         $oferta->save();
-        return redirect()->action('OfertaController@index');
+
+        $ult_oferta = DB::table('oferta')
+                        ->select('id')
+                        ->orderBy('id', 'DESC')
+                        ->get()
+                        ->first();
+
+        $destino = new Destino_Oferta($request->all());
+        $destino->oferta_id = $ult_oferta->id;
+        $destino->save();
+
+        if ($request->who == 'P')
+            return redirect('productor/mis-ofertas')->with('msj', 'Su oferta ha sido registrada con éxito');
     }
 
     /**
