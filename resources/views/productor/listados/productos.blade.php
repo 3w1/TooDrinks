@@ -12,6 +12,8 @@
 @endsection
 
 @section('content-left')
+   
+
    <div class="row">
       @foreach($productos as $producto)
          <?php 
@@ -36,7 +38,9 @@
          
          <div class="col-md-4 col-xs-6">
             <div class="thumbnail">
-               <img src="{{ asset('imagenes/productos/') }}/{{ $producto->imagen }}" >
+               <div class="fondo">
+                  <img src="{{ asset('imagenes/productos/') }}/{{ $producto->imagen }}" class="img-responsive">
+               </div>             
                <div class="caption">
                   <h3>{{ $producto->nombre }}</h3>
                   <p><strong>{{ $tipo_bebida->nombre }}</strong> ({{ $clase_bebida->clase }})</p>

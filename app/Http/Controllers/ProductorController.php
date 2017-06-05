@@ -261,7 +261,7 @@ class ProductorController extends Controller
                         ['tipo_creador', '=', 'P'],
                         ['creador_id', '=', session('productorId')],
                     ])
-                    ->paginate(4);
+                    ->paginate(6);
 
         return view('productor.listados.ofertas')->with(compact('ofertas'));
     }

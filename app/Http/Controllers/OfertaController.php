@@ -57,10 +57,29 @@ class OfertaController extends Controller
                         ->get()
                         ->first();
 
-        $destino = new Destino_Oferta($request->all());
-        $destino->oferta_id = $ult_oferta->id;
-        $destino->save();
+        if ( $request->opciones == "P"){
+            for ($i=0; $i<count($request->provincias); $i++){
+                $destino = new Destino_Oferta();
+                $destino->oferta_id = $ult_oferta->id;
+                $destino->pais_id = $request->pais_id;
+                $destino->provincia_region_id = $request->provincias[$i];
+                $destino->save();
+            }
+        }else{
+            $provincias = DB::table('provincia_region')
+                            ->select('id')
+                            ->where('pais_id', '=', $request->pais_id)
+                            ->get();
 
+            foreach ($provincias as $provincia){
+                $destino = new Destino_Oferta();
+                $destino->oferta_id = $ult_oferta->id;
+                $destino->pais_id = $request->pais_id;
+                $destino->provincia_region_id = $provincia->id;
+                $destino->save();
+            }
+        }
+        
         if ($request->who == 'P')
             return redirect('productor/mis-ofertas')->with('msj', 'Su oferta ha sido registrada con éxito');
     }
@@ -84,6 +103,7 @@ class OfertaController extends Controller
      */
     public function edit($id)
     {
+       
         $productos = DB::table('producto')
                         ->orderBy('nombre')
                         ->select('id', 'nombre')

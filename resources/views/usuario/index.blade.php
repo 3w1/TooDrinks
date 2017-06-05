@@ -1,5 +1,5 @@
 @extends('plantillas.usuario.mainUsuario')
-@section('title', 'Usuario '.$user->name)
+@section('title', 'Usuario '. Auth::user()->name)
 
 @section('items')
 	@if (Session::has('msj'))
@@ -19,7 +19,7 @@
              	<i class="ion ion-bag"></i>
             </div>
             @if ($cont > 0) 
-            	<a href="{{  route('usuario.productores', $user->id ) }}" class="small-box-footer">Ver Mis Productores <i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="{{  route('usuario.productores') }}" class="small-box-footer">Ver Mis Productores <i class="fa fa-arrow-circle-right"></i></a>
             @else
             	<a href="{{ route('usuario.registrar-productor') }}" class="small-box-footer">Registrar Productor <i class="fa fa-arrow-circle-right"></i></a>
             @endif
@@ -38,7 +38,7 @@
 	          	<i class="ion ion-stats-bars"></i>
 	        </div>
 	         @if ($cont2 > 0) 
-            	<a href="{{ route('usuario.importadores', $user->id) }}" class="small-box-footer">Ver Mis Importadores <i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="{{ route('usuario.importadores') }}" class="small-box-footer">Ver Mis Importadores <i class="fa fa-arrow-circle-right"></i></a>
             @else
             	<a href="{{ route('usuario.registrar-importador') }}" class="small-box-footer">Registrar Importador <i class="fa fa-arrow-circle-right"></i></a>
             @endif
@@ -55,7 +55,7 @@
 	           	<i class="ion ion-person-add"></i>
 	        </div>
              @if ($cont3 > 0) 
-            	<a href="{{ route('usuario.distribuidores', $user->id) }}" class="small-box-footer">Ver Mis Distribuidores <i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="{{ route('usuario.distribuidores') }}" class="small-box-footer">Ver Mis Distribuidores <i class="fa fa-arrow-circle-right"></i></a>
             @else
             	<a href="{{ route('usuario.registrar-distribuidor') }}" class="small-box-footer">Registrar Distribuidor <i class="fa fa-arrow-circle-right"></i></a>
             @endif
@@ -73,7 +73,7 @@
 	           	<i class="ion ion-pie-graph"></i>
 	        </div>
 	         @if ($cont4 > 0) 
-            	<a href="{{ route('usuario.horecas', $user->id) }}" class="small-box-footer">Ver Mis Horecas <i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="{{ route('usuario.horecas') }}" class="small-box-footer">Ver Mis Horecas <i class="fa fa-arrow-circle-right"></i></a>
             @else
             	<a href="{{ route('usuario.registrar-horeca') }}" class="small-box-footer">Agregar Horeca <i class="fa fa-arrow-circle-right"></i></a>
             @endif

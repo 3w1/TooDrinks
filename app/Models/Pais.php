@@ -9,7 +9,7 @@ class Pais extends Model
     protected $table = 'pais';
 
     protected $fillable = [
-    	'pais', 'continente',
+    	'pais',
     ]; 
 
     public function provincias_regiones(){

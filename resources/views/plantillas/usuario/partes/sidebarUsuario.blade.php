@@ -1,6 +1,6 @@
 <div class="user-panel">
    <div class="pull-left image">
-      <img src="{{ asset('imagenes/usuarios/')}}/{{ Auth::user()->avatar }}" class="img-circle" alt="User Image">
+      <img src="{{ asset('imagenes/usuarios/')}}/{{ Auth::user()->avatar }}" class="img-rounded" >
    </div>
    <div class="pull-left info">
       <p>{{ Auth::user()->nombre }} {{ Auth::user()->apellido }}</p>
@@ -20,8 +20,9 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href=""><i class="fa fa-circle-o"></i> Productores Sin Propietario</a></li>
+         <li><a href="{{ route('usuario.productores')}}"><i class="fa fa-circle-o"></i> Mis Productores</a></li>
          <li><a href="{{ route('usuario.registrar-productor') }}"><i class="fa fa-circle-o"></i> Crear Nuevo</a></li>
+         <li><a href=""><i class="fa fa-circle-o"></i> Listado de Productores Sin Reclamar</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE PRODUCTORES -->
@@ -35,8 +36,9 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href=""><i class="fa fa-circle-o"></i> Importadores Sin Propietario</a></li>
+         <li><a href="{{ route('usuario.importadores')}}"><i class="fa fa-circle-o"></i> Mis Importadores</a></li>
          <li><a href="{{ route('usuario.registrar-importador') }}"><i class="fa fa-circle-o"></i> Crear Nuevo</a></li>
+         <li><a href=""><i class="fa fa-circle-o"></i> Listado de Importadores Sin Reclamar</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE IMPORTADORES -->
@@ -50,8 +52,9 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href=""><i class="fa fa-circle-o"></i> Distribuidores Sin Propietario</a></li>
+         <li><a href="{{ route('usuario.distribuidores') }}"><i class="fa fa-circle-o"></i> Mis Distribuidores</a></li>
          <li><a href="{{ route('usuario.registrar-distribuidor') }}"><i class="fa fa-circle-o"></i> Crear Nuevo</a></li>
+         <li><a href=""><i class="fa fa-circle-o"></i> Listado de Distribuidores sin Reclamar</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE DISTRIBUIDORES -->
@@ -65,11 +68,27 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href=""><i class="fa fa-circle-o"></i>Horecas Sin Propietario</a></li>
+         <li><a href="{{ route('usuario.horecas') }}"><i class="fa fa-circle-o"></i> Mis Horecas</a></li>
          <li><a href="{{ route('usuario.registrar-horeca') }}"><i class="fa fa-circle-o"></i>Crear Nuevo</a></li>
+         <li><a href=""><i class="fa fa-circle-o"></i> Listado de Horecas Sin Reclamar</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE HORECAS -->
+
+   <!-- SECCIÓN DE PRODUCTOS -->
+   <li class="treeview">
+      <a href="#">
+         <i class="fa fa-user"></i> <span>Productos</span>
+         <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+         </span>
+      </a>
+      <ul class="treeview-menu">
+         <li><a href=""><i class="fa fa-circle-o"></i> Crear nuevo</a></li>
+         <li><a href=""><i class="fa fa-circle-o"></i>Ver Productos creados</a></li>
+      </ul>
+   </li>
+   <!-- FIN DE SECCIÓN DE PRODUCTOS -->
    
    <!-- FIN DE UNA SECCIÓN DEL PANEL -->
 

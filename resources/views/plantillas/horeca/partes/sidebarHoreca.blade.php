@@ -1,6 +1,6 @@
 <div class="user-panel">
    <div class="pull-left image">
-      <img src="{{ asset('imagenes/horecas/')}}/{{ $horeca->logo }}" class="img-circle" alt="User Image">
+      <img src="{{ asset('imagenes/horecas/')}}/{{ $horeca->logo }}" class="img-rounded">
    </div>
    <div class="pull-left info">
       <p>{{ $horeca->nombre }}</p>

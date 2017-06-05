@@ -19,7 +19,6 @@ class UsuarioController extends Controller
 
     public function index()
     {
-        session(['perfil' => 'U']);
         $user = User::find(Auth::user()->id);
         $cont=0;
         $cont2=0;
@@ -35,7 +34,7 @@ class UsuarioController extends Controller
         foreach($user->horecas as $horeca)
             $cont4++;
 
-        return view('usuario.index')->with(compact('user', 'cont', 'cont2', 'cont3', 'cont4'));
+        return view('usuario.index')->with(compact('cont', 'cont2', 'cont3', 'cont4'));
     }
 
     public function create()
@@ -104,7 +103,7 @@ class UsuarioController extends Controller
     public function update(Request $request, $id)
     {
         
-        $usuario = User::find($id);
+        $usuario = User::find(Auth::user()->id);
         $usuario->fill($request->all());
         $usuario->save();
 
@@ -161,13 +160,13 @@ class UsuarioController extends Controller
     }
 
     //FUNCION QUE PERMITE VER LOS PRODUCTORES PERTENECIENTES A U USUARIO
-    public function ver_productores($id){
-        $usuario = User::find($id);
+    public function ver_productores(){
+        $usuario = User::find(Auth::user()->id);
 
         $productores = DB::table('productor')
                         ->orderBy('nombre')
                         ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', $id)
+                        ->where('user_id', Auth::user()->id)
                         ->paginate(4);
 
         return view('usuario.listados.productores')->with(compact('usuario', 'productores'));
@@ -191,13 +190,13 @@ class UsuarioController extends Controller
     }
 
     //FUNCION QUE PERMITE VER LOS IMPORTADORES PERTENECIENTES A U USUARIO
-    public function ver_importadores($id){
-        $usuario = User::find($id);
+    public function ver_importadores(){
+        $usuario = User::find(Auth::user()->id);
 
         $importadores = DB::table('importador')
                         ->orderBy('nombre')
                         ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', $id)
+                        ->where('user_id', Auth::user()->id)
                         ->paginate(8);
 
         return view('usuario.listados.importadores')->with(compact('usuario', 'importadores'));
@@ -221,13 +220,13 @@ class UsuarioController extends Controller
     }
 
     //FUNCION QUE PERMITE VER LOS DISTRIBUIDORES PERTENECIENTES A U USUARIO
-    public function ver_distribuidores($id){
-        $usuario = User::find($id);
+    public function ver_distribuidores(){
+        $usuario = User::find(Auth::user()->id);
 
         $distribuidores = DB::table('distribuidor')
                         ->orderBy('nombre')
                         ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', $id)
+                        ->where('user_id', Auth::user()->id)
                         ->paginate(8);
 
         return view('usuario.listados.distribuidores')->with(compact('usuario', 'distribuidores'));
@@ -251,13 +250,13 @@ class UsuarioController extends Controller
     }
 
     //FUNCION QUE PERMITE VER LOS HORECAS PERTENECIENTES A U USUARIO
-    public function ver_horecas($id){
-        $usuario = User::find($id);
+    public function ver_horecas(){
+        $usuario = User::find(Auth::user()->id);
 
         $horecas = DB::table('horeca')
                         ->orderBy('nombre')
                         ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', $id)
+                        ->where('user_id', Auth::user()->id)
                         ->paginate(8);
 
         return view('usuario.listados.horecas')->with(compact('usuario', 'horecas'));

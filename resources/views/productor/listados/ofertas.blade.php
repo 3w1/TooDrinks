@@ -41,9 +41,9 @@
             </div>
          </div>
       @endforeach
-      <div>
-         {{ $ofertas->render() }}
-      </div>
+   </div>
+   <div>
+      <center>{{ $ofertas->render() }}</center>
    </div>
 @endsection
 

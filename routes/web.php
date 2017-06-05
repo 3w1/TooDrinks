@@ -22,10 +22,10 @@ Route::get('/', function () {
 // ./RUTAS DE INICIO Y AUTENTICACIÓN ./
 
 //  RUTAS PARA LOS USUARIOS
-Route::get('usuario/{id}/mis-productores', 'UsuarioController@ver_productores')->name('usuario.productores');
-Route::get('usuario/{id}/mis-importadores', 'UsuarioController@ver_importadores')->name('usuario.importadores');
-Route::get('usuario/{id}/mis-distribuidores', 'UsuarioController@ver_distribuidores')->name('usuario.distribuidores');
-Route::get('usuario/{id}/mis-horecas', 'UsuarioController@ver_horecas')->name('usuario.horecas');
+Route::get('usuario/mis-productores', 'UsuarioController@ver_productores')->name('usuario.productores');
+Route::get('usuario/mis-importadores', 'UsuarioController@ver_importadores')->name('usuario.importadores');
+Route::get('usuario/mis-distribuidores', 'UsuarioController@ver_distribuidores')->name('usuario.distribuidores');
+Route::get('usuario/mis-horecas', 'UsuarioController@ver_horecas')->name('usuario.horecas');
 
 Route::get('usuario/registrar-productor', 'UsuarioController@registrar_productor')->name('usuario.registrar-productor');
 Route::get('usuario/registrar-importador', 'UsuarioController@registrar_importador')->name('usuario.registrar-importador');
@@ -105,5 +105,7 @@ Route::resource('demanda-distribuidor','DemandaDistribucionController');
 Route::resource('suscripcion', 'SuscripcionController');
 
 Route::resource('opinion','OpinionController');
+
+Route::resource('pais', 'PaisController');
 
 

@@ -9,7 +9,7 @@ class Provincia_Region extends Model
     protected $table = 'provincia_region';
 
     protected $fillable = [
-    	'provincia', 'region', 'pais_id',
+    	'provincia', 'pais_id',
     ]; 
 
     public function pais(){

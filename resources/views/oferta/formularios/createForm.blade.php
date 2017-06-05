@@ -37,7 +37,7 @@
 		{!! Form::label('envio', 'Envío Disponible') !!}
 		<select name="envio" class="form-control">
 			<option value="1">Si</option>
-			<option value="2">No</option>
+			<option value="0">No</option>
 		</select>
 	</div>
 
@@ -50,7 +50,7 @@
 		{!! Form::label('visible_importadores', 'Visible para Importadores') !!}
 		<select name="visible_importadores" class="form-control">
 			<option value="1">Si</option>
-			<option value="2">No</option>
+			<option value="0">No</option>
 		</select>
 	</div>
 
@@ -58,20 +58,22 @@
 		{!! Form::label('visible_distribuidores', 'Visible para Importadores') !!}
 		<select name="visible_distribuidores" class="form-control">
 			<option value="1">Si</option>
-			<option value="2">No</option>
+			<option value="0">No</option>
 		</select>
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('visible_horecas', 'Visible para Importadores') !!}
+		{!! Form::label('visible_horecas', 'Visible para Horecas') !!}
 		<select name="visible_horecas" class="form-control">
 			<option value="1">Si</option>
-			<option value="2">No</option>
+			<option value="0">No</option>
 		</select>
 	</div>
 
 	<div class="form-group">
-		<select name="pais_id" class="form-control">
+		{!! Form::label('pais', 'Seleccione el país que será destino de la oferta') !!}
+		<select name="pais_id" id="pais_id" class="form-control">
+			<option value="">Seleccione una opción</option>
 			@foreach ($paises as $pais )
 				<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
 			@endforeach
@@ -79,13 +81,16 @@
 	</div>
 
 	<div class="form-group">
-		<select name="provincia_region_id" class="form-control">
-			@foreach ($provincias as $provincia )
-				<option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
-			@endforeach
+		{!! Form::label('pais', 'Seleccione las provincias que serán destino de la oferta') !!}
+		<select name="opciones" id="opciones" class="form-control" onchange="estados();">
+			<option value="">Seleccione una opción</option>
+			<option value="T">Todas las provincias</option>
+			<option value="P">Personalizado</option>
 		</select>
 	</div>
 
+	<div class="form-group" id="estados"></div>
+	
 	<div class="form-group">
 		{!! Form::submit('Crear Oferta', ['class' => 'btn btn-primary']) !!}
 	</div>

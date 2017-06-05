@@ -1,4 +1,4 @@
-@extends('plantillas.main')
+@extends('plantillas.usuario.mainUsuario')
 @section('title', 'Listado de Importadores')
 
 @section('title-header')
