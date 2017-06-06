@@ -1,3 +1,5 @@
+	{!! Html::script('js/marcas/create.js') !!}
+
 	<div class="form-group">
 		{!! Form::label ('nombre','Nombre') !!}
 		{!! Form::text ('nombre',null,['class'=>'form-control','placeholder'=>'Ej. Polar', 'required']) !!}
@@ -14,15 +16,9 @@
 	</div>
 
 	<div class="form-group">
-		<select name="reclamada" class="form-control">
-			<option value="0">No</option>
-			<option value="1">Si</option>
-		</select>	
-	</div>
-	
-	<div class="form-group">
 		{!! Form::label ('pais_id','País') !!}
-		<select name="pais_id" class="form-control">
+		<select name="pais_id" class="form-control" id="pais_id" onchange="cargarProvincias();">
+			<option value="">Seleccione un país..</option>
 			@foreach($paises as $pais)
 				<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
 			@endforeach
@@ -31,19 +27,8 @@
 
 	<div class="form-group">
 		{!! Form::label ('provincia_region_id','Provincia / Región') !!}
-		<select name="provincia_region_id" class="form-control">
-			@foreach($provincias as $provincia)
-				<option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
-			@endforeach
-		</select>
-	</div>
-	
-	<div class="form-group">
-		{!! Form::label ('productor_id','Productor') !!}
-		<select name="productor_id" class="form-control">
-			@foreach($productores as $productor)
-				<option value="{{ $productor->id }}">{{ $productor->nombre }}</option>
-			@endforeach
+		<select name="provincia_region_id" class="form-control" id="provincias">
+			<option value="">Seleccione una provincia..</option>
 		</select>
 	</div>
 

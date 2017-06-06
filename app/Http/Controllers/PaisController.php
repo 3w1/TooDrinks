@@ -9,11 +9,6 @@ use DB; use Mail; use Session; use Redirect;
 
 class PaisController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-    
     public function index()
     {
         $data['datos'] = "Hola";

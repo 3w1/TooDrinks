@@ -1,3 +1,6 @@
+	 {!! Html::script('js/productores/create.js') !!}
+
+
 	{!! Form::hidden('saldo', '0') !!}
 	{!! Form::hidden('reclamada', '1') !!}
 	{!! Form::hidden('estado_datos', '1') !!}
@@ -29,18 +32,19 @@
 	</div>
 	
 	<div class="form-group">
-		<select name="pais_id" class="form-control">
+		{!! Form::label('pais', 'País') !!}
+		<select name="pais_id" class="form-control" id="pais_id" onchange="cargarProvincias();">
+			<option value="">Seleccione un país..</option>
 			@foreach ($paises as $pais )
 				<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
 			@endforeach
 		</select>
 	</div>
-
+	
 	<div class="form-group">
-		<select name="provincia_region_id" class="form-control">
-			@foreach ($provincias as $provincia )
-				<option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
-			@endforeach
+		{!! Form::label('provincia', 'Provincia') !!}
+		<select name="provincia_region_id" class="form-control" id="provincias">
+			<option value="">Seleccione una provincia..</option>
 		</select>
 	</div>
 	

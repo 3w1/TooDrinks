@@ -1,145 +1,154 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Registrar</div>
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
-                        {{ csrf_field() }}
 
-                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label for="name" class="col-md-4 control-label">Nombre de Usuario</label>
+    {!! Html::script('js/usuarios/registrarse.js') !!}
 
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
+    <?php 
+        $paises = DB::table('pais')
+                    ->orderBy('pais')
+                    ->get();
 
-                                @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
+     ?>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Registrarse</div>
+                    <div class="panel-body">
+                        <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
+                            {{ csrf_field() }}
+
+                            {!! Form::hidden('estado_datos', '1') !!}
+
+                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                                <label for="name" class="col-md-4 control-label">Nombre de Usuario</label>
+
+                                <div class="col-md-6">
+                                    <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
+
+                                    @if ($errors->has('name'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('name') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">Correo Electrónico</label>
+                            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                                <label for="email" class="col-md-4 control-label">Correo Electrónico</label>
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+                                <div class="col-md-6">
+                                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
 
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
+                                    @if ($errors->has('email'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('email') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Contraseña</label>
+                            <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                                <label for="password" class="col-md-4 control-label">Contraseña</label>
 
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
+                                <div class="col-md-6">
+                                    <input id="password" type="password" class="form-control" name="password" required>
 
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
+                                    @if ($errors->has('password'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('password') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="password-confirm" class="col-md-4 control-label">Confirmar Contraseña</label>
+                            <div class="form-group">
+                                <label for="password-confirm" class="col-md-4 control-label">Confirmar Contraseña</label>
 
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                                <div class="col-md-6">
+                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            {!! Form::label('nombre', 'Nombre', ['class' => 'col-md-4 control-label']) !!}
-                            <div class="col-md-6">
-                                {!! Form::text('nombre', null, ['class' => 'form-control', 'placeholder' => 'Nombre'] ) !!}
+                            <div class="form-group">
+                                {!! Form::label('nombre', 'Nombre', ['class' => 'col-md-4 control-label']) !!}
+                                <div class="col-md-6">
+                                    {!! Form::text('nombre', null, ['class' => 'form-control', 'placeholder' => 'Nombre'] ) !!}
+                                </div>
+                                
+                            </div>
+
+                            <div class="form-group">
+                                {!! Form::label('apellido', 'Apellido', ['class' => 'col-md-4 control-label']) !!}
+                                <div class="col-md-6">
+                                     {!! Form::text('apellido', null, ['class' => 'form-control', 'placeholder' => 'Apellido'] ) !!}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                {!! Form::label('direccion', 'Dirección', ['class' => 'col-md-4 control-label']) !!}
+                                <div class="col-md-6">
+                                   {!! Form::textarea('direccion', null, ['class' => 'form-control', 'placeholder' => 'Dirección', 'rows' => '5'] ) !!}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                {!! Form::label('codigo_postal', 'Código Postal', ['class' => 'col-md-4 control-label']) !!}
+                                <div class="col-md-6">
+                                    {!! Form::text('codigo_postal', null, ['class' => 'form-control', 'placeholder' => 'Código Postal'] ) !!}
+                                </div>
                             </div>
                             
-                        </div>
-
-                        <div class="form-group">
-                            {!! Form::label('apellido', 'Apellido', ['class' => 'col-md-4 control-label']) !!}
-                            <div class="col-md-6">
-                                 {!! Form::text('apellido', null, ['class' => 'form-control', 'placeholder' => 'Apellido'] ) !!}
+                            <div class="form-group">
+                                {!! Form::label('país', 'País', ['class' => 'col-md-4 control-label']) !!}
+                                <div class="col-md-6">
+                                    <select name="pais_id" class="form-control" id="pais_id" onchange="cargarProvincias();">
+                                        <option value="">Seleccione un país..</option>
+                                        @foreach ($paises as $pais )
+                                            <option value="{{ $pais->id }}">{{ $pais->pais }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            {!! Form::label('direccion', 'Dirección', ['class' => 'col-md-4 control-label']) !!}
-                            <div class="col-md-6">
-                               {!! Form::textarea('direccion', null, ['class' => 'form-control', 'placeholder' => 'Dirección', 'rows' => '5'] ) !!}
+                            <div class="form-group">
+                                {!! Form::label('provincia', 'Provincia', ['class' => 'col-md-4 control-label']) !!}
+                                <div class="col-md-6">
+                                    <select name="provincia_region_id" class="form-control" id="provincias">
+                                        <option value="">Seleccione una provincia..</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            {!! Form::label('codigo_postal', 'Código Postal', ['class' => 'col-md-4 control-label']) !!}
-                            <div class="col-md-6">
-                                {!! Form::text('codigo_postal', null, ['class' => 'form-control', 'placeholder' => 'Código Postal'] ) !!}
+                            <div class="form-group">
+                                {!! Form::label('telefono', 'Teléfono', ['class' => 'col-md-4 control-label']) !!}
+                                <div class="col-md-6">
+                                    {!! Form::text('telefono', null, ['class' => 'form-control', 'placeholder' => 'Teléfono'] ) !!}
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="form-group">
-                           {!! Form::label('pais_id', 'País', ['class' => 'col-md-4 control-label']) !!}
-                           <div class="col-md-6">
-                               {!! Form::number('pais_id', null, ['class' => 'form-control', 'placeholder' => 'País'] ) !!}
-                           </div>
-                        </div>
 
-                        <div class="form-group">
-                           {!! Form::label('provincia_region_id', 'Provincia/Región', ['class' => 'col-md-4 control-label']) !!}
-                           <div class="col-md-6">
-                                {!! Form::number('provincia_region_id', null, ['class' => 'form-control', 'placeholder' => 'Provincia/Región'] ) !!}
-                           </div>
-                        </div>
-
-                        <div class="form-group">
-                             {!! Form::label('estado_datos', 'Estado de los Datos', ['class' => 'col-md-4 control-label']) !!}
-                            <div class="col-md-6">
-                                <select name="estado_datos" class="form-control">
-                                    <option value="0">Sin Actualizar</option>
-                                    <option value="1">Actualizados</option>
-                                </select>
+                            <div class="form-group">
+                                {!! Form::label('telefono_opcional', 'Teléfono Opcional', ['class' => 'col-md-4 control-label']) !!}
+                                <div class="col-md-6">
+                                     {!! Form::text('telefono_opcional', null, ['class' => 'form-control', 'placeholder' => 'Teléfono Opcional'] ) !!}
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            {!! Form::label('telefono', 'Teléfono', ['class' => 'col-md-4 control-label']) !!}
-                            <div class="col-md-6">
-                                {!! Form::text('telefono', null, ['class' => 'form-control', 'placeholder' => 'Teléfono'] ) !!}
+                            {!! Form::hidden('avatar', 'icono-usuario.jpg') !!}
+
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        Registrar
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="form-group">
-                            {!! Form::label('telefono_opcional', 'Teléfono', ['class' => 'col-md-4 control-label']) !!}
-                            <div class="col-md-6">
-                                 {!! Form::text('telefono_opcional', null, ['class' => 'form-control', 'placeholder' => 'Teléfono Opcional'] ) !!}
-                            </div>
-                        </div>
-
-                        {!! Form::hidden('avatar', 'icono-usuario.jpg') !!}
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Registrar
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @endsection

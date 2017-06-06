@@ -22,7 +22,7 @@
       <ul class="treeview-menu">
          <li><a href="{{ route('productor.importadores') }}"><i class="fa fa-circle-o"></i> Mis Importadores</a></li>
          <li><a href="{{ route('productor.registrar-importador') }}"><i class="fa fa-circle-o"></i> Crear Nuevo</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i> Listado de Importadores Disponibles</a></li>
+         <li><a href=""><i class="fa fa-circle-o"></i> Importadores Disponibles</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE IMPORTADORES -->
@@ -38,7 +38,7 @@
       <ul class="treeview-menu">
          <li><a href="{{ route('productor.distribuidores') }}"><i class="fa fa-circle-o"></i> Mis Distribuidores</a></li>
          <li><a href="{{ route('productor.registrar-distribuidor') }}"><i class="fa fa-circle-o"></i> Crear Nuevo</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i> Listado de Distribuidores Disponibles</a></li>
+         <li><a href=""><i class="fa fa-circle-o"></i> Distribuidores Disponibles</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE DISTRIBUIDORES -->
@@ -54,7 +54,7 @@
       <ul class="treeview-menu">
          <li><a href="{{ route('productor.marcas') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
          <li><a href="{{ route('productor.registrar-marca') }}"><i class="fa fa-circle-o"></i>Crear Nueva</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i> Listado de Marcas sin Reclamar</a></li>
+         <li><a href=""><i class="fa fa-circle-o"></i> Marcas sin Reclamar</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE MARCAS -->

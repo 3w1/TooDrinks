@@ -1,3 +1,5 @@
+	{!! Html::script('js/importadores/create.js') !!}
+
 	{!! Form::hidden('user_id', Auth::user()->id) !!}	
 	{!! Form::hidden('reclamada', '1') !!}
 	{!! Form::hidden('estado_datos', '1') !!}
@@ -29,7 +31,8 @@
 	</div>
 	
 	<div class="form-group">
-		<select name="pais_id" class="form-control">
+		<select name="pais_id" class="form-control" id="pais_id" onchange="cargarProvincias();">
+			<option value="">Seleccione un país..</option>
 			@foreach ($paises as $pais )
 				<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
 			@endforeach
@@ -37,10 +40,8 @@
 	</div>
 
 	<div class="form-group">
-		<select name="provincia_region_id" class="form-control">
-			@foreach ($provincias as $provincia )
-				<option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
-			@endforeach
+		<select name="provincia_region_id" class="form-control" id="provincias">
+			<option value="">Seleccione una provincia..</option>
 		</select>
 	</div>
 	

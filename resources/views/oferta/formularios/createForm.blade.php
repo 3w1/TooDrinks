@@ -73,7 +73,7 @@
 	<div class="form-group">
 		{!! Form::label('pais', 'Seleccione el país que será destino de la oferta') !!}
 		<select name="pais_id" id="pais_id" class="form-control">
-			<option value="">Seleccione una opción</option>
+			<option value="">Seleccione un país..</option>
 			@foreach ($paises as $pais )
 				<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
 			@endforeach
