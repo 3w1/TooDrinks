@@ -1,10 +1,10 @@
 <div class="user-panel">
    <div class="pull-left image">
-      <img src="{{ asset('imagenes/importadores/')}}/{{ $importador->logo }}" class="img-rounded" >
+      <img src="{{ asset('imagenes/importadores/thumbnails/')}}/{{ session('importadorLogo') }}" class="img-rounded" >
    </div>
    <div class="pull-left info">
-      <p>{{ $importador->nombre }}</p>
-      <a href="{{ route('importador.edit', $importador->id) }}"><i class="fa fa-edit text-success"></i> Editar Perfil</a>
+      <p>{{ session('importadorNombre') }}</p>
+      <a href="{{ route('importador.edit', session('importadorId')) }}"><i class="fa fa-edit text-success"></i> Editar Perfil</a>
    </div>
 </div>
 <ul class="sidebar-menu">

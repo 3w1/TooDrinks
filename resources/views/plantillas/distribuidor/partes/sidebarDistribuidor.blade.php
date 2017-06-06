@@ -1,10 +1,10 @@
 <div class="user-panel">
    <div class="pull-left image">
-      <img src="{{ asset('imagenes/distribuidores/')}}/{{ $distribuidor->logo }}" class="img-rounded" >
+      <img src="{{ asset('imagenes/distribuidores/thumbnails')}}/{{ session('distribuidorLogo') }}" class="img-rounded" >
    </div>
    <div class="pull-left info">
-      <p>{{ $distribuidor->nombre }}</p>
-      <a href="{{ route('distribuidor.edit', $distribuidor->id) }}"><i class="fa fa-edit text-info"></i> Editar Perfil</a>
+      <p>{{ session('distribuidorNombre') }}</p>
+      <a href="{{ route('distribuidor.edit', session('distribuidorId')) }}"><i class="fa fa-edit text-info"></i> Editar Perfil</a>
    </div>
 </div>
 <ul class="sidebar-menu">

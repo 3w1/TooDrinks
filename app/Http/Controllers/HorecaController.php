@@ -7,9 +7,7 @@ use App\Models\Horeca;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
 use App\Models\Telefono_Horeca;
-use DB;
-use Storage;
-use Auth;
+use DB; use Storage; use Auth; use Input; use Image;
 
 
 class HorecaController extends Controller
@@ -42,10 +40,21 @@ class HorecaController extends Controller
 
     public function store(Request $request)
     {
-        $file = $request->file('logo');
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
+
+        //Ruta donde queremos guardar las imagenes
+        $path = public_path().'/imagenes/horecas/';
+        $path2 = public_path().'/imagenes/horecas/thumbnails/';
+        
+        //Nombre en el sistema de la imagen
         $nombre = 'horeca_'.time().'.'.$file->getClientOriginalExtension();
-        $path = public_path() . '/imagenes/horecas';
-        $file->move($path, $nombre);
+        // Guardar Original
+        $image->save($path.$nombre);
+        // Cambiar de tamaño
+        $image->resize(240,200);
+        // Guardar Thumbnail
+        $image->save($path2.$nombre);
 
         $horeca = new Horeca($request->all());
         $horeca->logo = $nombre;
@@ -57,6 +66,10 @@ class HorecaController extends Controller
     public function show($id)
     {
         $horeca = Horeca::find($id);
+
+        session(['horecaId' => $id]);
+        session(['horecaNombre' => $horeca->nombre]);
+        session(['horecaLogo' => $horeca->logo]);
         
         return view('horeca.show')->with(compact('horeca'));
     }
@@ -89,11 +102,21 @@ class HorecaController extends Controller
     }
 
     public function updateAvatar(Request $request){
-        $imagen = $request->file('logo');
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
 
-        $nombre = 'horeca_'.time().'.'.$imagen->getClientOriginalExtension();
-        $path = public_path() . '/imagenes/horecas';
-        $imagen->move($path, $nombre);
+        //Ruta donde queremos guardar las imagenes
+        $path = public_path().'/imagenes/horecas/';
+        $path2 = public_path().'/imagenes/horecas/thumbnails/';
+        
+        //Nombre en el sistema de la imagen
+        $nombre = 'horeca_'.time().'.'.$file->getClientOriginalExtension();
+        // Guardar Original
+        $image->save($path.$nombre);
+        // Cambiar de tamaño
+        $image->resize(240,200);
+        // Guardar Thumbnail
+        $image->save($path2.$nombre);
 
         $actualizacion = DB::table('horeca')
                             ->where('id', '=', $request->id)

@@ -39,7 +39,7 @@
          <div class="col-md-4 col-xs-6">
             <div class="thumbnail">
                <div class="fondo">
-                  <img src="{{ asset('imagenes/productos/') }}/{{ $producto->imagen }}" class="img-responsive">
+                  <img src="{{ asset('imagenes/productos/thumbnails/') }}/{{ $producto->imagen }}" class="img-responsive">
                </div>             
                <div class="caption">
                   <h3>{{ $producto->nombre }}</h3>

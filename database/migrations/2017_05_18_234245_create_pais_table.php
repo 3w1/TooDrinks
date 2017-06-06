@@ -11,14 +11,12 @@ class CreatePaisTable extends Migration
         Schema::create('pais', function (Blueprint $table ){
             $table->increments('id');
             $table->string('pais');
-            $table->enum('continente', ['AF','AM','AS','EU','OC']);
             $table->timestamps();
         });
 
         Schema::create('provincia_region', function (Blueprint $table ){
             $table->increments('id');
             $table->string('provincia');
-            $table->string('region');
             $table->integer('pais_id');
             $table->timestamps();
 

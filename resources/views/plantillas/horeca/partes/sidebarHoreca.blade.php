@@ -1,10 +1,10 @@
 <div class="user-panel">
    <div class="pull-left image">
-      <img src="{{ asset('imagenes/horecas/')}}/{{ $horeca->logo }}" class="img-rounded">
+      <img src="{{ asset('imagenes/horecas/thumbnails')}}/{{ session('horecaLogo') }}" class="img-rounded">
    </div>
    <div class="pull-left info">
-      <p>{{ $horeca->nombre }}</p>
-      <a href="{{ route('horeca.edit', $horeca->id) }}"><i class="fa fa-edit text-info"></i> Editar Perfil</a>
+      <p>{{ session('horecaNombre') }}</p>
+      <a href="{{ route('horeca.edit', session('horecaId') ) }}"><i class="fa fa-edit text-info"></i> Editar Perfil</a>
    </div>
 </div>
 <ul class="sidebar-menu">

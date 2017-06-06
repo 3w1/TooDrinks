@@ -9,6 +9,7 @@ use App\Models\Provincia_Region;
 use DB;
 use Auth;
 use Input;
+use Image;
 
 class UsuarioController extends Controller
 {
@@ -54,15 +55,7 @@ class UsuarioController extends Controller
 
     public function store(Request $request)
     {
-        $file = $request->file('avatar');
-        $nombre = 'usuario_'.time().'.'.$file->getClientOriginalExtension();
-        $path = public_path() . '/imagenes/usuarios';
-        $file->move($path, $nombre);
-
-        $usuario = new User($request->all());
-        $usuario->avatar = $nombre;
-        $usuario->save();
-        return redirect()->action('UsuarioController@index');
+        
     }
 
     /**
@@ -113,11 +106,27 @@ class UsuarioController extends Controller
 
     public function updateAvatar(Request $request){
 
-        $imagen = $request->file('avatar');
+        $file = Input::file('avatar');   
+        $image = Image::make(Input::file('avatar'));
+
+        //Ruta donde queremos guardar las imagenes
+        $path = public_path().'/imagenes/usuarios/';
+        $path2 = public_path().'/imagenes/usuarios/thumbnails/';
+        
+        //Nombre en el sistema de la imagen
+        $nombre = 'usuario_'.time().'.'.$file->getClientOriginalExtension();
+        // Guardar Original
+        $image->save($path.$nombre);
+        // Cambiar de tamaño
+        $image->resize(240,200);
+        // Guardar Thumbnail
+        $image->save($path2.$nombre);
+
+       /* $imagen = $request->file('avatar');
 
         $nombre = 'usuario_'.time().'.'.$imagen->getClientOriginalExtension();
         $path = public_path() . '/imagenes/usuarios';
-        $imagen->move($path, $nombre);
+        $imagen->move($path, $nombre);*/
 
         $actualizacion = DB::table('users')
                             ->where('id', '=', Auth::user()->id)

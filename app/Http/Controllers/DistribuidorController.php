@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Distribuidor;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
-use DB;
-use Auth;
+use DB; use Auth; use Input; use Image;
 
 class DistribuidorController extends Controller
 {
@@ -39,10 +38,21 @@ class DistribuidorController extends Controller
 
     public function store(Request $request)
     {
-        $file = $request->file('logo');
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
+
+        //Ruta donde queremos guardar las imagenes
+        $path = public_path().'/imagenes/distribuidores/';
+        $path2 = public_path().'/imagenes/distribuidores/thumbnails/';
+        
+        //Nombre en el sistema de la imagen
         $nombre = 'distribuidor_'.time().'.'.$file->getClientOriginalExtension();
-        $path = public_path() . '/imagenes/distribuidores';
-        $file->move($path, $nombre);
+        // Guardar Original
+        $image->save($path.$nombre);
+        // Cambiar de tamaño
+        $image->resize(240,200);
+        // Guardar Thumbnail
+        $image->save($path2.$nombre);
 
         $distribuidor = new Distribuidor($request->all());
         $distribuidor->logo = $nombre;
@@ -62,6 +72,10 @@ class DistribuidorController extends Controller
         $distribuidor = Distribuidor::find($id);
         $cont=0;
         $cont2=0;
+
+        session(['distribuidorId' => $id]);
+        session(['distribuidorNombre' => $distribuidor->nombre]);
+        session(['distribuidorLogo' => $distribuidor->logo]);
 
         foreach($distribuidor->marcas as $marca)
             $cont++;
@@ -108,11 +122,21 @@ class DistribuidorController extends Controller
     }
 
     public function updateAvatar(Request $request){
-        $imagen = $request->file('logo');
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
 
-        $nombre = 'distribuidor_'.time().'.'.$imagen->getClientOriginalExtension();
-        $path = public_path() . '/imagenes/distribuidores';
-        $imagen->move($path, $nombre);
+        //Ruta donde queremos guardar las imagenes
+        $path = public_path().'/imagenes/distribuidores/';
+        $path2 = public_path().'/imagenes/distribuidores/thumbnails/';
+        
+        //Nombre en el sistema de la imagen
+        $nombre = 'distribuidor_'.time().'.'.$file->getClientOriginalExtension();
+        // Guardar Original
+        $image->save($path.$nombre);
+        // Cambiar de tamaño
+        $image->resize(240,200);
+        // Guardar Thumbnail
+        $image->save($path2.$nombre);
 
         $actualizacion = DB::table('distribuidor')
                             ->where('id', '=', $request->id)

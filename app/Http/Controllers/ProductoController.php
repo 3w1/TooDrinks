@@ -9,6 +9,8 @@ use App\Models\Provincia_Region;
 use App\Models\Clase_Bebida;
 use App\Models\Marca;
 use DB;
+use Image;
+use Input;
 
 class ProductoController extends Controller
 {
@@ -50,10 +52,22 @@ class ProductoController extends Controller
 
     public function store(Request $request)
     {
-        $file = $request->file('imagen');
-        $nombre = 'producto_'.time().'.'.$file->getClientOriginalExtension();
-        $path = public_path() . '/imagenes/productos';
-        $file->move($path, $nombre);
+        
+       $file = Input::file('imagen');   
+       $image = Image::make(Input::file('imagen'));
+
+       //Ruta donde queremos guardar las imagenes
+       $path = public_path().'/imagenes/productos/';
+       $path2 = public_path().'/imagenes/productos/thumbnails/';
+        
+       //Nombre en el sistema de la imagen
+       $nombre = 'producto_'.time().'.'.$file->getClientOriginalExtension();
+       // Guardar Original
+       $image->save($path.$nombre);
+       // Cambiar de tamaño
+       $image->resize(240,200);
+       // Guardar Thumbnail
+       $image->save($path2.$nombre);
 
         $producto = new Producto($request->all());
         $producto->imagen = $nombre;

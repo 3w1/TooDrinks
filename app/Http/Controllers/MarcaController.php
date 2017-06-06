@@ -7,7 +7,7 @@ use App\Models\Marca;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
 use App\Models\Productor;
-use DB;
+use DB; use Input; use Image;
 
 class MarcaController extends Controller
 {
@@ -45,10 +45,21 @@ class MarcaController extends Controller
 
     public function store(Request $request)
     {
-        $file = $request->file('logo');
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
+
+        //Ruta donde queremos guardar las imagenes
+        $path = public_path().'/imagenes/marcas/';
+        $path2 = public_path().'/imagenes/marcas/thumbnails/';
+        
+        //Nombre en el sistema de la imagen
         $nombre = 'marca_'.time().'.'.$file->getClientOriginalExtension();
-        $path = public_path() . '/imagenes/marcas';
-        $file->move($path, $nombre);
+        // Guardar Original
+        $image->save($path.$nombre);
+        // Cambiar de tamaño
+        $image->resize(240,200);
+        // Guardar Thumbnail
+        $image->save($path2.$nombre);
 
         $marca=new Marca($request->all());
         $marca->logo = $nombre;

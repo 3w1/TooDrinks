@@ -1,6 +1,6 @@
 <div class="user-panel">
    <div class="pull-left image">
-      <img src="{{ asset('imagenes/productores/')}}/{{ session('productorLogo') }}" class="img-rounded" >
+      <img src="{{ asset('imagenes/productores/thumbnails/')}}/{{ session('productorLogo') }}" class="img-rounded" >
    </div>
    <div class="pull-left info">
       <p>{{ session('productorNombre') }} </p>

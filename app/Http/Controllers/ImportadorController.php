@@ -7,8 +7,7 @@ use App\Models\Importador;
 use App\Models\User;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
-use DB;
-use Auth;
+use DB; use Auth; use Input; use Image;
 
 class ImportadorController extends Controller
 {
@@ -40,10 +39,21 @@ class ImportadorController extends Controller
 
     public function store(Request $request)
     {
-        $file = $request->file('logo');
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
+
+        //Ruta donde queremos guardar las imagenes
+        $path = public_path().'/imagenes/importadores/';
+        $path2 = public_path().'/imagenes/importadores/thumbnails/';
+        
+        //Nombre en el sistema de la imagen
         $nombre = 'importador_'.time().'.'.$file->getClientOriginalExtension();
-        $path = public_path() . '/imagenes/importadores';
-        $file->move($path, $nombre);
+        // Guardar Original
+        $image->save($path.$nombre);
+        // Cambiar de tamaño
+        $image->resize(240,200);
+        // Guardar Thumbnail
+        $image->save($path2.$nombre);
 
         $importador = new Importador($request->all());
         $importador->logo = $nombre;
@@ -71,6 +81,10 @@ class ImportadorController extends Controller
         foreach($importador->distribuidores as $distribuidor)
             $cont2++;
 
+        session(['importadorId' => $id]);
+        session(['importadorNombre' => $importador->nombre]);
+        session(['importadorLogo' => $importador->logo]);
+
         $ofertas = DB::table('oferta')
                         ->orderBy('titulo')
                         ->select('id')
@@ -91,6 +105,8 @@ class ImportadorController extends Controller
 
         foreach($demandas as $demanda)
             $cont4++;
+
+
 
         return view('importador.show')->with(compact('importador', 'cont', 'cont2', 'cont3', 'cont4'));
     }
@@ -123,11 +139,21 @@ class ImportadorController extends Controller
     }
 
     public function updateAvatar(Request $request){
-        $imagen = $request->file('logo');
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
 
-        $nombre = 'importador_'.time().'.'.$imagen->getClientOriginalExtension();
-        $path = public_path() . '/imagenes/importadores';
-        $imagen->move($path, $nombre);
+        //Ruta donde queremos guardar las imagenes
+        $path = public_path().'/imagenes/importadores/';
+        $path2 = public_path().'/imagenes/importadores/thumbnails/';
+        
+        //Nombre en el sistema de la imagen
+        $nombre = 'importador_'.time().'.'.$file->getClientOriginalExtension();
+        // Guardar Original
+        $image->save($path.$nombre);
+        // Cambiar de tamaño
+        $image->resize(240,200);
+        // Guardar Thumbnail
+        $image->save($path2.$nombre);
 
         $actualizacion = DB::table('importador')
                             ->where('id', '=', $request->id)

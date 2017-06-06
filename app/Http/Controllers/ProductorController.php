@@ -7,10 +7,7 @@ use App\Models\Productor;
 use App\Models\Pais;
 use App\Models\Telefono_Productor;
 use App\Models\Marca;
-use DB;
-use Auth;
-use Session;
-use Redirect;
+use DB; use Auth; use Session; use Redirect; use Input; use Image;
 
 class ProductorController extends Controller
 {
@@ -41,11 +38,22 @@ class ProductorController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $file = $request->file('logo');
+    {  
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
+
+        //Ruta donde queremos guardar las imagenes
+        $path = public_path().'/imagenes/productores/';
+        $path2 = public_path().'/imagenes/productores/thumbnails/';
+        
+        //Nombre en el sistema de la imagen
         $nombre = 'productor_'.time().'.'.$file->getClientOriginalExtension();
-        $path = public_path() . '/imagenes/productores';
-        $file->move($path, $nombre);
+        // Guardar Original
+        $image->save($path.$nombre);
+        // Cambiar de tamaño
+        $image->resize(240,200);
+        // Guardar Thumbnail
+        $image->save($path2.$nombre);
 
         $productor = new Productor($request->all());
         $productor->logo = $nombre; 
@@ -109,11 +117,21 @@ class ProductorController extends Controller
     }
 
     public function updateAvatar(Request $request){
-        $imagen = $request->file('logo');
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
 
-        $nombre = 'productor_'.time().'.'.$imagen->getClientOriginalExtension();
-        $path = public_path() . '/imagenes/productores';
-        $imagen->move($path, $nombre);
+        //Ruta donde queremos guardar las imagenes
+        $path = public_path().'/imagenes/productores/';
+        $path2 = public_path().'/imagenes/productores/thumbnails/';
+        
+        //Nombre en el sistema de la imagen
+        $nombre = 'productor_'.time().'.'.$file->getClientOriginalExtension();
+        // Guardar Original
+        $image->save($path.$nombre);
+        // Cambiar de tamaño
+        $image->resize(240,200);
+        // Guardar Thumbnail
+        $image->save($path2.$nombre);
 
         $actualizacion = DB::table('productor')
                             ->where('id', '=', $request->id)

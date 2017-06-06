@@ -21,7 +21,7 @@
            			<!-- Add the bg color to the header using any of the bg-* classes -->
             		<div class="widget-user-header bg-blue">
               			<div class="widget-user-image">
-                			<img class="img-circle" src="{{ asset('imagenes/productores/')}}/{{ $productor->logo }}" alt="User Avatar">
+                			<img class="img-rounded" src="{{ asset('imagenes/productores/thumbnails/')}}/{{ $productor->logo }}">
               			</div>
               			<!-- /.widget-user-image -->
               			<h3 class="widget-user-username">{{ $productor->nombre }}</h3>

@@ -9,7 +9,7 @@
 
 	<div class="row">
   		<div class="col-sm-6 col-md-3">
-    		<a href="" class="thumbnail" data-toggle='modal' data-target='#myModal'><img src="{{ asset('imagenes/usuarios/') }}/{{ $usuario->avatar }}" alt="..."></a>
+    		<a href="" class="thumbnail" data-toggle='modal' data-target='#myModal'><img src="{{ asset('imagenes/usuarios/thumbnails/') }}/{{ $usuario->avatar }}" alt="..."></a>
   		</div>
 	</div>
 

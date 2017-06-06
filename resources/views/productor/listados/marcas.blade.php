@@ -29,7 +29,7 @@
            			<!-- Add the bg color to the header using any of the bg-* classes -->
             		<div class="widget-user-header bg-green">
               			<div class="widget-user-image">
-                			<img class="img-circle" src="{{ asset('imagenes/marcas/')}}/{{ $marca->logo }}">
+                			<img class="img-rounded" src="{{ asset('imagenes/marcas/thumbnails/')}}/{{ $marca->logo }}">
               			</div>
               			<!-- /.widget-user-image -->
               			<h3 class="widget-user-username">{{ $marca->nombre }}</h3>

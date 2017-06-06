@@ -24,7 +24,7 @@
          
          <div class="col-md-4 col-xs-6">
             <div class="thumbnail">
-               <img src="{{ asset('imagenes/productos/') }}/{{ $producto->imagen }}" >
+               <img src="{{ asset('imagenes/productos/thumbnails/') }}/{{ $producto->imagen }}" >
                <div class="caption">
                   <h3>{{ $oferta->titulo }}</h3>
                   <p>{{ $oferta->descripcion }}</p>

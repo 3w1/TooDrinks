@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Oferta;
 use App\Models\Pais;
-use DB;
+use DB; use Mail; use Session; use Redirect;
 
 class PaisController extends Controller
 {
@@ -16,7 +16,12 @@ class PaisController extends Controller
     
     public function index()
     {
-
+        $data['datos'] = "Hola";
+        
+        Mail::send('emails.confirmacionUsuario', $data, function($msj){
+            $msj->subject('Confirmación de cuenta TooDrinks');
+            $msj->to('lvmb29@gmail.com');
+        });
     }
 
     /**
