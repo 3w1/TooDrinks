@@ -7,6 +7,10 @@ use App\Models\Productor;
 use App\Models\Pais;
 use App\Models\Telefono_Productor;
 use App\Models\Marca;
+use App\Models\Bebida;
+use App\Models\Clase_Bebida;
+use App\Models\Producto;
+use App\Models\Oferta;
 use DB; use Auth; use Session; use Redirect; use Input; use Image;
 
 class ProductorController extends Controller
@@ -258,6 +262,22 @@ class ProductorController extends Controller
         return view('productor.listados.productos')->with(compact('productos', 'marca'));
     }
 
+    public function ver_detalle_producto($id, $producto){
+        $producto = Producto::find($id);
+        
+        $bebida = Bebida::find($producto->clase_bebida->bebida_id)
+                        ->select('nombre', 'caracteristicas')
+                        ->get()
+                        ->first();
+
+        $productor = Productor::find($producto->marca->productor_id)
+                        ->select('nombre')
+                        ->get()
+                        ->first();
+
+        return view('productor.detalleProducto')->with(compact('producto', 'bebida', 'productor'));
+    }
+
     public function registrar_oferta($id, $producto){
         $paises = DB::table('pais')
                         ->orderBy('pais')
@@ -282,6 +302,12 @@ class ProductorController extends Controller
                     ->paginate(6);
 
         return view('productor.listados.ofertas')->with(compact('ofertas'));
+    }
+
+    public function ver_detalle_oferta($id){
+        $oferta = Oferta::find($id);
+
+        return view('productor.detalleOferta')->with(compact('oferta'));
     }
 
 }

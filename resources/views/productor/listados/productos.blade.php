@@ -11,8 +11,7 @@
   <span><strong><h3>Productos de la Marca <strong>{{ $marca }}</strong></h3></strong></span>
 @endsection
 
-@section('content-left')
-   
+@section('content-left')   
 
    <div class="row">
       @foreach($productos as $producto)
@@ -34,6 +33,7 @@
                               ->where('id', $clase_bebida->bebida_id)
                               ->get()
                               ->first();
+
          ?>
          
          <div class="col-md-4 col-xs-6">
@@ -44,12 +44,8 @@
                <div class="caption">
                   <h3>{{ $producto->nombre }}</h3>
                   <p><strong>{{ $tipo_bebida->nombre }}</strong> ({{ $clase_bebida->clase }})</p>
-                  <ul class="nav nav-stacked">
-                     <li><a><strong>Año de Producción: </strong> {{ $producto->ano_produccion }} </a></li>
-                     <li><a><strong>País: </strong> {{ $pais->pais }} </a></li>
-                  </ul>
                   <p>
-                     <a href="#" class="btn btn-primary" role="button">Ver Más</a>
+                     <a href="{{ route('productor.producto', [$producto->id, $producto->nombre]) }}" class="btn btn-primary" role="button">Ver Más</a>
                      <a href="{{ route('productor.registrar-oferta', [$producto->id, $producto->nombre]) }}" class="btn btn-info" role="button">Ofertar</a>
                   </p>
                </div>
@@ -60,10 +56,6 @@
          {{ $productos->render() }}
       </div>
    </div>
-@endsection
-
-@section('content-right')
-   Holaaa
 @endsection
 
 

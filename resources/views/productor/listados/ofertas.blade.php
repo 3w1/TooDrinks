@@ -29,13 +29,13 @@
                   <h3>{{ $oferta->titulo }}</h3>
                   <p>{{ $oferta->descripcion }}</p>
                   <ul class="nav nav-stacked">
+                     <li><a><strong>Producto Ofertado:</strong> {{ $producto->nombre }}</a></li>
                      <li><a><strong>Precio Unitario: </strong> {{ $oferta->precio_unitario }} $</a></li>
                      <li><a><strong>Precio por Lote: </strong> {{ $oferta->precio_lote }} $</a></li>
-                     <li><a><strong>País Destino: </strong> {{ $oferta->precio_lote }} $</a></li>
-                     <li><a><strong>Provincia Destino: </strong> {{ $oferta->precio_lote }} $</a></li>
+                     <li><a><strong>Envío Disponible: </strong> @if ( $oferta->envio == '1') Si  @else No @endif </a></li>
                   </ul>
                   <p>
-                     <a href="#" class="btn btn-primary" role="button">Ver Más</a>
+                     <a href="{{ route('productor.oferta', $oferta->id) }}" class="btn btn-primary" role="button">Ver Más</a>
                   </p>
                </div>
             </div>

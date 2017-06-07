@@ -92,7 +92,7 @@ class OfertaController extends Controller
      */
     public function show($id)
     {
-
+        
     }
 
     /**

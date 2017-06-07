@@ -8,9 +8,8 @@ use App\Models\Pais;
 use App\Models\Provincia_Region;
 use App\Models\Clase_Bebida;
 use App\Models\Marca;
-use DB;
-use Image;
-use Input;
+use App\Models\Bebida;
+use DB; use Image; use Input;
 
 class ProductoController extends Controller
 {
@@ -80,7 +79,7 @@ class ProductoController extends Controller
 
     public function show($id)
     {
-        //
+        
     }
 
     public function edit($id)
