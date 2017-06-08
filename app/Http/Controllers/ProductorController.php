@@ -12,7 +12,7 @@ use App\Models\Clase_Bebida;
 use App\Models\Producto;
 use App\Models\Oferta;
 use App\Models\Destino_Oferta;
-use App\Models\Demanda_Importador;
+use App\Models\Demanda_Importador; use App\Models\Demanda_Distribuidor;
 use DB; use Auth; use Session; use Redirect; use Input; use Image;
 
 class ProductorController extends Controller
@@ -377,4 +377,36 @@ class ProductorController extends Controller
 
     }
 
+    public function ver_demandas_distribuidores(){
+
+        $cont = 0;
+
+        $demandasDistribuidores = Demanda_Distribuidor::where([
+                                        ['tipo_creador', '=', 'P'], 
+                                        ['creador_id', '=', session('productorId')]
+                                    ])->orderBy('created_at', 'ASC')
+                                    ->paginate(8);
+
+        return view('productor.listados.demandasDistribuidores')->with(compact('demandasDistribuidores', 'cont'));
+    }
+
+    public function editar_demanda_distribucion($id){
+        $demandaDistribuidor = Demanda_Distribuidor::find($id);
+
+        $pais_productor = Productor::where('id', '=', session('productorId'))
+                                    ->select('pais_id')
+                                    ->get()
+                                    ->first();
+
+        $provincias = DB::table('provincia_region')
+                        ->orderBy('provincia')
+                        ->where('pais_id', '=', $pais_productor->pais_id)
+                        ->pluck('provincia', 'id');
+        
+        $marcas = DB::table('marca')
+                        ->orderBy('nombre')
+                        ->pluck('nombre', 'id');
+
+        return view('productor.editDemandaDist')->with(compact('demandaDistribuidor','marcas', 'provincias'));
+    }
 }

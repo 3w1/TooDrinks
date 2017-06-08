@@ -86,23 +86,15 @@ class DemandaDistribucionController extends Controller
 
         $demandaDistribuidor = Demanda_Distribuidor::find($id);
 
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
-
         $provincias = DB::table('provincia_region')
                         ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
+                        ->pluck('provincia', 'id');
         
-        $productos = DB::table('producto')
+        $marcas = DB::table('marca')
                         ->orderBy('nombre')
-                        ->select('id', 'nombre')
-                        ->get();
+                        ->pluck('nombre', 'id');
 
-        return view('demandaDistribucion.edit')->with(compact('demandaDistribuidor','productos', 'paises', 'provincias'));
+        return view('demandaDistribucion.edit')->with(compact('demandaDistribuidor','marcas', 'provincias'));
     }
 
     /**
@@ -118,7 +110,8 @@ class DemandaDistribucionController extends Controller
         $demanda_distribuidor->fill($request->all());
         $demanda_distribuidor->save();
 
-        return redirect()->action('DemandaDistribucionController@index');
+        if ($request->who == 'P')
+            return redirect('productor/mis-demandas-distribuidores')->with('msj', 'Los datos de su demanda se han actualizado exitosamente');
     }
 
     /**
