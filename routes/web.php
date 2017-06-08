@@ -38,25 +38,27 @@ Route::resource('usuario','UsuarioController');
 // ./RUTAS PARA LOS USUARIOS./
 
 // RUTAS PARA LOS PRODUCTORES
-Route::post('productor/updateAvatar', 'ProductorController@updateAvatar')->name('productor.updateAvatar');
-
 Route::get('productor/registrar-importador', 'ProductorController@registrar_importador')->name('productor.registrar-importador');
-Route::get('productor/registrar-distribuidor', 'ProductorController@registrar_distribuidor')->name('productor.registrar-distribuidor');
-
 Route::get('productor/mis-importadores', 'ProductorController@ver_importadores')->name('productor.importadores');
+
+Route::get('productor/registrar-distribuidor', 'ProductorController@registrar_distribuidor')->name('productor.registrar-distribuidor');
 Route::get('productor/mis-distribuidores', 'ProductorController@ver_distribuidores')->name('productor.distribuidores');
 
-Route::get('productor/mis-marcas', 'ProductorController@ver_marcas')->name('productor.marcas');
 Route::get('productor/registrar-marca', 'ProductorController@registrar_marca')->name('productor.registrar-marca');
+Route::get('productor/mis-marcas', 'ProductorController@ver_marcas')->name('productor.marcas');
 
-Route::get('productor/{id}-{marca}/productos', 'ProductorController@ver_productos')->name('productor.productos');
 Route::get('productor/{id}-{marca}/registrar-producto', 'ProductorController@registrar_producto')->name('productor.registrar-producto');
+Route::get('productor/{id}-{marca}/productos', 'ProductorController@ver_productos')->name('productor.productos');
 Route::get('productor/ver-producto/{id}-{producto}', 'ProductorController@ver_detalle_producto')->name('productor.producto');
 
-Route::get('productor/mis-ofertas', 'ProductorController@ver_ofertas')->name('productor.ofertas');
 Route::get('productor/{id}-{producto}/registrar-oferta', 'ProductorController@registrar_oferta')->name('productor.registrar-oferta');
-Route::get('productor/ver-oferta/{id}}', 'ProductorController@ver_detalle_oferta')->name('productor.oferta');
+Route::get('productor/mis-ofertas', 'ProductorController@ver_ofertas')->name('productor.ofertas');
+Route::get('productor/ver-oferta/{id}', 'ProductorController@ver_detalle_oferta')->name('productor.oferta');
 
+Route::get('productor/solicitar-importador', 'ProductorController@solicitar_importador')->name('productor.solicitar-importador');
+Route::get('productor/solicitar-distribuidor', 'ProductorController@solicitar_distribuidor')->name('productor.solicitar-distribuidor');
+
+Route::post('productor/updateAvatar', 'ProductorController@updateAvatar')->name('productor.updateAvatar');
 Route::resource('productor','ProductorController');
 // ./RUTAS PARA LOS PRODUCTORES ./
 
@@ -84,11 +86,17 @@ Route::get('marca/{id}/registrar-producto', 'MarcaController@registrar_producto'
 Route::resource('marca','MarcaController');
 // ./RUTAS PARA LAS MARCAS ./
 
-Route::get('credito/compra','CreditoController@compra')->name('compra');
+// RUTAS PARA LOS PRODUCTOS
+Route::post('producto/updateImagen', 'ProductoController@updateImagen')->name('producto.updateImagen');
 
 Route::resource('producto','ProductoController');
+// ./RUTAS PARA LOS PRODUCTOS ./
 
+// RUTAS PARA LAS DEMANDAS DE IMPORTADORES
+Route::resource('demanda-importador','DemandaImportacionController');
+// ./RUTAS PARA LAS DEMANDAS DE IMPORTADORES ./
 
+Route::get('credito/compra','CreditoController@compra')->name('compra');
 
 Route::resource('credito','CreditoController');
 
@@ -97,8 +105,6 @@ Route::resource('bebida','BebidaController');
 Route::resource('oferta','OfertaController');
 
 Route::resource('demanda-producto','DemandaProductoController');
-
-Route::resource('demanda-importador','DemandaImportacionController');
 
 Route::resource('demanda-distribuidor','DemandaDistribucionController');
 

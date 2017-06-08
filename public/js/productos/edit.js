@@ -22,7 +22,7 @@ $(document).ready(function() {
       	}   
    	}
 
-   	//Cargar el valor del Select ClaseBebida
+   //Cargar el valor del Select ClaseBebida
    var valorClaseBebida = $("#clase_bebida_hidden").val();
 	
 	var selectClaseBebida = document.getElementById("clase_bebida_id");
@@ -32,14 +32,22 @@ $(document).ready(function() {
        		selectClaseBebida[i].selected = true;
        	}
     }
-
-    var valorMarca = $("#marca_hidden").val();
-	
-	var selectMarca = document.getElementById("marca_id");
-  	var cantMarcas = selectMarca.length;
-   	for (i = 0; i < cantMarcas; i++) {
-    	if (selectMarca[i].value == valorMarca) {
-       		selectMarca[i].selected = true;
-       	}
-    } 
 });
+
+function cargarProvincias() {
+
+   document.getElementById("provincia_id").innerHTML = "<option value=''>Seleccione una provincia..</option>";
+        
+   var pais = document.getElementById('pais_id').value;
+   var route = "http://localhost:8000/pais/"+pais+"";
+                    
+   $.ajax({
+      url:route,
+      type:'GET',
+      success:function(ans){
+         for (var i = 0; i < ans.length; i++ ){
+            document.getElementById("provincia_id").innerHTML += "<option value='"+ans[i].id+"'>"+ans[i].provincia+"</option>";
+         }
+      }
+   });
+}

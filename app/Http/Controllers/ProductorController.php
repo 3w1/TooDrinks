@@ -11,6 +11,7 @@ use App\Models\Bebida;
 use App\Models\Clase_Bebida;
 use App\Models\Producto;
 use App\Models\Oferta;
+use App\Models\Destino_Oferta;
 use DB; use Auth; use Session; use Redirect; use Input; use Image;
 
 class ProductorController extends Controller
@@ -69,6 +70,13 @@ class ProductorController extends Controller
     public function show($id)
     {
         $productor = Productor::find($id);
+
+        $demandas_distribuidores = DB::table('demanda_distribuidor')
+                                    ->select('id')
+                                    ->where([
+                                        ['tipo_creador', '=', 'P'],
+                                        ['creador_id', '=', $id]
+                                    ])->get();
         $cont=0;
         $cont2=0;
         $cont3=0;
@@ -82,7 +90,7 @@ class ProductorController extends Controller
             $cont3++;
         foreach($productor->demandas_importadores as $demandaImportador)
             $cont4++;
-        foreach($productor->demandas_distribuidores as $demandasDistribuidor)
+        foreach($demandas_distribuidores as $demandasDistribuidor)
             $cont4++;
 
         session(['productorId' => $id]);
@@ -307,7 +315,57 @@ class ProductorController extends Controller
     public function ver_detalle_oferta($id){
         $oferta = Oferta::find($id);
 
-        return view('productor.detalleOferta')->with(compact('oferta'));
+        $destinos = Destino_Oferta::where('oferta_id', '=', $id)
+                                ->orderBy('provincia_region_id')
+                                ->select('pais_id', 'provincia_region_id')
+                                ->get();
+
+        return view('productor.detalleOferta')->with(compact('oferta', 'destinos'));
+    }
+
+    public function solicitar_importador(){
+        $tipo = 'I';
+
+        $marcas = DB::table('marca')
+                    ->orderBy('nombre')
+                    ->select('id', 'nombre')
+                    ->get();
+
+        $paises = DB::table('pais')
+                    ->orderBy('pais')
+                    ->select('id', 'pais')
+                    ->get();
+
+        $pais_origen = DB::table('productor')
+                        ->select('pais_id')
+                        ->where('id', '=', session('productorId'))
+                        ->get()
+                        ->first();
+
+        return view('productor.solicitarDemanda')->with(compact('tipo', 'marcas', 'paises', 'pais_origen'));
+    }
+
+    public function solicitar_distribuidor(){
+        $tipo = 'D';
+
+        $marcas = DB::table('marca')
+                    ->orderBy('nombre')
+                    ->select('id', 'nombre')
+                    ->get();
+
+        $pais_origen = DB::table('productor')
+                        ->select('pais_id')
+                        ->where('id', '=', session('productorId'))
+                        ->get()
+                        ->first();
+
+        $provincias = DB::table('provincia_region')
+                        ->select('id', 'provincia')
+                        ->orderBy('provincia')
+                        ->where('pais_id', '=', $pais_origen->pais_id)
+                        ->get();
+
+        return view('productor.solicitarDemanda')->with(compact('tipo', 'marcas', 'provincias'));
     }
 
 }

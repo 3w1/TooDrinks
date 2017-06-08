@@ -9,12 +9,12 @@ class Demanda_Importador extends Model
     protected $table = "demanda_importador";
 
     protected $fillable = [
-    	'productor_id', 'producto_id', 'pais_id', 'provincia_region_id', 'status', 
+    	'productor_id', 'marca_id', 'pais_id', 'status', 
     ]; 
 
 
-    public function producto(){
-    	return $this->belongsTo('App\Models\Producto');
+    public function marca(){
+    	return $this->belongsTo('App\Models\Marca');
     }
 
     public function productor(){
@@ -23,9 +23,5 @@ class Demanda_Importador extends Model
 
     public function pais(){
     	return $this->belongsTo('App\Models\Pais');
-    }
-
-    public function provincia_region(){
-    	return $this->belongsTo('App\Models\Provincia_Region');
     }
 }

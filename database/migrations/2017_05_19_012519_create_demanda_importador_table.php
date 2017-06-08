@@ -11,14 +11,13 @@ class CreateDemandaImportadorTable extends Migration
         Schema::create('demanda_importador', function (Blueprint $table){
         	$table->increments('id');
         	$table->integer('productor_id');
-        	$table->integer('producto_id');
+        	$table->integer('marca_id');
         	$table->integer('pais_id');
-        	$table->integer('provincia_region_id');
           $table->boolean('status');
           $table->timestamps();
 
-            $table->foreign('producto_id')
-                  ->references('id')->on('producto')
+            $table->foreign('marca_id')
+                  ->references('id')->on('marca')
                   ->onDelete('restrict')
                   ->onUpdate('cascade');
 
@@ -29,11 +28,6 @@ class CreateDemandaImportadorTable extends Migration
 
             $table->foreign('pais_id')
                   ->references('id')->on('pais')
-                  ->onDelete('restrict')
-                  ->onUpdate('cascade');
-
-            $table->foreign('provincia_region_id')
-                  ->references('id')->on('provincia_region')
                   ->onDelete('restrict')
                   ->onUpdate('cascade');
         });

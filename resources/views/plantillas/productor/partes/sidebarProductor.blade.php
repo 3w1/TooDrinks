@@ -83,8 +83,8 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href=""><i class="fa fa-circle-o"></i>Solicitar Importador</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i>Solicitar Distribuidor</a></li>
+         <li><a href="{{ route('productor.solicitar-importador') }}"><i class="fa fa-circle-o"></i>Solicitar Importador</a></li>
+         <li><a href="{{ route('productor.solicitar-distribuidor') }}"><i class="fa fa-circle-o"></i>Solicitar Distribuidor</a></li>
          <li><a href=""><i class="fa fa-circle-o"></i>Ver mis Demandas</a></li>
       </ul>
    </li>

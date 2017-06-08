@@ -57,7 +57,10 @@ class DemandaImportacionController extends Controller
     {
         $demanda_importador  = new Demanda_Importador($request->all());
         $demanda_importador ->save();
-        return redirect()->action('DemandaImportacionController@index');    }
+
+        $url = 'productor/'.session('productorId');
+        return redirect($url)->with('msj', 'Su solicitud de importador ha sido creada exitosamente');    
+    }
 
     /**
      * Display the specified resource.

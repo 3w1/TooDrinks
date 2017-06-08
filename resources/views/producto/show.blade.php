@@ -5,10 +5,16 @@
   </div>
 @endif
 
+@include('producto.modales.modalEdit')
+
+@include('producto.modales.updateImagen')
+
+{!! Form::hidden('producto', $producto->id, ['id' => 'producto']) !!}
+
 <div class="row">
    <div class="col-md-4"></div>
     <div class="col-sm-6 col-md-4">
-      <a class="thumbnail"><img src="{{ asset('imagenes/productos/thumbnails') }}/{{ $producto->imagen }}"></a>
+      <a href="" class="thumbnail" data-toggle='modal' data-target="#modalImagen"><img src="{{ asset('imagenes/productos/thumbnails') }}/{{ $producto->imagen }}"></a>
     </div>
     <div class="col-md-4"></div>
 </div>
@@ -18,7 +24,7 @@
    <div class="col-md-10 col-xs-12">
       
       <div class="panel panel-default panel-success">
-        <div class="pull-right"><a class="btn btn-primary btn-xs" href=""><i class="fa fa-edit"></i></a></div>
+        <div class="pull-right"><a class="btn btn-primary btn-xs" data-toggle='modal' data-target='#myModal'><i class="fa fa-edit"></i></a></div>
          <div class="panel-heading"><h4><b>Nombre SEO: {{ $producto->nombre_seo }}</b></h4></div>
          
          <ul class="list-group">

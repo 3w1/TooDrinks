@@ -84,7 +84,7 @@ class ProductoController extends Controller
 
     public function edit($id)
     {
-        $producto = Producto::find($id);
+       /* $producto = Producto::find($id);
 
         $paises = DB::table('pais')
                         ->orderBy('pais')
@@ -106,7 +106,15 @@ class ProductoController extends Controller
                         ->select('id', 'nombre')
                         ->get();
 
-        return view('producto.edit')->with(compact('producto', 'paises', 'provincias', 'bebidas', 'marcas'));
+        return response()->json([
+            $producto, 
+            $paises, 
+            $provincias, 
+            $bebidas, 
+            $marcas
+        ]);*/
+
+        //return view('producto.edit')->with(compact('producto', 'paises', 'provincias', 'bebidas', 'marcas'));
     }
 
     public function update(Request $request, $id)
@@ -115,7 +123,37 @@ class ProductoController extends Controller
         $producto->fill($request->all());
         $producto->save();
 
-        return redirect()->action('ProductoController@index');
+        if ($request->who == 'P')
+            $url = 'productor/ver-producto/'.$id.'-'.$request->nombre;
+            return redirect($url)->with('msj', 'Los datos del producto se han actualizado exitosamente');
+
+        //return redirect()->action('ProductoController@index');
+    }
+
+     public function updateImagen(Request $request){
+        $file = Input::file('imagen');   
+        $image = Image::make(Input::file('imagen'));
+
+        //Ruta donde queremos guardar las imagenes
+        $path = public_path().'/imagenes/productos/';
+        $path2 = public_path().'/imagenes/productos/thumbnails/';
+        
+        //Nombre en el sistema de la imagen
+        $nombre = 'producto_'.time().'.'.$file->getClientOriginalExtension();
+        // Guardar Original
+        $image->save($path.$nombre);
+        // Cambiar de tamaño
+        $image->resize(240,200);
+        // Guardar Thumbnail
+        $image->save($path2.$nombre);
+
+        $actualizacion = DB::table('producto')
+                            ->where('id', '=', $request->id)
+                            ->update(['imagen' => $nombre ]);
+       
+        if ($request->who == 'P')
+            $url = 'productor/ver-producto/'.$request->id.'-'.$request->nombre;
+            return redirect($url)->with('msj', 'La imagen del producto se ha actualizado exitosamente');
     }
 
     public function destroy($id)

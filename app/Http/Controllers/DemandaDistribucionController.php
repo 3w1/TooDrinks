@@ -58,7 +58,11 @@ class DemandaDistribucionController extends Controller
     {
         $demanda_distribuidor  = new Demanda_Distribuidor($request->all());
         $demanda_distribuidor ->save();
-        return redirect()->action('DemandaDistribucionController@index');    }
+
+        if ($request->who == 'P')
+            $url = 'productor/'.session('productorId');
+            return redirect($url)->with('msj', 'Su solicitud de distribuidor ha sido creada exitosamente');    
+        }
 
     /**
      * Display the specified resource.

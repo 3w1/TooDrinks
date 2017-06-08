@@ -123,14 +123,16 @@ class OfertaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        
+    {   
         $oferta = Oferta::find($id);
         $oferta->fill($request->all());
         $oferta->save();
 
-        return redirect()->action('OfertaController@index');
-        
+        if ($request->who == 'P')
+            $url = 'productor/ver-oferta/'.$id;
+            return redirect($url)->with('msj', 'Los datos de la oferta han sido actualizados exitosamente');
+
+       //return redirect()->action('OfertaController@index'); 
     }
 
     /**

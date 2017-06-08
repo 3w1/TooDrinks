@@ -42,10 +42,6 @@ class Productor extends Model
         return $this->hasMany('App\Models\Demanda_Importador');
     }
 
-    public function demandas_distribuidores(){
-        return $this->hasMany('App\Models\Demanda_Distribuidor');
-    }
-
     public function creditos(){
     	return $this->belongsToMany('App\Models\Credito', 'credito_productor')->withPivot('total', 'fecha_compra')->withTimestamps();
     }

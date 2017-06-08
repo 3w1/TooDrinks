@@ -1,43 +1,23 @@
-{!! Form::open(['route' => 'demanda-distribuidor.store', 'method' => 'POST']) !!}
-
-	{!! Form::hidden('productor_id', '1') !!}
-
 	<div class="form-group">
-		{!! Form::label('producto_id', 'Seleccione el producto') !!}
-		<select name="producto_id" class="form-control">
-			@foreach ($productos as $producto) 
-				<option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
+		{!! Form::label('marca_id', 'Seleccione la marca que desea distribuir') !!}
+		<select name="marca_id" class="form-control">
+			@foreach ($marcas as $marca) 
+				<option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
 			@endforeach
 		</select>
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('pais_id', 'Seleccione el país') !!}
-		<select name="pais_id" class="form-control">
-			@foreach ($paises as $pais )
-				<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
-			@endforeach
-		</select>
-	</div>
-
-	<div class="form-group">
-		{!! Form::label('provincia_region_id', 'Seleccione la provincia') !!}
+		{!! Form::label('provincia_region_id', 'Seleccione la provincia a la cual desea distribuir') !!}
 		<select name="provincia_region_id" class="form-control">
 			@foreach ($provincias as $provincia )
 				<option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
 			@endforeach
 		</select>
 	</div>
+	
+	{!! Form::hidden('status', '1')  !!}
 
 	<div class="form-group">
-		{!! Form::label('status', 'Seleccione el status') !!}
-		<select name="status" class="form-control">
-			<option value="1">Activa</option>
-			<option value="0">Inactiva</option>
-		</select>
+		{!! Form::submit('Crear Solicitud', ['class' => 'btn btn-primary']) !!}
 	</div>
-
-	<div class="form-group">
-		{!! Form::submit('Registrar', ['class' => 'btn btn-primary']) !!}
-	</div>
-{!! Form::close() !!}

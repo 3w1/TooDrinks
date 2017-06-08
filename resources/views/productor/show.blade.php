@@ -1,8 +1,6 @@
 @extends('plantillas.productor.mainProductor')
 @section('title', 'Dashboard Productor')
 
-
-
 @section('items')
     
     @if (Session::has('msj'))
