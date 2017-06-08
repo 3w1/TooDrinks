@@ -1,5 +1,5 @@
-@extends('plantillas.main')
-@section('title', 'Modificar Demanda de Importación')
+@extends('plantillas.productor.mainProductor')
+@section('title', 'Modificar Demanda ')
 @section('content-left')
 	
 	{!! Html::script('js/demandaImportadores/edit.js') !!}

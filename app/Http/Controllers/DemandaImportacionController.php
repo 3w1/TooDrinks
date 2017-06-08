@@ -81,25 +81,17 @@ class DemandaImportacionController extends Controller
      */
     public function edit($id)
     {
-
         $demandaImportador = Demanda_Importador::find($id);
         
-        $productos = DB::table('producto')
+        $marcas = DB::table('marca')
                         ->orderBy('nombre')
-                        ->select('id', 'nombre')
-                        ->get();
+                        ->pluck('nombre', 'id');
 
         $paises = DB::table('pais')
                         ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
+                        ->pluck('pais', 'id');
 
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        return view('demandaImportacion.edit')->with(compact('demandaImportador','productos', 'paises', 'provincias'));
+        return view('demandaImportacion.edit')->with(compact('demandaImportador','marcas', 'paises'));
     }
 
     /**
@@ -115,7 +107,7 @@ class DemandaImportacionController extends Controller
         $demanda_importador->fill($request->all());
         $demanda_importador->save();
 
-        return redirect()->action('DemandaImportacionController@index');
+        return redirect('productor/mis-demandas-importadores')->with('msj', 'Los datos de su demanda se han actualizado exitosamente');
     }
 
     /**

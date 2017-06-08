@@ -1,41 +1,21 @@
 {!! Form::open(['route' => ['demanda-importador.update', $demandaImportador->id], 'method' => 'PUT']) !!}
 
-	{!! Form::hidden('productor_id', '1') !!}
-	{!! Form::hidden('producto_hidden', $demandaImportador->producto_id, ['id' => 'producto_hidden']) !!}
-	{!! Form::hidden('pais_hidden', $demandaImportador->pais_id, ['id' => 'pais_hidden']) !!}
-	{!! Form::hidden('provincia_hidden', $demandaImportador->provincia_region_id, ['id' => 'provincia_hidden']) !!}
+	{!! Form::hidden('productor_id', session('productorId')) !!}
 	{!! Form::hidden('status_hidden', $demandaImportador->status, ['id' => 'status_hidden']) !!}
 
-
+	
 	<div class="form-group">
 		{!! Form::label('producto_id', 'Seleccione el producto') !!}
-		<select name="producto_id" id="producto_id" class="form-control">
-			@foreach ($productos as $producto) 
-				<option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
-			@endforeach
-		</select>
+		{!! Form::select('marca_id', $marcas, $demandaImportador->marca_id, ['class' => 'form-control']) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('pais_id', 'Seleccione el país') !!}
-		<select name="pais_id" id="pais_id" class="form-control">
-			@foreach ($paises as $pais )
-				<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
-			@endforeach
-		</select>
+		{!! Form::select('pais_id', $paises, $demandaImportador->pais_id, ['class' => 'form-control']) !!}
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('provincia_region_id', 'Seleccione la provincia') !!}
-		<select name="provincia_region_id" id="provincia_id" class="form-control">
-			@foreach ($provincias as $provincia )
-				<option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
-			@endforeach
-		</select>
-	</div>
-
-	<div class="form-group">
-		{!! Form::label('producto_id', 'Seleccione el status') !!}
+		{!! Form::label('status', 'Seleccione el status') !!}
 		<select name="status" id="status" class="form-control">
 			<option value="1">Activa</option>
 			<option value="0">Inactiva</option>

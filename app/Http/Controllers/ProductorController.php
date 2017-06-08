@@ -12,6 +12,7 @@ use App\Models\Clase_Bebida;
 use App\Models\Producto;
 use App\Models\Oferta;
 use App\Models\Destino_Oferta;
+use App\Models\Demanda_Importador;
 use DB; use Auth; use Session; use Redirect; use Input; use Image;
 
 class ProductorController extends Controller
@@ -71,12 +72,12 @@ class ProductorController extends Controller
     {
         $productor = Productor::find($id);
 
-        $demandas_distribuidores = DB::table('demanda_distribuidor')
-                                    ->select('id')
-                                    ->where([
-                                        ['tipo_creador', '=', 'P'],
-                                        ['creador_id', '=', $id]
-                                    ])->get();
+        $ofertas = DB::table('oferta')
+                    ->select('id')
+                    ->where([
+                        ['tipo_creador', '=', 'P'],
+                        ['creador_id', '=', $id]
+                    ])->get();
         $cont=0;
         $cont2=0;
         $cont3=0;
@@ -88,9 +89,7 @@ class ProductorController extends Controller
             $cont2++;
         foreach($productor->distribuidores as $distribuidor)
             $cont3++;
-        foreach($productor->demandas_importadores as $demandaImportador)
-            $cont4++;
-        foreach($demandas_distribuidores as $demandasDistribuidor)
+        foreach($ofertas as $oferta)
             $cont4++;
 
         session(['productorId' => $id]);
@@ -328,13 +327,11 @@ class ProductorController extends Controller
 
         $marcas = DB::table('marca')
                     ->orderBy('nombre')
-                    ->select('id', 'nombre')
-                    ->get();
+                    ->pluck('nombre', 'id');
 
         $paises = DB::table('pais')
                     ->orderBy('pais')
-                    ->select('id', 'pais')
-                    ->get();
+                    ->pluck('pais', 'id');
 
         $pais_origen = DB::table('productor')
                         ->select('pais_id')
@@ -366,6 +363,18 @@ class ProductorController extends Controller
                         ->get();
 
         return view('productor.solicitarDemanda')->with(compact('tipo', 'marcas', 'provincias'));
+    }
+
+    public function ver_demandas_importadores(){
+
+        $cont = 0;
+
+        $demandasImportadores = Demanda_Importador::where('productor_id', '=', session('productorId'))
+                                    ->orderBy('created_at', 'ASC')
+                                    ->paginate(8);
+
+        return view('productor.listados.demandasImportadores')->with(compact('demandasImportadores', 'cont'));
+
     }
 
 }

@@ -85,7 +85,8 @@
       <ul class="treeview-menu">
          <li><a href="{{ route('productor.solicitar-importador') }}"><i class="fa fa-circle-o"></i>Solicitar Importador</a></li>
          <li><a href="{{ route('productor.solicitar-distribuidor') }}"><i class="fa fa-circle-o"></i>Solicitar Distribuidor</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i>Ver mis Demandas</a></li>
+         <li><a href="{{ route('productor.demandas-importadores') }}"><i class="fa fa-circle-o"></i>Demandas de Importadores</a></li>
+         <li><a href="{{ route('productor.demandas-distribuidores') }}"><i class="fa fa-circle-o"></i>Demandas de Distribuidores</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE DEMANDAS -->

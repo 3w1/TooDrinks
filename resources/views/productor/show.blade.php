@@ -68,15 +68,15 @@
         <div class="small-box bg-red">
 	        <div class="inner">
 	            <h3>{{ $cont4 }}</h3>
-	            <p>Demandas de Prod / Imp</p>
+	            <p>Ofertas de Producto</p>
 	        </div>
 	        <div class="icon">
 	           	<i class="ion ion-pie-graph"></i>
 	        </div>
 	         @if ($cont4 > 0) 
-            	<a href="" class="small-box-footer">Ver Mis Demandas<i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="{{ route('productor.ofertas') }}" class="small-box-footer">Ver Mis Ofertas<i class="fa fa-arrow-circle-right"></i></a>
             @else
-            	<a href="" class="small-box-footer">Agregar Demanda <i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="" class="small-box-footer">Agregar Oferta <i class="fa fa-arrow-circle-right"></i></a>
             @endif
         </div>
     </div>
