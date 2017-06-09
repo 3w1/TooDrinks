@@ -32,6 +32,8 @@ Route::get('usuario/registrar-importador', 'UsuarioController@registrar_importad
 Route::get('usuario/registrar-distribuidor', 'UsuarioController@registrar_distribuidor')->name('usuario.registrar-distribuidor');
 Route::get('usuario/registrar-horeca', 'UsuarioController@registrar_horeca')->name('usuario.registrar-horeca');
 
+Route::get('usuario/registrar-producto', 'UsuarioController@registrar_producto')->name('usuario.registrar-producto');
+
 Route::post('usuario/updateAvatar', 'UsuarioController@updateAvatar')->name('usuario.updateAvatar');
 
 Route::resource('usuario','UsuarioController');

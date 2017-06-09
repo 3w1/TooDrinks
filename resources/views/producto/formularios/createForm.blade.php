@@ -17,12 +17,8 @@
 		</div>
 		
 		<div class="form-group">
-			<select name="pais_id" class="form-control" id="pais_id" onchange="cargarProvincias();">
-				<option value="">Seleccione un país..</option>
-				@foreach ($paises as $pais )
-					<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
-				@endforeach
-			</select>
+			{!! Form::label('pais_id', 'País origen del producto') !!}
+			{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'onchange' => 'cargarProvincias();'] ) !!}
 		</div>
 
 		<div class="form-group">
@@ -31,15 +27,11 @@
 			</select>
 		</div>
 
-
 		<div class="form-group">
-			<select name="clase_bebida_id" class="form-control">
-				@foreach ($bebidas as $bebida )
-					<option value="{{ $bebida->id }}">{{ $bebida->clase }}</option>
-				@endforeach
-			</select>
+			{!! Form::label('clase_bebida_id', 'Clase a la que pertenece el producto') !!}
+			{!! Form::select('clase_bebida_id', $clases_bebidas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una clase..'] ) !!}
 		</div>
-		
+
 		<div class="form-group">
 			{!! Form::label('ano_produccion', 'Imagen') !!}
 			{!! Form::text('ano_produccion', null, ['class' => 'form-control', 'required', 'placeholder' => 'Año de Producción'] ) !!}

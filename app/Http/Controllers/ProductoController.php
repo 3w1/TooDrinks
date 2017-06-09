@@ -72,9 +72,14 @@ class ProductoController extends Controller
         $producto->imagen = $nombre;
         $producto->save();
 
-        if ($request->who == 'P')
+        if ($request->who == 'P'){
             $url = 'productor/'.$request->marca_id.'-'.$request->marca_nombre.'/productos';
             return redirect($url)->with('msj', 'Su producto ha sido agregado con éxito');
+        }elseif ($request->who == 'U'){
+            $url = 'usuario';
+                return redirect($url)->with('msj', 'Su producto ha sido agregado con éxito');
+        }
+                
     }
 
     public function show($id)

@@ -84,7 +84,7 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href=""><i class="fa fa-circle-o"></i> Crear nuevo</a></li>
+         <li><a href="{{ route('usuario.registrar-producto') }}"><i class="fa fa-circle-o"></i> Crear nuevo</a></li>
          <li><a href=""><i class="fa fa-circle-o"></i>Ver Productos creados</a></li>
       </ul>
    </li>
