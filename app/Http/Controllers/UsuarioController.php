@@ -286,4 +286,16 @@ class UsuarioController extends Controller
 
         return view('usuario.registrarProducto')->with(compact('marcas', 'paises', 'clases_bebidas'));
     }
+
+    public function ver_productos(){
+        $productos = DB::table('producto')
+                    ->orderBy('nombre')
+                    ->where([
+                            ['tipo_creador', '=', 'U'],
+                            ['creador_id', '=', Auth::user()->id],
+                        ])
+                    ->paginate(6);
+
+        return view('usuario.listados.productos')->with(compact('productos'));
+    }
 }

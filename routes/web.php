@@ -33,6 +33,7 @@ Route::get('usuario/registrar-distribuidor', 'UsuarioController@registrar_distri
 Route::get('usuario/registrar-horeca', 'UsuarioController@registrar_horeca')->name('usuario.registrar-horeca');
 
 Route::get('usuario/registrar-producto', 'UsuarioController@registrar_producto')->name('usuario.registrar-producto');
+Route::get('usuario/productos', 'UsuarioController@ver_productos')->name('usuario.productos');
 
 Route::post('usuario/updateAvatar', 'UsuarioController@updateAvatar')->name('usuario.updateAvatar');
 
