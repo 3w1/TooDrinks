@@ -20,8 +20,8 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href=""><i class="fa fa-circle-o"></i> Listado</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i> Crear Nuevo</a></li>
+         <li><a href="{{ route('importador.distribuidores') }}"><i class="fa fa-circle-o"></i> Listado</a></li>
+         <li><a href="{{ route('importador.registrar-distribuidor') }}"><i class="fa fa-circle-o"></i> Crear Nuevo</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE DISTRIBUIDORES -->

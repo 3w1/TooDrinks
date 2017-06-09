@@ -106,8 +106,6 @@ class ImportadorController extends Controller
         foreach($demandas as $demanda)
             $cont4++;
 
-
-
         return view('importador.show')->with(compact('importador', 'cont', 'cont2', 'cont3', 'cont4'));
     }
 
@@ -169,5 +167,24 @@ class ImportadorController extends Controller
         $importador->delete();
 
         return redirect()->action('ImportadorController@index');
+    }
+
+     //FUNCION QUE LE PERMITE AL IMPORTADOR REGISTRAR UN DISTRIBUIDOR ASOCIADO
+    public function registrar_distribuidor(){
+
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+
+        return view('importador.registrarDistribuidor')->with(compact('paises'));
+    }
+
+    //FUNCION QUE PERMITE VER LOS DISTRIBUIDORES ASOCIADOS A UN IMPORTADOR
+    public function ver_distribuidores(){
+        $distribuidores = Importador::find(session('importadorId'))
+                                    ->distribuidores()
+                                    ->paginate(6);
+
+        return view('importador.listados.distribuidores')->with(compact('distribuidores'));
     }
 }

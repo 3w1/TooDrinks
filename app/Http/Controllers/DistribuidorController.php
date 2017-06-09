@@ -64,6 +64,10 @@ class DistribuidorController extends Controller
             $distribuidor->productores()->attach(session('productorId'));
             $url = 'productor/'.session('productorId');
             return redirect($url)->with('msj', 'Se ha registrado exitosamente su distribuidor');
+        }elseif ($request->who == 'I'){
+            $distribuidor->importadores()->attach(session('importadorId'));
+            $url = 'importador/'.session('importadorId');
+            return redirect($url)->with('msj', 'Se ha registrado exitosamente su distribuidor');   
         }
     }
 

@@ -71,6 +71,9 @@ Route::resource('productor','ProductorController');
 // ./RUTAS PARA LOS PRODUCTORES ./
 
 // RUTAS PARA LOS IMPORTADORES
+Route::get('importador/registrar-distribuidor', 'ImportadorController@registrar_distribuidor')->name('importador.registrar-distribuidor');
+Route::get('importador/mis-distribuidores', 'ImportadorController@ver_distribuidores')->name('importador.distribuidores');
+
 Route::post('importador/updateAvatar', 'ImportadorController@updateAvatar')->name('importador.updateAvatar');
 
 Route::resource('importador','ImportadorController');

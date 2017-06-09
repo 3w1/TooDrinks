@@ -215,17 +215,11 @@ class UsuarioController extends Controller
     public function registrar_distribuidor(){
         $perfil = 'D';
 
-        $paises = DB::table('pais')
+       $paises = DB::table('pais')
                         ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
+                        ->pluck('pais', 'id');
 
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        return view('usuario.registrarPerfil')->with(compact('perfil', 'paises', 'provincias'));
+        return view('usuario.registrarPerfil')->with(compact('perfil', 'paises'));
     }
 
     //FUNCION QUE PERMITE VER LOS DISTRIBUIDORES PERTENECIENTES A U USUARIO
