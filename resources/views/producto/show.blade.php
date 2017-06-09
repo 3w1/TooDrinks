@@ -5,12 +5,6 @@
   </div>
 @endif
 
-@include('producto.modales.modalEdit')
-
-@include('producto.modales.updateImagen')
-
-{!! Form::hidden('producto', $producto->id, ['id' => 'producto']) !!}
-
 <div class="row">
    <div class="col-md-4"></div>
     <div class="col-sm-6 col-md-4">

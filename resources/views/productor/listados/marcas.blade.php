@@ -8,12 +8,7 @@
 @section('content-left')
 	<div class="row">
 		@foreach($marcas as $marca)
-			<?php 
-				$pais = DB::table('pais')
-							->select('pais')
-							->where('id', $marca->pais_id)
-							->get()->first();
-
+			<?php
             $productos = DB::table('producto')
                            ->select('id')
                            ->where('marca_id', $marca->id)
@@ -33,7 +28,7 @@
               			</div>
               			<!-- /.widget-user-image -->
               			<h3 class="widget-user-username">{{ $marca->nombre }}</h3>
-              			<h5 class="widget-user-desc"> {{ $pais->pais }} </i></h5>
+              			<h5 class="widget-user-desc"> {{ $marca->pais->pais }} </i></h5>
            			</div>
             		
             		<div class="box-footer no-padding">
@@ -42,6 +37,7 @@
               				<li class="active"><a><strong>Website: </strong> {{ $marca->website }} </a></li>
                         <li class="active"><a href="{{ route('productor.productos', [$marca->id, $marca->nombre]) }}"><strong><u>Catálogo de Productos: </strong> {{ $cont }} Producto(s) </u></a></li>
                         <li class="active"><a href="{{ route('productor.registrar-producto', [$marca->id, $marca->nombre]) }}"><strong><u>Agregar Producto</u></strong></a></li>
+                        <li class="active"><a href="{{ route('productor.marca', [$marca->id, $marca->nombre]) }}"><strong><u>Ver más detalles</u></strong></a></li>
                      </ul>
             		</div>
          		</div>

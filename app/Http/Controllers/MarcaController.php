@@ -91,11 +91,39 @@ class MarcaController extends Controller
 
     public function update(Request $request, $id)
     {
-         $marca = Marca::find($id);
+        $marca = Marca::find($id);
         $marca->fill($request->all());
         $marca->save();
 
-        return redirect()->action('MarcaController@index');
+        if ($request->who == 'P')
+            $url = 'productor/ver-marca/'.$request->id.'-'.$request->nombre;
+            return redirect($url)->with('msj', 'Los datos de su marca han sido actualizados exitosamente');
+    }
+
+    public function updateLogo(Request $request){
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
+
+        //Ruta donde queremos guardar las imagenes
+        $path = public_path().'/imagenes/marcas/';
+        $path2 = public_path().'/imagenes/marcas/thumbnails/';
+        
+        //Nombre en el sistema de la imagen
+        $nombre = 'marca_'.time().'.'.$file->getClientOriginalExtension();
+        // Guardar Original
+        $image->save($path.$nombre);
+        // Cambiar de tamaño
+        $image->resize(240,200);
+        // Guardar Thumbnail
+        $image->save($path2.$nombre);
+
+        $actualizacion = DB::table('marca')
+                            ->where('id', '=', $request->id)
+                            ->update(['logo' => $nombre ]);
+       
+        if ($request->who == 'P')
+            $url = 'productor/ver-marca/'.$request->id.'-'.$request->nombre;
+            return redirect($url)->with('msj', 'La imagen de la marca se ha actualizado exitosamente');
     }
 
     public function destroy($id)

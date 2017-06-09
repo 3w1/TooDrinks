@@ -46,6 +46,7 @@ Route::get('productor/mis-distribuidores', 'ProductorController@ver_distribuidor
 
 Route::get('productor/registrar-marca', 'ProductorController@registrar_marca')->name('productor.registrar-marca');
 Route::get('productor/mis-marcas', 'ProductorController@ver_marcas')->name('productor.marcas');
+Route::get('productor/ver-marca/{id}-{marca}', 'ProductorController@ver_detalle_marca')->name('productor.marca');
 
 Route::get('productor/{id}-{marca}/registrar-producto', 'ProductorController@registrar_producto')->name('productor.registrar-producto');
 Route::get('productor/{id}-{marca}/productos', 'ProductorController@ver_productos')->name('productor.productos');
@@ -86,6 +87,8 @@ Route::resource('horeca','HorecaController');
 
 // RUTAS PARA LAS MARCAS 
 Route::get('marca/{id}/registrar-producto', 'MarcaController@registrar_producto')->name('marca.registrar-producto');
+
+Route::post('marca/cambiar-logo', 'MarcaController@updateLogo')->name('marca.updateLogo');
 
 Route::resource('marca','MarcaController');
 // ./RUTAS PARA LAS MARCAS ./

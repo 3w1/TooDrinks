@@ -6,6 +6,10 @@
 
 @section('content-left')
 
+	@include('productor.modales.cambiarLogoProducto')
+
+	@include('productor.modales.editProducto')
+
 	@section('title-header')
 		<h3>Detalles del Producto: <strong>{{ $producto->nombre }}</strong></h3>
 	@endsection

@@ -238,6 +238,12 @@ class ProductorController extends Controller
         return view('productor.listados.marcas')->with(compact('marcas'));
     }
 
+    public function ver_detalle_marca($id, $nombre){
+        $marca = Marca::find($id);
+
+        return view('productor.detalleMarca')->with(compact('marca'));
+    }
+
      //FUNCION QUE LE PERMITE AL PRODUCTOR REGISTRAR UN PRODUCTO ASOCIADO A SU MARCA 
     public function registrar_producto($id, $marca){
 
