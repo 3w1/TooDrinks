@@ -80,8 +80,11 @@ class OfertaController extends Controller
             }
         }
         
-        if ($request->who == 'P')
+        if ($request->who == 'P'){
             return redirect('productor/mis-ofertas')->with('msj', 'Su oferta ha sido registrada con éxito');
+        }elseif ($request->who == 'I'){
+            return redirect('importador/mis-ofertas')->with('msj', 'Su oferta ha sido registrada con éxito');
+        }
     }
 
     /**
@@ -128,11 +131,13 @@ class OfertaController extends Controller
         $oferta->fill($request->all());
         $oferta->save();
 
-        if ($request->who == 'P')
+        if ($request->who == 'P'){
             $url = 'productor/ver-oferta/'.$id;
             return redirect($url)->with('msj', 'Los datos de la oferta han sido actualizados exitosamente');
-
-       //return redirect()->action('OfertaController@index'); 
+        }elseif ($request->who == 'I'){
+            $url = 'importador/ver-oferta/'.$id;
+            return redirect($url)->with('msj', 'Los datos de la oferta han sido actualizados exitosamente');
+        }
     }
 
     /**

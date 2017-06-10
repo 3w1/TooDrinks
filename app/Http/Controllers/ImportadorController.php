@@ -11,6 +11,8 @@ use App\Models\Marca;
 use App\Models\Producto;
 use App\Models\Bebida;
 use App\Models\Productor;
+use App\Models\Oferta;
+use App\Models\Destino_Oferta;
 use DB; use Auth; use Input; use Image;
 
 class ImportadorController extends Controller
@@ -241,7 +243,6 @@ class ImportadorController extends Controller
         return view('importador.listados.productos')->with(compact('productos', 'marca'));
     }
 
-
     public function ver_detalle_producto($id, $producto){
         $producto = Producto::find($id);
         
@@ -256,6 +257,37 @@ class ImportadorController extends Controller
                         ->first();
 
         return view('importador.detalleProducto')->with(compact('producto', 'bebida', 'productor'));
+    }
+
+     public function registrar_oferta($id, $producto){
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+
+        return view('importador.registrarOferta')->with(compact('id', 'producto', 'paises'));
+    }
+
+     //FUNCION QUE PERMITE VER LAS OFERTAS DE UN PRODUCTOR
+    public function ver_ofertas(){
+        $ofertas = DB::table('oferta')
+                    ->where([
+                        ['tipo_creador', '=', 'I'],
+                        ['creador_id', '=', session('importadorId')],
+                    ])
+                    ->paginate(6);
+
+        return view('importador.listados.ofertas')->with(compact('ofertas'));
+    }
+
+    public function ver_detalle_oferta($id){
+        $oferta = Oferta::find($id);
+
+        $destinos = Destino_Oferta::where('oferta_id', '=', $id)
+                                ->orderBy('provincia_region_id')
+                                ->select('pais_id', 'provincia_region_id')
+                                ->get();
+
+        return view('importador.detalleOferta')->with(compact('oferta', 'destinos'));
     }
 
 }

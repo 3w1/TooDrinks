@@ -1,3 +1,7 @@
+	{!! Html::script('js/ofertas/create.js') !!}
+
+	<input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
+
 	<div class="form-group">
 		{!! Form::label('titulo', 'Título') !!}
 		{!! Form::text('titulo', null, ['class' => 'form-control', 'placeholder' => 'Título'] ) !!}
@@ -34,11 +38,8 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('envio', 'Envío Disponible') !!}
-		<select name="envio" class="form-control">
-			<option value="1">Si</option>
-			<option value="0">No</option>
-		</select>
+		{!! Form::label('env', 'Envío Disponible') !!}
+		{!! Form::select('envio', ['0' => 'No', '1' => 'Si'], null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción']); !!}
 	</div>
 
 	<div class="form-group">
@@ -47,46 +48,13 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('visible_importadores', 'Visible para Importadores') !!}
-		<select name="visible_importadores" class="form-control">
-			<option value="1">Si</option>
-			<option value="0">No</option>
-		</select>
-	</div>
-
-	<div class="form-group">
-		{!! Form::label('visible_distribuidores', 'Visible para Importadores') !!}
-		<select name="visible_distribuidores" class="form-control">
-			<option value="1">Si</option>
-			<option value="0">No</option>
-		</select>
-	</div>
-
-	<div class="form-group">
-		{!! Form::label('visible_horecas', 'Visible para Horecas') !!}
-		<select name="visible_horecas" class="form-control">
-			<option value="1">Si</option>
-			<option value="0">No</option>
-		</select>
-	</div>
-
-	<div class="form-group">
 		{!! Form::label('pais', 'Seleccione el país que será destino de la oferta') !!}
-		<select name="pais_id" id="pais_id" class="form-control">
-			<option value="">Seleccione un país..</option>
-			@foreach ($paises as $pais )
-				<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
-			@endforeach
-		</select>
+		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'id' => 'pais_id']) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('pais', 'Seleccione las provincias que serán destino de la oferta') !!}
-		<select name="opciones" id="opciones" class="form-control" onchange="estados();">
-			<option value="">Seleccione una opción</option>
-			<option value="T">Todas las provincias</option>
-			<option value="P">Personalizado</option>
-		</select>
+		{!! Form::select('opciones', ['T' => 'Todas las Provincias', 'P' => 'Personalizado'], null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción...', 'id' => 'opciones', 'onchange' => 'cargarProvincias();'] ) !!}
 	</div>
 
 	<div class="form-group" id="estados"></div>

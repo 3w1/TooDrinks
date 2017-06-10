@@ -57,7 +57,7 @@
                 <i class="ion ion-pie-graph"></i>
             </div>
              @if ($cont3 > 0) 
-                <a href="" class="small-box-footer">Ver Mis Ofertas<i class="fa fa-arrow-circle-right"></i></a>
+                <a href="{{ route('importador.ofertas') }}" class="small-box-footer">Ver Mis Ofertas<i class="fa fa-arrow-circle-right"></i></a>
             @else
                 <a href="" class="small-box-footer">Registrar Oferta<i class="fa fa-arrow-circle-right"></i></a>
             @endif

@@ -5,8 +5,6 @@
   </div>
 @endif
 
-@include('oferta.modales.modalEdit')
-
 <div class="row">
    <div class="col-md-4"></div>
     <div class="col-sm-6 col-md-4">

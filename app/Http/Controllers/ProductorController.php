@@ -276,15 +276,9 @@ class ProductorController extends Controller
     public function registrar_oferta($id, $producto){
         $paises = DB::table('pais')
                         ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
+                        ->pluck('pais', 'id');
 
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        return view('productor.registrarOferta')->with(compact('id', 'producto', 'paises', 'provincias'));
+        return view('productor.registrarOferta')->with(compact('id', 'producto', 'paises'));
     }
 
      //FUNCION QUE PERMITE VER LAS OFERTAS DE UN PRODUCTOR

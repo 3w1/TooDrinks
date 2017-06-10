@@ -1,4 +1,4 @@
-@extends('plantillas.productor.mainProductor')
+@extends('plantillas.importador.mainImportador')
 @section('title', 'Crear Oferta')
 
 @section('items')
@@ -13,18 +13,14 @@
 	
 	{!! Form::open(['route' => 'oferta.store', 'method' => 'POST']) !!}
 		
-		{!! Form::hidden('who', 'P') !!}
+		{!! Form::hidden('who', 'I') !!}
 
-		{!! Form::hidden('tipo_creador', 'P') !!}
-		{!! Form::hidden('creador_id', session('productorId')) !!}
+		{!! Form::hidden('tipo_creador', 'I') !!}
+		{!! Form::hidden('creador_id', session('importadorId')) !!}
 		{!! Form::hidden('producto_id', $id) !!}
+		{!! Form::hidden('visible_importadores', '0') !!}
 
-		@include('oferta.formularios.createForm')
-		
-		<div class="form-group">
-            {!! Form::label('visible_importador', 'Disponible para Importadores') !!}
-            {!! Form::select('visible_importadores', ['0' => 'No', '1' => 'Si'], null, ['class' => 'form-control']) !!}
-        </div>
+			@include('oferta.formularios.createForm')
 
 		<div class="form-group">
             {!! Form::label('visible_distribuidor', 'Disponible para Distribuidores') !!}

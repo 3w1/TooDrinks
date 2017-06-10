@@ -1,4 +1,4 @@
-@extends('plantillas.productor.mainProductor')
+@extends('plantillas.importador.mainImportador')
 @section('title', 'Ver Oferta')
 
 @section('items')
@@ -6,12 +6,12 @@
 
 @section('content-left')
 	
-	@include('productor.modales.editOferta')
-	
+	@include('importador.modales.editOferta')
+
 	@section('title-header')
 		<h3>Detalles de la Oferta <strong> {{ $oferta->titulo }} </strong></h3>
 	@endsection
-		
+
 	@include('oferta.show')
 
 @endsection

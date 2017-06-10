@@ -1,10 +1,6 @@
 	{!! Html::script('js/ofertas/edit.js') !!}
 
-	{!! Form::hidden('v_importadores', $oferta->visible_importadores, ['id' => 'v_importadores']) !!}
-	{!! Form::hidden('v_distribuidores', $oferta->visible_distribuidores, ['id' => 'v_distribuidores']) !!}
-	{!! Form::hidden('v_horecas', $oferta->visible_horecas, ['id' => 'v_horecas']) !!}
 	{!! Form::hidden('producto_id', $oferta->producto_id) !!}
-	{!! Form::hidden('envio_hidden', $oferta->envio, ['id' => 'envio_hidden']) !!}
 
 	<div class="form-group">
 		{!! Form::label('titulo', 'Título') !!}
@@ -42,38 +38,11 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('envio', 'Envío Disponible') !!}
-		<select name="envio" class="form-control" id="envio">
-			<option value="0">No</option>
-			<option value="1">Si</option>
-		</select>
+		{!! Form::label('env', 'Envío Disponible') !!}
+		{!! Form::select('envio', ['0' => 'No', '1' => 'Si'], $oferta->envio, ['class' => 'form-control']); !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('costo_envio', 'Costo del Envío') !!}
 		{!! Form::text('costo_envio', $oferta->costo_envio, ['class' => 'form-control'] ) !!}
-	</div>
-
-	<div class="form-group">
-		{!! Form::label('visible_importadores', 'Disponible para Importadores') !!}
-		<select name="visible_importadores" class="form-control" id="visible_importadores">
-			<option value="0">No</option>
-			<option value="1">Si</option>
-		</select>
-	</div>
-
-	<div class="form-group">
-		{!! Form::label('visible_distribuidores', 'Disponible para Distribuidores') !!}
-		<select name="visible_distribuidores" class="form-control" id="visible_distribuidores">
-			<option value="0">No</option>
-			<option value="1">Si</option>
-		</select>
-	</div>
-
-	<div class="form-group">
-		{!! Form::label('visible_horecas', 'Visible para Horecas') !!}
-		<select name="visible_horecas" class="form-control" id="visible_horecas">
-			<option value="0">No</option>
-			<option value="1">Si</option>
-		</select>
 	</div>
