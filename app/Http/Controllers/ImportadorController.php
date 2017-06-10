@@ -8,6 +8,9 @@ use App\Models\User;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
 use App\Models\Marca;
+use App\Models\Producto;
+use App\Models\Bebida;
+use App\Models\Productor;
 use DB; use Auth; use Input; use Image;
 
 class ImportadorController extends Controller
@@ -213,4 +216,46 @@ class ImportadorController extends Controller
 
         return view('importador.detalleMarca')->with(compact('marca'));
     }
+
+    //FUNCION QUE LE PERMITE AL IMPORTADOR REGISTRAR UN PRODUCTO ASOCIADO A SU MARCA 
+    public function registrar_producto($id, $marca){
+
+        $paises = DB::table('pais')
+                    ->orderBy('pais')
+                    ->pluck('pais', 'id');
+
+        $clases_bebidas = DB::table('clase_bebida')
+                    ->orderBy('clase')
+                    ->pluck('clase', 'id');
+
+        return view('importador.registrarProducto')->with(compact('id', 'marca', 'paises', 'clases_bebidas'));
+    }
+
+    //FUNCION QUE LE PERMITE AL IMPORTADOR VER EL LISTADO DE PRODUCTOS ASOCIADOS A UNA MARCA
+    public function ver_productos($id, $marca){
+        
+        $productos = Marca::find($id)
+                            ->productos()
+                            ->paginate(8);
+
+        return view('importador.listados.productos')->with(compact('productos', 'marca'));
+    }
+
+
+    public function ver_detalle_producto($id, $producto){
+        $producto = Producto::find($id);
+        
+        $bebida = Bebida::find($producto->clase_bebida->bebida_id)
+                        ->select('nombre', 'caracteristicas')
+                        ->get()
+                        ->first();
+
+        $productor = Productor::find($producto->marca->productor_id)
+                        ->select('nombre')
+                        ->get()
+                        ->first();
+
+        return view('importador.detalleProducto')->with(compact('producto', 'bebida', 'productor'));
+    }
+
 }

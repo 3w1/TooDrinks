@@ -236,21 +236,15 @@ class ProductorController extends Controller
     public function registrar_producto($id, $marca){
 
         $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
+                    ->orderBy('pais')
+                    ->pluck('pais', 'id');
 
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
+        $clases_bebidas = DB::table('clase_bebida')
+                    ->orderBy('clase')
+                    ->pluck('clase', 'id');
 
-        $bebidas = DB::table('clase_bebida')
-                        ->orderBy('clase')
-                        ->select('id', 'clase')
-                        ->get();
 
-        return view('productor.registrarProducto')->with(compact('id', 'marca', 'paises', 'provincias', 'bebidas'));
+        return view('productor.registrarProducto')->with(compact('id', 'marca', 'paises', 'clases_bebidas'));
     }
 
     //FUNCION QUE PERMITE VER LOS IMPORTADORES ASOCIADOS A UN PRODUCTOR

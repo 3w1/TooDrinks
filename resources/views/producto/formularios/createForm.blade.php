@@ -33,7 +33,7 @@
 		</div>
 
 		<div class="form-group">
-			{!! Form::label('ano_produccion', 'Imagen') !!}
+			{!! Form::label('ano_produccion', 'Año de Producción') !!}
 			{!! Form::text('ano_produccion', null, ['class' => 'form-control', 'required', 'placeholder' => 'Año de Producción'] ) !!}
 		</div>
 		

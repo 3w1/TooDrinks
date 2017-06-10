@@ -77,7 +77,10 @@ class ProductoController extends Controller
             return redirect($url)->with('msj', 'Su producto ha sido agregado con éxito');
         }elseif ($request->who == 'U'){
             $url = 'usuario';
-                return redirect($url)->with('msj', 'Su producto ha sido agregado con éxito');
+            return redirect($url)->with('msj', 'Su producto ha sido agregado con éxito');
+        }elseif ($request->who == 'I'){
+            $url = 'importador/'.$request->marca_id.'-'.$request->marca_nombre.'/productos';
+            return redirect($url)->with('msj', 'Su producto ha sido agregado con éxito');
         }
                 
     }
@@ -128,11 +131,13 @@ class ProductoController extends Controller
         $producto->fill($request->all());
         $producto->save();
 
-        if ($request->who == 'P')
+        if ($request->who == 'P'){
             $url = 'productor/ver-producto/'.$id.'-'.$request->nombre;
             return redirect($url)->with('msj', 'Los datos del producto se han actualizado exitosamente');
-
-        //return redirect()->action('ProductoController@index');
+        }elseif ($request->who == 'I'){
+            $url = 'importador/ver-producto/'.$request->id.'-'.$request->nombre;
+            return redirect($url)->with('msj', 'Los datos del producto se han actualizado exitosamente');
+        } 
     }
 
      public function updateImagen(Request $request){
@@ -156,9 +161,13 @@ class ProductoController extends Controller
                             ->where('id', '=', $request->id)
                             ->update(['imagen' => $nombre ]);
        
-        if ($request->who == 'P')
+        if ($request->who == 'P'){
             $url = 'productor/ver-producto/'.$request->id.'-'.$request->nombre;
             return redirect($url)->with('msj', 'La imagen del producto se ha actualizado exitosamente');
+        }elseif ($request->who == 'I'){
+            $url = 'importador/ver-producto/'.$request->id.'-'.$request->nombre;
+            return redirect($url)->with('msj', 'La imagen del producto se ha actualizado exitosamente');
+        }    
     }
 
     public function destroy($id)
