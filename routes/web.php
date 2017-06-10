@@ -92,6 +92,18 @@ Route::resource('importador','ImportadorController');
 // ./RUTAS PARA LOS IMPORTADORES ./
 
 // RUTAS PARA LOS DISTRIBUIDORES
+Route::get('distribuidor/registrar-marca', 'DistribuidorController@registrar_marca')->name('distribuidor.registrar-marca');
+Route::get('distribuidor/mis-marcas', 'DistribuidorController@ver_marcas')->name('distribuidor.marcas');
+Route::get('distribuidor/ver-marca/{id}-{marca}', 'DistribuidorController@ver_detalle_marca')->name('distribuidor.marca');
+
+Route::get('distribuidor/{id}-{marca}/registrar-producto', 'DistribuidorController@registrar_producto')->name('distribuidor.registrar-producto');
+Route::get('distribuidor/{id}-{marca}/productos', 'DistribuidorController@ver_productos')->name('distribuidor.productos');
+Route::get('distribuidor/ver-producto/{id}-{producto}', 'DistribuidorController@ver_detalle_producto')->name('distribuidor.producto');
+
+Route::get('distribuidor/{id}-{producto}/registrar-oferta', 'DistribuidorController@registrar_oferta')->name('distribuidor.registrar-oferta');
+Route::get('distribuidor/mis-ofertas', 'DistribuidorController@ver_ofertas')->name('distribuidor.ofertas');
+Route::get('distribuidor/ver-oferta/{id}', 'DistribuidorController@ver_detalle_oferta')->name('distribuidor.oferta');
+
 Route::post('distribuidor/updateAvatar', 'DistribuidorController@updateAvatar')->name('distribuidor.updateAvatar');
 
 Route::resource('distribuidor','DistribuidorController');

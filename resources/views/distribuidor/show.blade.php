@@ -2,7 +2,14 @@
 @section('title', 'Dashboard Distribuidor')
 
 @section('items')
-	<div class="col-lg-6 col-xs-12">
+	@if (Session::has('msj'))
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+        </div>
+    @endif
+
+    <div class="col-lg-6 col-xs-12">
         <div class="small-box bg-aqua">
             <div class="inner">
 				<h3>{{ $cont }}</h3>
@@ -12,9 +19,9 @@
              	<i class="ion ion-bag"></i>
             </div>
             @if ($cont > 0) 
-            	<a href="" class="small-box-footer">Ver Mis Marcas <i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="{{ route('distribuidor.marcas') }}" class="small-box-footer">Ver Mis Marcas <i class="fa fa-arrow-circle-right"></i></a>
             @else
-            	<a href="" class="small-box-footer">Registrar Marca <i class="fa fa-arrow-circle-right"></i></a>
+            	<a href="{{ route('distribuidor.registrar-marca') }}" class="small-box-footer">Registrar Marca <i class="fa fa-arrow-circle-right"></i></a>
             @endif
             
         </div>

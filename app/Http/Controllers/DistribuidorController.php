@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Distribuidor;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
+use App\Models\Marca;
+use App\Models\Producto;
+use App\Models\Bebida;
+use App\Models\Productor;
 use DB; use Auth; use Input; use Image;
 
 class DistribuidorController extends Controller
@@ -156,5 +160,70 @@ class DistribuidorController extends Controller
         $distribuidor->delete();
 
         return redirect()->action('DistribuidorController@index');   
-     }
+    }
+
+    //FUNCION QUE LE PERMITE AL DISTRIBUIDOR REGISTRAR UNA MARCA
+    public function registrar_marca(){
+
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+
+        return view('distribuidor.registrarMarca')->with(compact('paises'));
+    }
+    
+     //FUNCION QUE PERMITE VER LAS MARCAS QUE MANEJA UN IMPORTADOR
+    public function ver_marcas(){
+        $marcas = Distribuidor::find(session('distribuidorId'))
+                                    ->marcas()
+                                    ->paginate(6);
+
+        return view('distribuidor.listados.marcas')->with(compact('marcas'));
+    }
+
+    public function ver_detalle_marca($id, $nombre){
+        $marca = Marca::find($id);
+
+        return view('distribuidor.detalleMarca')->with(compact('marca'));
+    }
+
+     //FUNCION QUE LE PERMITE AL DISTRIBUIDOR REGISTRAR UN PRODUCTO ASOCIADO A SU MARCA 
+    public function registrar_producto($id, $marca){
+
+        $paises = DB::table('pais')
+                    ->orderBy('pais')
+                    ->pluck('pais', 'id');
+
+        $clases_bebidas = DB::table('clase_bebida')
+                    ->orderBy('clase')
+                    ->pluck('clase', 'id');
+
+        return view('distribuidor.registrarProducto')->with(compact('id', 'marca', 'paises', 'clases_bebidas'));
+    }
+
+    //FUNCION QUE LE PERMITE AL IMPORTADOR VER EL LISTADO DE PRODUCTOS ASOCIADOS A UNA MARCA
+    public function ver_productos($id, $marca){
+        
+        $productos = Marca::find($id)
+                            ->productos()
+                            ->paginate(8);
+
+        return view('distribuidor.listados.productos')->with(compact('productos', 'marca'));
+    }
+
+    public function ver_detalle_producto($id, $producto){
+        $producto = Producto::find($id);
+        
+        $bebida = Bebida::find($producto->clase_bebida->bebida_id)
+                        ->select('nombre', 'caracteristicas')
+                        ->get()
+                        ->first();
+
+        $productor = Productor::find($producto->marca->productor_id)
+                        ->select('nombre')
+                        ->get()
+                        ->first();
+
+        return view('distribuidor.detalleProducto')->with(compact('producto', 'bebida', 'productor'));
+    }
 }

@@ -20,8 +20,9 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href=""><i class="fa fa-circle-o"></i> Listado</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i>Crear Nueva</a></li>
+         <li><a href="{{ route('distribuidor.marcas') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
+         <li><a href="{{ route('distribuidor.registrar-marca') }}"><i class="fa fa-circle-o"></i>Crear Nueva</a></li>
+         <li><a href=""><i class="fa fa-circle-o"></i> Marcas Disponibles</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE MARCAS -->

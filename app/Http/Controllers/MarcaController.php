@@ -72,6 +72,10 @@ class MarcaController extends Controller
             $marca->importadores()->attach(session('importadorId'));
             $url = 'importador/'.session('importadorId');
             return redirect($url)->with('msj', 'Su marca se ha agregado con exito');
+        }elseif ($request->who == 'D'){
+            $marca->distribuidores()->attach(session('distribuidorId'));
+            $url = 'distribuidor/'.session('distribuidorId');
+            return redirect($url)->with('msj', 'Su marca se ha agregado con exito');
         }   
     }
     
@@ -98,11 +102,14 @@ class MarcaController extends Controller
 
         if ($request->who == 'P'){
             $url = 'productor/ver-marca/'.$request->id.'-'.$request->nombre;
-            return redirect($url)->with('msj', 'Los datos de su marca han sido actualizados exitosamente');
+            return redirect($url)->with('msj', 'Los datos de su marca se han actualizado exitosamente');
         }elseif ($request->who == 'I'){
             $url = 'importador/ver-marca/'.$request->id.'-'.$request->nombre;
-            return redirect($url)->with('msj', 'Los datos de la marca han sido actualizados exitosamente');
-        }      
+            return redirect($url)->with('msj', 'Los datos de la marca se han actualizado exitosamente');
+        }elseif ($request->who == 'D'){
+            $url = 'distribuidor/ver-marca/'.$request->id.'-'.$request->nombre;
+            return redirect($url)->with('msj', 'Los datos de la marca se han actualizado exitosamente');
+        }          
     }
 
     public function updateLogo(Request $request){
@@ -131,6 +138,9 @@ class MarcaController extends Controller
             return redirect($url)->with('msj', 'La imagen de la marca se ha actualizado exitosamente');
         }elseif ($request->who == 'I'){
             $url = 'importador/ver-marca/'.$request->id.'-'.$request->nombre;
+            return redirect($url)->with('msj', 'La imagen de la marca se ha actualizado exitosamente');
+        }elseif ($request->who == 'D'){
+            $url = 'distribuidor/ver-marca/'.$request->id.'-'.$request->nombre;
             return redirect($url)->with('msj', 'La imagen de la marca se ha actualizado exitosamente');
         }       
     }

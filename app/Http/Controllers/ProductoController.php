@@ -81,6 +81,9 @@ class ProductoController extends Controller
         }elseif ($request->who == 'I'){
             $url = 'importador/'.$request->marca_id.'-'.$request->marca_nombre.'/productos';
             return redirect($url)->with('msj', 'Su producto ha sido agregado con éxito');
+        }elseif ($request->who == 'D'){
+            $url = 'distribuidor/'.$request->marca_id.'-'.$request->marca_nombre.'/productos';
+            return redirect($url)->with('msj', 'Su producto ha sido agregado con éxito');
         }
                 
     }
@@ -137,7 +140,10 @@ class ProductoController extends Controller
         }elseif ($request->who == 'I'){
             $url = 'importador/ver-producto/'.$request->id.'-'.$request->nombre;
             return redirect($url)->with('msj', 'Los datos del producto se han actualizado exitosamente');
-        } 
+        }elseif ($request->who == 'D'){
+            $url = 'distribuidor/ver-producto/'.$request->id.'-'.$request->nombre;
+            return redirect($url)->with('msj', 'Los datos del producto se han actualizado exitosamente');
+        }    
     }
 
      public function updateImagen(Request $request){
@@ -166,6 +172,9 @@ class ProductoController extends Controller
             return redirect($url)->with('msj', 'La imagen del producto se ha actualizado exitosamente');
         }elseif ($request->who == 'I'){
             $url = 'importador/ver-producto/'.$request->id.'-'.$request->nombre;
+            return redirect($url)->with('msj', 'La imagen del producto se ha actualizado exitosamente');
+        }elseif ($request->who == 'D'){
+            $url = 'distribuidor/ver-producto/'.$request->id.'-'.$request->nombre;
             return redirect($url)->with('msj', 'La imagen del producto se ha actualizado exitosamente');
         }    
     }
