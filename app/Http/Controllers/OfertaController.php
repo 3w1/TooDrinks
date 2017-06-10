@@ -84,6 +84,8 @@ class OfertaController extends Controller
             return redirect('productor/mis-ofertas')->with('msj', 'Su oferta ha sido registrada con éxito');
         }elseif ($request->who == 'I'){
             return redirect('importador/mis-ofertas')->with('msj', 'Su oferta ha sido registrada con éxito');
+        }elseif ($request->who == 'D'){
+            return redirect('distribuidor/mis-ofertas')->with('msj', 'Su oferta ha sido registrada con éxito');
         }
     }
 
@@ -136,6 +138,9 @@ class OfertaController extends Controller
             return redirect($url)->with('msj', 'Los datos de la oferta han sido actualizados exitosamente');
         }elseif ($request->who == 'I'){
             $url = 'importador/ver-oferta/'.$id;
+            return redirect($url)->with('msj', 'Los datos de la oferta han sido actualizados exitosamente');
+        }elseif ($request->who == 'D'){
+            $url = 'distribuidor/ver-oferta/'.$id;
             return redirect($url)->with('msj', 'Los datos de la oferta han sido actualizados exitosamente');
         }
     }

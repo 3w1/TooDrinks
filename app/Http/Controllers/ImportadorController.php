@@ -259,7 +259,7 @@ class ImportadorController extends Controller
         return view('importador.detalleProducto')->with(compact('producto', 'bebida', 'productor'));
     }
 
-     public function registrar_oferta($id, $producto){
+    public function registrar_oferta($id, $producto){
         $paises = DB::table('pais')
                         ->orderBy('pais')
                         ->pluck('pais', 'id');
