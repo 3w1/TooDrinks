@@ -37,9 +37,9 @@
                 <i class="ion ion-bag"></i>
             </div>
             @if ($cont > 0) 
-                <a href="" class="small-box-footer">Ver Mis Marcas <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="{{ route('importador.marcas') }}" class="small-box-footer">Ver Mis Marcas <i class="fa fa-arrow-circle-right"></i></a>
             @else
-                <a href="" class="small-box-footer">Registrar Marca <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="{{ route('importador.registrar-marca') }}" class="small-box-footer">Registrar Marca <i class="fa fa-arrow-circle-right"></i></a>
             @endif
             
         </div>

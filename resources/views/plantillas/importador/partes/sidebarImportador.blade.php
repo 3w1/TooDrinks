@@ -20,8 +20,9 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href="{{ route('importador.distribuidores') }}"><i class="fa fa-circle-o"></i> Listado</a></li>
+         <li><a href="{{ route('importador.distribuidores') }}"><i class="fa fa-circle-o"></i> Mis Distribuidores</a></li>
          <li><a href="{{ route('importador.registrar-distribuidor') }}"><i class="fa fa-circle-o"></i> Crear Nuevo</a></li>
+          <li><a href=""><i class="fa fa-circle-o"></i> Distribuidores Disponibles</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE DISTRIBUIDORES -->
@@ -35,8 +36,9 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href=""><i class="fa fa-circle-o"></i> Listado</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i>Crear Nueva</a></li>
+         <li><a href="{{ route('importador.marcas') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
+         <li><a href="{{ route('importador.registrar-marca') }}"><i class="fa fa-circle-o"></i>Crear Nueva</a></li>
+          <li><a href=""><i class="fa fa-circle-o"></i>Marcas Disponibles</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE MARCAS -->

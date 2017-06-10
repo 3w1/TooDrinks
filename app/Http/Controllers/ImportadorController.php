@@ -7,6 +7,7 @@ use App\Models\Importador;
 use App\Models\User;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
+use App\Models\Marca;
 use DB; use Auth; use Input; use Image;
 
 class ImportadorController extends Controller
@@ -186,5 +187,30 @@ class ImportadorController extends Controller
                                     ->paginate(6);
 
         return view('importador.listados.distribuidores')->with(compact('distribuidores'));
+    }
+
+    //FUNCION QUE LE PERMITE AL IMPORTADOR REGISTRAR UNA MARCA
+    public function registrar_marca(){
+
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+
+        return view('importador.registrarMarca')->with(compact('paises'));
+    }
+    
+     //FUNCION QUE PERMITE VER LAS MARCAS QUE MANEJA UN IMPORTADOR
+    public function ver_marcas(){
+        $marcas = Importador::find(session('importadorId'))
+                                    ->marcas()
+                                    ->paginate(6);
+
+        return view('importador.listados.marcas')->with(compact('marcas'));
+    }
+
+    public function ver_detalle_marca($id, $nombre){
+        $marca = Marca::find($id);
+
+        return view('importador.detalleMarca')->with(compact('marca'));
     }
 }

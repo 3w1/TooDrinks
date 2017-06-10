@@ -68,12 +68,13 @@ class MarcaController extends Controller
         if ($request->who == 'P'){
             $url = 'productor/'.session('productorId');
             return redirect($url)->with('msj', 'Su marca se ha agregado con exito');
-        }else{
-            return redirect()->action('MarcaController@index');
-        }
-        
+        }elseif ($request->who == 'I'){
+            $marca->importadores()->attach(session('importadorId'));
+            $url = 'importador/'.session('importadorId');
+            return redirect($url)->with('msj', 'Su marca se ha agregado con exito');
+        }   
     }
-
+    
     public function show($id)
     {
        
@@ -95,9 +96,13 @@ class MarcaController extends Controller
         $marca->fill($request->all());
         $marca->save();
 
-        if ($request->who == 'P')
+        if ($request->who == 'P'){
             $url = 'productor/ver-marca/'.$request->id.'-'.$request->nombre;
             return redirect($url)->with('msj', 'Los datos de su marca han sido actualizados exitosamente');
+        }elseif ($request->who == 'I'){
+            $url = 'importador/ver-marca/'.$request->id.'-'.$request->nombre;
+            return redirect($url)->with('msj', 'Los datos de la marca han sido actualizados exitosamente');
+        }      
     }
 
     public function updateLogo(Request $request){
@@ -121,9 +126,13 @@ class MarcaController extends Controller
                             ->where('id', '=', $request->id)
                             ->update(['logo' => $nombre ]);
        
-        if ($request->who == 'P')
+        if ($request->who == 'P'){
             $url = 'productor/ver-marca/'.$request->id.'-'.$request->nombre;
             return redirect($url)->with('msj', 'La imagen de la marca se ha actualizado exitosamente');
+        }elseif ($request->who == 'I'){
+            $url = 'importador/ver-marca/'.$request->id.'-'.$request->nombre;
+            return redirect($url)->with('msj', 'La imagen de la marca se ha actualizado exitosamente');
+        }       
     }
 
     public function destroy($id)

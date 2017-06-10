@@ -74,6 +74,14 @@ Route::resource('productor','ProductorController');
 Route::get('importador/registrar-distribuidor', 'ImportadorController@registrar_distribuidor')->name('importador.registrar-distribuidor');
 Route::get('importador/mis-distribuidores', 'ImportadorController@ver_distribuidores')->name('importador.distribuidores');
 
+Route::get('importador/registrar-marca', 'ImportadorController@registrar_marca')->name('importador.registrar-marca');
+Route::get('importador/mis-marcas', 'ImportadorController@ver_marcas')->name('importador.marcas');
+Route::get('importador/ver-marca/{id}-{marca}', 'ImportadorController@ver_detalle_marca')->name('importador.marca');
+
+Route::get('importador/{id}-{marca}/registrar-producto', 'ImportadorController@registrar_producto')->name('importador.registrar-producto');
+Route::get('importador/{id}-{marca}/productos', 'ImportadorController@ver_productos')->name('importador.productos');
+Route::get('importador/ver-producto/{id}-{producto}', 'ImportadorController@ver_detalle_producto')->name('importador.producto');
+
 Route::post('importador/updateAvatar', 'ImportadorController@updateAvatar')->name('importador.updateAvatar');
 
 Route::resource('importador','ImportadorController');

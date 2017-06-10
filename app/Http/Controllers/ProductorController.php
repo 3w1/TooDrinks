@@ -212,13 +212,7 @@ class ProductorController extends Controller
 
         $paises = DB::table('pais')
                         ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
-
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
+                        ->pluck('pais', 'id');
 
         return view('productor.registrarMarca')->with(compact('paises', 'provincias'));
     }
