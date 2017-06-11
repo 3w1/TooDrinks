@@ -18,113 +18,47 @@ class DemandaDistribucionController extends Controller
     
     public function index()
     {
-        $demandaDistribuidores = Demanda_Distribuidor::paginate(1);
-        return view('demandaDistribucion.index')->with(compact('demandaDistribuidores'));
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
 
-        $productos = DB::table('producto')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre')
-                        ->get();
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
-
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        return view('demandaDistribucion.create')->with(compact('productos','paises','provincias')); 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $demanda_distribuidor  = new Demanda_Distribuidor($request->all());
         $demanda_distribuidor ->save();
 
-        if ($request->who == 'P')
+        if ($request->who == 'P'){
             $url = 'productor/'.session('productorId');
             return redirect($url)->with('msj', 'Su solicitud de distribuidor ha sido creada exitosamente');    
         }
+    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
 
-        $demandaDistribuidor = Demanda_Distribuidor::find($id);
-
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->pluck('provincia', 'id');
-        
-        $marcas = DB::table('marca')
-                        ->orderBy('nombre')
-                        ->pluck('nombre', 'id');
-
-        return view('demandaDistribucion.edit')->with(compact('demandaDistribuidor','marcas', 'provincias'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $demanda_distribuidor = Demanda_Distribuidor::find($id);
-        $demanda_distribuidor->fill($request->all());
+       	$demanda_distribuidor->fill($request->all());
         $demanda_distribuidor->save();
 
         if ($request->who == 'P')
             return redirect('productor/mis-demandas-distribuidores')->with('msj', 'Los datos de su demanda se han actualizado exitosamente');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        $demanda_distribuidor  = Demanda_Distribuidor::find($id);
-        $demanda_distribuidor ->delete();
 
-        return redirect()->action('DemandaDistribucionController@index');
     }
 }

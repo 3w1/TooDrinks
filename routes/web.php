@@ -61,6 +61,7 @@ Route::get('productor/ver-oferta/{id}', 'ProductorController@ver_detalle_oferta'
 
 Route::get('productor/solicitar-importador', 'ProductorController@solicitar_importador')->name('productor.solicitar-importador');
 Route::get('productor/mis-demandas-importadores', 'ProductorController@ver_demandas_importadores')->name('productor.demandas-importadores');
+Route::get('productor/editar-demanda-importador/{id}', 'ProductorController@editar_demanda_importacion')->name('productor.editarDemandaImp');
 
 Route::get('productor/solicitar-distribuidor', 'ProductorController@solicitar_distribuidor')->name('productor.solicitar-distribuidor');
 Route::get('productor/mis-demandas-distribuidores', 'ProductorController@ver_demandas_distribuidores')->name('productor.demandas-distribuidores');

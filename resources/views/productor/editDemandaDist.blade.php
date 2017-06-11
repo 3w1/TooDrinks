@@ -1,5 +1,5 @@
 @extends('plantillas.productor.mainProductor')
-@section('title', 'Listado de Demandas de Distribuidores')
+@section('title', 'Demanda de Distribuidor')
 
 @section('items')
 	<span><strong><h3>Modificar Demanda de Distribución</h3></strong></span>

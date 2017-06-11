@@ -1,6 +1,3 @@
-	{!! Html::script('js/demandaDistribuidores/edit.js') !!}
-	
-	{!! Form::hidden('status_hidden', $demandaDistribuidor->status, ['id' => 'status_hidden']) !!}
 
 	<div class="form-group">
 		{!! Form::label('marca_id', 'Seleccione la Marca que desea distribuir') !!}
@@ -13,11 +10,8 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('producto_id', 'Seleccione el status') !!}
-		<select name="status" id="status" class="form-control">
-			<option value="1">Activa</option>
-			<option value="0">Inactiva</option>
-		</select>
+		{!! Form::label('producto_id', 'Status') !!}
+		{!! Form::select('status', ['0' => 'Inactiva', '1' => 'Activa'], $demandaDistribuidor->status, ['class' => 'form-control']) !!}
 	</div>
 
 	<div class="form-group">

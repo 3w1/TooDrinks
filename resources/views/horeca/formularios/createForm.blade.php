@@ -31,12 +31,8 @@
 	</div>
 
 	<div class="form-group">
-		<select name="pais_id" class="form-control" id="pais_id" onchange="cargarProvincias();">
-			<option value="">Seleccione un país..</option>
-			@foreach ($paises as $pais )
-				<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
-			@endforeach
-		</select>
+		{!! Form::label('pais', 'País') !!}
+		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();']) !!}
 	</div>
 
 	<div class="form-group">
@@ -97,12 +93,10 @@
 	</div>
 
 	<div class="form-group">
-		<select name="tipo_horeca" class="form-control">
-			<option value="H">Hotel</option>
-			<option value="R">Restaurant</option>
-			<option value="C">Cafetería</option>
-		</select>
+		{!! Form::label('tip', 'Tipo de Horeca') !!}
+		{!! Form::select('tipo_horeca', ['H' => 'Hotel', 'R' => 'Restaurant', 'C' => 'Cafetería'], null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción..']) !!}
 	</div>
+
 
 	<div class="form-group">
 		{!! Form::label('logo', 'Logotipo / Avatar') !!}

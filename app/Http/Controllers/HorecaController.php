@@ -19,23 +19,12 @@ class HorecaController extends Controller
     
     public function index()
     {
-        $horecas = Horeca::paginate(1);
-        return view('horeca.index')->with(compact('horecas'));
+
     }
 
     public function create()
     {
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
 
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        return view('horeca.create')->with(compact('paises', 'provincias'));
     }
 
     public function store(Request $request)
@@ -43,17 +32,12 @@ class HorecaController extends Controller
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
-        //Ruta donde queremos guardar las imagenes
         $path = public_path().'/imagenes/horecas/';
         $path2 = public_path().'/imagenes/horecas/thumbnails/';
-        
-        //Nombre en el sistema de la imagen
         $nombre = 'horeca_'.time().'.'.$file->getClientOriginalExtension();
-        // Guardar Original
+
         $image->save($path.$nombre);
-        // Cambiar de tamaño
         $image->resize(240,200);
-        // Guardar Thumbnail
         $image->save($path2.$nombre);
 
         $horeca = new Horeca($request->all());
@@ -76,17 +60,16 @@ class HorecaController extends Controller
 
     public function edit($id)
     {
-       $paises = DB::table('pais')
+        $horeca = Horeca::find($id);
+
+        $paises = DB::table('pais')
                         ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
+                        ->pluck('pais', 'id');
 
         $provincias = DB::table('provincia_region')
                         ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        $horeca = Horeca::find($id);
+                        ->where('pais_id', '=', $horeca->pais_id)
+                        ->pluck('provincia', 'id');
 
         return view('horeca.edit')->with(compact('horeca', 'paises', 'provincias'));
     }
@@ -105,17 +88,12 @@ class HorecaController extends Controller
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
-        //Ruta donde queremos guardar las imagenes
         $path = public_path().'/imagenes/horecas/';
         $path2 = public_path().'/imagenes/horecas/thumbnails/';
-        
-        //Nombre en el sistema de la imagen
         $nombre = 'horeca_'.time().'.'.$file->getClientOriginalExtension();
-        // Guardar Original
+
         $image->save($path.$nombre);
-        // Cambiar de tamaño
         $image->resize(240,200);
-        // Guardar Thumbnail
         $image->save($path2.$nombre);
 
         $actualizacion = DB::table('horeca')
@@ -128,9 +106,6 @@ class HorecaController extends Controller
 
     public function destroy($id)
     {
-        $horeca = Horeca::find($id);
-        $horeca->delete();
 
-        return redirect()->action('HorecaController@index');
     }
 }

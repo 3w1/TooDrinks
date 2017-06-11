@@ -18,41 +18,14 @@ class DemandaImportacionController extends Controller
     
     public function index()
     {
-        $demandaImportadores = Demanda_Importador::paginate(1);
-        return view('demandaImportacion.index')->with(compact('demandaImportadores'));
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        $productos = DB::table('producto')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre')
-                        ->get();
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
-
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        return view('demandaImportacion.create')->with(compact('productos','paises','provincias')); 
+        
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $demanda_importador  = new Demanda_Importador($request->all());
@@ -62,45 +35,16 @@ class DemandaImportacionController extends Controller
         return redirect($url)->with('msj', 'Su solicitud de importador ha sido creada exitosamente');    
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        $demandaImportador = Demanda_Importador::find($id);
-        
-        $marcas = DB::table('marca')
-                        ->orderBy('nombre')
-                        ->pluck('nombre', 'id');
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        return view('demandaImportacion.edit')->with(compact('demandaImportador','marcas', 'paises'));
+       
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $demanda_importador = Demanda_Importador::find($id);
@@ -118,9 +62,6 @@ class DemandaImportacionController extends Controller
      */
     public function destroy($id)
     {
-        $demanda_importador  = Demanda_Importador::find($id);
-        $demanda_importador ->delete();
-
-        return redirect()->action('DemandaImportacionController@index');
+       
     }
 }

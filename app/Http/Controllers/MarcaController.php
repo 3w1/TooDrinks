@@ -18,29 +18,12 @@ class MarcaController extends Controller
 
     public function index()
     {
-        $listas=Marca::paginate(1);
-        return view ('marca.index')->with (compact('listas'));
+        
     }
 
     public function create()
     {
-        //
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
-
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        $productores = DB::table('productor')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre')
-                        ->get();
-
-        return view ('marca.create')->with (compact('paises','provincias','productores'));
+       
     }
 
     public function store(Request $request)
@@ -48,17 +31,12 @@ class MarcaController extends Controller
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
-        //Ruta donde queremos guardar las imagenes
         $path = public_path().'/imagenes/marcas/';
         $path2 = public_path().'/imagenes/marcas/thumbnails/';
-        
-        //Nombre en el sistema de la imagen
         $nombre = 'marca_'.time().'.'.$file->getClientOriginalExtension();
-        // Guardar Original
+
         $image->save($path.$nombre);
-        // Cambiar de tamaño
         $image->resize(240,200);
-        // Guardar Thumbnail
         $image->save($path2.$nombre);
 
         $marca=new Marca($request->all());
@@ -86,12 +64,7 @@ class MarcaController extends Controller
 
     public function edit($id)
     {
-       $marca = Marca::find($id);
-       $productores = Productor::all();
-        $paises = Pais::all();
-        $provincias = Provincia_Region::all();
 
-        return view('marca.edit')->with(compact('productores', 'paises', 'provincias', 'marca'));
     }
 
     public function update(Request $request, $id)
@@ -116,17 +89,12 @@ class MarcaController extends Controller
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
-        //Ruta donde queremos guardar las imagenes
         $path = public_path().'/imagenes/marcas/';
-        $path2 = public_path().'/imagenes/marcas/thumbnails/';
-        
-        //Nombre en el sistema de la imagen
+        $path2 = public_path().'/imagenes/marcas/thumbnails/';      
         $nombre = 'marca_'.time().'.'.$file->getClientOriginalExtension();
-        // Guardar Original
+
         $image->save($path.$nombre);
-        // Cambiar de tamaño
         $image->resize(240,200);
-        // Guardar Thumbnail
         $image->save($path2.$nombre);
 
         $actualizacion = DB::table('marca')
@@ -147,31 +115,6 @@ class MarcaController extends Controller
 
     public function destroy($id)
     {
-       $marca = Marca::find($id);
-        $marca->delete();
 
-        return redirect()->action('MarcaController@index');
-    }
-
-    public function agregar_producto($id){
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
-
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        $marca = DB::table('marca')
-                    ->select('id', 'nombre')
-                    ->where('id', $id)
-                    ->get()
-                    ->first();
-
-        if ( session('perfil') == 'P')
-            return view('productor.registrarProducto')->with(compact('paises', 'provincias', 'marca'));
     }
 }

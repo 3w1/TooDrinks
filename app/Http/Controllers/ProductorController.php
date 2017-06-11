@@ -24,23 +24,12 @@ class ProductorController extends Controller
     
     public function index()
     {
-        $productores = Productor::paginate(1);
-        return view('productor.index')->with(compact('productores'));
+       
     }
 
     public function create()
     {
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
-
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        return view('productor.create')->with(compact('paises', 'provincias'));
+        
     }
 
     public function store(Request $request)
@@ -48,17 +37,12 @@ class ProductorController extends Controller
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
-        //Ruta donde queremos guardar las imagenes
         $path = public_path().'/imagenes/productores/';
         $path2 = public_path().'/imagenes/productores/thumbnails/';
-        
-        //Nombre en el sistema de la imagen
         $nombre = 'productor_'.time().'.'.$file->getClientOriginalExtension();
-        // Guardar Original
+
         $image->save($path.$nombre);
-        // Cambiar de tamaño
         $image->resize(240,200);
-        // Guardar Thumbnail
         $image->save($path2.$nombre);
 
         $productor = new Productor($request->all());
@@ -105,13 +89,12 @@ class ProductorController extends Controller
        
         $paises = DB::table('pais')
                         ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
+                        ->pluck('pais', 'id');
 
         $provincias = DB::table('provincia_region')
                         ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
+                        ->where('pais_id', '=', $productor->pais_id)
+                        ->pluck('provincia', 'id');
 
        return view('productor.edit')->with(compact('productor','paises', 'provincias'));
 
@@ -131,17 +114,12 @@ class ProductorController extends Controller
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
-        //Ruta donde queremos guardar las imagenes
         $path = public_path().'/imagenes/productores/';
-        $path2 = public_path().'/imagenes/productores/thumbnails/';
-        
-        //Nombre en el sistema de la imagen
+        $path2 = public_path().'/imagenes/productores/thumbnails/';      
         $nombre = 'productor_'.time().'.'.$file->getClientOriginalExtension();
-        // Guardar Original
+
         $image->save($path.$nombre);
-        // Cambiar de tamaño
         $image->resize(240,200);
-        // Guardar Thumbnail
         $image->save($path2.$nombre);
 
         $actualizacion = DB::table('productor')
@@ -154,10 +132,7 @@ class ProductorController extends Controller
 
     public function destroy($id)
     {
-        $productor = Productor::find($id);
-        $productor->delete();
 
-        return redirect()->action('ProductorController@index');
     }
 
     //FUNCION QUE LE PERMITE AL PRODUCTOR REGISTRAR UN IMPORTADOR DE SU PROPIEDAD
@@ -166,15 +141,9 @@ class ProductorController extends Controller
 
         $paises = DB::table('pais')
                         ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
+                        ->pluck('pais', 'id');
 
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        return view('productor.registrarPerfil')->with(compact('perfil', 'paises', 'provincias'));
+        return view('productor.registrarPerfil')->with(compact('perfil', 'paises'));
     }
 
     //FUNCION QUE PERMITE VER LOS IMPORTADORES ASOCIADOS A UN PRODUCTOR
@@ -390,5 +359,19 @@ class ProductorController extends Controller
                         ->pluck('nombre', 'id');
 
         return view('productor.editDemandaDist')->with(compact('demandaDistribuidor','marcas', 'provincias'));
+    }
+
+     public function editar_demanda_importacion($id){
+        $demandaImportador = Demanda_Importador::find($id);
+        
+        $marcas = DB::table('marca')
+                        ->orderBy('nombre')
+                        ->pluck('nombre', 'id');
+
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+
+        return view('productor.editDemandaImp')->with(compact('demandaImportador','marcas', 'paises'));
     }
 }

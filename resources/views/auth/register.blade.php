@@ -7,7 +7,7 @@
     <?php 
         $paises = DB::table('pais')
                     ->orderBy('pais')
-                    ->get();
+                    ->pluck('pais', 'id');
 
      ?>
 
@@ -104,12 +104,7 @@
                             <div class="form-group">
                                 {!! Form::label('país', 'País', ['class' => 'col-md-4 control-label']) !!}
                                 <div class="col-md-6">
-                                    <select name="pais_id" class="form-control" id="pais_id" onchange="cargarProvincias();">
-                                        <option value="">Seleccione un país..</option>
-                                        @foreach ($paises as $pais )
-                                            <option value="{{ $pais->id }}">{{ $pais->pais }}</option>
-                                        @endforeach
-                                    </select>
+                                    {!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();']) !!}
                                 </div>
                             </div>
 

@@ -1,17 +1,3 @@
-@if (Session::has('msj'))
-	<div class="alert alert-success alert-dismissable">
-  		<button type="button" class="close" data-dismiss="alert">&times;</button>
-  		<strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
-	</div>
-@endif
-
-@section('title-header')
-	<span><h3>Editar Perfil</h3></span>
-@endsection
-
-@include('importador.modales.modalAvatar')
-
-
 <div class="row">
   	<div class="col-sm-6 col-md-3">
     	<a href="" class="thumbnail" data-toggle='modal' data-target='#myModal'><img src="{{ asset('imagenes/importadores/') }}/{{ $importador->logo }}" alt="..."></a>
@@ -20,13 +6,6 @@
 
 {!! Form::open(['route' => ['importador.update', $importador->id], 'method' => 'PUT']) !!}
 	
-	{!! Form::hidden('user_id', '1') !!}
-	{!! Form::hidden('saldo', '0') !!}
-	{!! Form::hidden('pais_hidden', $importador->pais_id, ['id' => 'pais_hidden']) !!}
-	{!! Form::hidden('provincia_hidden', $importador->provincia_region_id, ['id' => 'provincia_hidden']) !!}
-	{!! Form::hidden('reclamada_hidden', $importador->reclamada, ['id' => 'reclamada_hidden']) !!}
-	{!! Form::hidden('datos_hidden', $importador->estado_datos, ['id' => 'datos_hidden']) !!}
-
 	<div class="form-group">
 		{!! Form::label('nombre', 'Nombre') !!}
 		{!! Form::text('nombre', $importador->nombre, ['class' => 'form-control'] ) !!}
@@ -53,19 +32,13 @@
 	</div>
 	
 	<div class="form-group">
-		<select name="pais_id" id="pais_id" class="form-control">
-			@foreach ($paises as $pais )
-				<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
-			@endforeach
-		</select>
+		{!! Form::label('pais', 'País') !!}
+		{!! Form::select('pais_id', $paises, $importador->pais_id, ['class' => 'form-control', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();']) !!}
 	</div>
 
 	<div class="form-group">
-		<select name="provincia_region_id" id="provincia_id" class="form-control">
-			@foreach ($provincias as $provincia )
-				<option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
-			@endforeach
-		</select>
+		{!! Form::label('provincias', 'Provincia') !!}
+		{!! Form::select('provincia_region_id', $provincias, $importador->provincia_region_id, ['class' => 'form-control', 'id' => 'provincias']) !!}
 	</div>
 	
 	<div class="form-group">
@@ -109,13 +82,6 @@
 	</div>
 
 	<div class="form-group">
-		<select name="reclamada" id="reclamada" class="form-control">
-			<option value="0">No</option>
-			<option value="1">Si</option>
-		</select>
-	</div>
-
-	<div class="form-group">
 		{!! Form::label('latitud', 'Latitud') !!}
 		{!! Form::text('latitud', $importador->latitud, ['class' => 'form-control', 'placeholder' => 'Latitud'] ) !!}
 	</div>
@@ -123,13 +89,6 @@
 	<div class="form-group">
 		{!! Form::label('longitud', 'Longitud') !!}
 		{!! Form::text('longitud', $importador->longitud, ['class' => 'form-control', 'placeholder' => 'Longitud'] ) !!}
-	</div>
-
-	<div class="form-group">
-		<select name="estado_datos" id="estado_datos" class="form-control">
-			<option value="0">Sin Actualizar</option>
-			<option value="1">Actualizados</option>
-		</select>
 	</div>
 
 	<div class="form-group">

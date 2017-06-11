@@ -12,10 +12,7 @@
 	{!! Html::script('js/marcas/edit.js') !!}
 
 	{!! Form::hidden('id', $marca->id) !!}
-	{!! Form::hidden('reclamada_hidden', $marca->reclamada) !!}
 	{!! Form::hidden('productor_id', $marca->productor_id) !!}
-	{!! Form::hidden('creador_id', $marca->creador_id) !!}
-	{!! Form::hidden('tipo_creador', $marca->tipo_creador) !!}
 
 	<div class="form-group">
 		{!! Form::label ('nombre','Nombre') !!}

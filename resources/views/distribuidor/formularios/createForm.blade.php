@@ -31,7 +31,7 @@
 	</div>
 	
 	<div class="form-group">
-		{!! Form::label('pais', 'País del Distribuidor') !!}
+		{!! Form::label('pais', 'País') !!}
 		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();']) !!}
 	</div>
 

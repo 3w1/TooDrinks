@@ -23,41 +23,25 @@ class DistribuidorController extends Controller
     
     public function index()
     {
-        $distribuidores = Distribuidor::paginate(1);
-        return view('distribuidor.index')->with(compact('distribuidores'));
+        
     }
 
     public function create()
     {
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
-
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        return view('distribuidor.create')->with(compact('paises','provincias'));
-     }
+        
+    }
 
     public function store(Request $request)
     {
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
-        //Ruta donde queremos guardar las imagenes
         $path = public_path().'/imagenes/distribuidores/';
         $path2 = public_path().'/imagenes/distribuidores/thumbnails/';
-        
-        //Nombre en el sistema de la imagen
         $nombre = 'distribuidor_'.time().'.'.$file->getClientOriginalExtension();
-        // Guardar Original
+
         $image->save($path.$nombre);
-        // Cambiar de tamaño
         $image->resize(240,200);
-        // Guardar Thumbnail
         $image->save($path2.$nombre);
 
         $distribuidor = new Distribuidor($request->all());
@@ -110,13 +94,12 @@ class DistribuidorController extends Controller
 
         $paises = DB::table('pais')
                         ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
+                        ->pluck('pais', 'id');
 
         $provincias = DB::table('provincia_region')
                         ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
+                        ->where('pais_id', '=', $distribuidor->pais_id)
+                        ->pluck('provincia', 'id');
 
        return view('distribuidor.edit')->with(compact('distribuidor', 'paises', 'provincias')); 
     }
@@ -135,17 +118,12 @@ class DistribuidorController extends Controller
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
-        //Ruta donde queremos guardar las imagenes
         $path = public_path().'/imagenes/distribuidores/';
         $path2 = public_path().'/imagenes/distribuidores/thumbnails/';
-        
-        //Nombre en el sistema de la imagen
         $nombre = 'distribuidor_'.time().'.'.$file->getClientOriginalExtension();
-        // Guardar Original
+
         $image->save($path.$nombre);
-        // Cambiar de tamaño
         $image->resize(240,200);
-        // Guardar Thumbnail
         $image->save($path2.$nombre);
 
         $actualizacion = DB::table('distribuidor')
@@ -158,10 +136,7 @@ class DistribuidorController extends Controller
 
     public function destroy($id)
     {
-        $distribuidor = Distribuidor::find($id);
-        $distribuidor->delete();
-
-        return redirect()->action('DistribuidorController@index');   
+         
     }
 
     //FUNCION QUE LE PERMITE AL DISTRIBUIDOR REGISTRAR UNA MARCA

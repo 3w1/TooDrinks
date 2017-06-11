@@ -24,23 +24,12 @@ class ImportadorController extends Controller
     
     public function index()
     {
-        $importadores = Importador::paginate(1);
-        return view('importador.index')->with(compact('importadores'));
+        
     }
 
     public function create()
     {   
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
-
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        return view('importador.create')->with(compact('paises','provincias'));
+        
     }
 
     public function store(Request $request)
@@ -48,17 +37,12 @@ class ImportadorController extends Controller
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
-        //Ruta donde queremos guardar las imagenes
         $path = public_path().'/imagenes/importadores/';
         $path2 = public_path().'/imagenes/importadores/thumbnails/';
-        
-        //Nombre en el sistema de la imagen
         $nombre = 'importador_'.time().'.'.$file->getClientOriginalExtension();
-        // Guardar Original
+
         $image->save($path.$nombre);
-        // Cambiar de tamaño
         $image->resize(240,200);
-        // Guardar Thumbnail
         $image->save($path2.$nombre);
 
         $importador = new Importador($request->all());
@@ -121,13 +105,12 @@ class ImportadorController extends Controller
 
         $paises = DB::table('pais')
                         ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
+                        ->pluck('pais', 'id');
 
         $provincias = DB::table('provincia_region')
                         ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
+                        ->where('pais_id', '=', $importador->pais_id)
+                        ->pluck('provincia', 'id');
 
        return view('importador.edit')->with(compact('importador', 'paises', 'provincias'));
     }
@@ -146,17 +129,12 @@ class ImportadorController extends Controller
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
-        //Ruta donde queremos guardar las imagenes
         $path = public_path().'/imagenes/importadores/';
         $path2 = public_path().'/imagenes/importadores/thumbnails/';
-        
-        //Nombre en el sistema de la imagen
         $nombre = 'importador_'.time().'.'.$file->getClientOriginalExtension();
-        // Guardar Original
+
         $image->save($path.$nombre);
-        // Cambiar de tamaño
         $image->resize(240,200);
-        // Guardar Thumbnail
         $image->save($path2.$nombre);
 
         $actualizacion = DB::table('importador')
@@ -169,10 +147,7 @@ class ImportadorController extends Controller
 
     public function destroy($id)
     {
-        $importador = Importador::find($id);
-        $importador->delete();
 
-        return redirect()->action('ImportadorController@index');
     }
 
      //FUNCION QUE LE PERMITE AL IMPORTADOR REGISTRAR UN DISTRIBUIDOR ASOCIADO

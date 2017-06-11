@@ -82,13 +82,12 @@ class UsuarioController extends Controller
        
        $paises = DB::table('pais')
                         ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
+                        ->pluck('pais', 'id');
 
         $provincias = DB::table('provincia_region')
                         ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
+                        ->where('pais_id', '=', $usuario->pais_id)
+                        ->pluck('provincia', 'id');
 
        return view('usuario.edit')->with(compact('usuario', 'paises', 'provincias'));
     }
@@ -122,12 +121,6 @@ class UsuarioController extends Controller
         // Guardar Thumbnail
         $image->save($path2.$nombre);
 
-       /* $imagen = $request->file('avatar');
-
-        $nombre = 'usuario_'.time().'.'.$imagen->getClientOriginalExtension();
-        $path = public_path() . '/imagenes/usuarios';
-        $imagen->move($path, $nombre);*/
-
         $actualizacion = DB::table('users')
                             ->where('id', '=', Auth::user()->id)
                             ->update(['avatar' => $nombre ]);
@@ -157,15 +150,9 @@ class UsuarioController extends Controller
 
         $paises = DB::table('pais')
                         ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
+                        ->pluck('pais', 'id');
 
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        return view('usuario.registrarPerfil')->with(compact('perfil', 'paises', 'provincias'));
+        return view('usuario.registrarPerfil')->with(compact('perfil', 'paises'));
     }
 
     //FUNCION QUE PERMITE VER LOS PRODUCTORES PERTENECIENTES A U USUARIO
@@ -187,15 +174,9 @@ class UsuarioController extends Controller
 
         $paises = DB::table('pais')
                         ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
+                        ->pluck('pais', 'id');
 
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        return view('usuario.registrarPerfil')->with(compact('perfil', 'paises', 'provincias'));
+        return view('usuario.registrarPerfil')->with(compact('perfil', 'paises'));
     }
 
     //FUNCION QUE PERMITE VER LOS IMPORTADORES PERTENECIENTES A U USUARIO
@@ -241,15 +222,9 @@ class UsuarioController extends Controller
 
         $paises = DB::table('pais')
                         ->orderBy('pais')
-                        ->select('id', 'pais')
-                        ->get();
+                        ->pluck('pais', 'id');
 
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->select('id', 'provincia')
-                        ->get();
-
-        return view('usuario.registrarPerfil')->with(compact('perfil', 'paises', 'provincias'));
+        return view('usuario.registrarPerfil')->with(compact('perfil', 'paises'));
     }
 
     //FUNCION QUE PERMITE VER LOS HORECAS PERTENECIENTES A U USUARIO

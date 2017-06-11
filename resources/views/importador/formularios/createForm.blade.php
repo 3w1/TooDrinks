@@ -31,15 +31,12 @@
 	</div>
 	
 	<div class="form-group">
-		<select name="pais_id" class="form-control" id="pais_id" onchange="cargarProvincias();">
-			<option value="">Seleccione un país..</option>
-			@foreach ($paises as $pais )
-				<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
-			@endforeach
-		</select>
+		{!! Form::label('pais', 'País') !!}
+		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'id' => 'pais_id', 'placeholder' => 'Seleccione un país..', 'onchange' => 'cargarProvincias();']) !!}
 	</div>
 
 	<div class="form-group">
+		{!! Form::label('provincia', 'Provincia') !!}
 		<select name="provincia_region_id" class="form-control" id="provincias">
 			<option value="">Seleccione una provincia..</option>
 		</select>

@@ -1,17 +1,3 @@
-@if (Session::has('msj'))
-	<div class="alert alert-success alert-dismissable">
-  		<button type="button" class="close" data-dismiss="alert">&times;</button>
-  		<strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
-	</div>
-@endif
-
-@section('title-header')
-	<span><h3>Editar Perfil</h3></span>
-@endsection
-
-@include('horeca.modales.modalAvatar')
-
-
 <div class="row">
   	<div class="col-sm-6 col-md-3">
    		<a href="" class="thumbnail" data-toggle='modal' data-target='#myModal'><img src="{{ asset('imagenes/horecas/') }}/{{ $horeca->logo }}"></a>
@@ -19,13 +5,6 @@
 </div>
 
 {!! Form::open(['route' => ['horeca.update', $horeca->id], 'method' => 'PUT']) !!}
-	
-	{!! Form::hidden('saldo', $horeca->saldo) !!}
-	{!! Form::hidden('reclamada_hidden', $horeca->reclamada, ['id' => 'reclamada_hidden']) !!}
-	{!! Form::hidden('pais_hidden', $horeca->pais_id, ['id' => 'pais_hidden']) !!}
-	{!! Form::hidden('provincia_hidden', $horeca->provincia_region_id, ['id' => 'provincia_hidden']) !!}
-	{!! Form::hidden('datos_hidden', $horeca->estado_datos, ['id' => 'datos_hidden']) !!}
-	{!! Form::hidden('tipo_hidden', $horeca->tipo_horeca, ['id' => 'tipo_hidden']) !!}
 
 	<div class="form-group">
 		{!! Form::label('nombre', 'Nombre del Horeca') !!}
@@ -53,19 +32,13 @@
 	</div>
 
 	<div class="form-group">
-		<select name="pais_id" id="pais_id" class="form-control">
-			@foreach ($paises as $pais )
-				<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
-			@endforeach
-		</select>
+		{!! Form::label('pais', 'País') !!}
+		{!! Form::select('pais_id', $paises, $horeca->pais_id, ['class' => 'form-control', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();']) !!}
 	</div>
 
 	<div class="form-group">
-		<select name="provincia_region_id" id="provincia_id" class="form-control">
-			@foreach ($provincias as $provincia )
-				<option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
-			@endforeach
-		</select>
+		{!! Form::label('provincias', 'Provincia') !!}
+		{!! Form::select('provincia_region_id', $provincias, $horeca->provincia_region_id, ['class' => 'form-control', 'id' => 'provincias']) !!}
 	</div>
 
 	<div class="form-group">
@@ -109,14 +82,6 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('reclamada', 'Reclamada') !!}
-		<select name="reclamada" id="reclamada" class="form-control">
-			<option value="0">No</option>
-			<option value="1">Si</option>
-		</select>
-	</div>
-
-	<div class="form-group">
 		{!! Form::label('latitud', 'Latitud') !!}
 		{!! Form::text('latitud', $horeca->latitud, ['class' => 'form-control'] ) !!}
 	</div>
@@ -127,18 +92,8 @@
 	</div>
 
 	<div class="form-group">
-		<select name="estado_datos" id="estado_datos" class="form-control">
-			<option value="0">Sin Actualizar</option>
-			<option value="1">Actualizados</option>
-		</select>
-	</div>
-
-	<div class="form-group">
-		<select name="tipo_horeca" id="tipo_horeca" class="form-control">
-			<option value="H">Hotel</option>
-			<option value="R">Restaurante</option>
-			<option value="C">Cafetería</option>
-		</select>
+		{!! Form::label('tip', 'Tipo de Horeca') !!}
+		{!! Form::select('tipo_horeca', ['H' => 'Hotel', 'R' => 'Restaurant', 'C' => 'Cafetería'], $horeca->tipo_horeca, ['class' => 'form-control']) !!}
 	</div>
 
 	<div class="form-group">
