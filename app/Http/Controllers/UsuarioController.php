@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
+use App\Models\Productor;
+use App\Models\Importador;
+use App\Models\Distribuidor;
+use App\Models\Horeca;
 use DB;
 use Auth;
 use Input;
@@ -21,21 +25,66 @@ class UsuarioController extends Controller
     public function index()
     {
         $user = User::find(Auth::user()->id);
-        $cont=0;
+        /*$cont=0;
         $cont2=0;
         $cont3=0;
         $cont4=0;
 
         foreach($user->productores as $productor)
-            $cont++;
+            if ($productor->id != '0')
+                $cont++;
         foreach($user->importadores as $importador)
             $cont2++;
         foreach($user->distribuidores as $distribuidor)
             $cont3++;
         foreach($user->horecas as $horeca)
-            $cont4++;
+            $cont4++;*/
 
-        return view('usuario.index')->with(compact('cont', 'cont2', 'cont3', 'cont4'));
+        if ($user->productor == '1'){
+            $productor = DB::table('productor')
+                            ->where('user_id', '=', Auth::user()->id)
+                            ->select('id', 'nombre')
+                            ->get()
+                            ->first();
+
+            session(['productorId' => $productor->id]);
+            session(['productorNombre' => $productor->nombre]);
+        }
+
+        if ($user->importador == '1'){
+            $importador = DB::table('importador')
+                            ->where('user_id', '=', Auth::user()->id)
+                            ->select('id', 'nombre')
+                            ->get()
+                            ->first();
+
+            session(['importadorId' => $importador->id]);
+            session(['importadorNombre' => $importador->nombre]);
+        }
+
+        if ($user->distribuidor == '1'){
+            $distribuidor = DB::table('distribuidor')
+                            ->where('user_id', '=', Auth::user()->id)
+                            ->select('id', 'nombre')
+                            ->get()
+                            ->first();
+
+            session(['distribuidorId' => $distribuidor->id]);
+            session(['distribuidorNombre' => $distribuidor->nombre]);
+        }
+
+        if ($user->horeca == '1'){
+             $horeca = DB::table('horeca')
+                            ->where('user_id', '=', Auth::user()->id)
+                            ->select('id', 'nombre')
+                            ->get()
+                            ->first();
+
+            session(['horecaId' => $horeca->id]);
+            session(['horecaNombre' => $horeca->nombre]);
+        }
+
+        return view('usuario.index');
     }
 
     public function create()
@@ -266,5 +315,70 @@ class UsuarioController extends Controller
                     ->paginate(6);
 
         return view('usuario.listados.productos')->with(compact('productos'));
+    }
+
+    public function listado_productores(){
+        $productores = Productor::orderBy('nombre', 'ASC')
+                        ->where('user_id', '=', '0')
+                        ->paginate(6);
+
+        return view('usuario.listados.productoresDisponibles')->with(compact('productores'));
+    }
+
+    public function reclamar_productor($id){
+        $actualizacion = DB::table('productor')
+                            ->where('id', '=', $id)
+                            ->update(['user_id' => Auth::user()->id ]);
+
+        return redirect('usuario/mis-productores')->with('msj', 'Se ha agregado exitosamente un productor a su propiedad');
+
+    }
+
+    public function listado_importadores(){
+        $importadores = Importador::orderBy('nombre', 'ASC')
+                        ->where('user_id', '=', '0')
+                        ->paginate(6);
+
+        return view('usuario.listados.importadoresDisponibles')->with(compact('importadores'));
+    }
+
+    public function reclamar_importador($id){
+        $actualizacion = DB::table('importador')
+                            ->where('id', '=', $id)
+                            ->update(['user_id' => Auth::user()->id ]);
+
+        return redirect('usuario/mis-importadores')->with('msj', 'Se ha agregado exitosamente un importador a su propiedad');
+    }
+
+    public function listado_distribuidores(){
+        $distribuidores = Distribuidor::orderBy('nombre', 'ASC')
+                        ->where('user_id', '=', '0')
+                        ->paginate(6);
+
+        return view('usuario.listados.distribuidoresDisponibles')->with(compact('distribuidores'));
+    }
+
+    public function reclamar_distribuidor($id){
+        $actualizacion = DB::table('distribuidor')
+                            ->where('id', '=', $id)
+                            ->update(['user_id' => Auth::user()->id ]);
+
+        return redirect('usuario/mis-distribuidores')->with('msj', 'Se ha agregado exitosamente un distribuidor a su propiedad');
+    }
+
+    public function listado_horecas(){
+        $horecas = Horeca::orderBy('nombre', 'ASC')
+                        ->where('user_id', '=', '0')
+                        ->paginate(6);
+
+        return view('usuario.listados.horecasDisponibles')->with(compact('horecas'));
+    }
+
+    public function reclamar_horeca($id){
+        $actualizacion = DB::table('horeca')
+                            ->where('id', '=', $id)
+                            ->update(['user_id' => Auth::user()->id ]);
+
+        return redirect('usuario/mis-horecas')->with('msj', 'Se ha agregado exitosamente un horeca a su propiedad');
     }
 }

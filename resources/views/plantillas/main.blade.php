@@ -18,73 +18,65 @@
 	</head>
 
 	<body class="hold-transition skin-blue sidebar-mini">
-		<div class="wrapper">
+    <div class="wrapper">
 
-  			<header class="main-header">
-			    <!-- Logo -->
-			    <a href="{{ route('usuario.index') }}" class="logo">
-			    	<!-- mini logo for sidebar mini 50x50 pixels -->
-			      	<span class="logo-mini"><b>T</b>D</span>
-			      	<!-- logo for regular state and mobile devices -->
-			      	<span class="logo-lg"><b>Too</b>Drinks</span>
-			    </a>
+        <header class="main-header">
+          <!-- Logo -->
+          <a href="{{ route('usuario.index') }}" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+              <span class="logo-mini"><b>T</b>D</span>
+              <!-- logo for regular state and mobile devices -->
+              <span class="logo-lg"><b>Too</b>Drinks</span>
+          </a>
 
-			    @include('plantillas.partes.navbar')
+          @include('plantillas.partes.navbar')
 
-  			</header>
- 			
- 			<!-- Left side column. contains the logo and sidebar -->
- 			 <aside class="main-sidebar">
-    			<!-- sidebar: style can be found in sidebar.less -->
-    			<section class="sidebar">
-               @if ( session('perfil') == 'U')
-      			   @include('plantillas.partes.sidebarUsuario')
-               @elseif ( session('perfil') == 'P')
-                  @include('plantillas.partes.sidebarProductor')
-               @elseif ( session('perfil') == 'I')
-                  @include('plantillas.partes.sidebarImportador')
-               @elseif ( session('perfil') == 'D')
-                  @include('plantillas.partes.sidebarDistribuidor')
-               @elseif ( session('perfil') == 'H')
-                  @include('plantillas.partes.sidebarHoreca')
-               @endif
-    			</section>
-    			<!-- /.sidebar -->
-  			</aside>
+        </header>
+      
+      <!-- Left side column. contains the logo and sidebar -->
+       <aside class="main-sidebar">
+          <!-- sidebar: style can be found in sidebar.less -->
+          <section class="sidebar">
+            @include('plantillas.partes.sidebar')
+  
+          </section>
+          <!-- /.sidebar -->
+        </aside>
 
-  			<!-- Content Wrapper. Contains page content -->
-  			<div class="content-wrapper">
-    			<!-- Content Header (Page header) -->
-    			<section class="content-header">
-      			@yield('title-header')
-    			</section>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+          <!-- Content Header (Page header) -->
+          <section class="content-header">
+              @yield('title-header')
+          </section>
 
-    			<!-- Main content -->
-    			<section class="content">
-      			<div class="row">
-                	@yield('items')	
-     				</div>
+          <!-- Main content -->
+          <section class="content">
+              <!-- Small boxes (Stat box) -->
+              <div class="row">
+                    @yield('items') 
+              </div>
     
-      			<!-- Main row -->
-      			<div class="row">
-        			<!-- Left col -->
-        			<section class="col-lg-9 connectedSortable">
-				     @yield('content-left')
-				   </section>
-        			<!-- /.Left col -->
-        				
-        			<!-- right col (We are only adding the ID to make the widgets sortable)-->
-        			<section class="col-lg-3 connectedSortable">
-						@include('plantillas.partes.content-right')
-        			</section>
-        			<!-- right col -->
-      		</div>
-      				<!-- /.row (main row) -->
-    			</section>
-    			<!-- /.content -->
-  			</div>
-  			<!-- /.content-wrapper -->
-	    </div>
+              <!-- Main row -->
+              <div class="row">
+                <!-- Left col -->
+                <section class="col-lg-8 connectedSortable">
+                  @yield('content-left')
+                </section>
+                <!-- /.Left col -->
+                
+                <!-- right col (We are only adding the ID to make the widgets sortable)-->
+                <section class="col-lg-4 connectedSortable">
+              @include('plantillas.partes.content-right')
+                </section>
+                <!-- right col -->
+              </div>
+              <!-- /.row (main row) -->
+          </section>
+          <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+      </div>
      
 	   {!! Html::script('bootstrap/js/jquery-3.2.1.min.js') !!}
       {!! Html::script('bootstrap/js/bootstrap.min.js') !!}}

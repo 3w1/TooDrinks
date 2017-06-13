@@ -1,4 +1,4 @@
-@extends('plantillas.productor.mainProductor')
+@extends('plantillas.main')
 @section('title', 'Crear Oferta')
 
 @section('items')
@@ -35,6 +35,10 @@
             {!! Form::label('visible_horeca', 'Visible para Horecas') !!}
             {!! Form::select('visible_horecas', ['0' => 'No', '1' => 'Si'], null, ['class' => 'form-control']); !!}
         </div>  
+
+        <div class="form-group">
+			{!! Form::submit('Crear Oferta', ['class' => 'btn btn-primary']) !!}
+		</div>
 		
 		{!! Form::close() !!}
 

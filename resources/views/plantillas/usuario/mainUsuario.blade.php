@@ -35,7 +35,8 @@
  			 <aside class="main-sidebar">
     			<!-- sidebar: style can be found in sidebar.less -->
     			<section class="sidebar">
-      				@include('plantillas.usuario.partes.sidebarUsuario')
+            @include('plantillas.partes.sidebar')
+  
     			</section>
     			<!-- /.sidebar -->
   			</aside>

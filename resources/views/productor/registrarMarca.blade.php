@@ -1,4 +1,4 @@
-@extends('plantillas.productor.mainProductor')
+@extends('plantillas.main')
 @section('title', 'Registrar Narca')
 
 @section('items')

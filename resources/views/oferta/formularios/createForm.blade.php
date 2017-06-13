@@ -59,6 +59,3 @@
 
 	<div class="form-group" id="estados"></div>
 	
-	<div class="form-group">
-		{!! Form::submit('Crear Oferta', ['class' => 'btn btn-primary']) !!}
-	</div>

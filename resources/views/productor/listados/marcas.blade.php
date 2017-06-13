@@ -1,7 +1,13 @@
-@extends('plantillas.productor.mainProductor')
+@extends('plantillas.main')
 @section('title', 'Listado de Marcas')
 
 @section('items')
+  @if (Session::has('msj'))
+      <div class="alert alert-success alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+      </div>
+  @endif
 	<span><strong><h3>Mis Marcas</h3></strong></span>
 @endsection
 

@@ -1,11 +1,18 @@
 @extends('plantillas.usuario.mainUsuario')
 @section('title', 'Listado de Importadores')
 
-@section('title-header')
-	<span><strong><h3>Mis Importadores</h3></strong></span>
-@endsection
-
 @section('content-left')
+	
+	@section('title-header')
+		@if (Session::has('msj'))
+	        <div class="alert alert-success alert-dismissable">
+	            <button type="button" class="close" data-dismiss="alert">&times;</button>
+	            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+	        </div>
+	    @endif
+		<span><strong><h3>Mis Importadores</h3></strong></span>
+	@endsection
+
 	<div class="row">
 		@foreach($importadores as $importador)
 			<?php 

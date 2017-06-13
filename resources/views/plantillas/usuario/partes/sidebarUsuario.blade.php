@@ -22,7 +22,7 @@
       <ul class="treeview-menu">
          <li><a href="{{ route('usuario.productores')}}"><i class="fa fa-circle-o"></i> Mis Productores</a></li>
          <li><a href="{{ route('usuario.registrar-productor') }}"><i class="fa fa-circle-o"></i> Crear Nuevo</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i>Productores Sin Reclamar</a></li>
+         <li><a href="{{ route('usuario.productores-disponibles') }}"><i class="fa fa-circle-o"></i>Productores Sin Reclamar</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE PRODUCTORES -->
@@ -38,7 +38,7 @@
       <ul class="treeview-menu">
          <li><a href="{{ route('usuario.importadores')}}"><i class="fa fa-circle-o"></i> Mis Importadores</a></li>
          <li><a href="{{ route('usuario.registrar-importador') }}"><i class="fa fa-circle-o"></i> Crear Nuevo</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i>Importadores Sin Reclamar</a></li>
+         <li><a href="{{ route('usuario.importadores-disponibles') }}"><i class="fa fa-circle-o"></i>Importadores Sin Reclamar</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE IMPORTADORES -->
@@ -54,7 +54,7 @@
       <ul class="treeview-menu">
          <li><a href="{{ route('usuario.distribuidores') }}"><i class="fa fa-circle-o"></i> Mis Distribuidores</a></li>
          <li><a href="{{ route('usuario.registrar-distribuidor') }}"><i class="fa fa-circle-o"></i> Crear Nuevo</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i>Distribuidores sin Reclamar</a></li>
+         <li><a href="{{ route('usuario.distribuidores-disponibles') }}"><i class="fa fa-circle-o"></i>Distribuidores sin Reclamar</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE DISTRIBUIDORES -->
@@ -70,7 +70,7 @@
       <ul class="treeview-menu">
          <li><a href="{{ route('usuario.horecas') }}"><i class="fa fa-circle-o"></i> Mis Horecas</a></li>
          <li><a href="{{ route('usuario.registrar-horeca') }}"><i class="fa fa-circle-o"></i>Crear Nuevo</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i> Horecas Sin Reclamar</a></li>
+         <li><a href="{{ route('usuario.horecas-disponibles') }}"><i class="fa fa-circle-o"></i> Horecas Sin Reclamar</a></li>
       </ul>
    </li>
    <!-- FIN DE SECCIÓN DE HORECAS -->

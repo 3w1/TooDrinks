@@ -23,6 +23,11 @@ class CreateUsersTable extends Migration
             $table->integer('provincia_region_id');
             $table->string('avatar');
             $table->boolean('estado_datos'); 
+            $table->boolean('productor'); 
+            $table->boolean('importador'); 
+            $table->boolean('distribuidor'); 
+            $table->boolean('horeca'); 
+            $table->boolean('activado');
             $table->rememberToken();
             $table->timestamps();
 

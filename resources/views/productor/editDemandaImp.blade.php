@@ -1,4 +1,4 @@
-@extends('plantillas.productor.mainProductor')
+@extends('plantillas.main')
 @section('title', 'Demanda de Importador')
 
 @section('items')

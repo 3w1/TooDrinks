@@ -32,7 +32,7 @@ class DemandaDistribucionController extends Controller
         $demanda_distribuidor ->save();
 
         if ($request->who == 'P'){
-            $url = 'productor/'.session('productorId');
+            $url = 'productor/mis-demandas-distribuidores';
             return redirect($url)->with('msj', 'Su solicitud de distribuidor ha sido creada exitosamente');    
         }
     }

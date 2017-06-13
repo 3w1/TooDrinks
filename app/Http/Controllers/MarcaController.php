@@ -44,8 +44,7 @@ class MarcaController extends Controller
         $marca->save();
 
         if ($request->who == 'P'){
-            $url = 'productor/'.session('productorId');
-            return redirect($url)->with('msj', 'Su marca se ha agregado con exito');
+            return redirect('productor/mis-marcas')->with('msj', 'Su marca se ha agregado con exito');
         }elseif ($request->who == 'I'){
             $marca->importadores()->attach(session('importadorId'));
             $url = 'importador/'.session('importadorId');

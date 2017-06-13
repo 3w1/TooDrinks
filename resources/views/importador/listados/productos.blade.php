@@ -1,4 +1,4 @@
-@extends('plantillas.importador.mainImportador')
+@extends('plantillas.main')
 @section('title', 'Listado de Productos')
 
 @section('items')

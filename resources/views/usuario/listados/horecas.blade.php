@@ -2,6 +2,12 @@
 @section('title', 'Listado de Horecas')
 
 @section('items')
+	@if (Session::has('msj'))
+	    <div class="alert alert-success alert-dismissable">
+	        <button type="button" class="close" data-dismiss="alert">&times;</button>
+	        <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+	    </div>
+	@endif
 	<span><strong><h3>Mis Horecas</h3></strong></span>
 @endsection
 
