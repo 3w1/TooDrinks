@@ -219,7 +219,7 @@
                   <ul class="treeview-menu">
                      <li><a href="#"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
                      <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
+                     <li><a href="{{ route('distribuidor.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
                   </ul>
                </li>
                <li>

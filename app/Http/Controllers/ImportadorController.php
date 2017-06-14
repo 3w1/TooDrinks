@@ -292,7 +292,7 @@ class ImportadorController extends Controller
     public function listado_ofertas(){
         $importador = DB::table('importador')
                             ->where('id', '=', session('importadorId') )
-                            ->select('pais_id', 'provincia_region_id')
+                            ->select('pais_id')
                             ->get()
                             ->first();
 

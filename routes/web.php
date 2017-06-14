@@ -123,8 +123,9 @@ Route::get('distribuidor/{id}-{marca}/productos', 'DistribuidorController@ver_pr
 Route::get('distribuidor/ver-producto/{id}-{producto}', 'DistribuidorController@ver_detalle_producto')->name('distribuidor.producto');
 
 Route::get('distribuidor/{id}-{producto}/registrar-oferta', 'DistribuidorController@registrar_oferta')->name('distribuidor.registrar-oferta');
-Route::get('distribuidor/mis-ofertas', 'DistribuidorController@ver_ofertas')->name('distribuidor.ofertas');
+Route::get('distribuidor/mis-ofertas', 'DistribuidorController@mis_ofertas')->name('distribuidor.ofertas');
 Route::get('distribuidor/ver-oferta/{id}', 'DistribuidorController@ver_detalle_oferta')->name('distribuidor.oferta');
+Route::get('distribuidor/ver-ofertas-disponibles', 'DistribuidorController@listado_ofertas')->name('distribuidor.ofertas-disponibles');
 
 Route::post('distribuidor/updateAvatar', 'DistribuidorController@updateAvatar')->name('distribuidor.updateAvatar');
 
