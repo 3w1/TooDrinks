@@ -104,8 +104,9 @@ Route::get('importador/{id}-{marca}/productos', 'ImportadorController@ver_produc
 Route::get('importador/ver-producto/{id}-{producto}', 'ImportadorController@ver_detalle_producto')->name('importador.producto');
 
 Route::get('importador/{id}-{producto}/registrar-oferta', 'ImportadorController@registrar_oferta')->name('importador.registrar-oferta');
-Route::get('importador/mis-ofertas', 'ImportadorController@ver_ofertas')->name('importador.ofertas');
+Route::get('importador/mis-ofertas', 'ImportadorController@mis_ofertas')->name('importador.ofertas');
 Route::get('importador/ver-oferta/{id}', 'ImportadorController@ver_detalle_oferta')->name('importador.oferta');
+Route::get('importador/ver-ofertas-disponibles', 'ImportadorController@listado_ofertas')->name('importador.ofertas-disponibles');
 
 Route::post('importador/updateAvatar', 'ImportadorController@updateAvatar')->name('importador.updateAvatar');
 

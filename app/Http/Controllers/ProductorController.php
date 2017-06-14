@@ -395,8 +395,4 @@ class ProductorController extends Controller
 
         return redirect('productor/mis-marcas')->with('msj', 'Se ha agregado exitosamente una marca a su propiedad');
     }
-
-    public function confirmar_importadores(){
-
-    }
 }

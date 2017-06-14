@@ -267,7 +267,7 @@ class ImportadorController extends Controller
     }
 
      //FUNCION QUE PERMITE VER LAS OFERTAS DE UN PRODUCTOR
-    public function ver_ofertas(){
+    public function mis_ofertas(){
         $ofertas = DB::table('oferta')
                     ->where([
                         ['tipo_creador', '=', 'I'],
@@ -287,6 +287,24 @@ class ImportadorController extends Controller
                                 ->get();
 
         return view('importador.detalleOferta')->with(compact('oferta', 'destinos'));
+    }
+
+    public function listado_ofertas(){
+        $importador = DB::table('importador')
+                            ->where('id', '=', session('importadorId') )
+                            ->select('pais_id', 'provincia_region_id')
+                            ->get()
+                            ->first();
+
+        $ofertas = DB::table('oferta')
+                    ->select('oferta.*')
+                    ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
+                    ->where('oferta.visible_importadores', '=', '1')
+                    ->where('destino_oferta.pais_id', '=', $importador->pais_id)
+                    ->groupBy('oferta.id')
+                    ->paginate(6);
+
+        return view('importador.listados.ofertasDisponibles')->with(compact('ofertas'));
     }
 
 }
