@@ -200,7 +200,8 @@ class ImportadorController extends Controller
         $marcas = DB::table('marca')
                     ->select('marca.*')
                     ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
-                    ->where('importador_marca.marca_id', '=', null)
+                    ->where('importador_marca.importador_id', '!=', session('importadorId'))
+                    ->orwhere('importador_marca.marca_id', '=', null)
                     ->paginate(6);
 
         return view('importador.listados.marcasDisponibles')->with(compact('marcas'));
@@ -259,11 +260,22 @@ class ImportadorController extends Controller
     }
 
     public function registrar_oferta($id, $producto){
+         if ($id != '0'){
+            $tipo = '1';
+        }else{
+            $tipo = '2';
+        }
+
         $paises = DB::table('pais')
                         ->orderBy('pais')
                         ->pluck('pais', 'id');
 
-        return view('importador.registrarOferta')->with(compact('id', 'producto', 'paises'));
+        $marcas = DB::table('marca')
+                        ->orderBy('nombre')
+                        ->where('productor_id', '=', session('productorId'))
+                        ->pluck('nombre', 'id');
+
+        return view('importador.registrarOferta')->with(compact('id', 'producto', 'paises', 'marcas', 'tipo'));
     }
 
      //FUNCION QUE PERMITE VER LAS OFERTAS DE UN PRODUCTOR

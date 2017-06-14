@@ -140,14 +140,14 @@ class DistribuidorController extends Controller
     }
 
     //FUNCION QUE LE PERMITE AL DISTRIBUIDOR REGISTRAR UNA MARCA
-    public function registrar_marca(){
+   /* public function registrar_marca(){
 
         $paises = DB::table('pais')
                         ->orderBy('pais')
                         ->pluck('pais', 'id');
 
         return view('distribuidor.registrarMarca')->with(compact('paises'));
-    }
+    }*/
     
      //FUNCION QUE PERMITE VER LAS MARCAS QUE MANEJA UN IMPORTADOR
     public function ver_marcas(){
@@ -159,13 +159,36 @@ class DistribuidorController extends Controller
     }
 
     public function ver_detalle_marca($id, $nombre){
+        $perfil = 'D';
+
         $marca = Marca::find($id);
 
-        return view('distribuidor.detalleMarca')->with(compact('marca'));
+        return view('distribuidor.detalleMarca')->with(compact('marca', 'perfil'));
+    }
+
+     public function listado_marcas(){
+        $marcas = DB::table('marca')
+                    ->select('marca.*')
+                    ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
+                    ->where('distribuidor_marca.distribuidor_id', '!=', session('distribuidorId'))
+                    ->orwhere('distribuidor_marca.marca_id', '=', null)
+                    ->paginate(6);
+
+        return view('distribuidor.listados.marcasDisponibles')->with(compact('marcas'));
+    }
+
+    public function asociar_marca($id){
+        $marca = Marca::find($id);
+
+        $marca->distribuidores()->attach(session('distribuidorId'), ['status' => '0']);
+
+        $url = ('distribuidor/mis-marcas');
+        return redirect($url)->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
+
     }
 
      //FUNCION QUE LE PERMITE AL DISTRIBUIDOR REGISTRAR UN PRODUCTO ASOCIADO A SU MARCA 
-    public function registrar_producto($id, $marca){
+   /* public function registrar_producto($id, $marca){
 
         $paises = DB::table('pais')
                     ->orderBy('pais')
@@ -176,7 +199,7 @@ class DistribuidorController extends Controller
                     ->pluck('clase', 'id');
 
         return view('distribuidor.registrarProducto')->with(compact('id', 'marca', 'paises', 'clases_bebidas'));
-    }
+    }*/
 
     //FUNCION QUE LE PERMITE AL IMPORTADOR VER EL LISTADO DE PRODUCTOS ASOCIADOS A UNA MARCA
     public function ver_productos($id, $marca){
@@ -189,6 +212,8 @@ class DistribuidorController extends Controller
     }
 
     public function ver_detalle_producto($id, $producto){
+        $perfil = 'D';
+
         $producto = Producto::find($id);
         
         $bebida = Bebida::find($producto->clase_bebida->bebida_id)
@@ -201,15 +226,26 @@ class DistribuidorController extends Controller
                         ->get()
                         ->first();
 
-        return view('distribuidor.detalleProducto')->with(compact('producto', 'bebida', 'productor'));
+        return view('distribuidor.detalleProducto')->with(compact('producto', 'bebida', 'productor', 'perfil'));
     }
 
     public function registrar_oferta($id, $producto){
+        if ($id != '0'){
+            $tipo = '1';
+        }else{
+            $tipo = '2';
+        }
+
         $paises = DB::table('pais')
                         ->orderBy('pais')
                         ->pluck('pais', 'id');
 
-        return view('distribuidor.registrarOferta')->with(compact('id', 'producto', 'paises'));
+         $marcas = DB::table('marca')
+                        ->orderBy('nombre')
+                        ->where('productor_id', '=', session('productorId'))
+                        ->pluck('nombre', 'id');
+
+        return view('distribuidor.registrarOferta')->with(compact('id', 'producto', 'paises', 'marcas', 'tipo'));
     }
 
      //FUNCION QUE PERMITE VER LAS OFERTAS DE UN PRODUCTOR

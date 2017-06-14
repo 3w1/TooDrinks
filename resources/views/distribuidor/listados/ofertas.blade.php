@@ -1,4 +1,4 @@
-@extends('plantillas.distribuidor.mainDistribuidor')
+@extends('plantillas.main')
 @section('title', 'Listado de Ofertas')
 
 @section('items')

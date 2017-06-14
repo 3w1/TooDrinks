@@ -22,3 +22,23 @@ function cargarProvincias() {
 		document.getElementById("estados").innerHTML = "";
 	}
 }
+
+function cargarProductos() {
+
+    document.getElementById("productos").innerHTML = "<option value=''>Seleccione un producto..</option>";
+        
+    var marca = document.getElementById('marca').value;
+	var route = "http://localhost:8000/producto/"+marca+"";
+                    
+    $.ajax({
+        url:route,
+        type:'GET',
+        success:function(ans){
+        	console.log(ans[0]);
+            for (var i = 0; i < ans.length; i++ ){
+
+                document.getElementById("productos").innerHTML += "<option value='"+ans[i].id+"'>"+ans[i].nombre+"</option>";
+            }
+        }
+    });
+}

@@ -246,7 +246,28 @@ class ProductorController extends Controller
         return view('productor.detalleProducto')->with(compact('producto', 'bebida', 'productor', 'perfil'));
     }
 
-    public function registrar_oferta($id, $producto){
+    public function registrar_oferta($id, $producto){     
+        if ($id != '0'){
+            $tipo = '1';
+        }else{
+            $tipo = '2';
+        }
+
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+
+        $marcas = DB::table('marca')
+                        ->orderBy('nombre')
+                        ->where('productor_id', '=', session('productorId'))
+                        ->pluck('nombre', 'id');
+
+        return view('productor.registrarOferta')->with(compact('id', 'producto', 'paises', 'tipo', 'marcas'));
+    }
+
+    public function crear_oferta($id, $producto){     
+        $tipo = '2';
+
         $paises = DB::table('pais')
                         ->orderBy('pais')
                         ->pluck('pais', 'id');
@@ -254,7 +275,7 @@ class ProductorController extends Controller
         return view('productor.registrarOferta')->with(compact('id', 'producto', 'paises'));
     }
 
-     //FUNCION QUE PERMITE VER LAS OFERTAS DE UN PRODUCTOR
+    //FUNCION QUE PERMITE VER LAS OFERTAS DE UN PRODUCTOR
     public function ver_ofertas(){
         $ofertas = DB::table('oferta')
                     ->where([

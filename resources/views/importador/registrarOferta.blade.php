@@ -8,7 +8,11 @@
 @section('content-left')
 	
 	@section('title-header')
-		<h3><b>Crear Oferta  del Producto {{ $producto }}</b></h3>
+		@if ($tipo == '1')
+			<h3><b>Crear Oferta  del Producto {{ $producto }}</b></h3>
+		@else
+			<h3><b>Crear Oferta  de Producto </b></h3>
+		@endif
 	@endsection
 	
 	{!! Form::open(['route' => 'oferta.store', 'method' => 'POST']) !!}
@@ -17,8 +21,23 @@
 
 		{!! Form::hidden('tipo_creador', 'I') !!}
 		{!! Form::hidden('creador_id', session('importadorId')) !!}
-		{!! Form::hidden('producto_id', $id) !!}
 		{!! Form::hidden('visible_importadores', '0') !!}
+
+		@if ($tipo == '1')
+			{!! Form::hidden('producto_id', $id) !!}
+		@else
+			<div class="form-group">
+				{!! Form::label('marca', 'Marca') !!}
+				{!! Form::select('marca_id', $marcas, null, ['class' => 'form-control', 'id' => 'marca', 'placeholder' => 'Seleccione una marca..', 'onchange' => 'cargarProductos();']) !!}
+			</div>
+
+			<div class="form-group">
+				{!! Form::label('producto_id', 'Producto') !!}
+				<select class="form-control" id="productos" name="producto_id">
+					<option value="">Seleccione un producto..</option>
+				</select>
+			</div>
+		@endif
 
 			@include('oferta.formularios.createForm')
 

@@ -29,10 +29,10 @@
                   <h3>{{ $oferta->titulo }}</h3>
                   <p>{{ $oferta->descripcion }}</p>
                   <ul class="nav nav-stacked">
-                     <li><a><strong>Producto Ofertado:</strong> {{ $producto->nombre }}</a></li>
+                     <li><a><strong>Producto:</strong> {{ $producto->nombre }}</a></li>
                   </ul>
                   <p>
-                     <a href="{{ route('importador.oferta', $oferta->id) }}" class="btn btn-primary" role="button">Ver Más</a>
+                     <a href="" class="btn btn-primary" role="button">Ver Más</a>
                   </p>
                </div>
             </div>

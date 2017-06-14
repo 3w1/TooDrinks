@@ -64,7 +64,15 @@ class ProductoController extends Controller
 
     public function show($id)
     {
-        
+        $productos = DB::table('producto')
+                    ->select('id', 'nombre')
+                    ->orderBy('nombre')
+                    ->where('marca_id', '=', $id)
+                    ->get();
+
+        return response()->json(
+            $productos->toArray()
+        );
     }
 
     public function edit($id)

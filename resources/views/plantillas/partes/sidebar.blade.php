@@ -46,7 +46,7 @@
                   </a>
                   <ul class="treeview-menu">
                      <li><a href="{{ route('productor.ofertas') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                     <li><a href="{{ route('productor.registrar-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
                   </ul>
                </li>
                <li>
@@ -138,8 +138,8 @@
                   </a>
                   <ul class="treeview-menu">
                      <li><a href="{{ route('importador.ofertas') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
                      <li><a href="{{ route('importador.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
+                     <li><a href="{{ route('importador.registrar-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
                   </ul>
                </li>
                <li>
@@ -150,7 +150,7 @@
                   </a>
                   <ul class="treeview-menu">
                      <li>
-                        <a href="#"><i class="fa fa-circle-o"></i> Importación
+                        <a href="#"><i class="fa fa-circle-o"></i> Distribución
                           <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                           </span>
@@ -206,8 +206,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Marcas Disponibles</a></li>
+                     <li><a href="{{ route('distribuidor.marcas') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
+                     <li><a href="{{ route('distribuidor.marcas-disponibles') }}"><i class="fa fa-circle-o"></i> Marcas Disponibles</a></li>
                   </ul>
                </li>
                <li>
@@ -218,8 +218,8 @@
                   </a>
                   <ul class="treeview-menu">
                      <li><a href="#"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
                      <li><a href="{{ route('distribuidor.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
+                     <li><a href="{{ route('distribuidor.registrar-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
                   </ul>
                </li>
                <li>
