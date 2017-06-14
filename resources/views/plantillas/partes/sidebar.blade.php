@@ -230,17 +230,6 @@
                   </a>
                   <ul class="treeview-menu">
                      <li>
-                        <a href="#"><i class="fa fa-circle-o"></i> Distribución
-                          <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                          </span>
-                        </a>
-                        <ul class="treeview-menu">
-                          <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                          <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
-                        </ul>
-                     </li>
-                     <li>
                         <a href="#"><i class="fa fa-circle-o"></i> Producto
                           <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
@@ -286,7 +275,7 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
+                     <li><a href="{{ route('horeca.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
                   </ul>
                </li>
                <li>

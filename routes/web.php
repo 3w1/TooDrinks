@@ -135,6 +135,8 @@ Route::resource('distribuidor','DistribuidorController');
 // ./RUTAS PARA LOS DISTRIBUIDORES ./
 
 // RUTAS PARA LOS HORECAS
+Route::get('horeca/ver-ofertas-disponibles', 'HorecaController@listado_ofertas')->name('horeca.ofertas-disponibles');
+
 Route::post('horeca/updateAvatar', 'HorecaController@updateAvatar')->name('horeca.updateAvatar');
 
 Route::resource('horeca','HorecaController');

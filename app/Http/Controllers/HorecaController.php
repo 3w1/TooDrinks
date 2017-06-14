@@ -108,4 +108,21 @@ class HorecaController extends Controller
     {
 
     }
+
+    public function listado_ofertas(){
+        $horeca = DB::table('horeca')
+                            ->where('id', '=', session('horecaId') )
+                            ->select('provincia_region_id')
+                            ->get()
+                            ->first();
+
+        $ofertas = DB::table('oferta')
+                    ->select('oferta.*')
+                    ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
+                    ->where('oferta.visible_horecas', '=', '1')
+                    ->where('destino_oferta.provincia_region_id', '=', $horeca->provincia_region_id)
+                    ->paginate(6);
+
+        return view('horeca.listados.ofertasDisponibles')->with(compact('ofertas'));
+    }
 }
