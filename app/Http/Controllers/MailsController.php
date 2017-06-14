@@ -3,17 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Oferta;
-use App\Models\Pais;
+
 use App\Models\Productor;
-use DB; use Mail; use Session; use Redirect;
+use Mail;
 
-class PaisController extends Controller
+class MailsController extends Controller
 {
-
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        
+        $productor = Productor::find(10)->toArray();
+        $productor['tipo'] = 'P';
+
+        Mail::send('emails.confirmacionUsuario',['productor'=>$productor], function($msj) use ($productor){
+            $msj->subject('Confirmación de cuenta TooDrinks');
+            $msj->to($productor['email']);
+        });
+    }
+
+    public function registrarse($id){
+        return view('auth.register')->with(compact('id'));
     }
 
     /**
@@ -45,15 +58,7 @@ class PaisController extends Controller
      */
     public function show($id)
     {
-        $estados= DB::table('provincia_region')
-                    ->orderBy('provincia', 'ASC')
-                    ->select('id', 'provincia')
-                    ->where('pais_id', '=', $id)
-                    ->get();
-
-        return response()->json(
-            $estados->toArray()
-        );
+        //
     }
 
     /**
@@ -64,7 +69,7 @@ class PaisController extends Controller
      */
     public function edit($id)
     {
-        
+        //
     }
 
     /**

@@ -12,6 +12,8 @@
 */
 
 //RUTAS DE INICIO Y AUTENTICACIÓN
+//
+
 Auth::routes();
 
 Route::get('/home', 'UsuarioController@index')->name('dashboard');
@@ -169,5 +171,10 @@ Route::resource('suscripcion', 'SuscripcionController');
 Route::resource('opinion','OpinionController');
 
 Route::resource('pais', 'PaisController');
+
+Route::resource('mails', 'MailsController');
+
+Route::get('registrarse/{tipo}${id}${token}', 'Auth\RegisterController@registrarse');
+Route::get('confirmar-correo/{id}${token}', 'UsuarioController@confirmar_correo');
 
 

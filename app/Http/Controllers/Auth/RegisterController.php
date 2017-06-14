@@ -6,6 +6,9 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Models\Productor;
+use Mail;
+use DB;
 
 class RegisterController extends Controller
 {
@@ -39,6 +42,9 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+    public function registrarse($tipo, $id, $token){
+        return view('auth.register')->with(compact('id', 'tipo'));
+    }
     /**
      * Get a validator for an incoming registration request.
      *
@@ -62,7 +68,9 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $data['codigo_confirmacion'] = str_random(25);
+
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
@@ -76,6 +84,37 @@ class RegisterController extends Controller
             'provincia_region_id' => $data['provincia_region_id'],
             'avatar' => 'usuario-icono.jpg',
             'estado_datos' => $data['estado_datos'],
+            'productor' => '0',
+            'importador' => '0',
+            'distribuidor' => '0',
+            'horeca' => '0',
+            'activado' => '0',
+            'codigo_confirmacion' => $data['codigo_confirmacion'],
+            'remember_token' => $data['_token']
         ]);
+
+        $ult_user = DB::table('users')
+                        ->select('id')
+                        ->orderBy('id', 'DESC')
+                        ->get()
+                        ->first();
+
+        $data['id_usuario'] = $ult_user->id;
+
+        if ($data['tipo_entidad'] == 'P'){
+            $act_p = DB::table('productor')
+                            ->where('id', '=', $data['id_entidad'])
+                            ->update(['user_id' => $ult_user->id]);
+            $act_u = DB::table('users')
+                            ->where('id', '=', $ult_user->id)
+                            ->update(['productor' => '1']);
+        }
+        
+        Mail::send('emails.confirmarCorreo', ['data' => $data] , function($msj) use ($data){
+            $msj->subject('Confirmación de cuenta TooDrinks');
+            $msj->to($data['email']);
+        });
+
+        return $user;
     }
 }

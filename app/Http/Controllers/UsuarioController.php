@@ -22,23 +22,24 @@ class UsuarioController extends Controller
         $this->middleware('auth');
     }
 
+    public function confirmar_correo($id, $token){
+        $user = User::find($id);
+        //$the_user = $user->select()->where('id', '=', $id)->get()->first();
+
+        if ($user->codigo_confirmacion == $token){
+            $actualizacion = DB::table('users')
+                            ->where('id', '=', $id)
+                            ->update(['activado' => '1', 'codigo_confirmacion' => null ]);
+
+            return redirect('usuario')->with('msj', 'Su cuenta ha sido activada exitosamente.');
+        }else{
+            return redirect('');
+        }
+    }
+
     public function index()
     {
         $user = User::find(Auth::user()->id);
-        /*$cont=0;
-        $cont2=0;
-        $cont3=0;
-        $cont4=0;
-
-        foreach($user->productores as $productor)
-            if ($productor->id != '0')
-                $cont++;
-        foreach($user->importadores as $importador)
-            $cont2++;
-        foreach($user->distribuidores as $distribuidor)
-            $cont3++;
-        foreach($user->horecas as $horeca)
-            $cont4++;*/
 
         if ($user->productor == '1'){
             $productor = DB::table('productor')
@@ -104,6 +105,9 @@ class UsuarioController extends Controller
 
     public function store(Request $request)
     {
+    	$usuario = new Usuario($request->all());
+        $usuario->save();
+        
         
     }
 

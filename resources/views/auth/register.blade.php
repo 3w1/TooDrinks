@@ -20,7 +20,12 @@
                         <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
                             {{ csrf_field() }}
 
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
                             {!! Form::hidden('estado_datos', '1') !!}
+                            {!! Form::hidden('id_entidad', $id) !!}
+                            {!! Form::hidden('tipo_entidad', $tipo) !!}
+
 
                             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                 <label for="name" class="col-md-4 control-label">Nombre de Usuario</label>
