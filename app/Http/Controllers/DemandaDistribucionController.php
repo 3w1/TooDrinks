@@ -34,6 +34,9 @@ class DemandaDistribucionController extends Controller
         if ($request->who == 'P'){
             $url = 'productor/mis-demandas-distribuidores';
             return redirect($url)->with('msj', 'Su solicitud de distribuidor ha sido creada exitosamente');    
+        }else{
+            $url = 'importador/mis-demandas-distribuidores';
+            return redirect($url)->with('msj', 'Su solicitud de distribuidor ha sido creada exitosamente');  
         }
     }
 
@@ -53,8 +56,11 @@ class DemandaDistribucionController extends Controller
        	$demanda_distribuidor->fill($request->all());
         $demanda_distribuidor->save();
 
-        if ($request->who == 'P')
+        if ($request->who == 'P'){
             return redirect('productor/mis-demandas-distribuidores')->with('msj', 'Los datos de su demanda se han actualizado exitosamente');
+        }else{
+            return redirect('importador/mis-demandas-distribuidores')->with('msj', 'Los datos de su demanda se han actualizado exitosamente');
+        }
     }
 
     public function destroy($id)

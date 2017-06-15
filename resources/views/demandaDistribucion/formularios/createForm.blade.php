@@ -1,19 +1,11 @@
 	<div class="form-group">
-		{!! Form::label('marca_id', 'Seleccione la marca que desea distribuir') !!}
-		<select name="marca_id" class="form-control">
-			@foreach ($marcas as $marca) 
-				<option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
-			@endforeach
-		</select>
+		{!! Form::label('marca', 'Seleccione la marca que desea distribuir') !!}
+		{!! Form::select('marca_id', $marcas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción..']) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('provincia_region_id', 'Seleccione la provincia a la cual desea distribuir') !!}
-		<select name="provincia_region_id" class="form-control">
-			@foreach ($provincias as $provincia )
-				<option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
-			@endforeach
-		</select>
+		{!! Form::select('provincia_region_id', $provincias, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción..']) !!}
 	</div>
 	
 	{!! Form::hidden('status', '1')  !!}

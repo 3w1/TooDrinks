@@ -3,16 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Productor;
-use App\Models\Pais;
-use App\Models\Telefono_Productor;
-use App\Models\Marca;
-use App\Models\Bebida;
-use App\Models\Clase_Bebida;
-use App\Models\Producto;
-use App\Models\Oferta;
-use App\Models\Destino_Oferta;
-use App\Models\Demanda_Importador; use App\Models\Demanda_Distribuidor;
+use App\Models\Productor; use App\Models\Pais; use App\Models\Marca; use App\Models\Bebida;
+use App\Models\Clase_Bebida; use App\Models\Producto; use App\Models\Oferta;
+use App\Models\Destino_Oferta; use App\Models\Demanda_Importador; use App\Models\Demanda_Distribuidor;
+use App\Models\Importador;
 use DB; use Auth; use Session; use Redirect; use Input; use Image;
 
 class ProductorController extends Controller
@@ -415,5 +409,13 @@ class ProductorController extends Controller
                             ->update(['productor_id' => session('productorId'), 'reclamada' => '1' ]);
 
         return redirect('productor/mis-marcas')->with('msj', 'Se ha agregado exitosamente una marca a su propiedad');
+    }
+
+    public function listado_importadores(){
+        $importadores = Importador::orderBy('nombre')
+                            ->select('nombre', 'pais_id', 'provincia_region_id', 'logo', 'persona_contacto')
+                            ->paginate(6);
+
+        return view('productor.listados.importadoresMundiales')->with(compact('importadores'));
     }
 }

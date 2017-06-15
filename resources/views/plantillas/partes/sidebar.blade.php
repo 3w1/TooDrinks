@@ -103,7 +103,7 @@
                      <li><a href="#"><i class="fa fa-circle-o"></i> Importación</a></li>
                   </ul>
                </li>
-               <li><a href=""><i class="fa fa-circle-o"></i> Listado de Importadores</a></li>
+               <li><a href="{{ route('productor.listado-importadores') }}"><i class="fa fa-circle-o"></i> Listado de Importadores</a></li>
             </ul>
          </li>
          <!-- FIN DE SECCIÓN DE PRODUCTORES -->
@@ -156,8 +156,8 @@
                           </span>
                         </a>
                         <ul class="treeview-menu">
-                          <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                          <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                          <li><a href="{{ route('importador.solicitar-distribuidor') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                          <li><a href="{{ route('importador.demandas-distribuidores') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
                         </ul>
                      </li>
                      <li>
@@ -184,6 +184,7 @@
                      <li><a href="#"><i class="fa fa-circle-o"></i> Productos</a></li>
                   </ul>
                </li>
+                <li><a href="{{ route('importador.listado-distribuidores') }}"><i class="fa fa-circle-o"></i> Listado de Distribuidores</a></li>
             </ul>
          </li>
          <!-- FIN DE SECCIÓN DE IMPORTADOR -->

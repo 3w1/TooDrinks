@@ -3,16 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Importador;
-use App\Models\User;
-use App\Models\Pais;
-use App\Models\Provincia_Region;
-use App\Models\Marca;
+use App\Models\Importador; use App\Models\Distribuidor; use App\Models\User;
+use App\Models\Pais; use App\Models\Provincia_Region; use App\Models\Marca;
 use App\Models\Producto;
 use App\Models\Bebida;
 use App\Models\Productor;
 use App\Models\Oferta;
 use App\Models\Destino_Oferta;
+use App\Models\Demanda_Distribuidor;
 use DB; use Auth; use Input; use Image;
 
 class ImportadorController extends Controller
@@ -317,6 +315,76 @@ class ImportadorController extends Controller
                     ->paginate(6);
 
         return view('importador.listados.ofertasDisponibles')->with(compact('ofertas'));
+    }
+
+     public function solicitar_distribuidor(){
+        $tipo = 'D';
+
+        $marcas = DB::table('marca')
+                    ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                    ->where('importador_marca.importador_id', '=', session('importadorId'))
+                    ->pluck('marca.nombre', 'marca.id');
+
+        $pais_origen = DB::table('importador')
+                        ->select('pais_id')
+                        ->where('id', '=', session('importadorId'))
+                        ->get()
+                        ->first();
+
+        $provincias = DB::table('provincia_region')
+                        ->orderBy('provincia')
+                        ->where('pais_id', '=', $pais_origen->pais_id)
+                        ->pluck('provincia', 'id');
+
+        return view('importador.solicitarDemanda')->with(compact('tipo', 'marcas', 'provincias'));
+    }
+
+    public function ver_demandas_distribuidores(){
+        $cont = 0;
+
+        $demandasDistribuidores = Demanda_Distribuidor::where([
+                                        ['tipo_creador', '=', 'I'], 
+                                        ['creador_id', '=', session('importadorId')]
+                                    ])->orderBy('created_at', 'ASC')
+                                    ->paginate(8);
+
+        return view('importador.listados.demandasDistribuidores')->with(compact('demandasDistribuidores', 'cont'));
+    }
+
+    public function editar_demanda_distribucion($id){
+        $demandaDistribuidor = Demanda_Distribuidor::find($id);
+
+        $pais_importador = Importador::where('id', '=', session('importadorId'))
+                                    ->select('pais_id')
+                                    ->get()
+                                    ->first();
+
+        $provincias = DB::table('provincia_region')
+                        ->orderBy('provincia')
+                        ->where('pais_id', '=', $pais_importador->pais_id)
+                        ->pluck('provincia', 'id');
+        
+        $marcas = DB::table('marca')
+                    ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                    ->where('importador_marca.importador_id', '=', session('importadorId'))
+                    ->pluck('marca.nombre', 'marca.id');
+
+        return view('importador.editDemandaDist')->with(compact('demandaDistribuidor','marcas', 'provincias'));
+    }
+
+    public function listado_distribuidores(){
+        $pais_importador = DB::table('importador')
+                            ->select('pais_id')
+                            ->where('id', '=', session('importadorId'))
+                            ->get()
+                            ->first();
+
+        $distribuidores = Distribuidor::orderBy('nombre')
+                            ->select('nombre', 'pais_id', 'provincia_region_id', 'logo', 'persona_contacto')
+                            ->where('pais_id', '=', $pais_importador->pais_id)
+                            ->paginate(6);
+
+        return view('importador.listados.distribuidoresPais')->with(compact('distribuidores'));
     }
 
 }

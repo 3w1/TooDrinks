@@ -85,6 +85,9 @@ Route::get('productor/marcas-sin-propietario', 'ProductorController@listado_marc
 Route::get('productor/reclamar-marca/{id}', 'ProductorController@reclamar_marca')->name('productor.reclamar-marca');
 
 Route::get('productor/confirmar-importadores', 'ProductorController@confirmar_importadores')->name('productor.confirmar-importadores');
+
+Route::get('productor/ver-listado-importadores', 'ProductorController@listado_importadores')->name('productor.listado-importadores');
+
 Route::post('productor/updateAvatar', 'ProductorController@updateAvatar')->name('productor.updateAvatar');
 Route::resource('productor','ProductorController');
 // ./RUTAS PARA LOS PRODUCTORES ./
@@ -107,6 +110,12 @@ Route::get('importador/{id}-{producto}/registrar-oferta', 'ImportadorController@
 Route::get('importador/mis-ofertas', 'ImportadorController@mis_ofertas')->name('importador.ofertas');
 Route::get('importador/ver-oferta/{id}', 'ImportadorController@ver_detalle_oferta')->name('importador.oferta');
 Route::get('importador/ver-ofertas-disponibles', 'ImportadorController@listado_ofertas')->name('importador.ofertas-disponibles');
+
+Route::get('importador/solicitar-distribuidor', 'ImportadorController@solicitar_distribuidor')->name('importador.solicitar-distribuidor');
+Route::get('importador/mis-demandas-distribuidores', 'ImportadorController@ver_demandas_distribuidores')->name('importador.demandas-distribuidores');
+Route::get('importador/editar-demanda-distribuidor/{id}', 'ImportadorController@editar_demanda_distribucion')->name('importador.editarDemandaDist');
+
+Route::get('importador/ver-listado-distribuidores', 'ImportadorController@listado_distribuidores')->name('importador.listado-distribuidores');
 
 Route::post('importador/updateAvatar', 'ImportadorController@updateAvatar')->name('importador.updateAvatar');
 
