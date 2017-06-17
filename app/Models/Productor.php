@@ -27,11 +27,11 @@ class Productor extends Model
     }
 
     public function importadores(){
-        return $this->belongsToMany('App\Models\Importador', 'productor_importador');
+        return $this->belongsToMany('App\Models\Importador', 'productor_importador')->withTimestamps();
     }
 
     public function distribuidores(){
-        return $this->belongsToMany('App\Models\Distribuidor', 'productor_distribuidor');
+        return $this->belongsToMany('App\Models\Distribuidor', 'productor_distribuidor')->withTimestamps();
     }
 
     public function marcas(){

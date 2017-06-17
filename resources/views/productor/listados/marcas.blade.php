@@ -44,10 +44,14 @@
                         <li class="active"><a href="{{ route('productor.productos', [$marca->id, $marca->nombre]) }}"><strong><u>Catálogo de Productos: </strong> {{ $cont }} Producto(s) </u></a></li>
                         <li class="active"><a href="{{ route('productor.registrar-producto', [$marca->id, $marca->nombre]) }}"><strong><u>Agregar Producto</u></strong></a></li>
                         <li class="active"><a href="{{ route('productor.marca', [$marca->id, $marca->nombre]) }}"><strong><u>Ver más detalles</u></strong></a></li>
+                        @if ($marca->aprobada == '0') 
+                          <li class="active"><a><label class="label label-danger">Sin Aprobar</label></a></li>
+                        @else 
+                          <li class="active"><a><label class="label label-success">Aprobada</label></a></li>
+                        @endif
                      </ul>
             		</div>
          		</div>
-          		<!-- /.widget-user -->
        		</div>
 		@endforeach
 

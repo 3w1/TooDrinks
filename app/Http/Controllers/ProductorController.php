@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Productor; use App\Models\Pais; use App\Models\Marca; use App\Models\Bebida;
 use App\Models\Clase_Bebida; use App\Models\Producto; use App\Models\Oferta;
 use App\Models\Destino_Oferta; use App\Models\Demanda_Importador; use App\Models\Demanda_Distribuidor;
-use App\Models\Importador;
+use App\Models\Importador; use App\Models\Importador_Marca;
 use DB; use Auth; use Session; use Redirect; use Input; use Image;
 
 class ProductorController extends Controller
@@ -417,5 +417,63 @@ class ProductorController extends Controller
                             ->paginate(6);
 
         return view('productor.listados.importadoresMundiales')->with(compact('importadores'));
+    }
+
+    public function confirmar_importadores(){
+        $solicitudes = DB::table('importador_marca')
+                    ->select('importador_marca.*')
+                    ->join('marca', 'importador_marca.marca_id', '=', 'marca.id')
+                    ->where('marca.productor_id', '=', session('productorId'))
+                    ->where('importador_marca.status', '=', '0')
+                    ->get();
+
+        return view('productor.solicitudes.importadores')->with(compact('solicitudes'));
+    }
+
+    public function confirmar_importador($id, $tipo, $imp){
+        if ($tipo == 'S'){
+            $actualizacion = DB::table('importador_marca')
+                                ->where('id', '=', $id)
+                                ->update(['status' => '1']);
+
+            $productor = Productor::find(session('productorId'));
+
+            $productor->importadores()->attach($imp);
+
+            return redirect('productor/confirmar-importadores')->with('msj', 'Solicitud aprobada exitosamente');
+        }else{
+            DB::table('importador_marca')->where('id', '=', $id)->delete();
+
+            return redirect('productor/confirmar-importadores')->with('msj', 'Solicitud denegada exitosamente');
+        }
+    }
+
+    public function confirmar_distribuidores(){
+        $solicitudes = DB::table('distribuidor_marca')
+                    ->select('distribuidor_marca.*')
+                    ->join('marca', 'distribuidor_marca.marca_id', '=', 'marca.id')
+                    ->where('marca.productor_id', '=', session('productorId'))
+                    ->where('distribuidor_marca.status', '=', '0')
+                    ->get();
+
+        return view('productor.solicitudes.distribuidores')->with(compact('solicitudes'));
+    }
+
+    public function confirmar_distribuidor($id, $tipo, $dist){
+        if ($tipo == 'S'){
+            $actualizacion = DB::table('distribuidor_marca')
+                                ->where('id', '=', $id)
+                                ->update(['status' => '1']);
+
+            $productor = Productor::find(session('productorId'));
+
+            $productor->distribuidores()->attach($dist);
+
+            return redirect('productor/confirmar-distribuidores')->with('msj', 'Solicitud aprobada exitosamente');
+        }else{
+            DB::table('distribuidor_marca')->where('id', '=', $id)->delete();
+
+            return redirect('productor/confirmar-distribuidores')->with('msj', 'Solicitud denegada exitosamente');
+        }
     }
 }

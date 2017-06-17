@@ -27,15 +27,15 @@ class Importador extends Model
     }
 
     public function productores(){
-        return $this->belongsToMany('App\Models\Productor', 'productor_importador');
+        return $this->belongsToMany('App\Models\Productor', 'productor_importador')->withTimestamps();;
     }
 
      public function distribuidores(){
-        return $this->belongsToMany('App\Models\Distribuidor', 'importador_distribuidor');
+        return $this->belongsToMany('App\Models\Distribuidor', 'importador_distribuidor')->withTimestamps();;
     }
 
      public function marcas(){
-        return $this->belongsToMany('App\Models\Marca', 'importador_marca');
+        return $this->belongsToMany('App\Models\Marca', 'importador_marca')->withTimestamps();;
     }
 
     public function ofertas(){
