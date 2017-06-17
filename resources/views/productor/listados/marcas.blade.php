@@ -16,13 +16,14 @@
 		@foreach($marcas as $marca)
 			<?php
             $productos = DB::table('producto')
-                           ->select('id')
+                           ->select('id', 'confirmado')
                            ->where('marca_id', $marca->id)
                            ->get();
 
             $cont = 0;
             foreach ($productos as $producto)
-               $cont++;
+               if ($producto->confirmado == '1')
+                  $cont++;
 			 ?>
 			<div class="col-md-6 col-xs-12">
           		<!-- Widget: user widget style 1 -->

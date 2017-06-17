@@ -89,7 +89,7 @@
                   <ul class="treeview-menu">
                      <li><a href="{{ route('productor.confirmar-importadores') }}"><i class="fa fa-circle-o"></i> Importadores</a></li>
                      <li><a href="{{ route('productor.confirmar-distribuidores') }}"><i class="fa fa-circle-o"></i> Distribuidores</a></li>
-                     <li><a href=""><i class="fa fa-circle-o"></i> Marcas</a></li>
+                     <li><a href="{{ route('productor.confirmar-productos') }}"><i class="fa fa-circle-o"></i> Productos</a></li>
                   </ul>
                </li>
                <li>

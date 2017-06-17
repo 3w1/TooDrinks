@@ -197,6 +197,22 @@ class ProductorController extends Controller
         return view('productor.detalleMarca')->with(compact('marca', 'perfil'));
     }
 
+    public function listado_marcas(){
+        $marcas = Marca::orderBy('nombre', 'ASC')
+                        ->where('productor_id', '=', '0')
+                        ->paginate(6);
+
+        return view('productor.listados.marcasDisponibles')->with(compact('marcas'));
+    }
+
+    public function reclamar_marca($id){
+        $actualizacion = DB::table('marca')
+                            ->where('id', '=', $id)
+                            ->update(['productor_id' => session('productorId'), 'reclamada' => '1' ]);
+
+        return redirect('productor/mis-marcas')->with('msj', 'Se ha agregado exitosamente una marca a su propiedad');
+    }
+
      //FUNCION QUE LE PERMITE AL PRODUCTOR REGISTRAR UN PRODUCTO ASOCIADO A SU MARCA 
     public function registrar_producto($id, $marca){
 
@@ -395,22 +411,6 @@ class ProductorController extends Controller
         return view('productor.editDemandaDist')->with(compact('demandaDistribuidor','marcas', 'provincias'));
     }
 
-    public function listado_marcas(){
-        $marcas = Marca::orderBy('nombre', 'ASC')
-                        ->where('productor_id', '=', '0')
-                        ->paginate(6);
-
-        return view('productor.listados.marcasDisponibles')->with(compact('marcas'));
-    }
-
-    public function reclamar_marca($id){
-        $actualizacion = DB::table('marca')
-                            ->where('id', '=', $id)
-                            ->update(['productor_id' => session('productorId'), 'reclamada' => '1' ]);
-
-        return redirect('productor/mis-marcas')->with('msj', 'Se ha agregado exitosamente una marca a su propiedad');
-    }
-
     public function listado_importadores(){
         $importadores = Importador::orderBy('nombre')
                             ->select('nombre', 'pais_id', 'provincia_region_id', 'logo', 'persona_contacto')
@@ -474,6 +474,32 @@ class ProductorController extends Controller
             DB::table('distribuidor_marca')->where('id', '=', $id)->delete();
 
             return redirect('productor/confirmar-distribuidores')->with('msj', 'Solicitud denegada exitosamente');
+        }
+    }
+
+     public function confirmar_productos(){
+        $productos = DB::table('producto')
+                    ->select('producto.*')
+                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                    ->where('marca.productor_id', '=', session('productorId'))
+                    ->where('producto.confirmado', '=', '0')
+                    ->orderBy('created_at', 'DESC')
+                    ->paginate(5);
+
+        return view('productor.solicitudes.productos')->with(compact('productos'));
+    }
+
+    public function confirmar_producto($id, $tipo){
+        if ($tipo == 'S'){
+            $actualizacion = DB::table('producto')
+                                ->where('id', '=', $id)
+                                ->update(['confirmado' => '1']);
+
+            return redirect('productor/confirmar-productos')->with('msj', 'Producto aprobado exitosamente');
+        }else{
+            DB::table('producto')->where('id', '=', $id)->delete();
+
+            return redirect('productor/confirmar-productos')->with('msj', 'Producto eliminado exitosamente');
         }
     }
 }

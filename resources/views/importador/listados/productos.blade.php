@@ -32,7 +32,8 @@
          
          <div class="col-md-4 col-xs-6">
             <div class="thumbnail">
-               <div class="fondo">
+               <div>
+                  @if ($producto->confirmado == '0')<label class="label label-danger">Sin Confirmar</label>@endif
                   <img src="{{ asset('imagenes/productos/thumbnails/') }}/{{ $producto->imagen }}" class="img-responsive">
                </div>             
                <div class="caption">
