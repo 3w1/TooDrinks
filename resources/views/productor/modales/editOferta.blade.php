@@ -10,8 +10,6 @@
         <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
          {!! Form::open(['route' => ['oferta.update', $oferta->id], 'method' => 'PUT']) !!}
             {!! Form::hidden('who', 'P') !!}
-            {!! Form::hidden('tipo_creador', $oferta->tipo_creador) !!}
-            {!! Form::hidden('creador_id', $oferta->creador_id) !!}
 
             @include('oferta.formularios.editForm')  
 

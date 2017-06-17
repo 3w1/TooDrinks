@@ -1,22 +1,116 @@
+@if (Auth::user()->productor == '1')
+   <?php 
+      $productores = DB::table('productor')
+                        ->select('id', 'nombre')
+                        ->where('user_id', '=', Auth::user()->id)
+                        ->get();
+
+      foreach ($productores as $productor)
+         $id_entidad[] = $productor->id; 
+         $nombre_entidad[] = $productor->nombre;
+         $tipo_entidad[] = 'P';  
+   ?>
+@endif
+@if (Auth::user()->importador == '1')
+   <?php 
+      $importadores = DB::table('importador')
+                        ->select('id', 'nombre')
+                        ->where('user_id', '=', Auth::user()->id)
+                        ->get();
+
+      foreach ($importadores as $importador)
+         $id_entidad[] = $importador->id; 
+         $nombre_entidad[] = $importador->nombre;
+         $tipo_entidad[] = 'I';   
+      ?>
+@endif
+@if (Auth::user()->distribuidor == '1')
+   <?php 
+      $distribuidores = DB::table('distribuidor')
+                           ->select('id', 'nombre')
+                           ->where('user_id', '=', Auth::user()->id)
+                           ->get();
+
+      foreach ($distribuidores as $distribuidor)
+            $id_entidad[] = $distribuidor->id; 
+            $nombre_entidad[] = $distribuidor->nombre;
+            $tipo_entidad[] = 'D';  
+      ?>
+@endif
+@if (Auth::user()->horeca == '1')
+   <?php 
+      $horecas = DB::table('horeca')
+                     ->select('id', 'nombre')
+                     ->where('user_id', '=', Auth::user()->id)
+                     ->get();
+
+      foreach ($horecas as $horeca)
+         $id_entidad[] = $horeca->id; 
+         $nombre_entidad[] = $horeca->nombre;
+         $tipo_entidad[] = 'H';   
+      ?>
+@endif
+
 <div class="user-panel">
-   <div class="pull-left image">
-      <img src="{{ asset('imagenes/usuarios/thumbnails/')}}/{{ Auth::user()->avatar }}" class="img-rounded" >
-   </div>
-   <div class="pull-left info">
-      <p>{{ Auth::user()->nombre }} {{ Auth::user()->apellido }}</p>
-      <a href="#"><i class="fa fa-circle text-success"></i> Usuario Propietario</a>
-   </div>
+   @if (session('perfilTipo') == 'P')
+      <div class="pull-left image">
+         <img src="{{ asset('imagenes/productores/thumbnails/')}}/{{ session('perfilLogo') }}" class="img-rounded" >
+      </div>
+      <div class="pull-left info">
+         <p>{{ session('perfilNombre') }} (P)</p>
+         <a><i class="fa fa-circle text-success"></i> Créditos: {{ session('perfilSaldo') }}</a>
+      </div>
+
+   @elseif (session('perfilTipo') == 'I')
+
+      <div class="pull-left image">
+         <img src="{{ asset('imagenes/importadores/thumbnails/')}}/{{ session('perfilLogo') }}" class="img-rounded" >
+      </div>
+      <div class="pull-left info">
+         <p>{{ session('perfilNombre') }} (I)</p>
+         <a><i class="fa fa-circle text-success"></i> Créditos: {{ session('perfilSaldo') }}</a>
+      </div>
+
+   @elseif (session('perfilTipo') == 'D')
+
+      <div class="pull-left image">
+         <img src="{{ asset('imagenes/distribuidores/thumbnails/')}}/{{ session('perfilLogo') }}" class="img-rounded" >
+      </div>
+      <div class="pull-left info">
+         <p>{{ session('perfilNombre') }} (D)</p>
+         <a><i class="fa fa-circle text-success"></i> Créditos: {{ session('perfilSaldo') }}</a>
+      </div>
+
+   @elseif (session('perfilTipo') == 'H')
+      <div class="pull-left image">
+         <img src="{{ asset('imagenes/horecas/thumbnails/')}}/{{ session('perfilLogo') }}" class="img-rounded" >
+      </div>
+      <div class="pull-left info">
+         <p>{{ session('perfilNombre') }} (H)</p>
+         <a><i class="fa fa-circle text-success"></i> Créditos: {{ session('perfilSaldo') }}</a>
+      </div>
+   @else
+      <div class="pull-left image">
+         <img src="{{ asset('imagenes/usuarios/thumbnails/')}}/{{ Auth::user()->avatar }}" class="img-rounded" >
+      </div>
+      <div class="pull-left info">
+         <p>{{ Auth::user()->nombre }} {{ Auth::user()->apellido }}</p>
+         <a><i class="fa fa-circle text-success"></i> Usuario Propietario</a>
+      </div>
+   @endif
 </div>
 
 <ul class="sidebar-menu">
    @if (Auth::user()->activado == 1)
       <li class="header">Opciones de Usuario</li>
 
+      <li><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
       <li><a href=""><i class="fa fa-circle-o"></i> Opiniones</a></li>
       <li><a href=""><i class="fa fa-circle-o"></i> Banners Publicitarios</a></li>
       <li><a href=""><i class="fa fa-circle-o"></i> Planes de Crédito</a></li>
 
-      @if(Auth::user()->productor == '1')
+      @if(session('perfilTipo') == 'P')
+         
          <!-- SECCIÓN DE PRODUCTORES -->
          <li class="treeview">
              <a href="#">
@@ -89,6 +183,7 @@
                   <ul class="treeview-menu">
                      <li><a href="{{ route('productor.confirmar-importadores') }}"><i class="fa fa-circle-o"></i> Importadores</a></li>
                      <li><a href="{{ route('productor.confirmar-distribuidores') }}"><i class="fa fa-circle-o"></i> Distribuidores</a></li>
+                     <li><a href=""><i class="fa fa-circle-o"></i> Marcas</a></li>
                      <li><a href="{{ route('productor.confirmar-productos') }}"><i class="fa fa-circle-o"></i> Productos</a></li>
                   </ul>
                </li>
@@ -109,7 +204,7 @@
          <!-- FIN DE SECCIÓN DE PRODUCTORES -->
       @endif
       
-      @if(Auth::user()->importador == '1')
+      @if(session('perfilTipo') == 'I')
          <!-- SECCIÓN DE IMPORTADOR -->
          <li class="treeview">
              <a href="#">
@@ -171,6 +266,17 @@
                           <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
                         </ul>
                      </li>
+                      <li>
+                        <a href="#"><i class="fa fa-circle-o"></i> Importar Marca
+                          <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                          </span>
+                        </a>
+                        <ul class="treeview-menu">
+                          <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                          <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                        </ul>
+                     </li>
                   </ul>
                </li>
                <li>
@@ -190,7 +296,7 @@
          <!-- FIN DE SECCIÓN DE IMPORTADOR -->
       @endif
 
-      @if(Auth::user()->distribuidor == '1')
+      @if(session('perfilTipo') == 'D')
          <!-- SECCIÓN DE IMPORTADORES -->
          <li class="treeview">
              <a href="#">
@@ -218,7 +324,7 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
+                     <li><a href="{{ route('distribuidor.ofertas') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
                      <li><a href="{{ route('distribuidor.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
                      <li><a href="{{ route('distribuidor.registrar-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
                   </ul>
@@ -232,6 +338,17 @@
                   <ul class="treeview-menu">
                      <li>
                         <a href="#"><i class="fa fa-circle-o"></i> Producto
+                          <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                          </span>
+                        </a>
+                        <ul class="treeview-menu">
+                          <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                          <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                        </ul>
+                     </li>
+                     <li>
+                        <a href="#"><i class="fa fa-circle-o"></i> Distribuir Marca
                           <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                           </span>
@@ -259,7 +376,7 @@
          <!-- FIN DE SECCIÓN DE DISTRIBUIDORES -->
       @endif
 
-      @if(Auth::user()->horeca == '1')
+      @if(session('perfilTipo') == 'H')
         <!-- SECCIÓN DE HORECAS -->
          <li class="treeview">
              <a href="#">
@@ -304,5 +421,31 @@
          </li>
          <!-- FIN DE SECCIÓN DE HORECAS -->
       @endif
+   @endif
+
+   @if (Auth::user()->cantidad_entidades > 1)
+      <li class="header">Opciones de Perfil</li>
+      <li>
+         <a href="#"><i class="fa fa-user"></i> Cambiar de Perfil
+            <span class="pull-right-container">
+               <i class="fa fa-angle-left pull-right"></i>
+            </span>
+         </a>
+         <ul class="treeview-menu">
+            <li>
+               {!! Form::open(['route' => 'usuario.cambiar-perfil', 'method' => 'POST']) !!}
+                  <select class="form-control" name="entidad">
+                     <?php 
+                        $longitud = count($id_entidad);
+                        for ($i=0; $i<$longitud; $i++ ){
+                           echo "<option value='".$tipo_entidad[$i].".".$id_entidad[$i]."'>".$tipo_entidad[$i]." - ".$nombre_entidad[$i]."</option>";
+                        }
+                      ?>
+                  </select>
+                  <center>{!! Form::submit('Cambiar', ['class' => 'btn btn-xs btn-primary']) !!}</center>
+               {!! Form::close() !!}
+            </li>
+         </ul>
+      <li>
    @endif
 </ul>

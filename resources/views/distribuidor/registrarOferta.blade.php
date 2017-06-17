@@ -20,7 +20,7 @@
 		{!! Form::hidden('who', 'D') !!}
 
 		{!! Form::hidden('tipo_creador', 'D') !!}
-		{!! Form::hidden('creador_id', session('distribuidorId')) !!}
+		{!! Form::hidden('creador_id', session('perfilId')) !!}
 		{!! Form::hidden('visible_importadores', '0') !!}
 		{!! Form::hidden('visible_distribuidores', '0') !!}
 		{!! Form::hidden('visible_horecas', '1') !!}

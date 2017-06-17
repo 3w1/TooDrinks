@@ -27,9 +27,8 @@
                <img src="{{ asset('imagenes/productos/thumbnails/') }}/{{ $producto->imagen }}" >
                <div class="caption">
                   <h3>{{ $oferta->titulo }}</h3>
-                  <p>{{ $oferta->descripcion }}</p>
                   <ul class="nav nav-stacked">
-                     <li><a><strong>Producto Ofertado:</strong> {{ $producto->nombre }}</a></li>
+                     <li><a><strong>Producto:</strong> {{ $producto->nombre }}</a></li>
                      <li><a><strong>Precio Unitario: </strong> {{ $oferta->precio_unitario }} $</a></li>
                      <li><a><strong>Precio por Lote: </strong> {{ $oferta->precio_lote }} $</a></li>
                      <li><a><strong>Envío Disponible: </strong> @if ( $oferta->envio == '1') Si  @else No @endif </a></li>

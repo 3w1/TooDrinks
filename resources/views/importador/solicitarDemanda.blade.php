@@ -16,7 +16,7 @@
 
 			{!! Form::hidden('who', 'I') !!}
 			{!! Form::hidden('tipo_creador', 'I') !!}
-			{!! Form::hidden('creador_id', session('importadorId')) !!}
+			{!! Form::hidden('creador_id', session('perfilId')) !!}
 
 			@include('demandaDistribucion.formularios.createForm')
 

@@ -8,8 +8,6 @@
 @section('content-left')
 	{!! Form::open(['route' => ['demanda-distribuidor.update', $demandaDistribuidor->id], 'method' => 'PUT']) !!}
 		{!! Form::hidden('who', 'P') !!}
-		{!! Form::hidden('tipo_creador', 'P') !!}
-		{!! Form::hidden('creador_id', session('productorId')) !!}
 		
 		@include('demandaDistribucion.formularios.editForm')
 	{!! Form::close() !!}

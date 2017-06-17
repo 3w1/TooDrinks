@@ -20,7 +20,7 @@
 		{!! Form::hidden('who', 'I') !!}
 
 		{!! Form::hidden('tipo_creador', 'I') !!}
-		{!! Form::hidden('creador_id', session('importadorId')) !!}
+		{!! Form::hidden('creador_id', session('perfilId')) !!}
 		{!! Form::hidden('visible_importadores', '0') !!}
 
 		@if ($tipo == '1')

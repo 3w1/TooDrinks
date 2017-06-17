@@ -37,6 +37,66 @@ class UsuarioController extends Controller
         }
     }
 
+    public function cambiar_perfil(Request $request){
+        $entidad = explode(".", $request->entidad);
+
+        if ($entidad[0] == 'P'){
+            $productor = DB::table('productor')
+                            ->where('id', '=', $entidad[1])
+                            ->select('id', 'nombre', 'logo', 'saldo')
+                            ->get()
+                            ->first();
+
+            session(['perfilId' => $productor->id]);
+            session(['perfilNombre' => $productor->nombre]);
+            session(['perfilLogo' => $productor->logo]);
+            session(['perfilSaldo' => $productor->saldo]);
+            session(['perfilTipo' => 'P']);
+        }elseif ($entidad[0] == 'I'){
+            $importador = DB::table('importador')
+                            ->where('id', '=', $entidad[1])
+                            ->select('id', 'nombre', 'logo', 'saldo')
+                            ->get()
+                            ->first();
+
+            session(['perfilId' => $importador->id]);
+            session(['perfilNombre' => $importador->nombre]);
+            session(['perfilLogo' => $importador->logo]);
+            session(['perfilSaldo' => $importador->saldo]);
+            session(['perfilTipo' => 'I']);
+        }elseif ($entidad[0] == 'D'){
+            $distribuidor = DB::table('distribuidor')
+                            ->where('id', '=', $entidad[1])
+                            ->select('id', 'nombre', 'logo', 'saldo')
+                            ->get()
+                            ->first();
+
+            session(['perfilId' => $distribuidor->id]);
+            session(['perfilNombre' => $distribuidor->nombre]);
+            session(['perfilLogo' => $distribuidor->logo]);
+            session(['perfilSaldo' => $distribuidor->saldo]);
+            session(['perfilTipo' => 'D']);
+        }elseif ($entidad[0] == 'H'){
+            $horeca = DB::table('horeca')
+                            ->where('id', '=', $entidad[1])
+                            ->select('id', 'nombre', 'logo', 'saldo')
+                            ->get()
+                            ->first();
+
+            session(['perfilId' => $horeca->id]);
+            session(['perfilNombre' => $horeca->nombre]);
+            session(['perfilLogo' => $horeca->logo]);
+            session(['perfilSaldo' => $horeca->saldo]);
+            session(['perfilTipo' => 'H']);
+        }
+
+        return redirect('usuario/inicio')->with('msj', 'Se ha cambiado de perfil exitosamente');
+    }
+
+    public function inicio(){
+        return view('usuario.index');
+    }
+
     public function index()
     {
         $user = User::find(Auth::user()->id);
@@ -44,45 +104,51 @@ class UsuarioController extends Controller
         if ($user->productor == '1'){
             $productor = DB::table('productor')
                             ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre')
+                            ->select('id', 'nombre', 'logo', 'saldo')
                             ->get()
                             ->first();
 
-            session(['productorId' => $productor->id]);
-            session(['productorNombre' => $productor->nombre]);
-        }
-
-        if ($user->importador == '1'){
+            session(['perfilId' => $productor->id]);
+            session(['perfilNombre' => $productor->nombre]);
+            session(['perfilLogo' => $productor->logo]);
+            session(['perfilSaldo' => $productor->saldo]);
+            session(['perfilTipo' => 'P']);
+        }elseif ($user->importador == '1'){
             $importador = DB::table('importador')
                             ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre')
+                            ->select('id', 'nombre', 'logo', 'saldo')
                             ->get()
                             ->first();
 
-            session(['importadorId' => $importador->id]);
-            session(['importadorNombre' => $importador->nombre]);
-        }
-
-        if ($user->distribuidor == '1'){
+            session(['perfilId' => $importador->id]);
+            session(['perfilNombre' => $importador->nombre]);
+            session(['perfilLogo' => $importador->logo]);
+            session(['perfilSaldo' => $importador->saldo]);
+            session(['perfilTipo' => 'I']);
+        }elseif ($user->distribuidor == '1'){
             $distribuidor = DB::table('distribuidor')
                             ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre')
+                            ->select('id', 'nombre', 'logo', 'saldo')
                             ->get()
                             ->first();
 
-            session(['distribuidorId' => $distribuidor->id]);
-            session(['distribuidorNombre' => $distribuidor->nombre]);
-        }
-
-        if ($user->horeca == '1'){
-             $horeca = DB::table('horeca')
+            session(['perfilId' => $distribuidor->id]);
+            session(['perfilNombre' => $distribuidor->nombre]);
+            session(['perfilLogo' => $distribuidor->logo]);
+            session(['perfilSaldo' => $distribuidor->saldo]);
+            session(['perfilTipo' => 'D']);
+        }elseif ($user->horeca == '1'){
+            $horeca = DB::table('horeca')
                             ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre')
+                            ->select('id', 'nombre', 'logo', 'saldo')
                             ->get()
                             ->first();
 
-            session(['horecaId' => $horeca->id]);
-            session(['horecaNombre' => $horeca->nombre]);
+            session(['perfilId' => $horeca->id]);
+            session(['perfilNombre' => $horeca->nombre]);
+            session(['perfilLogo' => $horeca->logo]);
+            session(['perfilSaldo' => $horeca->saldo]);
+            session(['perfilTipo' => 'H']);
         }
 
         return view('usuario.index');

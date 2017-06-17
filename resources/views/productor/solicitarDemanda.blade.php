@@ -14,7 +14,7 @@
 
 		{!! Form::open(['route' => 'demanda-importador.store', 'method' => 'POST']) !!}
 
-			{!! Form::hidden('productor_id', session('productorId')) !!}
+			{!! Form::hidden('productor_id', session('perfilId')) !!}
 		
 			@include('demandaImportacion.formularios.createForm')
 		
@@ -30,7 +30,7 @@
 
 			{!! Form::hidden('who', 'P') !!}
 			{!! Form::hidden('tipo_creador', 'P') !!}
-			{!! Form::hidden('creador_id', session('productorId')) !!}
+			{!! Form::hidden('creador_id', session('perfilId')) !!}
 
 			@include('demandaDistribucion.formularios.createForm')
 

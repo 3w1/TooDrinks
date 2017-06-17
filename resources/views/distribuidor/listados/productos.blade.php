@@ -32,11 +32,11 @@
          
          <div class="col-md-4 col-xs-6">
             <div class="thumbnail">
-               <div class="fondo">
-                  @if ($producto->confirmado == '0')<label class="label label-danger">Sin Confirmar</label>@endif
+               <div>
                   <img src="{{ asset('imagenes/productos/thumbnails/') }}/{{ $producto->imagen }}" class="img-responsive">
                </div>             
                <div class="caption">
+                   <P>@if ($producto->confirmado == '0')<label class="label label-danger">Sin Confirmar</label>   @else <label class="label label-success">Confirmado</label>@endif</P>
                   <h3>{{ $producto->nombre }}</h3>
                   <p><strong>{{ $tipo_bebida->nombre }}</strong> ({{ $clase_bebida->clase }})</p>
                   <p>

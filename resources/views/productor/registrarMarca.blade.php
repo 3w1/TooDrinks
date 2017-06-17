@@ -13,8 +13,8 @@
 	{!! Form::open(['route'=>'marca.store', 'method'=>'POST', 'enctype' => 'multipart/form-data']) !!}
 		{!! Form::hidden('who', 'P') !!}
 		{!! Form::hidden ('tipo_creador','P') !!}
-		{!! Form::hidden('creador_id', session('productorId')) !!}
-		{!! Form::hidden('productor_id', session('productorId')) !!}
+		{!! Form::hidden('creador_id', session('perfilId')) !!}
+		{!! Form::hidden('productor_id', session('perfilId')) !!}
 		{!! Form::hidden('reclamada', '1') !!}
 		{!! Form::hidden('aprobada', '1') !!}
 		

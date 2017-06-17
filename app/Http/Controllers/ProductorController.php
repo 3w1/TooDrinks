@@ -28,7 +28,7 @@ class ProductorController extends Controller
 
     public function store(Request $request)
     {  
-        $file = Input::file('logo');   
+        /*$file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
         $path = public_path().'/imagenes/productores/';
@@ -43,12 +43,12 @@ class ProductorController extends Controller
         $productor->logo = $nombre; 
         $productor->save();
 
-        return redirect('usuario')->with('msj', 'Su productor se ha agregado con éxito');
+        return redirect('usuario')->with('msj', 'Su productor se ha agregado con éxito');*/
     }
 
     public function show($id)
     {
-        $productor = Productor::find($id);
+       /* $productor = Productor::find($id);
 
         $ofertas = DB::table('oferta')
                     ->select('id')
@@ -74,12 +74,12 @@ class ProductorController extends Controller
         session(['productorNombre' => $productor->nombre]);
         session(['productorLogo' => $productor->logo]);
 
-        return view('productor.show')->with(compact('productor', 'cont', 'cont2', 'cont3', 'cont4'));
+        return view('productor.show')->with(compact('productor', 'cont', 'cont2', 'cont3', 'cont4'));*/
     }
 
     public function edit($id)
     {
-       $productor = Productor::find($id);
+       /* $productor = Productor::find($id);
        
         $paises = DB::table('pais')
                         ->orderBy('pais')
@@ -90,22 +90,22 @@ class ProductorController extends Controller
                         ->where('pais_id', '=', $productor->pais_id)
                         ->pluck('provincia', 'id');
 
-       return view('productor.edit')->with(compact('productor','paises', 'provincias'));
+       return view('productor.edit')->with(compact('productor','paises', 'provincias'));*/
 
     }
 
     public function update(Request $request, $id)
     {
-        $productor = Productor::find($id);
+        /*$productor = Productor::find($id);
         $productor->fill($request->all());
         $productor->save();
 
         $url = 'productor/'.$id.'/edit';
-        return redirect($url)->with('msj', 'Sus datos se han actualizado con éxito');
+        return redirect($url)->with('msj', 'Sus datos se han actualizado con éxito');*/
     }
 
     public function updateAvatar(Request $request){
-        $file = Input::file('logo');   
+        /*$file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
         $path = public_path().'/imagenes/productores/';
@@ -121,7 +121,7 @@ class ProductorController extends Controller
                             ->update(['logo' => $nombre ]);
        
        $url = 'productor/'.$request->id.'/edit';
-       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');
+       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');*/
     }
 
     public function destroy($id)
@@ -182,7 +182,7 @@ class ProductorController extends Controller
     
      //FUNCION QUE PERMITE VER LAS MARCAS DE UN PRODUCTOR
     public function ver_marcas(){
-        $marcas = Productor::find(session('productorId'))
+        $marcas = Productor::find(session('perfilId'))
                                     ->marcas()
                                     ->paginate(8);
 
@@ -208,7 +208,7 @@ class ProductorController extends Controller
     public function reclamar_marca($id){
         $actualizacion = DB::table('marca')
                             ->where('id', '=', $id)
-                            ->update(['productor_id' => session('productorId'), 'reclamada' => '1' ]);
+                            ->update(['productor_id' => session('perfilId'), 'reclamada' => '1' ]);
 
         return redirect('productor/mis-marcas')->with('msj', 'Se ha agregado exitosamente una marca a su propiedad');
     }
@@ -269,20 +269,10 @@ class ProductorController extends Controller
 
         $marcas = DB::table('marca')
                         ->orderBy('nombre')
-                        ->where('productor_id', '=', session('productorId'))
+                        ->where('productor_id', '=', session('perfilId'))
                         ->pluck('nombre', 'id');
 
         return view('productor.registrarOferta')->with(compact('id', 'producto', 'paises', 'tipo', 'marcas'));
-    }
-
-    public function crear_oferta($id, $producto){     
-        $tipo = '2';
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        return view('productor.registrarOferta')->with(compact('id', 'producto', 'paises'));
     }
 
     //FUNCION QUE PERMITE VER LAS OFERTAS DE UN PRODUCTOR
@@ -290,7 +280,7 @@ class ProductorController extends Controller
         $ofertas = DB::table('oferta')
                     ->where([
                         ['tipo_creador', '=', 'P'],
-                        ['creador_id', '=', session('productorId')],
+                        ['creador_id', '=', session('perfilId')],
                     ])
                     ->paginate(6);
 
@@ -313,7 +303,7 @@ class ProductorController extends Controller
 
         $marcas = DB::table('marca')
                     ->orderBy('nombre')
-                    ->where('productor_id', '=', session('productorId'))
+                    ->where('productor_id', '=', session('perfilId'))
                     ->pluck('nombre', 'id');
 
         $paises = DB::table('pais')
@@ -322,7 +312,7 @@ class ProductorController extends Controller
 
         $pais_origen = DB::table('productor')
                         ->select('pais_id')
-                        ->where('id', '=', session('productorId'))
+                        ->where('id', '=', session('perfilId'))
                         ->get()
                         ->first();
 
@@ -332,7 +322,7 @@ class ProductorController extends Controller
     public function ver_demandas_importadores(){
         $cont = 0;
 
-        $demandasImportadores = Demanda_Importador::where('productor_id', '=', session('productorId'))
+        $demandasImportadores = Demanda_Importador::where('productor_id', '=', session('perfilId'))
                                     ->orderBy('created_at', 'ASC')
                                     ->paginate(8);
 
@@ -358,21 +348,19 @@ class ProductorController extends Controller
 
         $marcas = DB::table('marca')
                     ->orderBy('nombre')
-                    ->select('id', 'nombre')
-                    ->where('productor_id', '=', session('productorId'))
-                    ->get();
+                    ->where('productor_id', '=', session('perfilId'))
+                    ->pluck('nombre', 'id');
 
         $pais_origen = DB::table('productor')
                         ->select('pais_id')
-                        ->where('id', '=', session('productorId'))
+                        ->where('id', '=', session('perfilId'))
                         ->get()
                         ->first();
 
         $provincias = DB::table('provincia_region')
-                        ->select('id', 'provincia')
-                        ->orderBy('provincia')
-                        ->where('pais_id', '=', $pais_origen->pais_id)
-                        ->get();
+                    ->orderBy('provincia')
+                    ->where('pais_id', '=', $pais_origen->pais_id)
+                    ->pluck('provincia', 'id');
 
         return view('productor.solicitarDemanda')->with(compact('tipo', 'marcas', 'provincias'));
     }
@@ -383,7 +371,7 @@ class ProductorController extends Controller
 
         $demandasDistribuidores = Demanda_Distribuidor::where([
                                         ['tipo_creador', '=', 'P'], 
-                                        ['creador_id', '=', session('productorId')]
+                                        ['creador_id', '=', session('perfilId')]
                                     ])->orderBy('created_at', 'ASC')
                                     ->paginate(8);
 
@@ -393,7 +381,7 @@ class ProductorController extends Controller
     public function editar_demanda_distribucion($id){
         $demandaDistribuidor = Demanda_Distribuidor::find($id);
 
-        $pais_productor = Productor::where('id', '=', session('productorId'))
+        $pais_productor = Productor::where('id', '=', session('perfilId'))
                                     ->select('pais_id')
                                     ->get()
                                     ->first();
@@ -405,7 +393,7 @@ class ProductorController extends Controller
         
         $marcas = DB::table('marca')
                         ->orderBy('nombre')
-                        ->where('productor_id', '=', session('productorId'))
+                        ->where('productor_id', '=', session('perfilId'))
                         ->pluck('nombre', 'id');
 
         return view('productor.editDemandaDist')->with(compact('demandaDistribuidor','marcas', 'provincias'));
@@ -423,7 +411,7 @@ class ProductorController extends Controller
         $solicitudes = DB::table('importador_marca')
                     ->select('importador_marca.*')
                     ->join('marca', 'importador_marca.marca_id', '=', 'marca.id')
-                    ->where('marca.productor_id', '=', session('productorId'))
+                    ->where('marca.productor_id', '=', session('perfilId'))
                     ->where('importador_marca.status', '=', '0')
                     ->get();
 
@@ -436,7 +424,7 @@ class ProductorController extends Controller
                                 ->where('id', '=', $id)
                                 ->update(['status' => '1']);
 
-            $productor = Productor::find(session('productorId'));
+            $productor = Productor::find(session('perfilId'));
 
             $productor->importadores()->attach($imp);
 
@@ -452,7 +440,7 @@ class ProductorController extends Controller
         $solicitudes = DB::table('distribuidor_marca')
                     ->select('distribuidor_marca.*')
                     ->join('marca', 'distribuidor_marca.marca_id', '=', 'marca.id')
-                    ->where('marca.productor_id', '=', session('productorId'))
+                    ->where('marca.productor_id', '=', session('perfilId'))
                     ->where('distribuidor_marca.status', '=', '0')
                     ->get();
 
@@ -465,7 +453,7 @@ class ProductorController extends Controller
                                 ->where('id', '=', $id)
                                 ->update(['status' => '1']);
 
-            $productor = Productor::find(session('productorId'));
+            $productor = Productor::find(session('perfilId'));
 
             $productor->distribuidores()->attach($dist);
 
@@ -481,7 +469,7 @@ class ProductorController extends Controller
         $productos = DB::table('producto')
                     ->select('producto.*')
                     ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                    ->where('marca.productor_id', '=', session('productorId'))
+                    ->where('marca.productor_id', '=', session('perfilId'))
                     ->where('producto.confirmado', '=', '0')
                     ->orderBy('created_at', 'DESC')
                     ->paginate(5);
