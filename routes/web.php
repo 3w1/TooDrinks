@@ -169,7 +169,9 @@ Route::resource('producto','ProductoController');
 Route::resource('demanda-importador','DemandaImportacionController');
 // ./RUTAS PARA LAS DEMANDAS DE IMPORTADORES ./
 
-Route::get('credito/compra','CreditoController@compra')->name('compra');
+Route::get('credito/compra/{id}','CreditoController@compra')->name('compra');
+
+Route::get('credito/generar_factura','CreditoController@generar_factura')->name('credito.generar-factura');
 
 Route::resource('credito','CreditoController');
 

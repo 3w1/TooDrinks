@@ -12,7 +12,7 @@
 				<p>Precio: $${{ number_format($credito->precio) }}</p>
 				
 				<p>
-				<a class="btn bt-warnig" href="{{ route('compra') }}"><i class="fa fa-cart-plus"></i>comprar</a> 
+				<a class="btn bt-warnig" href="{{ route('compra', $credito->id) }}"><i class="fa fa-cart-plus"></i>comprar</a> 
 				<a class="btn bt-prmary" href="#"><i class="fa fa-chevron-circle-right"></i>Leer mas</a>
 				</p>
 				

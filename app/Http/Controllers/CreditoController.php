@@ -9,6 +9,7 @@ use App\Http\Requests\CreditoUpdateRequest;
 use App\Models\Credito;
 use App\Models\User;
 use DB;
+use PDF;
 
 class CreditoController extends Controller
 {
@@ -66,31 +67,76 @@ class CreditoController extends Controller
         return redirect()->action('CreditoController@index');
     }
 
-    public function compra()
-    {   
-        $idusuario = Auth::id(); 
-        
-        $productores = DB::table('productor')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', $idusuario)
-                        ->paginate(10);
-        $distribuidores = DB::table('distribuidor')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', $idusuario)
-                        ->paginate(10);
-        $importador = DB::table('importador')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', $idusuario)
-                        ->paginate(10);
 
-        
-        $lista = array($productores, $distribuidores, $importador);
 
-        return view('credito.lista')->with(compact('lista'));
-        //dd($lista)
+
+
+
+    public function compra($id)
+    {  
+
+    $fecha = new \DateTime();
+    //echo $now->format(' H:i:s');
+
+     $idusuario = Auth::user()->id;
+
+     $credito = DB::table('credito')
+                      ->where('id', $id)->get()->first();
+
+
+    if(Auth::user()->productor==true){  
+
+        $saldo = DB::table('productor')
+                        ->select('saldo')
+                        ->where('user_id', $idusuario)->get()->first();
+
+        $actualizacion_saldo = DB::table('productor')
+                            ->where('user_id', '=', $idusuario)
+                            ->update(['saldo' =>$saldo->saldo+$credito->cantidad_creditos]);
+
+        $historial_compras = DB::table('productor_credito')->insertGetId(
+                                    ['credito_id' => $id, 'productor_id' => 11, 'total' => $credito->precio, 'fecha_compra' => $fecha]);    
+
+                                     }
+
+    if(Auth::user()->importador==true){
+
+         $saldo = DB::table('importador')
+                        ->select('saldo')
+                        ->where('user_id', $idusuario)->get()->first();
+
+        $actualizacion_saldo = DB::table('importador')
+                            ->where('user_id', '=', $idusuario)
+                            ->update(['saldo' =>$saldo->saldo+$credito->cantidad_creditos]);
+
+        $historial_compras = DB::table('importador_credito')->insertGetId(
+                                    ['credito_id' => $id, 'importador_id' => 11, 'total' => $credito->precio, 'fecha_compra' => $fecha]);
+
+                                    }
+
+    if(Auth::user()->distribuidor==true){
+
+         $saldo = DB::table('distribuidor')
+                        ->select('saldo')
+                        ->where('user_id', $idusuario)->get()->first();
+
+        $actualizacion_saldo = DB::table('distribuidor')
+                            ->where('user_id', '=', $idusuario)
+                            ->update(['saldo' =>$saldo->saldo+$credito->cantidad_creditos]);
+
+         $historial_compras = DB::table('distribuidor_credito')->insertGetId(
+                                    ['credito_id' => $id, 'idistribuidor_id' => 11, 'total' => $credito->precio, 'fecha_compra' => $fecha]);
+                                        }
+
+        $factura=PDF::loadview('credito.FacturaCredito',['credito'=>$credito]);
+       return $factura->stream('factura_credito.pdf');
+       //return $pdf->download('prueba.pdf');
+    
     }
+
+    public function generar_factura(){
+        
+    }
+
 }
 
