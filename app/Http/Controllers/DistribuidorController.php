@@ -31,7 +31,7 @@ class DistribuidorController extends Controller
         
     }
 
-    public function store(Request $request)
+   /* public function store(Request $request)
     {
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
@@ -137,7 +137,7 @@ class DistribuidorController extends Controller
     public function destroy($id)
     {
          
-    }
+    }*/
 
     //FUNCION QUE LE PERMITE AL DISTRIBUIDOR REGISTRAR UNA MARCA
    /* public function registrar_marca(){
@@ -151,7 +151,7 @@ class DistribuidorController extends Controller
     
      //FUNCION QUE PERMITE VER LAS MARCAS QUE MANEJA UN IMPORTADOR
     public function ver_marcas(){
-        $marcas = Distribuidor::find(session('distribuidorId'))
+        $marcas = Distribuidor::find(session('perfilId'))
                                     ->marcas()
                                     ->paginate(6);
 
@@ -170,7 +170,7 @@ class DistribuidorController extends Controller
         $marcas = DB::table('marca')
                     ->select('marca.*')
                     ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
-                    ->where('distribuidor_marca.distribuidor_id', '!=', session('distribuidorId'))
+                    ->where('distribuidor_marca.distribuidor_id', '!=', session('perfilId'))
                     ->orwhere('distribuidor_marca.marca_id', '=', null)
                     ->paginate(6);
 
@@ -180,7 +180,7 @@ class DistribuidorController extends Controller
     public function asociar_marca($id){
         $marca = Marca::find($id);
 
-        $marca->distribuidores()->attach(session('distribuidorId'), ['status' => '0']);
+        $marca->distribuidores()->attach(session('perfilId'), ['status' => '0']);
 
         $url = ('distribuidor/mis-marcas');
         return redirect($url)->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
@@ -241,9 +241,9 @@ class DistribuidorController extends Controller
                         ->pluck('pais', 'id');
 
          $marcas = DB::table('marca')
-                        ->orderBy('nombre')
-                        ->where('productor_id', '=', session('productorId'))
-                        ->pluck('nombre', 'id');
+                    ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
+                    ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
+                    ->pluck('marca.nombre', 'marca.id');
 
         return view('distribuidor.registrarOferta')->with(compact('id', 'producto', 'paises', 'marcas', 'tipo'));
     }
@@ -253,7 +253,7 @@ class DistribuidorController extends Controller
         $ofertas = DB::table('oferta')
                     ->where([
                         ['tipo_creador', '=', 'D'],
-                        ['creador_id', '=', session('distribuidorId')],
+                        ['creador_id', '=', session('perfilId')],
                     ])
                     ->paginate(6);
 
@@ -273,7 +273,7 @@ class DistribuidorController extends Controller
 
     public function listado_ofertas(){
         $distribuidor = DB::table('distribuidor')
-                            ->where('id', '=', session('distribuidorId') )
+                            ->where('id', '=', session('perfilId') )
                             ->select('pais_id', 'provincia_region_id')
                             ->get()
                             ->first();

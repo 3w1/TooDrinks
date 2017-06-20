@@ -20,7 +20,7 @@
 		{!! Form::hidden('who', 'P') !!}
 
 		{!! Form::hidden('tipo_creador', 'P') !!}
-		{!! Form::hidden('creador_id', session('productorId')) !!}
+		{!! Form::hidden('creador_id', session('perfilId')) !!}
 
 		@if ($tipo == '1')
 			{!! Form::hidden('producto_id', $id) !!}

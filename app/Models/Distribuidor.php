@@ -27,15 +27,15 @@ class Distribuidor extends Model
     }
 
     public function productores(){
-        return $this->belongsToMany('App\Models\Productor', 'productor_distribuidor');
+        return $this->belongsToMany('App\Models\Productor', 'productor_distribuidor')->withTimestamps();
     }
 
     public function importadores(){
-        return $this->belongsToMany('App\Models\Importador', 'importador_distribuidor');
+        return $this->belongsToMany('App\Models\Importador', 'importador_distribuidor')->withTimestamps();
     }
 
     public function marcas(){
-        return $this->belongsToMany('App\Models\Marca', 'distribuidor_marca');
+        return $this->belongsToMany('App\Models\Marca', 'distribuidor_marca')->withTimestamps();
     }
 
     public function ofertas(){

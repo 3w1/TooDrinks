@@ -18,7 +18,7 @@
              $status = DB::table('distribuidor_marca')
                         ->select('status')
                         ->where([
-                              ['distribuidor_id', '=', session('distribuidorId')], 
+                              ['distribuidor_id', '=', session('perfilId')], 
                               ['marca_id', '=', $marca->id]
                            ])->get()
                         ->first();
@@ -47,7 +47,6 @@
             		
             		<div class="box-footer no-padding">
               			<ul class="nav nav-stacked">
-              				<li class="active"><a><strong>Descripción: </strong> {{ $marca->descripcion }} </a></li>
               				<li class="active"><a><strong>Website: </strong> {{ $marca->website }} </a></li>
                         <li class="active"><a href="{{ route('distribuidor.productos', [$marca->id, $marca->nombre]) }}"><strong><u>Catálogo de Productos: </strong> {{ $cont }} Producto(s) </u></a></li>
                         <li class="active"><a href="{{ route('distribuidor.marca', [$marca->id, $marca->nombre]) }}"><strong><u>Ver más detalles</u></strong></a></li>

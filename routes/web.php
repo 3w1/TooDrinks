@@ -24,7 +24,7 @@ Route::get('/', function () {
 // ./RUTAS DE INICIO Y AUTENTICACIÓN ./
 
 //  RUTAS PARA LOS USUARIOS
-Route::get('usuario/mis-productores', 'UsuarioController@ver_productores')->name('usuario.productores');
+/*Route::get('usuario/mis-productores', 'UsuarioController@ver_productores')->name('usuario.productores');
 Route::get('usuario/mis-importadores', 'UsuarioController@ver_importadores')->name('usuario.importadores');
 Route::get('usuario/mis-distribuidores', 'UsuarioController@ver_distribuidores')->name('usuario.distribuidores');
 Route::get('usuario/mis-horecas', 'UsuarioController@ver_horecas')->name('usuario.horecas');
@@ -33,6 +33,10 @@ Route::get('usuario/registrar-productor', 'UsuarioController@registrar_productor
 Route::get('usuario/registrar-importador', 'UsuarioController@registrar_importador')->name('usuario.registrar-importador');
 Route::get('usuario/registrar-distribuidor', 'UsuarioController@registrar_distribuidor')->name('usuario.registrar-distribuidor');
 Route::get('usuario/registrar-horeca', 'UsuarioController@registrar_horeca')->name('usuario.registrar-horeca');
+*/
+
+Route::post('usuario/cambiar-perfil', 'UsuarioController@cambiar_perfil')->name('usuario.cambiar-perfil');
+Route::get('usuario/inicio', 'UsuarioController@inicio')->name('usuario.inicio');
 
 Route::get('usuario/registrar-producto', 'UsuarioController@registrar_producto')->name('usuario.registrar-producto');
 Route::get('usuario/productos', 'UsuarioController@ver_productos')->name('usuario.productos');
@@ -85,6 +89,13 @@ Route::get('productor/marcas-sin-propietario', 'ProductorController@listado_marc
 Route::get('productor/reclamar-marca/{id}', 'ProductorController@reclamar_marca')->name('productor.reclamar-marca');
 
 Route::get('productor/confirmar-importadores', 'ProductorController@confirmar_importadores')->name('productor.confirmar-importadores');
+Route::get('productor/confirmar-importador/{id}-{tipo}-{imp}', 'ProductorController@confirmar_importador')->name('productor.confirmar-importador');
+
+Route::get('productor/confirmar-distribuidores', 'ProductorController@confirmar_distribuidores')->name('productor.confirmar-distribuidores');
+Route::get('productor/confirmar-distribuidor/{id}-{tipo}-{dist}', 'ProductorController@confirmar_distribuidor')->name('productor.confirmar-distribuidor');
+
+Route::get('productor/confirmar-productos', 'ProductorController@confirmar_productos')->name('productor.confirmar-productos');
+Route::get('productor/confirmar-producto/{id}-{tipo}', 'ProductorController@confirmar_producto')->name('productor.confirmar-producto');
 
 Route::get('productor/ver-listado-importadores', 'ProductorController@listado_importadores')->name('productor.listado-importadores');
 

@@ -17,7 +17,7 @@
 		{!! Form::hidden('marca_id', $id)!!}
 		{!! Form::hidden('marca_nombre', $marca) !!}
 		{!! Form::hidden('tipo_creador', 'P') !!}
-		{!! Form::hidden('creador_id', session('productorId')) !!}
+		{!! Form::hidden('creador_id', session('perfilId')) !!}
 		{!! Form::hidden('publicado', '1') !!}
 		{!! Form::hidden('confirmado', '1') !!}
 

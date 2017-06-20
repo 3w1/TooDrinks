@@ -32,16 +32,19 @@
          
          <div class="col-md-4 col-xs-6">
             <div class="thumbnail">
-               <div class="fondo">
+               <div>
+                  
                   <img src="{{ asset('imagenes/productos/thumbnails/') }}/{{ $producto->imagen }}" class="img-responsive">
                </div>             
                <div class="caption">
+                  <P>@if ($producto->confirmado == '0')<label class="label label-danger">Sin Confirmar</label>   @else <label class="label label-success">Confirmado</label>@endif</P>
                   <h3>{{ $producto->nombre }}</h3>
                   <p><strong>{{ $tipo_bebida->nombre }}</strong> ({{ $clase_bebida->clase }})</p>
                   <p>
                      <a href="{{ route('importador.producto', [$producto->id, $producto->nombre]) }}" class="btn btn-primary" role="button">Ver Más</a>
                      <a href="{{ route('importador.registrar-oferta', [$producto->id, $producto->nombre]) }}" class="btn btn-info" role="button">Ofertar</a>
                   </p>
+                  <p></p>
                </div>
             </div>
          </div>

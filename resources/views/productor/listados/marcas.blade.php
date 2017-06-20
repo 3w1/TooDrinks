@@ -16,13 +16,14 @@
 		@foreach($marcas as $marca)
 			<?php
             $productos = DB::table('producto')
-                           ->select('id')
+                           ->select('id', 'confirmado')
                            ->where('marca_id', $marca->id)
                            ->get();
 
             $cont = 0;
             foreach ($productos as $producto)
-               $cont++;
+               if ($producto->confirmado == '1')
+                  $cont++;
 			 ?>
 			<div class="col-md-6 col-xs-12">
           		<!-- Widget: user widget style 1 -->
@@ -39,15 +40,13 @@
             		
             		<div class="box-footer no-padding">
               			<ul class="nav nav-stacked">
-              				<li class="active"><a><strong>Descripción: </strong> {{ $marca->descripcion }} </a></li>
-              				<li class="active"><a><strong>Website: </strong> {{ $marca->website }} </a></li>
+              			  <li class="active"><a><strong>Website: </strong> {{ $marca->website }} </a></li>
                         <li class="active"><a href="{{ route('productor.productos', [$marca->id, $marca->nombre]) }}"><strong><u>Catálogo de Productos: </strong> {{ $cont }} Producto(s) </u></a></li>
                         <li class="active"><a href="{{ route('productor.registrar-producto', [$marca->id, $marca->nombre]) }}"><strong><u>Agregar Producto</u></strong></a></li>
                         <li class="active"><a href="{{ route('productor.marca', [$marca->id, $marca->nombre]) }}"><strong><u>Ver más detalles</u></strong></a></li>
                      </ul>
             		</div>
          		</div>
-          		<!-- /.widget-user -->
        		</div>
 		@endforeach
 

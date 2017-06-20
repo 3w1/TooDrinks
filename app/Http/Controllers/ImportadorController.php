@@ -30,7 +30,7 @@ class ImportadorController extends Controller
         
     }
 
-    public function store(Request $request)
+    /*public function store(Request $request)
     {
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
@@ -146,7 +146,7 @@ class ImportadorController extends Controller
     public function destroy($id)
     {
 
-    }
+    }*/
 
      //FUNCION QUE LE PERMITE AL IMPORTADOR REGISTRAR UN DISTRIBUIDOR ASOCIADO
     /*public function registrar_distribuidor(){
@@ -179,7 +179,7 @@ class ImportadorController extends Controller
     
      //FUNCION QUE PERMITE VER LAS MARCAS QUE MANEJA UN IMPORTADOR
     public function mis_marcas(){
-        $marcas = Importador::find(session('importadorId'))
+        $marcas = Importador::find(session('perfilId'))
                                     ->marcas()
                                     ->paginate(6);
 
@@ -198,7 +198,7 @@ class ImportadorController extends Controller
         $marcas = DB::table('marca')
                     ->select('marca.*')
                     ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
-                    ->where('importador_marca.importador_id', '!=', session('importadorId'))
+                    ->where('importador_marca.importador_id', '!=', session('perfilId'))
                     ->orwhere('importador_marca.marca_id', '=', null)
                     ->paginate(6);
 
@@ -208,7 +208,7 @@ class ImportadorController extends Controller
     public function asociar_marca($id){
         $marca = Marca::find($id);
 
-        $marca->importadores()->attach(session('importadorId'), ['status' => '0']);
+        $marca->importadores()->attach(session('perfilId'), ['status' => '0']);
 
         $url = ('importador/mis-marcas');
         return redirect($url)->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
@@ -268,10 +268,10 @@ class ImportadorController extends Controller
                         ->orderBy('pais')
                         ->pluck('pais', 'id');
 
-        $marcas = DB::table('marca')
-                        ->orderBy('nombre')
-                        ->where('productor_id', '=', session('productorId'))
-                        ->pluck('nombre', 'id');
+       $marcas = DB::table('marca')
+                    ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                    ->where('importador_marca.importador_id', '=', session('perfilId'))
+                    ->pluck('marca.nombre', 'marca.id');
 
         return view('importador.registrarOferta')->with(compact('id', 'producto', 'paises', 'marcas', 'tipo'));
     }
@@ -281,7 +281,7 @@ class ImportadorController extends Controller
         $ofertas = DB::table('oferta')
                     ->where([
                         ['tipo_creador', '=', 'I'],
-                        ['creador_id', '=', session('importadorId')],
+                        ['creador_id', '=', session('perfilId')],
                     ])
                     ->paginate(6);
 
@@ -301,7 +301,7 @@ class ImportadorController extends Controller
 
     public function listado_ofertas(){
         $importador = DB::table('importador')
-                            ->where('id', '=', session('importadorId') )
+                            ->where('id', '=', session('perfilId') )
                             ->select('pais_id')
                             ->get()
                             ->first();
@@ -319,15 +319,15 @@ class ImportadorController extends Controller
 
      public function solicitar_distribuidor(){
         $tipo = 'D';
-
+        
         $marcas = DB::table('marca')
                     ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
-                    ->where('importador_marca.importador_id', '=', session('importadorId'))
+                    ->where('importador_marca.importador_id', '=', session('perfilId'))
                     ->pluck('marca.nombre', 'marca.id');
 
         $pais_origen = DB::table('importador')
                         ->select('pais_id')
-                        ->where('id', '=', session('importadorId'))
+                        ->where('id', '=', session('perfilId'))
                         ->get()
                         ->first();
 
@@ -344,7 +344,7 @@ class ImportadorController extends Controller
 
         $demandasDistribuidores = Demanda_Distribuidor::where([
                                         ['tipo_creador', '=', 'I'], 
-                                        ['creador_id', '=', session('importadorId')]
+                                        ['creador_id', '=', session('perfilId')]
                                     ])->orderBy('created_at', 'ASC')
                                     ->paginate(8);
 
@@ -354,7 +354,7 @@ class ImportadorController extends Controller
     public function editar_demanda_distribucion($id){
         $demandaDistribuidor = Demanda_Distribuidor::find($id);
 
-        $pais_importador = Importador::where('id', '=', session('importadorId'))
+        $pais_importador = Importador::where('id', '=', session('perfilId'))
                                     ->select('pais_id')
                                     ->get()
                                     ->first();
@@ -366,7 +366,7 @@ class ImportadorController extends Controller
         
         $marcas = DB::table('marca')
                     ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
-                    ->where('importador_marca.importador_id', '=', session('importadorId'))
+                    ->where('importador_marca.importador_id', '=', session('perfilId'))
                     ->pluck('marca.nombre', 'marca.id');
 
         return view('importador.editDemandaDist')->with(compact('demandaDistribuidor','marcas', 'provincias'));
@@ -375,7 +375,7 @@ class ImportadorController extends Controller
     public function listado_distribuidores(){
         $pais_importador = DB::table('importador')
                             ->select('pais_id')
-                            ->where('id', '=', session('importadorId'))
+                            ->where('id', '=', session('perfilId'))
                             ->get()
                             ->first();
 

@@ -21,6 +21,8 @@ class CreateMarcaTable extends Migration
             $table->string('logo');
             $table->string('website')->nullable();
             $table->boolean('reclamada');
+            $table->boolean('aprobada');
+            $table->boolean('publicada');
             $table->timestamps();
 
           $table->foreign('productor_id')

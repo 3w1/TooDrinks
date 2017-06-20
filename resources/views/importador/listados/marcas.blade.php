@@ -18,7 +18,7 @@
             $status = DB::table('importador_marca')
                         ->select('status')
                         ->where([
-                              ['importador_id', '=', session('importadorId')], 
+                              ['importador_id', '=', session('perfilId')], 
                               ['marca_id', '=', $marca->id]
                            ])->get()
                         ->first();

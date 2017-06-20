@@ -27,7 +27,7 @@ class HorecaController extends Controller
 
     }
 
-    public function store(Request $request)
+    /*public function store(Request $request)
     {
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
@@ -107,11 +107,11 @@ class HorecaController extends Controller
     public function destroy($id)
     {
 
-    }
+    }*/
 
     public function listado_ofertas(){
         $horeca = DB::table('horeca')
-                            ->where('id', '=', session('horecaId') )
+                            ->where('id', '=', session('perfilId') )
                             ->select('provincia_region_id')
                             ->get()
                             ->first();
