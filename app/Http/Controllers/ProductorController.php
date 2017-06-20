@@ -400,11 +400,23 @@ class ProductorController extends Controller
     }
 
     public function listado_importadores(){
+        $productor = DB::table('productor')
+                        ->where('id', '=', session('perfilId'))
+                        ->select('tipo_suscripcion')
+                        ->get()
+                        ->first();
+
+        if ($productor->tipo_suscripcion != 'G'){
+            $check = '1';
+        }else{
+            $check = '0';
+        }
+
         $importadores = Importador::orderBy('nombre')
                             ->select('nombre', 'pais_id', 'provincia_region_id', 'logo', 'persona_contacto')
                             ->paginate(6);
 
-        return view('productor.listados.importadoresMundiales')->with(compact('importadores'));
+        return view('productor.listados.importadoresMundiales')->with(compact('importadores', 'check'));
     }
 
     public function confirmar_importadores(){

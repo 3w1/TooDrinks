@@ -20,7 +20,7 @@ class SuscripcionController extends Controller
         //
         $suscripciones = DB::table('suscripcion')
                         ->orderBy('precio')
-                        ->paginate(2);
+                        ->get();
                         
         return view('suscripcion.index')->with(compact('suscripciones'));
     }

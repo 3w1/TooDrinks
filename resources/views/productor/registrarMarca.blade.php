@@ -16,6 +16,7 @@
 		{!! Form::hidden('creador_id', session('perfilId')) !!}
 		{!! Form::hidden('productor_id', session('perfilId')) !!}
 		{!! Form::hidden('reclamada', '1') !!}
+		{!! Form::hidden('publicada', '0') !!}
 		{!! Form::hidden('aprobada', '1') !!}
 		
 		@include('marca.formularios.createForm')
