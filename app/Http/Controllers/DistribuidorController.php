@@ -139,33 +139,6 @@ class DistribuidorController extends Controller
          
     }*/
 
-    //FUNCION QUE LE PERMITE AL DISTRIBUIDOR REGISTRAR UNA MARCA
-   /* public function registrar_marca(){
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        return view('distribuidor.registrarMarca')->with(compact('paises'));
-    }*/
-    
-     //FUNCION QUE PERMITE VER LAS MARCAS QUE MANEJA UN IMPORTADOR
-    public function ver_marcas(){
-        $marcas = Distribuidor::find(session('perfilId'))
-                                    ->marcas()
-                                    ->paginate(6);
-
-        return view('distribuidor.listados.marcas')->with(compact('marcas'));
-    }
-
-    public function ver_detalle_marca($id, $nombre){
-        $perfil = 'D';
-
-        $marca = Marca::find($id);
-
-        return view('distribuidor.detalleMarca')->with(compact('marca', 'perfil'));
-    }
-
      public function listado_marcas(){
         $marcas = DB::table('marca')
                     ->select('marca.*')

@@ -32,7 +32,7 @@
                      <li><a><strong>Producto:</strong> {{ $producto->nombre }}</a></li>
                   </ul>
                   <p>
-                     <a href="" class="btn btn-primary" role="button">Ver Más</a>
+                     <a href="{{ route('oferta.show', $oferta->id) }}" class="btn btn-primary" role="button">Ver Detalles</a>
                   </p>
                </div>
             </div>

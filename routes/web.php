@@ -151,8 +151,11 @@ Route::resource('marca','MarcaController');
 // ./RUTAS PARA LAS MARCAS ./
 
 // RUTAS PARA LOS PRODUCTOS
-Route::post('producto/updateImagen', 'ProductoController@updateImagen')->name('producto.updateImagen');
+Route::get('producto/agregar/{id}-{marca}', 'ProductoController@agregar')->name('producto.agregar');
+Route::get('producto/listado-de-productos/{id}-{marca}', 'ProductoController@listado')->name('producto.listado');
+Route::get('producto/detalle-de-producto/{id}', 'ProductoController@detalle')->name('producto.detalle');
 
+Route::post('producto/updateImagen', 'ProductoController@updateImagen')->name('producto.updateImagen');
 Route::resource('producto','ProductoController');
 // ./RUTAS PARA LOS PRODUCTOS ./
 
@@ -196,8 +199,6 @@ Route::resource('oferta','OfertaController');
 // ./RUTAS PARA LAS OFERTAS ./
 
 Route::resource('demanda-producto','DemandaProductoController');
-
-
 
 Route::resource('suscripcion', 'SuscripcionController');
 

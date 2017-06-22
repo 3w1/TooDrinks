@@ -145,33 +145,6 @@ class ProductorController extends Controller
         return view('productor.listados.distribuidores')->with(compact('distribuidores'));
     }*/
 
-    //FUNCION QUE LE PERMITE AL PRODUCTOR REGISTRAR UN DISTRIBUIDOR DE SU PROPIEDAD
-    public function registrar_marca(){
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        return view('productor.registrarMarca')->with(compact('paises', 'provincias'));
-    }
-    
-     //FUNCION QUE PERMITE VER LAS MARCAS DE UN PRODUCTOR
-    public function ver_marcas(){
-        $marcas = Productor::find(session('perfilId'))
-                                    ->marcas()
-                                    ->paginate(8);
-
-        return view('productor.listados.marcas')->with(compact('marcas'));
-    }
-
-    public function ver_detalle_marca($id, $nombre){
-        $perfil = 'P';
-
-        $marca = Marca::find($id);
-
-        return view('productor.detalleMarca')->with(compact('marca', 'perfil'));
-    }
-
     public function listado_marcas(){
         $marcas = Marca::orderBy('nombre', 'ASC')
                         ->where('productor_id', '=', '0')
@@ -186,49 +159,6 @@ class ProductorController extends Controller
                             ->update(['productor_id' => session('perfilId'), 'reclamada' => '1' ]);
 
         return redirect('productor/mis-marcas')->with('msj', 'Se ha agregado exitosamente una marca a su propiedad');
-    }
-
-     //FUNCION QUE LE PERMITE AL PRODUCTOR REGISTRAR UN PRODUCTO ASOCIADO A SU MARCA 
-    public function registrar_producto($id, $marca){
-
-        $paises = DB::table('pais')
-                    ->orderBy('pais')
-                    ->pluck('pais', 'id');
-
-        $clases_bebidas = DB::table('clase_bebida')
-                    ->orderBy('clase')
-                    ->pluck('clase', 'id');
-
-
-        return view('productor.registrarProducto')->with(compact('id', 'marca', 'paises', 'clases_bebidas'));
-    }
-
-    //FUNCION QUE PERMITE VER LOS IMPORTADORES ASOCIADOS A UN PRODUCTOR
-    public function ver_productos($id, $marca){
-        
-        $productos = Marca::find($id)
-                            ->productos()
-                            ->paginate(8);
-
-        return view('productor.listados.productos')->with(compact('productos', 'marca'));
-    }
-
-    public function ver_detalle_producto($id, $producto){
-        $perfil = 'P';
-
-        $producto = Producto::find($id);
-        
-        $bebida = Bebida::find($producto->clase_bebida->bebida_id)
-                        ->select('nombre', 'caracteristicas')
-                        ->get()
-                        ->first();
-
-        $productor = Productor::find($producto->marca->productor_id)
-                        ->select('nombre')
-                        ->get()
-                        ->first();
-
-        return view('productor.detalleProducto')->with(compact('producto', 'bebida', 'productor', 'perfil'));
     }
 
     public function listado_importadores(){

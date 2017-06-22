@@ -30,29 +30,37 @@
 
             $tipo_bebida = DB::table('bebida')
                               ->select('nombre')
-                              ->where('id', $clase_bebida->bebida_id)
+                              ->where('id', $producto->bebida_id)
                               ->get()
                               ->first();
-
          ?>
          
-         @if ($producto->confirmado == '1')
             <div class="col-md-4 col-xs-6">
                <div class="thumbnail">
-                  <div class="fondo">
+                  <div>
                      <img src="{{ asset('imagenes/productos/thumbnails/') }}/{{ $producto->imagen }}" class="img-responsive">
                   </div>             
                   <div class="caption">
+                     <p>
+                        @if ($producto->confirmado == '0')
+                           @if (session('perfilTipo')== 'P')
+                              <a href="#" class="label label-danger">Sin Confirmar</a>   
+                           @else 
+                              <label class="label label-danger">Sin Confirmar</label>
+                           @endif
+                        @else
+                           <label class="label label-success">Confirmado</label>
+                        @endif
+                     </p>
                      <h3>{{ $producto->nombre }}</h3>
                      <p><strong>{{ $tipo_bebida->nombre }}</strong> ({{ $clase_bebida->clase }})</p>
                      <p>
-                        <a href="{{ route('productor.producto', [$producto->id, $producto->nombre]) }}" class="btn btn-primary" role="button">Ver Más</a>
+                        <a href="{{ route('producto.detalle', $producto->id) }}" class="btn btn-primary" role="button">Ver Más</a>
                         <a href="{{ route('oferta.crear-oferta', [$producto->id, $producto->nombre]) }}" class="btn btn-info" role="button">Ofertar</a>
                      </p>
                   </div>
                </div>
             </div>
-         @endif
       @endforeach
       <div>
          {{ $productos->render() }}

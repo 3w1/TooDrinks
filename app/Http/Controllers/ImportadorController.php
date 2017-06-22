@@ -142,23 +142,6 @@ class ImportadorController extends Controller
         return view('importador.registrarMarca')->with(compact('paises'));
     }*/
     
-     //FUNCION QUE PERMITE VER LAS MARCAS QUE MANEJA UN IMPORTADOR
-    public function mis_marcas(){
-        $marcas = Importador::find(session('perfilId'))
-                                    ->marcas()
-                                    ->paginate(6);
-
-        return view('importador.listados.marcas')->with(compact('marcas'));
-    }
-
-    public function ver_detalle_marca($id, $nombre){
-        $perfil = 'I';
-
-        $marca = Marca::find($id);
-
-        return view('importador.detalleMarca')->with(compact('marca', 'perfil'));
-    }
-
     public function listado_marcas(){
         $accion = 'Asociar';
 

@@ -1,5 +1,22 @@
-	{!! Html::script('js/marcas/create.js') !!}
+{!! Html::script('js/marcas/create.js') !!}
 
+{!! Form::open(['route'=>'marca.store', 'method'=>'POST', 'enctype' => 'multipart/form-data']) !!}
+	
+	{!! Form::hidden ('tipo_creador', session('perfilTipo')) !!}
+	{!! Form::hidden('creador_id', session('perfilId')) !!}
+	
+	@if (session('perfilTipo') == 'P')
+		{!! Form::hidden('productor_id', session('perfilId')) !!}
+		{!! Form::hidden('reclamada', '1') !!}
+		{!! Form::hidden('aprobada', '1') !!}
+	@else
+		{!! Form::hidden('productor_id', '0') !!}
+		{!! Form::hidden('reclamada', '0') !!}
+		{!! Form::hidden('aprobada', '0') !!}
+	@endif
+
+	{!! Form::hidden('publicada', '0') !!}
+		
 	<div class="form-group">
 		{!! Form::label ('nombre','Nombre') !!}
 		{!! Form::text ('nombre',null,['class'=>'form-control','placeholder'=>'Ej. Polar', 'required']) !!}
@@ -33,3 +50,5 @@
 	</div>
 
 	{!! Form::submit ('Agregar',['class'=>'btn btn-primary']) !!}
+	
+{!! Form::close() !!}

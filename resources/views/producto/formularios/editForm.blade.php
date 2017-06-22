@@ -1,19 +1,25 @@
-	{!! Html::script('js/productos/edit.js') !!}
+{!! Html::script('js/productos/edit.js') !!}
 
-	<?php 
-		$paises = DB::table('pais')
-					->orderBy('pais', 'ASC')
-					->pluck('pais', 'id');
+<?php 
+	$paises = DB::table('pais')
+				->orderBy('pais', 'ASC')
+				->pluck('pais', 'id');
 
-		$provincias = DB::table('provincia_region')
-						->orderBy('provincia')
-						->where('pais_id', '=', $producto->pais_id)
-						->pluck('provincia', 'id');
+	$provincias = DB::table('provincia_region')
+					->orderBy('provincia')
+					->where('pais_id', '=', $producto->pais_id)
+					->pluck('provincia', 'id');
 
-		$clases_bebidas = DB::table('clase_bebida')
-							->orderBy('clase')
-							->pluck('clase', 'id');
-	 ?>
+	$bebidas = DB::table('bebida')
+						->orderBy('nombre')
+						->pluck('nombre', 'id');
+	
+	$clases_bebidas = DB::table('clase_bebida')
+						->orderBy('clase')
+						->pluck('clase', 'id');
+?>
+
+{!! Form::open(['route' => ['producto.update', $producto->id], 'method' => 'PUT']) !!}
 	
 	{!! Form::hidden('id', $producto->id) !!}
 	{!! Form::hidden('marca_id', $producto->marca_id, ['id' => 'marca_hidden']) !!}
@@ -42,9 +48,15 @@
 		{!! Form::label ('provincia_region_id','Provincia / Región') !!}
 		{!! Form::select('provincia_region_id', $provincias, $producto->provincia_region_id, ['class' => 'form-control', 'id' => 'provincias']) !!}
 	</div>
+
+	<div class="form-group">
+		{!! Form::label('bebida', 'País') !!}
+		{!! Form::select('bebida_id', $bebidas, $producto->bebida_id, ['class' => 'form-control', 'onchange' => 'cargarClases();', 'id' => 'bebida_id']) !!}
+	</div>
+
 	<div class="form-group">
 		{!! Form::label('clase_bebida', 'Clase de Bebida') !!}
-		{!! Form::select('clase_bebida_id', $clases_bebidas, $producto->clase_bebida_id, ['class' => 'form-control']) !!}
+		{!! Form::select('clase_bebida_id', $clases_bebidas, $producto->clase_bebida_id, ['class' => 'form-control', 'id' => 'clases_bebidas']) !!}
 	</div>
 			
 	<div class="form-group">

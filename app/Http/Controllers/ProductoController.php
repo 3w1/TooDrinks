@@ -7,8 +7,8 @@ use App\Models\Producto;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
 use App\Models\Clase_Bebida;
-use App\Models\Marca;
-use App\Models\Bebida;
+use App\Models\Marca; use App\Models\Bebida;
+use App\Models\Productor;
 use DB; use Image; use Input;
 
 class ProductoController extends Controller
@@ -26,6 +26,18 @@ class ProductoController extends Controller
     public function create()
     {
         
+    }
+
+    public function agregar($id, $marca){
+        $paises = DB::table('pais')
+                    ->orderBy('pais')
+                    ->pluck('pais', 'id');
+
+        $tipos_bebidas = DB::table('bebida')
+                    ->orderBy('nombre')
+                    ->pluck('nombre', 'id');
+
+        return view('producto.create')->with(compact('id', 'marca', 'paises', 'tipos_bebidas'));
     }
 
     public function store(Request $request)
@@ -46,20 +58,15 @@ class ProductoController extends Controller
         $producto->imagen = $nombre;
         $producto->save();
 
-        if ($request->who == 'P'){
-            $url = 'productor/'.$request->marca_id.'-'.$request->marca_nombre.'/productos';
-            return redirect($url)->with('msj', 'Su producto ha sido agregado con éxito');
-        }elseif ($request->who == 'U'){
-            $url = 'usuario';
-            return redirect($url)->with('msj', 'Su producto ha sido agregado con éxito');
-        }elseif ($request->who == 'I'){
-            $url = 'importador/'.$request->marca_id.'-'.$request->marca_nombre.'/productos';
-            return redirect($url)->with('msj', 'Su producto ha sido agregado con éxito');
-        }elseif ($request->who == 'D'){
-            $url = 'distribuidor/'.$request->marca_id.'-'.$request->marca_nombre.'/productos';
-            return redirect($url)->with('msj', 'Su producto ha sido agregado con éxito');
-        }
-                
+        return redirect('producto/listado-de-productos/'.$request->marca_id.'-'.$request->marca_nombre);             
+    }
+
+    public function listado($id, $marca){
+        $productos = Marca::find($id)
+                            ->productos()
+                            ->paginate(8);
+
+        return view('producto.listado')->with(compact('productos', 'marca'));
     }
 
     public function show($id)
@@ -75,6 +82,17 @@ class ProductoController extends Controller
         );
     }
 
+    public function detalle($id){
+        $producto = Producto::find($id);
+
+        $productor = Productor::find($producto->marca->productor_id)
+                        ->select('nombre')
+                        ->get()
+                        ->first();
+
+        return view('producto.show')->with(compact('producto', 'productor'));
+    }
+
     public function edit($id)
     {
        
@@ -86,16 +104,7 @@ class ProductoController extends Controller
         $producto->fill($request->all());
         $producto->save();
 
-        if ($request->who == 'P'){
-            $url = 'productor/ver-producto/'.$id.'-'.$request->nombre;
-            return redirect($url)->with('msj', 'Los datos del producto se han actualizado exitosamente');
-        }elseif ($request->who == 'I'){
-            $url = 'importador/ver-producto/'.$request->id.'-'.$request->nombre;
-            return redirect($url)->with('msj', 'Los datos del producto se han actualizado exitosamente');
-        }elseif ($request->who == 'D'){
-            $url = 'distribuidor/ver-producto/'.$request->id.'-'.$request->nombre;
-            return redirect($url)->with('msj', 'Los datos del producto se han actualizado exitosamente');
-        }    
+       return redirect('producto/detalle-de-producto/'.$request->id)->with('msj', 'Los datos de su producto han sido actualizados exitosamente');
     }
 
      public function updateImagen(Request $request){
@@ -113,17 +122,8 @@ class ProductoController extends Controller
         $actualizacion = DB::table('producto')
                             ->where('id', '=', $request->id)
                             ->update(['imagen' => $nombre ]);
-       
-        if ($request->who == 'P'){
-            $url = 'productor/ver-producto/'.$request->id.'-'.$request->nombre;
-            return redirect($url)->with('msj', 'La imagen del producto se ha actualizado exitosamente');
-        }elseif ($request->who == 'I'){
-            $url = 'importador/ver-producto/'.$request->id.'-'.$request->nombre;
-            return redirect($url)->with('msj', 'La imagen del producto se ha actualizado exitosamente');
-        }elseif ($request->who == 'D'){
-            $url = 'distribuidor/ver-producto/'.$request->id.'-'.$request->nombre;
-            return redirect($url)->with('msj', 'La imagen del producto se ha actualizado exitosamente');
-        }    
+
+        return redirect('producto/detalle-de-producto/'.$request->id)->with('msj', 'La imagen del producto ha sido actualizada exitosamente');
     }
 
     public function destroy($id)

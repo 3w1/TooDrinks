@@ -12,7 +12,6 @@
             {!! Form::open(['route' => 'producto.updateImagen', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
                {!! Form::hidden('id', $producto->id) !!}
                {!! Form::hidden('nombre', $producto->nombre) !!}
-               {!! Form::hidden('who', 'I') !!}
                
                <div class="form-group">
                   {!! Form::label('imagen', 'Logo / Imagen') !!}

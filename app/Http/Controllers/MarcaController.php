@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Marca;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
-use App\Models\Productor;
+use App\Models\Productor; use App\Models\Importador; use App\Models\Distribuidor;
 use DB; use Input; use Image;
 
 class MarcaController extends Controller
@@ -18,12 +18,30 @@ class MarcaController extends Controller
 
     public function index()
     {
-        
+        if (session('perfilTipo') == 'P'){
+            $marcas = Productor::find(session('perfilId'))
+                                    ->marcas()
+                                    ->paginate(6);
+        }elseif (session('perfilTipo') == 'I'){
+            $marcas = Importador::find(session('perfilId'))
+                                    ->marcas()
+                                    ->paginate(6);
+        }else{
+            $marcas = Distribuidor::find(session('perfilId'))
+                                    ->marcas()
+                                    ->paginate(6);
+        }
+
+        return view('marca.index')->with(compact('marcas'));
     }
 
     public function create()
     {
-       
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+
+        return view('marca.create')->with(compact('paises'));
     }
 
     public function store(Request $request)
@@ -43,22 +61,20 @@ class MarcaController extends Controller
         $marca->logo = $nombre;
         $marca->save();
 
-        if ($request->who == 'P'){
-            return redirect('productor/mis-marcas')->with('msj', 'Su marca se ha agregado con exito');
-        }elseif ($request->who == 'I'){
-            $marca->importadores()->attach(session('importadorId'));
-            $url = 'importador/'.session('importadorId');
-            return redirect($url)->with('msj', 'Su marca se ha agregado con exito');
-        }elseif ($request->who == 'D'){
+        if (session('perfilTipo') == 'I'){
+            $marca->importadores()->attach(session('perfilId'));
+        }elseif (session('perfilTipo') == 'D'){
             $marca->distribuidores()->attach(session('distribuidorId'));
-            $url = 'distribuidor/'.session('distribuidorId');
-            return redirect($url)->with('msj', 'Su marca se ha agregado con exito');
         }   
+
+        return redirect('marca')->with('msj', 'Su marca ha sido creada exitosamente');
     }
     
     public function show($id)
     {
-       
+        $marca = Marca::find($id);
+
+        return view('marca.show')->with(compact('marca'));
     }
 
     public function edit($id)
@@ -72,16 +88,7 @@ class MarcaController extends Controller
         $marca->fill($request->all());
         $marca->save();
 
-        if ($request->who == 'P'){
-            $url = 'productor/ver-marca/'.$request->id.'-'.$request->nombre;
-            return redirect($url)->with('msj', 'Los datos de su marca se han actualizado exitosamente');
-        }elseif ($request->who == 'I'){
-            $url = 'importador/ver-marca/'.$request->id.'-'.$request->nombre;
-            return redirect($url)->with('msj', 'Los datos de la marca se han actualizado exitosamente');
-        }elseif ($request->who == 'D'){
-            $url = 'distribuidor/ver-marca/'.$request->id.'-'.$request->nombre;
-            return redirect($url)->with('msj', 'Los datos de la marca se han actualizado exitosamente');
-        }          
+        return redirect('marca/'.$id)->with('msj', 'Los datos de su marca se han actualizado exitosamente');       
     }
 
     public function updateLogo(Request $request){
@@ -100,16 +107,7 @@ class MarcaController extends Controller
                             ->where('id', '=', $request->id)
                             ->update(['logo' => $nombre ]);
        
-        if ($request->who == 'P'){
-            $url = 'productor/ver-marca/'.$request->id.'-'.$request->nombre;
-            return redirect($url)->with('msj', 'La imagen de la marca se ha actualizado exitosamente');
-        }elseif ($request->who == 'I'){
-            $url = 'importador/ver-marca/'.$request->id.'-'.$request->nombre;
-            return redirect($url)->with('msj', 'La imagen de la marca se ha actualizado exitosamente');
-        }elseif ($request->who == 'D'){
-            $url = 'distribuidor/ver-marca/'.$request->id.'-'.$request->nombre;
-            return redirect($url)->with('msj', 'La imagen de la marca se ha actualizado exitosamente');
-        }       
+        return redirect('marca/'.$request->id)->with('msj', 'La imagen de la marca se ha actualizado exitosamente');     
     }
 
     public function destroy($id)
