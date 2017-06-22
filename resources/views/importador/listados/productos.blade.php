@@ -42,7 +42,7 @@
                   <p><strong>{{ $tipo_bebida->nombre }}</strong> ({{ $clase_bebida->clase }})</p>
                   <p>
                      <a href="{{ route('importador.producto', [$producto->id, $producto->nombre]) }}" class="btn btn-primary" role="button">Ver Más</a>
-                     <a href="{{ route('importador.registrar-oferta', [$producto->id, $producto->nombre]) }}" class="btn btn-info" role="button">Ofertar</a>
+                     <a href="{{ route('oferta.crear-oferta', [$producto->id, $producto->nombre]) }}" class="btn btn-info" role="button">Ofertar</a>
                   </p>
                   <p></p>
                </div>

@@ -32,7 +32,7 @@
 
 	         	<div class="box box-widget widget-user-2">
 
-	           		<div class="widget-user-header bg-blue">
+	           		<div class="widget-user-header bg-green">
 	              		<div class="widget-user-image">
 	                		<img class="img-rounded" src="{{ asset('imagenes/marcas/thumbnails/')}}/{{ $marca->logo }}">
 	              		</div>
@@ -45,7 +45,17 @@
 	             			<li class="active"><a><stron>País: </stron> {{ $pais->pais }} </a></li>
 	             			<li class="active"><a><stron>Provincia: </stron> {{ $provincia->provincia }} </a></li>
 	              			<li class="active"><a><stron>Descripción: </stron> {{ $marca->descripcion }} </a></li>
-				               <li class="active"><a class="btn btn-primary" href="{{ route('importador.asociar-marca', $marca->id) }}" ><strong>¡¡La Importo!!</strong><i class="fa fa-check"></i> </a></li>
+				            <li>
+				            @if ($accion == 'Asociar')
+				            	<center>
+				               		 <a class="btn btn-success" href="{{ route('importador.asociar-marca', $marca->id) }}" ><strong>¡¡La Importo!!</strong><i class="fa fa-check"></i> </a>
+				               	</center>
+				            @elseif ($accion == 'Solicitar')
+				            	<center>
+				               		 <a class="btn btn-success" href="{{ route('importador.solicitar-importacion', $marca->id) }}" ><strong>¡¡Solicitar Importación!!</strong><i class="fa fa-check"></i> </a>
+				               	</center>
+				            @endif
+				            </li>  
 				        </ul>
 	            	</div>
 	         	</div>

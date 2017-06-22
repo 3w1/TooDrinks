@@ -8,7 +8,7 @@ class Deduccion_Credito_Productor extends Model
     protected $table = "deduccion_credito_productor";
 
     protected $fillable = [
-        'productor_id', 'fecha', 'descripcion', 'cantidad_creditos', 
+        'productor_id', 'descripcion', 'cantidad_creditos', 
     ];
 
     public function productor(){

@@ -21,7 +21,6 @@
 			@include('demandaDistribucion.formularios.createForm')
 
 		{!! Form::close() !!}
-
 	@endif
 
 @endsection

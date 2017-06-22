@@ -256,48 +256,6 @@ class ProductorController extends Controller
         return view('productor.detalleProducto')->with(compact('producto', 'bebida', 'productor', 'perfil'));
     }
 
-    public function registrar_oferta($id, $producto){     
-        if ($id != '0'){
-            $tipo = '1';
-        }else{
-            $tipo = '2';
-        }
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        $marcas = DB::table('marca')
-                        ->orderBy('nombre')
-                        ->where('productor_id', '=', session('perfilId'))
-                        ->pluck('nombre', 'id');
-
-        return view('productor.registrarOferta')->with(compact('id', 'producto', 'paises', 'tipo', 'marcas'));
-    }
-
-    //FUNCION QUE PERMITE VER LAS OFERTAS DE UN PRODUCTOR
-    public function ver_ofertas(){
-        $ofertas = DB::table('oferta')
-                    ->where([
-                        ['tipo_creador', '=', 'P'],
-                        ['creador_id', '=', session('perfilId')],
-                    ])
-                    ->paginate(6);
-
-        return view('productor.listados.ofertas')->with(compact('ofertas'));
-    }
-
-    public function ver_detalle_oferta($id){
-        $oferta = Oferta::find($id);
-
-        $destinos = Destino_Oferta::where('oferta_id', '=', $id)
-                                ->orderBy('provincia_region_id')
-                                ->select('pais_id', 'provincia_region_id')
-                                ->get();
-
-        return view('productor.detalleOferta')->with(compact('oferta', 'destinos'));
-    }
-
     public function solicitar_importador(){
         $tipo = 'I';
 
@@ -400,16 +358,10 @@ class ProductorController extends Controller
     }
 
     public function listado_importadores(){
-        $productor = DB::table('productor')
-                        ->where('id', '=', session('perfilId'))
-                        ->select('tipo_suscripcion')
-                        ->get()
-                        ->first();
-
-        if ($productor->tipo_suscripcion != 'G'){
-            $check = '1';
+        if ( session('perfilSuscripcion') != 'G'){
+            $check = 1;
         }else{
-            $check = '0';
+            $check = 0;
         }
 
         $importadores = Importador::orderBy('nombre')

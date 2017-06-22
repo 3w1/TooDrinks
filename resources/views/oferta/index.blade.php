@@ -34,7 +34,7 @@
                      <li><a><strong>Envío Disponible: </strong> @if ( $oferta->envio == '1') Si  @else No @endif </a></li>
                   </ul>
                   <p>
-                     <a href="{{ route('productor.oferta', $oferta->id) }}" class="btn btn-primary" role="button">Ver Más</a>
+                     <a href="{{ route('oferta.show', $oferta->id) }}" class="btn btn-primary" role="button">Ver Más</a>
                   </p>
                </div>
             </div>

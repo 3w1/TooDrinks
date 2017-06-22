@@ -80,8 +80,8 @@
                </span>
              </a>
              <ul class="treeview-menu">
-               <li><a href="{{ route('productor.ofertas') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
-               <li><a href="{{ route('productor.registrar-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
+               <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
+               <li><a href="{{ route('oferta.crear-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
             </ul>
          </li>
          <li class="treeview">
@@ -166,9 +166,9 @@
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="{{ route('importador.ofertas') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
+               <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
                <li><a href="{{ route('importador.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
-               <li><a href="{{ route('importador.registrar-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
+               <li><a href="{{ route('oferta.crear-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
             </ul>
          </li>
          <li class="treeview">
@@ -196,8 +196,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-producto.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                     <li><a href="{{ route('demanda-producto.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
                   </ul>
                </li>
                <li>
@@ -207,7 +207,7 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                     <li><a href="{{ route('importador.solicitar-importacion') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
                      <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
                   </ul>
                </li>
@@ -249,9 +249,9 @@
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="{{ route('distribuidor.ofertas') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
+               <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
                <li><a href="{{ route('distribuidor.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
-               <li><a href="{{ route('distribuidor.registrar-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
+               <li><a href="{{ route('oferta.crear-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
             </ul>
          </li>
          <li class="treeview">
@@ -268,8 +268,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-producto.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                     <li><a href="{{ route('demanda-producto.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
                   </ul>
                </li>
                <li>

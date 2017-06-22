@@ -1,62 +1,61 @@
+{!! Html::script('js/demandaProductos/create.js') !!}
+
 {!! Form::open(['route' => 'demanda-producto.store', 'method' => 'POST']) !!}
 
-	{!! Form::hidden('creador_id', '1') !!}
-
-	{!! Form::hidden('tipo_creador', 'I') !!}
-
-	{!! Form::label('titulo', 'Título de la Demanda') !!}
-	{!! Form::text('titulo', null, ['class' => 'form-control', 'placeholder' => 'Ingrese el título']) !!}
+	{!! Form::hidden('tipo_creador', session('perfilTipo')) !!}
+	{!! Form::hidden('creador_id', session('perfilId')) !!}
 
 	<div class="form-group">
-		{!! Form::label('producto_id', 'Seleccione el producto a demandar') !!}
-		<select name="producto_id" class="form-control">
-			@foreach ($productos as $producto) 
-				<option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
-			@endforeach
-		</select>
+		{!! Form::label('titulo', 'Título de la Demanda') !!}
+		{!! Form::text('titulo', null, ['class' => 'form-control', 'placeholder' => 'Ingrese el título']) !!}
+	</div>
+	
+	<div class="form-group">
+		{!! Form::label('opcion', '¿Qué tipo de producto busca?') !!}
+		{!! Form::select('tipo_producto', ['P' => 'Producto Específico', 'B' => 'Bebida por Región'], null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción..', 'id' => 'opcion', 'onchange' => 'cargarOpcion();']) !!}
 	</div>
 
-	<div class="form-group">
-		{!! Form::label('pais_id', 'Seleccione el país en el cual se encuentra') !!}
-		<select name="pais_id" class="form-control">
-			@foreach ($paises as $pais )
-				<option value="{{ $pais->id }}">{{ $pais->pais }}</option>
-			@endforeach
-		</select>
+	<div class="form-group" id="productos" style="display: none;">
+		{!! Form::label('productos', 'Producto') !!}
+		{!! Form::select('producto_id', $productos, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un producto']) !!}
 	</div>
 
-	<div class="form-group">
-		{!! Form::label('provincia_region_id', 'Seleccione la provincia en la cual se encuentra') !!}
-		<select name="provincia_region_id" class="form-control">
-			@foreach ($provincias as $provincia )
-				<option value="{{ $provincia->id }}">{{ $provincia->provincia }}</option>
-			@endforeach
-		</select>
+	<div id="bebidas" style="display: none;">
+		<div class="form-group">
+			{!! Form::label('bebidas', 'Bebida') !!}
+			{!! Form::select('bebida_id', $bebidas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una bebida']) !!}
+		</div>
+
+		<div class="form-group">
+			{!! Form::label('paises', 'País') !!}
+			{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();']) !!}
+		</div>
+
+		<div class="form-group">
+			{!! Form::label('provincias', 'Provincia') !!}
+			<select class="form-control" name="provincia_region_id" id="provincias">
+				<option value="">Seleccione una provincia..</option>
+			</select>
+		</div>
 	</div>
-
-	{!! Form::label('descripcion', 'Descripción de la demanda') !!}
-	{!! Form::textarea('descripcion', null, ['class' => 'form-control', 'placeholder' => 'Ingrese una breve descripción']) !!}
-
-	{!! Form::label('cantidad_minima', 'Ingrese la cantidad mínima deseada') !!}
-	{!! Form::number('cantidad_minima', '0', ['class' => ' form-control'] ) !!}
-
-	{!! Form::label('cantidad_maxima', 'Ingrese la cantidad máxima deseada') !!}
-	{!! Form::number('cantidad_maxima', '0', ['class' => ' form-control'] ) !!}
-
-	{!! Form::label('fecha_creacion', 'Ingrese la Fecha de Creación') !!}
-	{!! Form::date('fecha_creacion', '0', ['class' => ' form-control'] ) !!}
-
-	{!! Form::label('fecha_caducidad', 'Ingrese la Fecha de Caducidad de la Demanda') !!}
-	{!! Form::date('fecha_caducidad', '0', ['class' => ' form-control'] ) !!}
-
+	
 	<div class="form-group">
-		<select name="status" class="form-control">
-			<option value="1">Activa</option>
-			<option value="0">Inactiva</option>
-		</select>
+		{!! Form::label('descripcion', 'Descripción de la demanda') !!}
+		{!! Form::textarea('descripcion', null, ['class' => 'form-control', 'placeholder' => 'Ingrese una breve descripción']) !!}
+	</div>
+	
+	<div class="form-group">
+		{!! Form::label('cantidad_minima', 'Ingrese la cantidad mínima deseada') !!}
+		{!! Form::number('cantidad_minima', '0', ['class' => ' form-control'] ) !!}
+	</div>
+	
+	<div class="form-group">
+		{!! Form::label('cantidad_maxima', 'Ingrese la cantidad máxima deseada') !!}
+		{!! Form::number('cantidad_maxima', '0', ['class' => ' form-control'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::submit('Registrar', ['class' => 'btn btn-primary']) !!}
 	</div>
+
 {!! Form::close() !!}

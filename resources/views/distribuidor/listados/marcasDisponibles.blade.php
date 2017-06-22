@@ -32,7 +32,7 @@
 
 	         	<div class="box box-widget widget-user-2">
 
-	           		<div class="widget-user-header bg-blue">
+	           		<div class="widget-user-header bg-yellow">
 	              		<div class="widget-user-image">
 	                		<img class="img-rounded" src="{{ asset('imagenes/marcas/thumbnails/')}}/{{ $marca->logo }}">
 	              		</div>
@@ -45,7 +45,11 @@
 	             			<li class="active"><a><stron>País: </stron> {{ $pais->pais }} </a></li>
 	             			<li class="active"><a><stron>Provincia: </stron> {{ $provincia->provincia }} </a></li>
 	              			<li class="active"><a><stron>Descripción: </stron> {{ $marca->descripcion }} </a></li>
-				               <li class="active"><a class="btn btn-primary" href="{{ route('distribuidor.asociar-marca', $marca->id) }}" ><strong>¡¡La Distribuyo!!</strong><i class="fa fa-check"></i> </a></li>
+	              			 <li>
+				            	<center>
+				               		 <a class="btn btn-success" href="{{ route('distribuidor.asociar-marca', $marca->id) }}" ><strong>¡¡La Distribuyo!!</strong><i class="fa fa-check"></i> </a>
+				               	</center>
+				            </li>  
 				        </ul>
 	            	</div>
 	         	</div>

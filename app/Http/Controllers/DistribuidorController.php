@@ -229,48 +229,6 @@ class DistribuidorController extends Controller
         return view('distribuidor.detalleProducto')->with(compact('producto', 'bebida', 'productor', 'perfil'));
     }
 
-    public function registrar_oferta($id, $producto){
-        if ($id != '0'){
-            $tipo = '1';
-        }else{
-            $tipo = '2';
-        }
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-         $marcas = DB::table('marca')
-                    ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
-                    ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
-                    ->pluck('marca.nombre', 'marca.id');
-
-        return view('distribuidor.registrarOferta')->with(compact('id', 'producto', 'paises', 'marcas', 'tipo'));
-    }
-
-     //FUNCION QUE PERMITE VER LAS OFERTAS DE UN PRODUCTOR
-    public function mis_ofertas(){
-        $ofertas = DB::table('oferta')
-                    ->where([
-                        ['tipo_creador', '=', 'D'],
-                        ['creador_id', '=', session('perfilId')],
-                    ])
-                    ->paginate(6);
-
-        return view('distribuidor.listados.ofertas')->with(compact('ofertas'));
-    }
-
-    public function ver_detalle_oferta($id){
-        $oferta = Oferta::find($id);
-
-        $destinos = Destino_Oferta::where('oferta_id', '=', $id)
-                                ->orderBy('provincia_region_id')
-                                ->select('pais_id', 'provincia_region_id')
-                                ->get();
-
-        return view('distribuidor.detalleOferta')->with(compact('oferta', 'destinos'));
-    }
-
     public function listado_ofertas(){
         $distribuidor = DB::table('distribuidor')
                             ->where('id', '=', session('perfilId') )

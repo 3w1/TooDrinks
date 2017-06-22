@@ -10,7 +10,7 @@ use App\Models\Bebida;
 use App\Models\Productor;
 use App\Models\Oferta;
 use App\Models\Destino_Oferta;
-use App\Models\Demanda_Distribuidor;
+use App\Models\Demanda_Distribuidor; use App\Models\Demanda_Producto;
 use DB; use Auth; use Input; use Image;
 
 class ImportadorController extends Controller
@@ -195,6 +195,8 @@ class ImportadorController extends Controller
     }
 
     public function listado_marcas(){
+        $accion = 'Asociar';
+
         $marcas = DB::table('marca')
                     ->select('marca.*')
                     ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
@@ -202,7 +204,7 @@ class ImportadorController extends Controller
                     ->orwhere('importador_marca.marca_id', '=', null)
                     ->paginate(6);
 
-        return view('importador.listados.marcasDisponibles')->with(compact('marcas'));
+        return view('importador.listados.marcasDisponibles')->with(compact('marcas', 'accion'));
     }
 
     public function asociar_marca($id){
@@ -255,48 +257,6 @@ class ImportadorController extends Controller
                         ->first();
 
         return view('importador.detalleProducto')->with(compact('producto', 'bebida', 'productor', 'perfil'));
-    }
-
-    public function registrar_oferta($id, $producto){
-         if ($id != '0'){
-            $tipo = '1';
-        }else{
-            $tipo = '2';
-        }
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-       $marcas = DB::table('marca')
-                    ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
-                    ->where('importador_marca.importador_id', '=', session('perfilId'))
-                    ->pluck('marca.nombre', 'marca.id');
-
-        return view('importador.registrarOferta')->with(compact('id', 'producto', 'paises', 'marcas', 'tipo'));
-    }
-
-     //FUNCION QUE PERMITE VER LAS OFERTAS DE UN PRODUCTOR
-    public function mis_ofertas(){
-        $ofertas = DB::table('oferta')
-                    ->where([
-                        ['tipo_creador', '=', 'I'],
-                        ['creador_id', '=', session('perfilId')],
-                    ])
-                    ->paginate(6);
-
-        return view('importador.listados.ofertas')->with(compact('ofertas'));
-    }
-
-    public function ver_detalle_oferta($id){
-        $oferta = Oferta::find($id);
-
-        $destinos = Destino_Oferta::where('oferta_id', '=', $id)
-                                ->orderBy('provincia_region_id')
-                                ->select('pais_id', 'provincia_region_id')
-                                ->get();
-
-        return view('importador.detalleOferta')->with(compact('oferta', 'destinos'));
     }
 
     public function listado_ofertas(){
@@ -370,6 +330,20 @@ class ImportadorController extends Controller
                     ->pluck('marca.nombre', 'marca.id');
 
         return view('importador.editDemandaDist')->with(compact('demandaDistribuidor','marcas', 'provincias'));
+    }
+
+
+    public function solicitar_importacion(){
+        $accion = 'Solicitar';
+
+        $marcas = DB::table('marca')
+                    ->select('marca.*')
+                    ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                    ->where('importador_marca.importador_id', '!=', session('perfilId'))
+                    ->orwhere('importador_marca.marca_id', '=', null)
+                    ->paginate(6);
+
+        return view('importador.listados.marcasDisponibles')->with(compact('marcas', 'accion'));
     }
 
     public function listado_distribuidores(){

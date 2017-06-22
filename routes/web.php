@@ -73,10 +73,6 @@ Route::get('productor/{id}-{marca}/registrar-producto', 'ProductorController@reg
 Route::get('productor/{id}-{marca}/productos', 'ProductorController@ver_productos')->name('productor.productos');
 Route::get('productor/ver-producto/{id}-{producto}', 'ProductorController@ver_detalle_producto')->name('productor.producto');
 
-Route::get('productor/{id}-{producto}/registrar-oferta', 'ProductorController@registrar_oferta')->name('productor.registrar-oferta');
-Route::get('productor/mis-ofertas', 'ProductorController@ver_ofertas')->name('productor.ofertas');
-Route::get('productor/ver-oferta/{id}', 'ProductorController@ver_detalle_oferta')->name('productor.oferta');
-
 Route::get('productor/solicitar-importador', 'ProductorController@solicitar_importador')->name('productor.solicitar-importador');
 Route::get('productor/mis-demandas-importadores', 'ProductorController@ver_demandas_importadores')->name('productor.demandas-importadores');
 Route::get('productor/editar-demanda-importador/{id}', 'ProductorController@editar_demanda_importacion')->name('productor.editarDemandaImp');
@@ -117,14 +113,13 @@ Route::get('importador/asociar-marca/{id}', 'ImportadorController@asociar_marca'
 Route::get('importador/{id}-{marca}/productos', 'ImportadorController@ver_productos')->name('importador.productos');
 Route::get('importador/ver-producto/{id}-{producto}', 'ImportadorController@ver_detalle_producto')->name('importador.producto');
 
-Route::get('importador/{id}-{producto}/registrar-oferta', 'ImportadorController@registrar_oferta')->name('importador.registrar-oferta');
-Route::get('importador/mis-ofertas', 'ImportadorController@mis_ofertas')->name('importador.ofertas');
-Route::get('importador/ver-oferta/{id}', 'ImportadorController@ver_detalle_oferta')->name('importador.oferta');
 Route::get('importador/ver-ofertas-disponibles', 'ImportadorController@listado_ofertas')->name('importador.ofertas-disponibles');
 
 Route::get('importador/solicitar-distribuidor', 'ImportadorController@solicitar_distribuidor')->name('importador.solicitar-distribuidor');
 Route::get('importador/mis-demandas-distribuidores', 'ImportadorController@ver_demandas_distribuidores')->name('importador.demandas-distribuidores');
 Route::get('importador/editar-demanda-distribuidor/{id}', 'ImportadorController@editar_demanda_distribucion')->name('importador.editarDemandaDist');
+
+Route::get('importador/solicitar-importacion', 'ImportadorController@solicitar_importacion')->name('importador.solicitar-importacion');
 
 Route::get('importador/ver-listado-distribuidores', 'ImportadorController@listado_distribuidores')->name('importador.listado-distribuidores');
 
@@ -144,9 +139,6 @@ Route::get('distribuidor/asociar-marca/{id}', 'DistribuidorController@asociar_ma
 Route::get('distribuidor/{id}-{marca}/productos', 'DistribuidorController@ver_productos')->name('distribuidor.productos');
 Route::get('distribuidor/ver-producto/{id}-{producto}', 'DistribuidorController@ver_detalle_producto')->name('distribuidor.producto');
 
-Route::get('distribuidor/{id}-{producto}/registrar-oferta', 'DistribuidorController@registrar_oferta')->name('distribuidor.registrar-oferta');
-Route::get('distribuidor/mis-ofertas', 'DistribuidorController@mis_ofertas')->name('distribuidor.ofertas');
-Route::get('distribuidor/ver-oferta/{id}', 'DistribuidorController@ver_detalle_oferta')->name('distribuidor.oferta');
 Route::get('distribuidor/ver-ofertas-disponibles', 'DistribuidorController@listado_ofertas')->name('distribuidor.ofertas-disponibles');
 
 Route::post('distribuidor/updateAvatar', 'DistribuidorController@updateAvatar')->name('distribuidor.updateAvatar');
@@ -180,15 +172,23 @@ Route::resource('producto','ProductoController');
 Route::resource('demanda-importador','DemandaImportacionController');
 // ./RUTAS PARA LAS DEMANDAS DE IMPORTADORES ./
 
+// RUTAS PARA LOS CRÉDITOS
 Route::get('credito/compra/{id}','CreditoController@compra')->name('compra');
-
 Route::get('credito/generar_factura','CreditoController@generar_factura')->name('credito.generar-factura');
 
+Route::get('credito/gastar-creditos/{cant}/{tipo}', 'CreditoController@gastar_creditos')->name('credito.gastar-creditos');
+
 Route::resource('credito','CreditoController');
+// ./RUTAS PARA LAS CRÉDITOS ./
+
 
 Route::resource('bebida','BebidaController');
 
+// RUTAS PARA LAS OFERTAS
+Route::get('oferta/{id}-{producto}/crear-oferta', 'OfertaController@crear_oferta')->name('oferta.crear-oferta');
+
 Route::resource('oferta','OfertaController');
+// ./RUTAS PARA LAS OFERTAS ./
 
 Route::resource('demanda-producto','DemandaProductoController');
 
@@ -204,5 +204,4 @@ Route::resource('mails', 'MailsController');
 
 Route::get('registrarse/{tipo}${id}${token}', 'Auth\RegisterController@registrarse');
 Route::get('confirmar-correo/{id}${token}', 'UsuarioController@confirmar_correo');
-
 

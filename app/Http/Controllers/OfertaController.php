@@ -20,7 +20,14 @@ class OfertaController extends Controller
     
     public function index()
     {
+        $ofertas = DB::table('oferta')
+                    ->where([
+                        ['tipo_creador', '=', session('perfilTipo')],
+                        ['creador_id', '=', session('perfilId')],
+                    ])
+                    ->paginate(6);
 
+        return view('oferta.index')->with(compact('ofertas'));
     }
 
     public function create()
@@ -28,8 +35,45 @@ class OfertaController extends Controller
 
     }
 
+    public function crear_oferta($id, $producto){ 
+        if ($id != '0'){
+            $tipo = '1';
+        }else{
+            $tipo = '2';
+        }
+
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+
+        if ( session('perfilTipo') == 'P'){
+            $marcas = DB::table('marca')
+                        ->orderBy('nombre')
+                        ->where('productor_id', '=', session('perfilId'))
+                        ->pluck('nombre', 'id');
+        }elseif ( session('perfilTipo') == 'I'){
+             $marcas = DB::table('marca')
+                    ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                    ->where('importador_marca.importador_id', '=', session('perfilId'))
+                    ->pluck('marca.nombre', 'marca.id');
+        }else{
+            $marcas = DB::table('marca')
+                    ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
+                    ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
+                    ->pluck('marca.nombre', 'marca.id');
+        }
+
+        return view('oferta.create')->with(compact('id', 'producto', 'paises', 'marcas', 'tipo'));
+    }
+
     public function store(Request $request)
     {
+        if ( (session('perfilSuscripcion') == 'G') || (session('perfilSuscripcion') == 'B') ){
+            $creditos = 1;
+        }else{
+            $creditos = 0;
+        }
+
         $oferta = new Oferta($request->all());
         $oferta->save();
 
@@ -61,19 +105,25 @@ class OfertaController extends Controller
                 $destino->save();
             }
         }
-        
-        if ($request->who == 'P'){
-            return redirect('productor/mis-ofertas')->with('msj', 'Su oferta ha sido registrada con éxito');
-        }elseif ($request->who == 'I'){
-            return redirect('importador/mis-ofertas')->with('msj', 'Su oferta ha sido registrada con éxito');
-        }elseif ($request->who == 'D'){
-            return redirect('distribuidor/mis-ofertas')->with('msj', 'Su oferta ha sido registrada con éxito');
-        }
+
+        if ($creditos == '1'){
+            $url = ('credito/gastar-creditos/25/CO');
+            return redirect($url); 
+        }else{
+             return redirect('oferta')->with('msj', 'Su oferta ha sido creada exitosamente');
+        }    
     }
 
     public function show($id)
     {
-        
+        $oferta = Oferta::find($id);
+
+        $destinos = Destino_Oferta::where('oferta_id', '=', $id)
+                                ->orderBy('provincia_region_id')
+                                ->select('pais_id', 'provincia_region_id')
+                                ->get();
+
+        return view('oferta.show')->with(compact('oferta', 'destinos'));   
     }
 
     public function edit($id)
@@ -87,16 +137,8 @@ class OfertaController extends Controller
         $oferta->fill($request->all());
         $oferta->save();
 
-        if ($request->who == 'P'){
-            $url = 'productor/ver-oferta/'.$id;
-            return redirect($url)->with('msj', 'Los datos de la oferta han sido actualizados exitosamente');
-        }elseif ($request->who == 'I'){
-            $url = 'importador/ver-oferta/'.$id;
-            return redirect($url)->with('msj', 'Los datos de la oferta han sido actualizados exitosamente');
-        }elseif ($request->who == 'D'){
-            $url = 'distribuidor/ver-oferta/'.$id;
-            return redirect($url)->with('msj', 'Los datos de la oferta han sido actualizados exitosamente');
-        }
+        $url = 'oferta/'.$id;
+        return redirect($url)->with('msj', 'Los datos de su oferta han sido actualizados exitosamente');
     }
 
     public function destroy($id)
