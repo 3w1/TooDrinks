@@ -231,62 +231,6 @@ class ProductorController extends Controller
         return view('productor.detalleProducto')->with(compact('producto', 'bebida', 'productor', 'perfil'));
     }
 
-    public function solicitar_distribuidor(){
-        $tipo = 'D';
-
-        $marcas = DB::table('marca')
-                    ->orderBy('nombre')
-                    ->where('productor_id', '=', session('perfilId'))
-                    ->pluck('nombre', 'id');
-
-        $pais_origen = DB::table('productor')
-                        ->select('pais_id')
-                        ->where('id', '=', session('perfilId'))
-                        ->get()
-                        ->first();
-
-        $provincias = DB::table('provincia_region')
-                    ->orderBy('provincia')
-                    ->where('pais_id', '=', $pais_origen->pais_id)
-                    ->pluck('provincia', 'id');
-
-        return view('productor.solicitarDemanda')->with(compact('tipo', 'marcas', 'provincias'));
-    }
-
-    public function ver_demandas_distribuidores(){
-
-        $cont = 0;
-
-        $demandasDistribuidores = Demanda_Distribuidor::where([
-                                        ['tipo_creador', '=', 'P'], 
-                                        ['creador_id', '=', session('perfilId')]
-                                    ])->orderBy('created_at', 'ASC')
-                                    ->paginate(8);
-
-        return view('productor.listados.demandasDistribuidores')->with(compact('demandasDistribuidores', 'cont'));
-    }
-
-    public function editar_demanda_distribucion($id){
-        $demandaDistribuidor = Demanda_Distribuidor::find($id);
-
-        $pais_productor = Productor::where('id', '=', session('perfilId'))
-                                    ->select('pais_id')
-                                    ->get()
-                                    ->first();
-
-        $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->where('pais_id', '=', $pais_productor->pais_id)
-                        ->pluck('provincia', 'id');
-        
-        $marcas = DB::table('marca')
-                        ->orderBy('nombre')
-                        ->where('productor_id', '=', session('perfilId'))
-                        ->pluck('nombre', 'id');
-
-        return view('productor.editDemandaDist')->with(compact('demandaDistribuidor','marcas', 'provincias'));
-    }
-
     public function listado_importadores(){
         if ( session('perfilSuscripcion') != 'G'){
             $check = 1;

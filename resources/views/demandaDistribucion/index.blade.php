@@ -2,14 +2,14 @@
 @section('title', 'Listado de Demandas de Distribuidores')
 
 @section('items')
-    @if (Session::has('msj'))
+   @if (Session::has('msj'))
         <div class="alert alert-success alert-dismissable">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
         </div>
     @endif
     
-   <span><strong><h3>Mis Demandas de Distribuidores</h3></strong></span>
+	<span><strong><h3>Mis Demandas de Distribuidor</h3></strong></span>
 @endsection
 
 @section('content-left')
@@ -18,7 +18,7 @@
          <div class="box">
 
             <div class="box-header">
-               <h3 class="box-title">Demandas de Distribuidores</h3>
+               <h3 class="box-title">Demandas de Distribuidor</h3>
 
                <div class="box-tools">
                   <div class="input-group input-group-sm" style="width: 150px;">
@@ -42,9 +42,7 @@
                   </thead>
                   <tbody>
                      @foreach ($demandasDistribuidores as $demandaDistribuidor)
-                        <?php 
-                           $cont++;
-                        ?>  
+                        <?php $cont++; ?>  
                         <tr>
                            <td><center>{{ $cont }}</td>
                            <td><center>{{ $demandaDistribuidor->created_at->format('d-m-Y') }}</td>
@@ -55,7 +53,7 @@
                            @else
                               <td><center><span class="label label-warning">Inactiva</span></td>
                            @endif
-                           <td><center><a href="{{ route('importador.editarDemandaDist', $demandaDistribuidor->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a></td>
+                           <td><center><a href="{{ route('demanda-distribuidor.edit', $demandaDistribuidor->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a></td>
                         </tr>
                      @endforeach
                   </tbody>

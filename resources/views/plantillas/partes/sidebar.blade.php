@@ -110,8 +110,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="{{ route('productor.solicitar-distribuidor') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="{{ route('productor.demandas-distribuidores') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-distribuidor.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                     <li><a href="{{ route('demanda-distribuidor.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
                   </ul>
                </li>
             </ul>
@@ -185,8 +185,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="{{ route('importador.solicitar-distribuidor') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="{{ route('importador.demandas-distribuidores') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-distribuidor.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                     <li><a href="{{ route('demanda-distribuidor.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
                   </ul>
                </li>
                <li>
@@ -292,8 +292,8 @@
                </span>
             </a>
             <ul class="treeview-menu">
+               <li><a href="{{ route('demanda-distribuidor.demandas-disponibles') }}"><i class="fa fa-circle-o"></i> Distribuidores</a></li>
                <li><a href="#"><i class="fa fa-circle-o"></i> Productos</a></li>
-               <li><a href="#"><i class="fa fa-circle-o"></i> Distribuidores</a></li>
             </ul>
          </li>
          <!-- FIN DE SECCIÓN DE DISTRIBUIDORES -->

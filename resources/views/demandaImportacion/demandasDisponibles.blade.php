@@ -63,7 +63,7 @@
                               <a class="btn btn-primary btn-xs" href="{{ route('productor.show', $demandaImportador->productor_id) }}">¡Contactar!</a>
                            @else
                               @if (session('perfilSaldo') >= '30')
-                                 <a class="btn btn-primary btn-xs" href="{{ route('credito.gastar-creditos', ['30', 'DI', $demandaImportador->productor_id]) }}">¡Contactar! 30 <i class="fa fa-certificate"></i></a>
+                                 <a class="btn btn-primary btn-xs" href="{{ route('credito.gastar-creditos-di', ['30', $demandaImportador->productor_id]) }}">¡Contactar! 30 <i class="fa fa-certificate"></i></a>
                               @else 
                                  <button class="btn btn-primary btn-xs" disabled>¡Contactar! 30 <i class="fa fa-certificate"></i></button>
                               @endif

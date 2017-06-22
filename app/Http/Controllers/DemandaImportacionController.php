@@ -71,7 +71,7 @@ class DemandaImportacionController extends Controller
         $demanda_importador  = new Demanda_Importador($request->all());
         $demanda_importador ->save();
 
-        return redirect('demanda-importador')->with('msj', 'Su solicitud de importador ha sido creada exitosamente');    
+        return redirect('demanda-importador')->with('msj', 'Su demanda de importador ha sido creada exitosamente');    
     }
 
     public function show($id)

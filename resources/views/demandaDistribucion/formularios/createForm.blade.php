@@ -1,3 +1,8 @@
+{!! Form::open(['route' => 'demanda-distribuidor.store', 'method' => 'POST']) !!}
+	
+	{!! Form::hidden('tipo_creador', session('perfilTipo')) !!}
+	{!! Form::hidden('creador_id', session('perfilId')) !!}
+
 	<div class="form-group">
 		{!! Form::label('marca', 'Seleccione la marca que desea distribuir') !!}
 		{!! Form::select('marca_id', $marcas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción..']) !!}
@@ -13,3 +18,4 @@
 	<div class="form-group">
 		{!! Form::submit('Crear Solicitud', ['class' => 'btn btn-primary']) !!}
 	</div>
+{!! Form::close() !!}
