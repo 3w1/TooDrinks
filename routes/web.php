@@ -73,10 +73,6 @@ Route::get('productor/{id}-{marca}/registrar-producto', 'ProductorController@reg
 Route::get('productor/{id}-{marca}/productos', 'ProductorController@ver_productos')->name('productor.productos');
 Route::get('productor/ver-producto/{id}-{producto}', 'ProductorController@ver_detalle_producto')->name('productor.producto');
 
-Route::get('productor/solicitar-importador', 'ProductorController@solicitar_importador')->name('productor.solicitar-importador');
-Route::get('productor/mis-demandas-importadores', 'ProductorController@ver_demandas_importadores')->name('productor.demandas-importadores');
-Route::get('productor/editar-demanda-importador/{id}', 'ProductorController@editar_demanda_importacion')->name('productor.editarDemandaImp');
-
 Route::get('productor/solicitar-distribuidor', 'ProductorController@solicitar_distribuidor')->name('productor.solicitar-distribuidor');
 Route::get('productor/mis-demandas-distribuidores', 'ProductorController@ver_demandas_distribuidores')->name('productor.demandas-distribuidores');
 Route::get('productor/editar-demanda-distribuidor/{id}', 'ProductorController@editar_demanda_distribucion')->name('productor.editarDemandaDist');
@@ -169,6 +165,7 @@ Route::resource('producto','ProductoController');
 // ./RUTAS PARA LOS PRODUCTOS ./
 
 // RUTAS PARA LAS DEMANDAS DE IMPORTADORES
+Route::get('demanda-importador/demandas-disponibles', 'DemandaImportacionController@demandas_disponibles')->name('demanda-importador.demandas-disponibles');
 Route::resource('demanda-importador','DemandaImportacionController');
 // ./RUTAS PARA LAS DEMANDAS DE IMPORTADORES ./
 
@@ -176,7 +173,7 @@ Route::resource('demanda-importador','DemandaImportacionController');
 Route::get('credito/compra/{id}','CreditoController@compra')->name('compra');
 Route::get('credito/generar_factura','CreditoController@generar_factura')->name('credito.generar-factura');
 
-Route::get('credito/gastar-creditos/{cant}/{tipo}', 'CreditoController@gastar_creditos')->name('credito.gastar-creditos');
+Route::get('credito/gastar-creditos/{cant}/{tipo}/{id}', 'CreditoController@gastar_creditos')->name('credito.gastar-creditos');
 
 Route::resource('credito','CreditoController');
 // ./RUTAS PARA LAS CRÉDITOS ./

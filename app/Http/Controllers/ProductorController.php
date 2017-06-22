@@ -48,33 +48,8 @@ class ProductorController extends Controller
 
     public function show($id)
     {
-       /* $productor = Productor::find($id);
-
-        $ofertas = DB::table('oferta')
-                    ->select('id')
-                    ->where([
-                        ['tipo_creador', '=', 'P'],
-                        ['creador_id', '=', $id]
-                    ])->get();
-        $cont=0;
-        $cont2=0;
-        $cont3=0;
-        $cont4=0;
-
-        foreach($productor->marcas as $marca)
-            $cont++;
-        foreach($productor->importadores as $importador)
-            $cont2++;
-        foreach($productor->distribuidores as $distribuidor)
-            $cont3++;
-        foreach($ofertas as $oferta)
-            $cont4++;
-
-        session(['productorId' => $id]);
-        session(['productorNombre' => $productor->nombre]);
-        session(['productorLogo' => $productor->logo]);
-
-        return view('productor.show')->with(compact('productor', 'cont', 'cont2', 'cont3', 'cont4'));*/
+        $productor = Productor::find($id);
+        return view('productor.show')->with(compact('productor'));
     }
 
     public function edit($id)
@@ -254,51 +229,6 @@ class ProductorController extends Controller
                         ->first();
 
         return view('productor.detalleProducto')->with(compact('producto', 'bebida', 'productor', 'perfil'));
-    }
-
-    public function solicitar_importador(){
-        $tipo = 'I';
-
-        $marcas = DB::table('marca')
-                    ->orderBy('nombre')
-                    ->where('productor_id', '=', session('perfilId'))
-                    ->pluck('nombre', 'id');
-
-        $paises = DB::table('pais')
-                    ->orderBy('pais')
-                    ->pluck('pais', 'id');
-
-        $pais_origen = DB::table('productor')
-                        ->select('pais_id')
-                        ->where('id', '=', session('perfilId'))
-                        ->get()
-                        ->first();
-
-        return view('productor.solicitarDemanda')->with(compact('tipo', 'marcas', 'paises', 'pais_origen'));
-    }
-
-    public function ver_demandas_importadores(){
-        $cont = 0;
-
-        $demandasImportadores = Demanda_Importador::where('productor_id', '=', session('perfilId'))
-                                    ->orderBy('created_at', 'ASC')
-                                    ->paginate(8);
-
-        return view('productor.listados.demandasImportadores')->with(compact('demandasImportadores', 'cont'));
-    }
-
-    public function editar_demanda_importacion($id){
-        $demandaImportador = Demanda_Importador::find($id);
-        
-        $marcas = DB::table('marca')
-                        ->orderBy('nombre')
-                        ->pluck('nombre', 'id');
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        return view('productor.editDemandaImp')->with(compact('demandaImportador','marcas', 'paises'));
     }
 
     public function solicitar_distribuidor(){

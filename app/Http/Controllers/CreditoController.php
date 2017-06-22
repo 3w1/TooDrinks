@@ -133,7 +133,7 @@ class CreditoController extends Controller
         
     }
 
-    public function gastar_creditos($cant, $tipo){
+    public function gastar_creditos($cant, $tipo, $id){
         $saldo = session('perfilSaldo') - $cant;
         session(['perfilSaldo' => $saldo]); 
 
@@ -173,12 +173,16 @@ class CreditoController extends Controller
         $deduccion->cantidad_creditos = $cant;
         if ($tipo == 'CO'){
             $deduccion->descripcion = "Crear Oferta";
+        }elseif ($tipo == 'DI'){
+        	 $deduccion->descripcion = "Ver Demanda de Importador";
         }
         
         $deduccion->save();
 
         if ($tipo == 'CO'){
             return redirect('oferta')->with('msj', 'Su oferta ha sido creada exitosamente. Se han descontado'.$cant.' créditos de su saldo.');
+        }elseif ($tipo == 'DI'){
+        	return redirect('productor/'.$id)->with('msj', 'Se han descontado'.$cant.' créditos de su saldo.');
         }
     }
 }

@@ -99,8 +99,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="{{ route('productor.solicitar-importador') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="{{ route('productor.demandas-importadores') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-importador.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                     <li><a href="{{ route('demanda-importador.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
                   </ul>
                </li>
                <li>
@@ -220,7 +220,7 @@
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="#"><i class="fa fa-circle-o"></i> Importadores</a></li>
+               <li><a href="{{ route('demanda-importador.demandas-disponibles') }}"><i class="fa fa-circle-o"></i> Importadores</a></li>
                <li><a href="#"><i class="fa fa-circle-o"></i> Productos</a></li>
             </ul>
          </li>

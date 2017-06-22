@@ -53,7 +53,7 @@
                            @else
                               <td><center><span class="label label-warning">Inactiva</span></td>
                            @endif
-                           <td><center><a href="{{ route('productor.editarDemandaImp', $demandaImportador->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a></td>
+                           <td><center><a href="{{ route('demanda-importador.edit', $demandaImportador->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a></td>
                         </tr>
                      @endforeach
                   </tbody>

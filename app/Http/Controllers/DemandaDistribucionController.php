@@ -18,7 +18,7 @@ class DemandaDistribucionController extends Controller
     
     public function index()
     {
-
+        
     }
 
     public function create()

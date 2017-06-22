@@ -107,7 +107,7 @@ class OfertaController extends Controller
         }
 
         if ($creditos == '1'){
-            $url = ('credito/gastar-creditos/25/CO');
+            $url = ('credito/gastar-creditos/25/CO/'.$ult_oferta->id);
             return redirect($url); 
         }else{
              return redirect('oferta')->with('msj', 'Su oferta ha sido creada exitosamente');

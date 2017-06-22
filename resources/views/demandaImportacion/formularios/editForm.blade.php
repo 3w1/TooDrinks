@@ -1,3 +1,4 @@
+{!! Form::open(['route' => ['demanda-importador.update', $demandaImportador->id], 'method' => 'PUT']) !!}
 	<div class="form-group">
 		{!! Form::label('producto_id', 'Marca') !!}
 		{!! Form::select('marca_id', $marcas, $demandaImportador->marca_id, ['class' => 'form-control']) !!}
@@ -16,3 +17,4 @@
 	<div class="form-group">
 		{!! Form::submit('Actualizar', ['class' => 'btn btn-primary']) !!}
 	</div>
+{!! Form::close() !!}
