@@ -431,6 +431,18 @@ class ProductorController extends Controller
     }
 
     public function confirmar_importador($id, $tipo, $imp){
+        $fecha = new \DateTime();
+
+          $id_marca = DB::table('importador_marca')
+         -> select('marca_id')
+                        ->where('id','=', $id)
+                        -> get()->first();
+
+        $nombre_marca = DB::table('marca')
+         -> select('nombre')
+                        ->where('id','=', $id_marca->marca_id)
+                        -> get()->first();
+
         if ($tipo == 'S'){
             $actualizacion = DB::table('importador_marca')
                                 ->where('id', '=', $id)
@@ -440,9 +452,20 @@ class ProductorController extends Controller
 
             $productor->importadores()->attach($imp);
 
+
+
+             $notificaciones_importador = DB::table('notificacion_i')->insertGetId(
+                                    ['id_creador' => session('perfilId'), 'id_usuario' => $imp, 'titulo' => 'se aprobo su solicitud para importar la marca '. $nombre_marca->nombre, 'url' => 'importador/mis-marcas' , 'fecha' => $fecha]);
+
+
             return redirect('productor/confirmar-importadores')->with('msj', 'Solicitud aprobada exitosamente');
         }else{
+
             DB::table('importador_marca')->where('id', '=', $id)->delete();
+
+            $notificaciones_importador = DB::table('notificacion_i')->insertGetId(
+                                    ['id_creador' => session('perfilId'), 'id_usuario' => $imp, 'titulo' => 'se rechazo su solicitud para importar la marca '. $nombre_marca->nombre, 'url' => 'importador/mis-marcas' , 'fecha' => $fecha]);
+
 
             return redirect('productor/confirmar-importadores')->with('msj', 'Solicitud denegada exitosamente');
         }

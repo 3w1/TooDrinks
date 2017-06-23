@@ -206,11 +206,18 @@ class ImportadorController extends Controller
     }
 
     public function asociar_marca($id){
+        $fecha = new \DateTime();
+
         $marca = Marca::find($id);
 
         $marca->importadores()->attach(session('perfilId'), ['status' => '0']);
 
         $url = ('importador/mis-marcas');
+
+
+         $notificaciones_importador = DB::table('notificacion_p')->insertGetId(
+                                    ['id_creador' => session('perfilId'), 'id_usuario' => $marca->productor_id, 'titulo' => 'solicito importar tu marca '. $marca->nombre, 'url' => 'productor/confirmar-importadores' , 'fecha' => $fecha]);
+
         return redirect($url)->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
 
     }
