@@ -8,7 +8,11 @@
 @section('content-left')
 
 	@section('title-header')
-		<h3><b>Agregar Producto a la Marca {{ $marca }}</b></h3>
+		@if ($id == '0')
+			<h3><b>Agregar Producto</b></h3>
+		@else 
+			<h3><b>Agregar Producto a la Marca {{ $marca }}</b></h3>
+		@endif
 	@endsection
 	
 	@include('producto.formularios.createForm')

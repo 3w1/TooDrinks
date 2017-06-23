@@ -1,4 +1,4 @@
-@extends('plantillas.usuario.mainUsuario')
+@extends('plantillas.main')
 @section('title', 'Listado de Productos')
 
 @section('items')
@@ -30,7 +30,7 @@
 
             $tipo_bebida = DB::table('bebida')
                               ->select('nombre')
-                              ->where('id', $clase_bebida->bebida_id)
+                              ->where('id', $producto->bebida_id)
                               ->get()
                               ->first();
 

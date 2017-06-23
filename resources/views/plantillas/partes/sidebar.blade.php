@@ -52,6 +52,18 @@
       <li class="header">Opciones de Usuario</li>
 
       <li><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
+      <li class="treeview">
+             <a href="#">
+               <i class="fa fa-share"></i> <span>Productos</span>
+               <span class="pull-right-container">
+                 <i class="fa fa-angle-left pull-right"></i>
+               </span>
+             </a>
+             <ul class="treeview-menu">
+               <li><a href="{{ route('producto.index') }}"><i class="fa fa-circle-o"></i> Status de mis Productos</a></li>
+               <li><a href="{{ route('producto.create') }}"><i class="fa fa-circle-o"></i> Nuevo Producto</a></li>
+            </ul>
+         </li>
       <li><a href=""><i class="fa fa-circle-o"></i> Opiniones</a></li>
       <li><a href=""><i class="fa fa-circle-o"></i> Banners Publicitarios</a></li>
       <li><a href=""><i class="fa fa-circle-o"></i> Planes de Crédito</a></li>

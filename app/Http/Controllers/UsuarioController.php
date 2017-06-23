@@ -180,9 +180,7 @@ class UsuarioController extends Controller
     public function store(Request $request)
     {
     	$usuario = new Usuario($request->all());
-        $usuario->save();
-        
-        
+        $usuario->save();  
     }
 
     /**
@@ -365,34 +363,6 @@ class UsuarioController extends Controller
                         ->paginate(8);
 
         return view('usuario.listados.horecas')->with(compact('usuario', 'horecas'));
-    }
-
-    public function registrar_producto(){
-        $marcas = DB::table('marca')
-                    ->orderBy('nombre')
-                    ->pluck('nombre', 'id');
-
-        $paises = DB::table('pais')
-                    ->orderBy('pais')
-                    ->pluck('pais', 'id');
-
-        $clases_bebidas = DB::table('clase_bebida')
-                    ->orderBy('clase')
-                    ->pluck('clase', 'id');
-
-        return view('usuario.registrarProducto')->with(compact('marcas', 'paises', 'clases_bebidas'));
-    }
-
-    public function ver_productos(){
-        $productos = DB::table('producto')
-                    ->orderBy('nombre')
-                    ->where([
-                            ['tipo_creador', '=', 'U'],
-                            ['creador_id', '=', Auth::user()->id],
-                        ])
-                    ->paginate(6);
-
-        return view('usuario.listados.productos')->with(compact('productos'));
     }
 
     public function listado_productores(){

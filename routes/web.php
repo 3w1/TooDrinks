@@ -12,15 +12,15 @@
 */
 
 //RUTAS DE INICIO Y AUTENTICACIÓN
-//
-
 Auth::routes();
 
 Route::get('/home', 'UsuarioController@index')->name('dashboard');
 
 Route::get('/', function () {
-    return redirect()->action('UsuarioController@index');
+    return redirect()->action('UsuarioController@inicio');
 });
+
+Route::get('registrarse/{tipo}${id}${token}', 'Auth\RegisterController@registrarse');
 // ./RUTAS DE INICIO Y AUTENTICACIÓN ./
 
 //  RUTAS PARA LOS USUARIOS
@@ -35,11 +35,10 @@ Route::get('usuario/registrar-distribuidor', 'UsuarioController@registrar_distri
 Route::get('usuario/registrar-horeca', 'UsuarioController@registrar_horeca')->name('usuario.registrar-horeca');
 */
 
+Route::get('confirmar-correo/{id}${token}', 'UsuarioController@confirmar_correo');
+
 Route::post('usuario/cambiar-perfil', 'UsuarioController@cambiar_perfil')->name('usuario.cambiar-perfil');
 Route::get('usuario/inicio', 'UsuarioController@inicio')->name('usuario.inicio');
-
-Route::get('usuario/registrar-producto', 'UsuarioController@registrar_producto')->name('usuario.registrar-producto');
-Route::get('usuario/productos', 'UsuarioController@ver_productos')->name('usuario.productos');
 
 Route::get('usuario/productores-sin-propietario', 'UsuarioController@listado_productores')->name('usuario.productores-disponibles');
 Route::get('usuario/reclamar-productor/{id}', 'UsuarioController@reclamar_productor')->name('usuario.reclamar-productor');
@@ -65,13 +64,6 @@ Route::get('productor/mis-importadores', 'ProductorController@ver_importadores')
 Route::get('productor/registrar-distribuidor', 'ProductorController@registrar_distribuidor')->name('productor.registrar-distribuidor');
 Route::get('productor/mis-distribuidores', 'ProductorController@ver_distribuidores')->name('productor.distribuidores');
 */
-Route::get('productor/registrar-marca', 'ProductorController@registrar_marca')->name('productor.registrar-marca');
-Route::get('productor/mis-marcas', 'ProductorController@ver_marcas')->name('productor.marcas');
-Route::get('productor/ver-marca/{id}-{marca}', 'ProductorController@ver_detalle_marca')->name('productor.marca');
-
-Route::get('productor/{id}-{marca}/registrar-producto', 'ProductorController@registrar_producto')->name('productor.registrar-producto');
-Route::get('productor/{id}-{marca}/productos', 'ProductorController@ver_productos')->name('productor.productos');
-Route::get('productor/ver-producto/{id}-{producto}', 'ProductorController@ver_detalle_producto')->name('productor.producto');
 
 Route::get('productor/marcas-sin-propietario', 'ProductorController@listado_marcas')->name('productor.marcas-disponibles');
 Route::get('productor/reclamar-marca/{id}', 'ProductorController@reclamar_marca')->name('productor.reclamar-marca');
@@ -96,18 +88,11 @@ Route::resource('productor','ProductorController');
 Route::get('importador/mis-distribuidores', 'ImportadorController@ver_distribuidores')->name('importador.distribuidores');
 */
 //Route::get('importador/registrar-marca', 'ImportadorController@registrar_marca')->name('importador.registrar-marca');
-Route::get('importador/mis-marcas', 'ImportadorController@mis_marcas')->name('importador.marcas');
-Route::get('importador/ver-marca/{id}-{marca}', 'ImportadorController@ver_detalle_marca')->name('importador.marca');
+
 Route::get('importador/ver-marcas-disponibles', 'ImportadorController@listado_marcas')->name('importador.marcas-disponibles');
 Route::get('importador/asociar-marca/{id}', 'ImportadorController@asociar_marca')->name('importador.asociar-marca');
 
-//Route::get('importador/{id}-{marca}/registrar-producto', 'ImportadorController@registrar_producto')->name('importador.registrar-producto');
-Route::get('importador/{id}-{marca}/productos', 'ImportadorController@ver_productos')->name('importador.productos');
-Route::get('importador/ver-producto/{id}-{producto}', 'ImportadorController@ver_detalle_producto')->name('importador.producto');
-
 Route::get('importador/ver-ofertas-disponibles', 'ImportadorController@listado_ofertas')->name('importador.ofertas-disponibles');
-
-Route::get('importador/solicitar-importacion', 'ImportadorController@solicitar_importacion')->name('importador.solicitar-importacion');
 
 Route::get('importador/ver-listado-distribuidores', 'ImportadorController@listado_distribuidores')->name('importador.listado-distribuidores');
 
@@ -118,14 +103,9 @@ Route::resource('importador','ImportadorController');
 
 // RUTAS PARA LOS DISTRIBUIDORES
 //Route::get('distribuidor/registrar-marca', 'DistribuidorController@registrar_marca')->name('distribuidor.registrar-marca');
-Route::get('distribuidor/mis-marcas', 'DistribuidorController@ver_marcas')->name('distribuidor.marcas');
-Route::get('distribuidor/ver-marca/{id}-{marca}', 'DistribuidorController@ver_detalle_marca')->name('distribuidor.marca');
+
 Route::get('distribuidor/ver-marcas-disponibles', 'DistribuidorController@listado_marcas')->name('distribuidor.marcas-disponibles');
 Route::get('distribuidor/asociar-marca/{id}', 'DistribuidorController@asociar_marca')->name('distribuidor.asociar-marca');
-
-//Route::get('distribuidor/{id}-{marca}/registrar-producto', 'DistribuidorController@registrar_producto')->name('distribuidor.registrar-producto');
-Route::get('distribuidor/{id}-{marca}/productos', 'DistribuidorController@ver_productos')->name('distribuidor.productos');
-Route::get('distribuidor/ver-producto/{id}-{producto}', 'DistribuidorController@ver_detalle_producto')->name('distribuidor.producto');
 
 Route::get('distribuidor/ver-ofertas-disponibles', 'DistribuidorController@listado_ofertas')->name('distribuidor.ofertas-disponibles');
 
@@ -143,12 +123,14 @@ Route::resource('horeca','HorecaController');
 // ./RUTAS PARA LOS HORECAS ./
 
 // RUTAS PARA LAS MARCAS 
-Route::get('marca/{id}/registrar-producto', 'MarcaController@registrar_producto')->name('marca.registrar-producto');
-
 Route::post('marca/cambiar-logo', 'MarcaController@updateLogo')->name('marca.updateLogo');
 
 Route::resource('marca','MarcaController');
 // ./RUTAS PARA LAS MARCAS ./
+
+// RUTAS PARA LAS BEBIDAS
+Route::resource('bebida','BebidaController');
+// ./RUTAS PARA LAS BEBIDAS ./
 
 // RUTAS PARA LOS PRODUCTOS
 Route::get('producto/agregar/{id}-{marca}', 'ProductoController@agregar')->name('producto.agregar');
@@ -158,6 +140,12 @@ Route::get('producto/detalle-de-producto/{id}', 'ProductoController@detalle')->n
 Route::post('producto/updateImagen', 'ProductoController@updateImagen')->name('producto.updateImagen');
 Route::resource('producto','ProductoController');
 // ./RUTAS PARA LOS PRODUCTOS ./
+
+// RUTAS PARA LAS OFERTAS
+Route::get('oferta/{id}-{producto}/crear-oferta', 'OfertaController@crear_oferta')->name('oferta.crear-oferta');
+
+Route::resource('oferta','OfertaController');
+// ./RUTAS PARA LAS OFERTAS ./
 
 // RUTAS PARA LAS DEMANDAS DE IMPORTADORES
 Route::get('demanda-importador/demandas-disponibles', 'DemandaImportacionController@demandas_disponibles')
@@ -172,6 +160,10 @@ Route::get('demanda-distribuidor/demandas-disponibles', 'DemandaDistribucionCont
 
 Route::resource('demanda-distribuidor','DemandaDistribucionController');
 // ./RUTAS PARA LAS DEMANDAS DE DISTRIBUIDORES ./
+
+// RUTAS PARA LAS DEMANDAS DE PRODUCTOS 
+Route::resource('demanda-producto','DemandaProductoController');
+// ./RUTAS PARA LAS DEMANDAS DE PRODUCTOS ./
 
 // RUTAS PARA LOS CRÉDITOS
 Route::get('credito/compra/{id}','CreditoController@compra')->name('compra');
@@ -189,17 +181,6 @@ Route::get('credito/gastar-creditos-dd/{cant}/{id}/{perfil}', 'CreditoController
 Route::resource('credito','CreditoController');
 // ./RUTAS PARA LAS CRÉDITOS ./
 
-
-Route::resource('bebida','BebidaController');
-
-// RUTAS PARA LAS OFERTAS
-Route::get('oferta/{id}-{producto}/crear-oferta', 'OfertaController@crear_oferta')->name('oferta.crear-oferta');
-
-Route::resource('oferta','OfertaController');
-// ./RUTAS PARA LAS OFERTAS ./
-
-Route::resource('demanda-producto','DemandaProductoController');
-
 Route::resource('suscripcion', 'SuscripcionController');
 
 Route::resource('opinion','OpinionController');
@@ -208,6 +189,5 @@ Route::resource('pais', 'PaisController');
 
 Route::resource('mails', 'MailsController');
 
-Route::get('registrarse/{tipo}${id}${token}', 'Auth\RegisterController@registrarse');
-Route::get('confirmar-correo/{id}${token}', 'UsuarioController@confirmar_correo');
+
 

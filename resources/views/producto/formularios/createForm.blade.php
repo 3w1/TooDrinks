@@ -2,22 +2,33 @@
 
 {!! Form::open(['route' => 'producto.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 	
-	{!! Form::hidden('marca_id', $id)!!}
 	{!! Form::hidden('marca_nombre', $marca) !!}
-	{!! Form::hidden('tipo_creador', session('perfilTipo')) !!}
-	{!! Form::hidden('creador_id', session('perfilId')) !!}
-	
-	@if (session('perfilTipo') == null)
-		{!! Form::hidden('publicado', '0') !!}
-	@else
-		{!! Form::hidden('publicado', '1') !!}
-	@endif
+	{!! Form::hidden('usuario', $usuario) !!}
 
-	@if (session('perfilTipo') == 'P')
-		{!! Form::hidden('confirmado', '1') !!}
-	@else 
+	@if ($usuario == '1')
+		{!! Form::hidden('tipo_creador', 'U') !!}
+		{!! Form::hidden('creador_id', Auth::user()->id) !!}
+		{!! Form::hidden('publicado', '0') !!}
 		{!! Form::hidden('confirmado', '0') !!}
+	@else
+		{!! Form::hidden('tipo_creador', session('perfilTipo')) !!}
+		{!! Form::hidden('creador_id', session('perfilId')) !!}
+		{!! Form::hidden('publicado', '1') !!}
+		@if (session('perfilTipo') == 'P')
+			{!! Form::hidden('confirmado', '1') !!}
+		@else 
+			{!! Form::hidden('confirmado', '0') !!}
+		@endif
 	@endif
+	
+	@if ($id == '0')
+		<div class="form-group">
+			{!! Form::label('marca', 'Marca') !!}
+			{!! Form::select('marca_id', $marcas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una marca..']) !!}
+		</div>
+	@else
+		{!! Form::hidden('marca_id', $id)!!}
+	@endif		
 
 	<div class="form-group">
 		{!! Form::label('nombre', 'Nombre') !!}
