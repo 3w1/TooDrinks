@@ -9,12 +9,16 @@ class Demanda_Producto extends Model
     protected $table = "demanda_producto";
 
     protected $fillable = [
-    	'producto_id', 'tipo_creador', 'creador_id', 'pais_id', 'provincia_region_id', 'titulo', 'descripcion', 'cantidad_minima', 'cantidad_maxima', 
-    	'fecha_creacion', 'fecha_caducidad', 'status',
+    	'producto_id', 'tipo_creador', 'creador_id', 'pais_id', 'provincia_region_id', 'titulo', 'descripcion', 'cantidad_minima', 'cantidad_maxima',
+        'status', 'bebida_id',
     ]; 
 
     public function producto(){
     	return $this->belongsTo('App\Models\Producto');
+    }
+
+    public function bebida(){
+        return $this->belongsTo('App\Models\Bebida');
     }
 
     public function pais(){

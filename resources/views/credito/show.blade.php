@@ -1,4 +1,12 @@
 @extends('plantillas.main')
+@section('items')
+	@if (Session::has('msj-error'))
+        <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>¡Ups!</strong> {{Session::get('msj-error')}}.
+        </div>
+    @endif
+@endsection
 @section('content-left')
 
 	

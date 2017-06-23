@@ -9,7 +9,7 @@ class Deduccion_Credito_Horeca extends Model
     protected $table = "deduccion_credito_horeca";
 
     protected $fillable = [
-        'horeca_id', 'fecha', 'descripcion', 'cantidad_creditos', 
+        'horeca_id', 'descripcion', 'cantidad_creditos', 
     ];
 
     public function horeca(){

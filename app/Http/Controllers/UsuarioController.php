@@ -24,7 +24,6 @@ class UsuarioController extends Controller
 
     public function confirmar_correo($id, $token){
         $user = User::find($id);
-        //$the_user = $user->select()->where('id', '=', $id)->get()->first();
 
         if ($user->codigo_confirmacion == $token){
             $actualizacion = DB::table('users')
@@ -43,7 +42,7 @@ class UsuarioController extends Controller
         if ($entidad[0] == 'P'){
             $productor = DB::table('productor')
                             ->where('id', '=', $entidad[1])
-                            ->select('id', 'nombre', 'logo', 'saldo')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
                             ->get()
                             ->first();
 
@@ -52,10 +51,11 @@ class UsuarioController extends Controller
             session(['perfilLogo' => $productor->logo]);
             session(['perfilSaldo' => $productor->saldo]);
             session(['perfilTipo' => 'P']);
+            session(['perfilSuscripcion' => $productor->tipo_suscripcion]);
         }elseif ($entidad[0] == 'I'){
             $importador = DB::table('importador')
                             ->where('id', '=', $entidad[1])
-                            ->select('id', 'nombre', 'logo', 'saldo')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
                             ->get()
                             ->first();
 
@@ -64,10 +64,11 @@ class UsuarioController extends Controller
             session(['perfilLogo' => $importador->logo]);
             session(['perfilSaldo' => $importador->saldo]);
             session(['perfilTipo' => 'I']);
+            session(['perfilSuscripcion' => $importador->tipo_suscripcion]);
         }elseif ($entidad[0] == 'D'){
             $distribuidor = DB::table('distribuidor')
                             ->where('id', '=', $entidad[1])
-                            ->select('id', 'nombre', 'logo', 'saldo')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
                             ->get()
                             ->first();
 
@@ -76,10 +77,11 @@ class UsuarioController extends Controller
             session(['perfilLogo' => $distribuidor->logo]);
             session(['perfilSaldo' => $distribuidor->saldo]);
             session(['perfilTipo' => 'D']);
+            session(['perfilSuscripcion' => $distribuidor->tipo_suscripcion]);
         }elseif ($entidad[0] == 'H'){
             $horeca = DB::table('horeca')
                             ->where('id', '=', $entidad[1])
-                            ->select('id', 'nombre', 'logo', 'saldo')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
                             ->get()
                             ->first();
 
@@ -88,6 +90,7 @@ class UsuarioController extends Controller
             session(['perfilLogo' => $horeca->logo]);
             session(['perfilSaldo' => $horeca->saldo]);
             session(['perfilTipo' => 'H']);
+            session(['perfilSuscripcion' => $horeca->tipo_suscripcion]);
         }
 
         return redirect('usuario/inicio')->with('msj', 'Se ha cambiado de perfil exitosamente');
@@ -104,7 +107,7 @@ class UsuarioController extends Controller
         if ($user->productor == '1'){
             $productor = DB::table('productor')
                             ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre', 'logo', 'saldo')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
                             ->get()
                             ->first();
 
@@ -113,10 +116,11 @@ class UsuarioController extends Controller
             session(['perfilLogo' => $productor->logo]);
             session(['perfilSaldo' => $productor->saldo]);
             session(['perfilTipo' => 'P']);
+            session(['perfilSuscripcion' => $productor->tipo_suscripcion]);
         }elseif ($user->importador == '1'){
             $importador = DB::table('importador')
                             ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre', 'logo', 'saldo')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
                             ->get()
                             ->first();
 
@@ -125,10 +129,11 @@ class UsuarioController extends Controller
             session(['perfilLogo' => $importador->logo]);
             session(['perfilSaldo' => $importador->saldo]);
             session(['perfilTipo' => 'I']);
+            session(['perfilSuscripcion' => $importador->tipo_suscripcion]);
         }elseif ($user->distribuidor == '1'){
             $distribuidor = DB::table('distribuidor')
                             ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre', 'logo', 'saldo')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
                             ->get()
                             ->first();
 
@@ -137,10 +142,11 @@ class UsuarioController extends Controller
             session(['perfilLogo' => $distribuidor->logo]);
             session(['perfilSaldo' => $distribuidor->saldo]);
             session(['perfilTipo' => 'D']);
+            session(['perfilSuscripcion' => $distribuidor->tipo_suscripcion]);
         }elseif ($user->horeca == '1'){
             $horeca = DB::table('horeca')
                             ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre', 'logo', 'saldo')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
                             ->get()
                             ->first();
 
@@ -149,6 +155,8 @@ class UsuarioController extends Controller
             session(['perfilLogo' => $horeca->logo]);
             session(['perfilSaldo' => $horeca->saldo]);
             session(['perfilTipo' => 'H']);
+            session(['perfilSuscripcion' => $horeca->tipo_suscripcion]);
+
         }
 
         return view('usuario.index');
@@ -172,9 +180,7 @@ class UsuarioController extends Controller
     public function store(Request $request)
     {
     	$usuario = new Usuario($request->all());
-        $usuario->save();
-        
-        
+        $usuario->save();  
     }
 
     /**
@@ -357,34 +363,6 @@ class UsuarioController extends Controller
                         ->paginate(8);
 
         return view('usuario.listados.horecas')->with(compact('usuario', 'horecas'));
-    }
-
-    public function registrar_producto(){
-        $marcas = DB::table('marca')
-                    ->orderBy('nombre')
-                    ->pluck('nombre', 'id');
-
-        $paises = DB::table('pais')
-                    ->orderBy('pais')
-                    ->pluck('pais', 'id');
-
-        $clases_bebidas = DB::table('clase_bebida')
-                    ->orderBy('clase')
-                    ->pluck('clase', 'id');
-
-        return view('usuario.registrarProducto')->with(compact('marcas', 'paises', 'clases_bebidas'));
-    }
-
-    public function ver_productos(){
-        $productos = DB::table('producto')
-                    ->orderBy('nombre')
-                    ->where([
-                            ['tipo_creador', '=', 'U'],
-                            ['creador_id', '=', Auth::user()->id],
-                        ])
-                    ->paginate(6);
-
-        return view('usuario.listados.productos')->with(compact('productos'));
     }
 
     public function listado_productores(){

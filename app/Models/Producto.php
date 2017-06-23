@@ -10,7 +10,7 @@ class Producto extends Model
 
      protected $fillable = [
         'nombre', 'nombre_seo', 'descripcion', 'pais_id', 'provincia_region_id', 'clase_bebida_id', 'marca_id', 
-        'imagen', 'ano_produccion', 'tipo_creador', 'creador_id', 'publicado', 'confirmado',
+        'imagen', 'ano_produccion', 'tipo_creador', 'creador_id', 'publicado', 'confirmado', 'bebida_id',
     ];
 
     public function pais(){
@@ -23,6 +23,10 @@ class Producto extends Model
 
     public function clase_bebida(){
     	return $this->belongsTo('App\Models\Clase_Bebida');
+    }
+
+    public function bebida(){
+        return $this->belongsTo('App\Models\Bebida');
     }
 
     public function marca(){

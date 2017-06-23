@@ -52,6 +52,18 @@
       <li class="header">Opciones de Usuario</li>
 
       <li><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
+      <li class="treeview">
+             <a href="#">
+               <i class="fa fa-share"></i> <span>Productos</span>
+               <span class="pull-right-container">
+                 <i class="fa fa-angle-left pull-right"></i>
+               </span>
+             </a>
+             <ul class="treeview-menu">
+               <li><a href="{{ route('producto.index') }}"><i class="fa fa-circle-o"></i> Status de mis Productos</a></li>
+               <li><a href="{{ route('producto.create') }}"><i class="fa fa-circle-o"></i> Nuevo Producto</a></li>
+            </ul>
+         </li>
       <li><a href=""><i class="fa fa-circle-o"></i> Opiniones</a></li>
       <li><a href=""><i class="fa fa-circle-o"></i> Banners Publicitarios</a></li>
       <li><a href=""><i class="fa fa-circle-o"></i> Planes de Crédito</a></li>
@@ -67,9 +79,9 @@
                </span>
              </a>
              <ul class="treeview-menu">
-               <li><a href="{{ route('productor.marcas') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
+               <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
                <li><a href="{{ route('productor.marcas-disponibles') }}"><i class="fa fa-circle-o"></i> Marcas Disponibles</a></li>
-               <li><a href="{{ route('productor.registrar-marca') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+               <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
             </ul>
          </li>
          <li class="treeview">
@@ -80,8 +92,8 @@
                </span>
              </a>
              <ul class="treeview-menu">
-               <li><a href="{{ route('productor.ofertas') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
-               <li><a href="{{ route('productor.registrar-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
+               <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
+               <li><a href="{{ route('oferta.crear-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
             </ul>
          </li>
          <li class="treeview">
@@ -99,8 +111,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="{{ route('productor.solicitar-importador') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="{{ route('productor.demandas-importadores') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-importador.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                     <li><a href="{{ route('demanda-importador.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
                   </ul>
                </li>
                <li>
@@ -110,8 +122,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="{{ route('productor.solicitar-distribuidor') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="{{ route('productor.demandas-distribuidores') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-distribuidor.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                     <li><a href="{{ route('demanda-distribuidor.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
                   </ul>
                </li>
             </ul>
@@ -155,7 +167,7 @@
                </span>
              </a>
             <ul class="treeview-menu">
-               <li><a href="{{ route('importador.marcas') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
+               <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
                <li><a href="{{ route('importador.marcas-disponibles') }}"><i class="fa fa-circle-o"></i> Marcas Disponibles</a></li>
             </ul>
          </li>
@@ -166,9 +178,9 @@
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="{{ route('importador.ofertas') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
+               <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
                <li><a href="{{ route('importador.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
-               <li><a href="{{ route('importador.registrar-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
+               <li><a href="{{ route('oferta.crear-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
             </ul>
          </li>
          <li class="treeview">
@@ -185,8 +197,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="{{ route('importador.solicitar-distribuidor') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="{{ route('importador.demandas-distribuidores') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-distribuidor.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                     <li><a href="{{ route('demanda-distribuidor.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
                   </ul>
                </li>
                <li>
@@ -196,8 +208,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-producto.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                     <li><a href="{{ route('demanda-producto.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
                   </ul>
                </li>
                <li>
@@ -207,7 +219,7 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                     <li><a href="{{ route('importador.solicitar-importacion') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
                      <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
                   </ul>
                </li>
@@ -220,7 +232,7 @@
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="#"><i class="fa fa-circle-o"></i> Importadores</a></li>
+               <li><a href="{{ route('demanda-importador.demandas-disponibles') }}"><i class="fa fa-circle-o"></i> Importadores</a></li>
                <li><a href="#"><i class="fa fa-circle-o"></i> Productos</a></li>
             </ul>
          </li>
@@ -238,7 +250,7 @@
                </span>
              </a>
             <ul class="treeview-menu">
-               <li><a href="{{ route('distribuidor.marcas') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
+               <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
                <li><a href="{{ route('distribuidor.marcas-disponibles') }}"><i class="fa fa-circle-o"></i> Marcas Disponibles</a></li>
             </ul>
          </li>
@@ -249,9 +261,9 @@
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="{{ route('distribuidor.ofertas') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
+               <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
                <li><a href="{{ route('distribuidor.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
-               <li><a href="{{ route('distribuidor.registrar-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
+               <li><a href="{{ route('oferta.crear-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
             </ul>
          </li>
          <li class="treeview">
@@ -268,8 +280,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-producto.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                     <li><a href="{{ route('demanda-producto.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
                   </ul>
                </li>
                <li>
@@ -292,8 +304,8 @@
                </span>
             </a>
             <ul class="treeview-menu">
+               <li><a href="{{ route('demanda-distribuidor.demandas-disponibles') }}"><i class="fa fa-circle-o"></i> Distribuidores</a></li>
                <li><a href="#"><i class="fa fa-circle-o"></i> Productos</a></li>
-               <li><a href="#"><i class="fa fa-circle-o"></i> Distribuidores</a></li>
             </ul>
          </li>
          <!-- FIN DE SECCIÓN DE DISTRIBUIDORES -->

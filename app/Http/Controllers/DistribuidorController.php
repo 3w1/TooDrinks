@@ -139,33 +139,6 @@ class DistribuidorController extends Controller
          
     }*/
 
-    //FUNCION QUE LE PERMITE AL DISTRIBUIDOR REGISTRAR UNA MARCA
-   /* public function registrar_marca(){
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        return view('distribuidor.registrarMarca')->with(compact('paises'));
-    }*/
-    
-     //FUNCION QUE PERMITE VER LAS MARCAS QUE MANEJA UN IMPORTADOR
-    public function ver_marcas(){
-        $marcas = Distribuidor::find(session('perfilId'))
-                                    ->marcas()
-                                    ->paginate(6);
-
-        return view('distribuidor.listados.marcas')->with(compact('marcas'));
-    }
-
-    public function ver_detalle_marca($id, $nombre){
-        $perfil = 'D';
-
-        $marca = Marca::find($id);
-
-        return view('distribuidor.detalleMarca')->with(compact('marca', 'perfil'));
-    }
-
      public function listado_marcas(){
         $marcas = DB::table('marca')
                     ->select('marca.*')
@@ -227,48 +200,6 @@ class DistribuidorController extends Controller
                         ->first();
 
         return view('distribuidor.detalleProducto')->with(compact('producto', 'bebida', 'productor', 'perfil'));
-    }
-
-    public function registrar_oferta($id, $producto){
-        if ($id != '0'){
-            $tipo = '1';
-        }else{
-            $tipo = '2';
-        }
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-         $marcas = DB::table('marca')
-                    ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
-                    ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
-                    ->pluck('marca.nombre', 'marca.id');
-
-        return view('distribuidor.registrarOferta')->with(compact('id', 'producto', 'paises', 'marcas', 'tipo'));
-    }
-
-     //FUNCION QUE PERMITE VER LAS OFERTAS DE UN PRODUCTOR
-    public function mis_ofertas(){
-        $ofertas = DB::table('oferta')
-                    ->where([
-                        ['tipo_creador', '=', 'D'],
-                        ['creador_id', '=', session('perfilId')],
-                    ])
-                    ->paginate(6);
-
-        return view('distribuidor.listados.ofertas')->with(compact('ofertas'));
-    }
-
-    public function ver_detalle_oferta($id){
-        $oferta = Oferta::find($id);
-
-        $destinos = Destino_Oferta::where('oferta_id', '=', $id)
-                                ->orderBy('provincia_region_id')
-                                ->select('pais_id', 'provincia_region_id')
-                                ->get();
-
-        return view('distribuidor.detalleOferta')->with(compact('oferta', 'destinos'));
     }
 
     public function listado_ofertas(){

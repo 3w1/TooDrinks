@@ -9,7 +9,7 @@ class Deduccion_Credito_Distribuidor extends Model
     protected $table = "deduccion_credito_distribuidor";
 
     protected $fillable = [
-        'distribuidor_id', 'fecha', 'descripcion', 'cantidad_creditos', 
+        'distribuidor_id', 'descripcion', 'cantidad_creditos', 
     ];
 
     public function distribuidor(){

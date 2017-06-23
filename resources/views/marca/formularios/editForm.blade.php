@@ -1,18 +1,17 @@
-	<?php 
-		$paises= DB::table('pais')
-					->orderBy('pais')
-					->pluck('pais', 'id');
+<?php 
+	$paises= DB::table('pais')
+				->orderBy('pais')
+				->pluck('pais', 'id');
 
-		$provincias = DB::table('provincia_region')
-						->orderBy('provincia')
-						->where('pais_id', '=', $marca->pais_id)
-						->pluck('provincia', 'id');
-	 ?>
+	$provincias = DB::table('provincia_region')
+					->orderBy('provincia')
+					->where('pais_id', '=', $marca->pais_id)
+					->pluck('provincia', 'id');
+?>
 
-	{!! Html::script('js/marcas/edit.js') !!}
+{!! Html::script('js/marcas/edit.js') !!}
 
-	{!! Form::hidden('id', $marca->id) !!}
-	{!! Form::hidden('productor_id', $marca->productor_id) !!}
+{!! Form::open(['route' => ['marca.update', $marca->id], 'method' => 'PUT']) !!}
 
 	<div class="form-group">
 		{!! Form::label ('nombre','Nombre') !!}

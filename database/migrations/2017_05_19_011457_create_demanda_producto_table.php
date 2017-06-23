@@ -11,6 +11,7 @@ class CreateDemandaProductoTable extends Migration
         Schema::create('demanda_producto', function(Blueprint $table){
             $table->increments('id');
             $table->integer('producto_id');
+            $table->integer('bebida_id');
             $table->enum('tipo_creador', ['I','D','H']);
             $table->integer('creador_id');
             $table->integer('pais_id');
@@ -26,6 +27,11 @@ class CreateDemandaProductoTable extends Migration
 
             $table->foreign('producto_id')
                   ->references('id')->on('producto')
+                  ->onDelete('restrict')
+                  ->onUpdate('cascade');
+
+            $table->foreign('bebida_id')
+                  ->references('id')->on('bebida')
                   ->onDelete('restrict')
                   ->onUpdate('cascade');
 

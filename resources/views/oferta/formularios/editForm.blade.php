@@ -1,4 +1,6 @@
-	{!! Html::script('js/ofertas/edit.js') !!}
+{!! Html::script('js/ofertas/edit.js') !!}
+
+{!! Form::open(['route' => ['oferta.update', $oferta->id], 'method' => 'PUT']) !!}
 
 	{!! Form::hidden('producto_id', $oferta->producto_id) !!}
 
@@ -46,3 +48,24 @@
 		{!! Form::label('costo_envio', 'Costo del Envío') !!}
 		{!! Form::text('costo_envio', $oferta->costo_envio, ['class' => 'form-control'] ) !!}
 	</div>
+	
+	@if (session('perfilTipo') == 'P')
+		<div class="form-group">
+            {!! Form::label('visible_importador', 'Disponible para Distribuidores') !!}
+            {!! Form::select('visible_importadores', ['0' => 'No', '1' => 'Si'], $oferta->visible_importadores, ['class' => 'form-control']) !!}
+        </div>
+    @endif
+
+    @if (session('perfilTipo') != 'D')
+        <div class="form-group">
+            {!! Form::label('visible_distribuidor', 'Disponible para Distribuidores') !!}
+            {!! Form::select('visible_distribuidores', ['0' => 'No', '1' => 'Si'], $oferta->visible_distribuidores, ['class' => 'form-control']) !!}
+        </div>
+
+        <div class="form-group">
+	        {!! Form::label('visible_horeca', 'Visible para Horecas') !!}
+	        {!! Form::select('visible_horecas', ['0' => 'No', '1' => 'Si'], $oferta->visible_horecas, ['class' => 'form-control']); !!}
+	    </div>       
+	@endif
+    
+    
