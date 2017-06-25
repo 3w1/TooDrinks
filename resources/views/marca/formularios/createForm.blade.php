@@ -16,7 +16,7 @@
 	@endif
 
 	{!! Form::hidden('publicada', '0') !!}
-		
+
 	<div class="form-group">
 		{!! Form::label ('nombre','Nombre') !!}
 		{!! Form::text ('nombre',null,['class'=>'form-control','placeholder'=>'Ej. Polar', 'required']) !!}

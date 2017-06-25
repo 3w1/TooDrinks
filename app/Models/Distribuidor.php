@@ -57,4 +57,9 @@ class Distribuidor extends Model
     public function suscripcion(){
         return $this->belongsTo('App\Models\Suscripcion');
     }
+
+    public function notificaciones_d(){
+        return $this->hasMany('App\Models\Notificacion_D');
+    }   
+
 }

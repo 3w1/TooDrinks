@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
             $table->boolean('horeca'); 
             $table->boolean('activado');
             $table->integer('cantidad_entidades');
+            $table->string('codigo_confirmacion');
             $table->rememberToken();
             $table->timestamps();
 

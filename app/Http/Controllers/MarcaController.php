@@ -62,9 +62,11 @@ class MarcaController extends Controller
         $marca->save();
 
         if (session('perfilTipo') == 'I'){
-            $marca->importadores()->attach(session('perfilId'));
+            $marca->importadores()->attach(session('perfilId'), ['status' => '0']);
+            //NOTIFICAR A PRODUCTORES QUE HAY UNA NUEVA MARCA DISPONIBLES
         }elseif (session('perfilTipo') == 'D'){
-            $marca->distribuidores()->attach(session('distribuidorId'));
+            $marca->distribuidores()->attach(session('perfilId'), ['status' => '0']);
+            //NOTIFICAR A PRODUCTORES QUE HAY UNA NUEVA MARCA DISPONIBLES
         }   
 
         return redirect('marca')->with('msj', 'Su marca ha sido creada exitosamente');

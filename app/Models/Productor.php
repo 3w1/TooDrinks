@@ -53,4 +53,8 @@ class Productor extends Model
     public function suscripcion(){
         return $this->belongsTo('App\Models\Suscripcion');
     }
+
+    public function notificaciones_p(){
+        return $this->hasMany('App\Models\Notificacion_P');
+    }
 }

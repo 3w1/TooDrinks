@@ -13,7 +13,7 @@ class Clase_Bebida extends Model
     ]; 
 
     public function bebida(){
-    	return $this->hasMany('App\Models\Bebida');
+    	return $this->belongsTo('App\Models\Bebida');
     }
 
     public function pais(){

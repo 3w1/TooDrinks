@@ -37,4 +37,8 @@ class Horeca extends Model
     public function demandas_productos(){
         return $this->hasMany('App\Models\Demanda_Producto');
     }
+
+    public function notificaciones_h(){
+        return $this->hasMany('App\Models\Notificacion_H');
+    }
 }
