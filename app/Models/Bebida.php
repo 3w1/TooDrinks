@@ -13,6 +13,10 @@ class Bebida extends Model
     ]; 
 
     public function clases_bebidas(){
-    	return $this->belongsTo('App\Models\Clase_Bebida');
+    	return $this->hasMany('App\Models\Clase_Bebida');
+    }
+
+    public function productos(){
+    	return $this->hasMany('App\Models\Producto');
     }
 }

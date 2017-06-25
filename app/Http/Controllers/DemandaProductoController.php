@@ -31,6 +31,22 @@ class DemandaProductoController extends Controller
         return view('demandaProducto.index')->with(compact('demandasProductos', 'cont'));
     }
 
+    public function demandas_disponibles(){
+        if (session('perfilTipo') == 'P'){
+            
+            $demandasProductos = DB::table('demanda_producto')
+                                    ->select('demanda_producto.*', 'producto.nombre', 'producto.marca_id', 'marca.productor_id')
+                                    ->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
+                                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                                    ->where('marca.productor_id', '=', session('perfilId'))
+                                    ->where('demanda_producto.status', '=', '1')
+                                    ->get();
+            dd($demandasProductos);
+
+        }
+    }
+
     public function create()
     {
         $productos = DB::table('producto')

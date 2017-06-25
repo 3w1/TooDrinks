@@ -32,7 +32,7 @@
 
 	         	<div class="box box-widget widget-user-2">
 
-	           		<div class="widget-user-header bg-yellow">
+	           		<div class="widget-user-header bg-red">
 	              		<div class="widget-user-image">
 	                		<img class="img-rounded" src="{{ asset('imagenes/marcas/thumbnails/')}}/{{ $marca->logo }}">
 	              		</div>
@@ -44,10 +44,11 @@
 	              		<ul class="nav nav-stacked">
 	             			<li class="active"><a><stron>País: </stron> {{ $pais->pais }} </a></li>
 	             			<li class="active"><a><stron>Provincia: </stron> {{ $provincia->provincia }} </a></li>
-	              			<li class="active"><a><stron>Descripción: </stron> {{ $marca->descripcion }} </a></li>
-	              			 <li>
+	              			<li class="active"><a><stron>Nombre SEO: </stron> {{ $marca->nombre_seo }} </a></li>
+	              			 <li class="active">
 				            	<center>
-				               		 <a class="btn btn-success" href="{{ route('distribuidor.asociar-marca', $marca->id) }}" ><strong>¡¡La Distribuyo!!</strong><i class="fa fa-check"></i> </a>
+				               		 <a class="btn btn-success btn-xs" href="{{ route('distribuidor.asociar-marca', $marca->id) }}" ><strong>¡¡La Distribuyo!!</strong><i class="fa fa-check"></i> </a>
+				               		 <a class="btn btn-primary btn-xs" href="" ><strong>¡¡Quiero Distribuirla!!</strong><i class="fa fa-check"></i> </a>
 				               	</center>
 				            </li>  
 				        </ul>

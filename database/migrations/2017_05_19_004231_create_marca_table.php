@@ -45,6 +45,7 @@ class CreateMarcaTable extends Migration
       			$table->increments('id');
       			$table->integer('importador_id');
       			$table->integer('marca_id');
+            $table->boolean('status');
       			$table->timestamps();
 
       			$table->foreign('importador_id')
@@ -62,6 +63,7 @@ class CreateMarcaTable extends Migration
 			$table->increments('id');
 			$table->integer('distribuidor_id');
 			$table->integer('marca_id');
+      $table->boolean('status');
 			$table->timestamps();
 
   			$table->foreign('distribuidor_id')

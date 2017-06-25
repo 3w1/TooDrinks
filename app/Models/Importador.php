@@ -53,4 +53,8 @@ class Importador extends Model
     public function suscripcion(){
         return $this->belongsTo('App\Models\Suscripcion');
     }
+
+    public function notificaciones_i(){
+        return $this->hasMany('App\Models\Notificacion_I');
+    }
 }
