@@ -148,7 +148,8 @@
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="{{ route('demanda-producto.demandas-disponibles') }}"><i class="fa fa-circle-o"></i> Productos</a></li>
+               <li><a href="{{ route('demanda-producto.demandas-productos-productores') }}"><i class="fa fa-circle-o"></i> Productos</a></li>
+               <li><a href="{{ route('demanda-producto.demandas-bebidas-productores') }}"><i class="fa fa-circle-o"></i> Bebidas</a></li>
                <li><a href="#"><i class="fa fa-circle-o"></i> Importación</a></li>
             </ul>
          </li>

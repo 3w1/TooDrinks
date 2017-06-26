@@ -162,8 +162,10 @@ Route::resource('demanda-distribuidor','DemandaDistribucionController');
 // ./RUTAS PARA LAS DEMANDAS DE DISTRIBUIDORES ./
 
 // RUTAS PARA LAS DEMANDAS DE PRODUCTOS 
-Route::get('demanda-producto/demandas-disponibles', 'DemandaProductoController@demandas_disponibles')
-->name('demanda-producto.demandas-disponibles');
+Route::get('demanda-producto/demandas-productos-productores', 'DemandaProductoController@demandas_productos_productores')
+->name('demanda-producto.demandas-productos-productores');
+Route::get('demanda-producto/demandas-bebidas-productores', 'DemandaProductoController@demandas_bebidas_productores')
+->name('demanda-producto.demandas-bebidas-productores');
 
 Route::resource('demanda-producto','DemandaProductoController');
 // ./RUTAS PARA LAS DEMANDAS DE PRODUCTOS ./
@@ -180,6 +182,9 @@ Route::get('credito/gastar-creditos-di/{cant}/{id}', 'CreditoController@gastar_c
 
 Route::get('credito/gastar-creditos-dd/{cant}/{id}/{perfil}', 'CreditoController@gastar_creditos_DD' )
 ->name('credito.gastar-creditos-dd');
+
+Route::get('credito/gastar-creditos-dp/{cant}/{id}', 'CreditoController@gastar_creditos_DP' )
+->name('credito.gastar-creditos-dp');
 
 Route::resource('credito','CreditoController');
 // ./RUTAS PARA LAS CRÉDITOS ./

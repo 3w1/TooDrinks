@@ -31,20 +31,34 @@ class DemandaProductoController extends Controller
         return view('demandaProducto.index')->with(compact('demandasProductos', 'cont'));
     }
 
-    public function demandas_disponibles(){
-        if (session('perfilTipo') == 'P'){
-            
-            $demandasProductos = DB::table('demanda_producto')
-                                    ->select('demanda_producto.*', 'producto.nombre', 'producto.marca_id', 'marca.productor_id')
-                                    ->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
-                                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
-                                    ->where('marca.productor_id', '=', session('perfilId'))
-                                    ->where('demanda_producto.status', '=', '1')
-                                    ->get();
-            dd($demandasProductos);
+    public function demandas_productos_productores(){
+           
+        $demandasProductos = DB::table('demanda_producto')
+                                ->select('demanda_producto.*', 'producto.nombre', 'producto.marca_id', 'marca.productor_id')
+                                ->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
+                                ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                                ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                                ->where('marca.productor_id', '=', session('perfilId'))
+                                ->where('demanda_producto.status', '=', '1')
+                                ->paginate(10);
 
-        }
+        return view('demandaProducto.demandasProductos')->with(compact('demandasProductos'));
+    }
+
+    public function demandas_bebidas_productores(){
+
+        $demandasBebidas = DB::table('demanda_producto')
+                                ->select('demanda_producto.*')
+                                ->join('producto', 'demanda_producto.bebida_id', '=', 'producto.bebida_id')
+                                ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                                ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                                ->where('marca.productor_id', '=', session('perfilId'))
+                                ->where('demanda_producto.producto_id', '=', '0')
+                                ->where('demanda_producto.status', '=', '1')
+                                ->groupBy('demanda_producto.id', 'producto.bebida_id')
+                                ->paginate(10);
+
+        return view('demandaProducto.demandasBebidas')->with(compact('demandasBebidas'));
     }
 
     public function create()
@@ -91,7 +105,9 @@ class DemandaProductoController extends Controller
 
     public function show($id)
     {
-        //
+        $demandaProducto = Demanda_Producto::find($id);
+
+        return view('demandaProducto.show')->with(compact('demandaProducto'));
     }
 
     public function edit($id)

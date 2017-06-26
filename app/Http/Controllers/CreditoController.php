@@ -206,5 +206,39 @@ class CreditoController extends Controller
             return redirect('importador/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
         }
     }
+
+    public function gastar_creditos_DP($cant, $id){
+        $saldo = session('perfilSaldo') - $cant;
+        session(['perfilSaldo' => $saldo]);    
+
+        if (session('perfilTipo') == 'P'){
+            $act = DB::table('productor')
+                    ->where('id', '=', session('perfilId'))
+                    ->update(['saldo' => $saldo ]);
+
+            $deduccion = new Deduccion_Credito_Productor();
+            $deduccion->productor_id = session('perfilId');
+        }elseif (sesion('perfilTipo') == 'I'){
+            $act = DB::table('importador')
+                    ->where('id', '=', session('perfilId'))
+                    ->update(['saldo' => $saldo ]);
+
+            $deduccion = new Deduccion_Credito_Importador();
+            $deduccion->importador_id = session('perfilId');
+        }else{
+            $act = DB::table('distribuidor')
+                    ->where('id', '=', session('perfilId'))
+                    ->update(['saldo' => $saldo ]);
+
+            $deduccion = new Deduccion_Credito_Distribuidor();
+            $deduccion->distribuidor_id = session('perfilId');
+        }
+       
+        $deduccion->descripcion = 'Ver demanda de producto';
+        $deduccion->cantidad_creditos = $cant;
+        $deduccion->save();
+
+        return redirect('demanda-producto/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
+    }
 }
 
