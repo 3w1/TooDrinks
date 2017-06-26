@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Productor; use App\Models\Pais; use App\Models\Marca; use App\Models\Bebida;
 use App\Models\Clase_Bebida; use App\Models\Producto; use App\Models\Oferta;
 use App\Models\Destino_Oferta; use App\Models\Demanda_Importador; use App\Models\Demanda_Distribuidor;
-use App\Models\Importador; use App\Models\Importador_Marca;
+use App\Models\Importador; use App\Models\Importador_Marca; use App\Models\Notificacion_I; use App\Models\Notificacion_D;
 use DB; use Auth; use Session; use Redirect; use Input; use Image;
 
 class ProductorController extends Controller
@@ -198,6 +198,7 @@ class ProductorController extends Controller
          -> select('nombre')
                         ->where('id','=', $id_marca->marca_id)
                         -> get()->first();
+
          $productor = Productor::find(session('perfilId'));
 
         if ($tipo == 'S'){
@@ -205,24 +206,28 @@ class ProductorController extends Controller
                                 ->where('id', '=', $id)
                                 ->update(['status' => '1']);
 
-           
-
             $productor->importadores()->attach($imp);
 
-
-
-             $notificaciones_importador = DB::table('notificacion_i')->insertGetId(
-                                    ['id_creador' => session('perfilId'), 'id_usuario' => $imp, 'titulo' => 'El productor ' . $productor->nombre  . 'lo ha confirmado como importador de la marca: '. $nombre_marca->nombre, 'url' => 'importador/mis-marcas' , 'fecha' => $fecha]);
-
+            $notificaciones_importador = new Notificacion_I();
+            $notificaciones_importador->creador_id = session('perfilId');
+            $notificaciones_importador->tipo_creador = session('perfilTipo');
+            $notificaciones_importador->titulo = 'El productor ' . $productor->nombre  . 'lo ha confirmado como importador de la marca: '. $nombre_marca->nombre;
+            $notificaciones_importador->url='marca';
+            $notificaciones_importador->importador_id = $imp;
+            $notificaciones_importador->save();
 
             return redirect('productor/confirmar-importadores')->with('msj', 'Solicitud aprobada exitosamente');
         }else{
 
             DB::table('importador_marca')->where('id', '=', $id)->delete();
 
-            $notificaciones_importador = DB::table('notificacion_i')->insertGetId(
-                                    ['id_creador' => session('perfilId'), 'id_usuario' => $imp, 'titulo' => 'El productor ' . $productor->nombre . ' lo ha rechazado como importador de la marca '. $nombre_marca->nombre, 'url' => 'importador/mis-marcas' , 'fecha' => $fecha]);
-
+            $notificaciones_importador = new Notificacion_I();
+            $notificaciones_importador->creador_id = session('perfilId');
+            $notificaciones_importador->tipo_creador = session('perfilTipo');
+            $notificaciones_importador->titulo = 'El productor ' . $productor->nombre . ' lo ha rechazado como importador de la marca '. $nombre_marca->nombre;
+            $notificaciones_importador->url='marca';
+            $notificaciones_importador->importador_id = $imp;
+            $notificaciones_importador->save();
 
             return redirect('productor/confirmar-importadores')->with('msj', 'Solicitud denegada exitosamente');
         }
@@ -270,14 +275,55 @@ class ProductorController extends Controller
     }
 
     public function confirmar_producto($id, $tipo){
+        $producto = DB::table('producto')
+                        ->select('creador_id', 'tipo_creador', 'nombre')
+                        ->where('id', '=', $id)
+                        ->get()
+                        ->first();
+         
         if ($tipo == 'S'){
             $actualizacion = DB::table('producto')
                                 ->where('id', '=', $id)
                                 ->update(['confirmado' => '1']);
 
+            if ($producto->tipo_creador == 'I'){
+                $notificaciones_importador = new Notificacion_I();
+                $notificaciones_importador->creador_id = session('perfilId');
+                $notificaciones_importador->tipo_creador = session('perfilTipo');
+                $notificaciones_importador->titulo = session('perfilNombre') . ' ha confirmado el producto '. $producto->nombre;
+                $notificaciones_importador->url='producto/detalle-de-producto/'.$id;
+                $notificaciones_importador->importador_id = $producto->creador_id;
+                $notificaciones_importador->save(); 
+            }elseif ($producto->tipo_creador == 'D'){
+                $notificaciones_distribuidor = new Notificacion_D();
+                $notificaciones_distribuidor->creador_id = session('perfilId');
+                $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
+                $notificaciones_distribuidor->titulo = session('perfilNombre') . ' ha confirmado el producto '. $producto->nombre;
+                $notificaciones_distribuidor->url='producto/detalle-de-producto/'.$id;
+                $notificaciones_distribuidor->distribuidor_id = $producto->creador_id;
+                $notificaciones_distribuidor->save(); 
+            }
             return redirect('productor/confirmar-productos')->with('msj', 'Producto aprobado exitosamente');
         }else{
             DB::table('producto')->where('id', '=', $id)->delete();
+
+            if ($producto->tipo_creador == 'I'){
+                $notificaciones_importador = new Notificacion_I();
+                $notificaciones_importador->creador_id = session('perfilId');
+                $notificaciones_importador->tipo_creador = session('perfilTipo');
+                $notificaciones_importador->titulo = session('perfilNombre') . ' ha rechazado el producto '. $producto->nombre;
+                $notificaciones_importador->url='producto/detalle-de-producto/'.$id;
+                $notificaciones_importador->importador_id = $producto->creador_id;
+                $notificaciones_importador->save(); 
+            }elseif ($producto->tipo_creador == 'D'){
+                $notificaciones_distribuidor = new Notificacion_D();
+                $notificaciones_distribuidor->creador_id = session('perfilId');
+                $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
+                $notificaciones_distribuidor->titulo = session('perfilNombre') . ' ha rechazado el producto '. $producto->nombre;
+                $notificaciones_distribuidor->url='producto/detalle-de-producto/'.$id;
+                $notificaciones_distribuidor->distribuidor_id = $producto->creador_id;
+                $notificaciones_distribuidor->save(); 
+            }
 
             return redirect('productor/confirmar-productos')->with('msj', 'Producto eliminado exitosamente');
         }

@@ -17,7 +17,7 @@ Auth::routes();
 Route::get('/home', 'UsuarioController@index')->name('dashboard');
 
 Route::get('/', function () {
-    return redirect()->action('UsuarioController@inicio');
+    return redirect()->action('UsuarioController@index');
 });
 
 Route::get('registrarse/{tipo}${id}${token}', 'Auth\RegisterController@registrarse');
@@ -165,6 +165,9 @@ Route::resource('demanda-distribuidor','DemandaDistribucionController');
 // ./RUTAS PARA LAS DEMANDAS DE DISTRIBUIDORES ./
 
 // RUTAS PARA LAS DEMANDAS DE PRODUCTOS 
+Route::get('demanda-producto/demandas-disponibles', 'DemandaProductoController@demandas_disponibles')
+->name('demanda-producto.demandas-disponibles');
+
 Route::resource('demanda-producto','DemandaProductoController');
 // ./RUTAS PARA LAS DEMANDAS DE PRODUCTOS ./
 

@@ -81,7 +81,7 @@
              <ul class="treeview-menu">
                <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
                <li><a href="{{ route('productor.marcas-disponibles') }}"><i class="fa fa-circle-o"></i> Marcas Disponibles</a></li>
-               <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+               <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Nueva Marca</a></li>
             </ul>
          </li>
          <li class="treeview">
@@ -111,8 +111,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="{{ route('demanda-importador.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="{{ route('demanda-importador.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-importador.create') }}"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
+                     <li><a href="{{ route('demanda-importador.index') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
                   </ul>
                </li>
                <li>
@@ -122,8 +122,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="{{ route('demanda-distribuidor.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="{{ route('demanda-distribuidor.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-distribuidor.create') }}"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
+                     <li><a href="{{ route('demanda-distribuidor.index') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
                   </ul>
                </li>
             </ul>
@@ -148,7 +148,7 @@
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="#"><i class="fa fa-circle-o"></i> Productos</a></li>
+               <li><a href="{{ route('demanda-producto.demandas-disponibles') }}"><i class="fa fa-circle-o"></i> Productos</a></li>
                <li><a href="#"><i class="fa fa-circle-o"></i> Importación</a></li>
             </ul>
          </li>
@@ -169,6 +169,7 @@
             <ul class="treeview-menu">
                <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
                <li><a href="{{ route('importador.marcas-disponibles') }}"><i class="fa fa-circle-o"></i> Marcas Disponibles</a></li>
+               <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Nueva Marca</a></li>
             </ul>
          </li>
          <li class="treeview">
@@ -197,8 +198,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="{{ route('demanda-distribuidor.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="{{ route('demanda-distribuidor.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-distribuidor.create') }}"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
+                     <li><a href="{{ route('demanda-distribuidor.index') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
                   </ul>
                </li>
                <li>
@@ -208,8 +209,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="{{ route('demanda-producto.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="{{ route('demanda-producto.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-producto.create') }}"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
+                     <li><a href="{{ route('demanda-producto.index') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
                   </ul>
                </li>
                <li>
@@ -219,8 +220,13 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
+<<<<<<< HEAD
                      <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
                      <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+=======
+                     <li><a href=""><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
+                     <li><a href="#"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
+>>>>>>> d5b4e44a634822c89c31f34b53297ab231baaac4
                   </ul>
                </li>
             </ul>
@@ -252,6 +258,7 @@
             <ul class="treeview-menu">
                <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
                <li><a href="{{ route('distribuidor.marcas-disponibles') }}"><i class="fa fa-circle-o"></i> Marcas Disponibles</a></li>
+               <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Nueva Marca</a></li>
             </ul>
          </li>
          <li class="treeview">
@@ -280,8 +287,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="{{ route('demanda-producto.create') }}"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="{{ route('demanda-producto.index') }}"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-producto.create') }}"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
+                     <li><a href="{{ route('demanda-producto.index') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
                   </ul>
                </li>
                <li>
@@ -291,8 +298,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="#"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
+                     <li><a href="#"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
                   </ul>
                </li>
             </ul>
@@ -338,8 +345,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+                     <li><a href="#"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
+                     <li><a href="#"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
                   </ul>
                </li>
             </ul>

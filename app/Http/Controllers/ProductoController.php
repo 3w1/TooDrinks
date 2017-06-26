@@ -8,7 +8,7 @@ use App\Models\Pais;
 use App\Models\Provincia_Region;
 use App\Models\Clase_Bebida;
 use App\Models\Marca; use App\Models\Bebida;
-use App\Models\Productor;
+use App\Models\Productor; use App\Models\Notificacion_P;
 use DB; use Image; use Input; use Auth;
 
 class ProductoController extends Controller
@@ -82,6 +82,28 @@ class ProductoController extends Controller
         $producto = new Producto($request->all());
         $producto->imagen = $nombre;
         $producto->save();
+
+        $productor = DB::table('marca')
+                        ->select('productor_id', 'nombre')
+                        ->where('id', '=', $request->marca_id)
+                        ->get()
+                        ->first();
+
+        $ult_producto = DB::table('producto')
+                            ->select('id')
+                            ->orderBY('id', 'DESC')
+                            ->get()
+                            ->first();
+
+        if ( $productor->productor_id != '0'){
+            $notificaciones_productor = new Notificacion_P();
+            $notificaciones_productor->creador_id = session('perfilId');
+            $notificaciones_productor->tipo_creador = session('perfilTipo');
+            $notificaciones_productor->titulo = session('perfilNombre') . ' ha creado un producto en tu marca '. $productor->nombre;
+            $notificaciones_productor->url='producto/detalle-de-producto/'.$ult_producto->id;
+            $notificaciones_productor->productor_id = $productor->productor_id;
+            $notificaciones_productor->save();            
+        }
 
         if ($request->usuario == '1'){
             return redirect('producto')->with('msj', 'Su producto ha sido agregado exitosamente');

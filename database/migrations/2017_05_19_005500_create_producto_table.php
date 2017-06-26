@@ -24,7 +24,6 @@ class CreateProductoTable extends Migration
           $table->integer('creador_id');
           $table->boolean('publicado')->default(1);
           $table->boolean('confirmado')->default(0);
-          $table->integer('bebida_id');
           $table->timestamps();
 
             $table->foreign('pais_id')
