@@ -221,8 +221,13 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
+<<<<<<< HEAD
+                     <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
+                     <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
+=======
                      <li><a href=""><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
                      <li><a href="#"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
+>>>>>>> d5b4e44a634822c89c31f34b53297ab231baaac4
                   </ul>
                </li>
             </ul>

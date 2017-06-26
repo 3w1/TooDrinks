@@ -218,5 +218,4 @@ class DistribuidorController extends Controller
 
         return view('distribuidor.listados.ofertasDisponibles')->with(compact('ofertas'));
     }
-
 }

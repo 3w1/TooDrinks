@@ -81,6 +81,9 @@ Route::get('productor/ver-listado-importadores', 'ProductorController@listado_im
 
 Route::post('productor/updateAvatar', 'ProductorController@updateAvatar')->name('productor.updateAvatar');
 Route::resource('productor','ProductorController');
+
+
+Route::get('notificaciones', 'MailsController@notificaciones')->name('notificaciones');
 // ./RUTAS PARA LOS PRODUCTORES ./
 
 // RUTAS PARA LOS IMPORTADORES

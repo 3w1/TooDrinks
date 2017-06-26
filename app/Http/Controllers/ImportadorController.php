@@ -11,6 +11,7 @@ use App\Models\Productor;
 use App\Models\Oferta;
 use App\Models\Destino_Oferta;
 use App\Models\Demanda_Distribuidor; use App\Models\Demanda_Producto;
+use App\Models\Notificacion_P;
 use DB; use Auth; use Input; use Image;
 
 class ImportadorController extends Controller
@@ -156,12 +157,24 @@ class ImportadorController extends Controller
     }
 
     public function asociar_marca($id){
+        $fecha = new \DateTime();
+
         $marca = Marca::find($id);
 
         $marca->importadores()->attach(session('perfilId'), ['status' => '0']);
 
-        $url = ('importador/mis-marcas');
-        return redirect($url)->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
+        $notificaciones_productor = new Notificacion_P();
+        $notificaciones_productor->creador_id = session('perfilId');
+        $notificaciones_productor->tipo_creador = session('perfilTipo');
+        $notificaciones_productor->titulo = session('perfilNombre') . ' solicito importar tu marca '. $marca->nombre;
+        $notificaciones_productor->url='marca';
+        $notificaciones_productor->productor_id = $marca->productor_id;
+        $notificaciones_productor->save();
+        
+       /* $notificaciones_importador = DB::table('notificacion_p')->insertGetId(
+                                    ['id_creador' => session('perfilId'), 'id_usuario' => $marca->productor_id, 'titulo' => session('perfilNombre') . ' solicito importar tu marca '. $marca->nombre, 'url' => 'productor/confirmar-importadores' , 'fecha' => $fecha]);
+    */
+        return redirect('marca')->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
 
     }
 
