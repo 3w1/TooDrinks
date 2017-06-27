@@ -218,7 +218,7 @@ class CreditoController extends Controller
 
             $deduccion = new Deduccion_Credito_Productor();
             $deduccion->productor_id = session('perfilId');
-        }elseif (sesion('perfilTipo') == 'I'){
+        }elseif (session('perfilTipo') == 'I'){
             $act = DB::table('importador')
                     ->where('id', '=', session('perfilId'))
                     ->update(['saldo' => $saldo ]);

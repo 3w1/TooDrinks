@@ -104,10 +104,14 @@
     @endif
 
     <div class="form-group">
-    	@if (session('perfilSaldo') >= '25')
-			{!! Form::submit('Crear Oferta', ['class' => 'btn btn-primary']) !!}
+    	@if ( (session('perfilSuscripcion') == 'G') || (session('perfilSuscripcion') == 'B') )
+	    	@if (session('perfilSaldo') >= '25')
+				{!! Form::submit('Crear Oferta', ['class' => 'btn btn-primary']) !!}
+			@else
+				{!! Form::submit('Crear Oferta', ['class' => 'btn btn-primary', 'disabled']) !!}
+			@endif
 		@else
-			{!! Form::submit('Crear Oferta', ['class' => 'btn btn-primary', 'disabled']) !!}
+			{!! Form::submit('Crear Oferta', ['class' => 'btn btn-primary']) !!}
 		@endif
 	</div>
 		

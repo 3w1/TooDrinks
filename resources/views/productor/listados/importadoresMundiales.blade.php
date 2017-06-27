@@ -26,7 +26,7 @@
 		              		<ul class="nav nav-stacked">
 		             			<li class="active"><a><strong>País: </strong> {{ $importador->pais->pais }} </a></li>
 		             			<li class="active"><a><strong>Provincia: </strong> {{ $importador->provincia_region->provincia }} </a></li>
-					            <li class="active"><a class="btn btn-primary" href="" ><strong>¡¡Contactar!!</strong><i class="fa fa-check"></i> </a></li>
+					            <li class="active"><a class="btn btn-primary" href="{{ route('importador.show', $importador->id) }}" ><strong>¡¡Contactar!!</strong><i class="fa fa-check"></i> </a></li>
 					        </ul>
 		            	</div>
 		         	</div>

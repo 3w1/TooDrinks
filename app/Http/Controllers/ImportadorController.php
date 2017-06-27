@@ -161,21 +161,16 @@ class ImportadorController extends Controller
 
         $marca = Marca::find($id);
 
+        //Asociar importador a la marca
         $marca->importadores()->attach(session('perfilId'), ['status' => '0']);
+        // ... //
 
-        $notificaciones_productor = new Notificacion_P();
-        $notificaciones_productor->creador_id = session('perfilId');
-        $notificaciones_productor->tipo_creador = session('perfilTipo');
-        $notificaciones_productor->titulo = session('perfilNombre') . ' solicito importar tu marca '. $marca->nombre;
-        $notificaciones_productor->url='marca';
-        $notificaciones_productor->productor_id = $marca->productor_id;
-        $notificaciones_productor->save();
-        
-       /* $notificaciones_importador = DB::table('notificacion_p')->insertGetId(
-                                    ['id_creador' => session('perfilId'), 'id_usuario' => $marca->productor_id, 'titulo' => session('perfilNombre') . ' solicito importar tu marca '. $marca->nombre, 'url' => 'productor/confirmar-importadores' , 'fecha' => $fecha]);
-    */
-        return redirect('marca')->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
-
+        //Notificar al productor
+        $url = 'notificacion/notificar-productor/AIM/'.$marca->nombre.'/'.$marca->productor_id;
+        return redirect($url);
+        // ... //
+       
+        //return redirect('marca')->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
     }
 
     /*//FUNCION QUE LE PERMITE AL IMPORTADOR REGISTRAR UN PRODUCTO ASOCIADO A SU MARCA 

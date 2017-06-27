@@ -221,13 +221,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-<<<<<<< HEAD
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Crear Nueva</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Ver Mis Solicitudes</a></li>
-=======
-                     <li><a href=""><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
->>>>>>> d5b4e44a634822c89c31f34b53297ab231baaac4
+		            <li><a href=""><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
+                    <li><a href="#"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
                   </ul>
                </li>
             </ul>
@@ -240,7 +235,8 @@
             </a>
             <ul class="treeview-menu">
                <li><a href="{{ route('demanda-importador.demandas-disponibles') }}"><i class="fa fa-circle-o"></i> Importadores</a></li>
-               <li><a href="#"><i class="fa fa-circle-o"></i> Productos</a></li>
+               <li><a href="{{ route('demanda-producto.demandas-productos-importadores') }}"><i class="fa fa-circle-o"></i> Productos</a></li>
+               <li><a href="{{ route('demanda-producto.demandas-bebidas-importadores') }}"><i class="fa fa-circle-o"></i> Bebidas</a></li>
             </ul>
          </li>
          <li><a href="{{ route('importador.listado-distribuidores') }}"><i class="fa fa-circle-o"></i> Listado de Distribuidores</a></li>
@@ -313,7 +309,8 @@
             </a>
             <ul class="treeview-menu">
                <li><a href="{{ route('demanda-distribuidor.demandas-disponibles') }}"><i class="fa fa-circle-o"></i> Distribuidores</a></li>
-               <li><a href="#"><i class="fa fa-circle-o"></i> Productos</a></li>
+               <li><a href="{{ route('demanda-producto.demandas-productos-distribuidores') }}"><i class="fa fa-circle-o"></i> Productos</a></li>
+               <li><a href="{{ route('demanda-producto.demandas-bebidas-distribuidores') }}"><i class="fa fa-circle-o"></i> Bebidas</a></li>
             </ul>
          </li>
          <!-- FIN DE SECCIÓN DE DISTRIBUIDORES -->
@@ -346,7 +343,7 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
+                     <li><a href="{{ route('demanda-producto.create') }}"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
                      <li><a href="#"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
                   </ul>
                </li>

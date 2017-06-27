@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Demanda_Distribuidor;
 use App\Models\Producto;
 use App\Models\Pais; use App\Models\Provincia_Region;
+use App\Models\Notificacion_D;
 use DB;
 
 class DemandaDistribucionController extends Controller
@@ -83,6 +84,37 @@ class DemandaDistribucionController extends Controller
     {
         $demanda_distribuidor  = new Demanda_Distribuidor($request->all());
         $demanda_distribuidor ->save();
+
+        $marca = DB::table('marca')
+                    ->select('nombre')
+                    ->where('id', '=', $request->marca_id)
+                    ->first();
+
+        $distribuidores = DB::table('distribuidor')
+                        ->select('id')
+                        ->where('provincia_region_id', '=', $request->provincia_region_id)
+                        ->get();
+        $cont = 0;
+        foreach ($distribuidores as $distribuidor){
+            $cont++;
+        }
+
+        if ($cont > 0){
+            foreach ($distribuidores as $distribuidor){
+                $notificaciones_distribuidor = new Notificacion_D();
+                $notificaciones_distribuidor->creador_id = session('perfilId');
+                $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
+                if (session('perfilTipo') == 'P'){
+                    $notificaciones_distribuidor->titulo = 'Un productor está en la búsqueda de nuevos distribuidores para su marca '. $marca->nombre;
+                }else{
+                    $notificaciones_distribuidor->titulo = 'Un importador está en la búsqueda de nuevos distribuidores para su marca '. $marca->nombre;
+                }
+                
+                $notificaciones_distribuidor->url='demanda-distribuidor/demandas-disponibles';
+                $notificaciones_distribuidor->distribuidor_id = $distribuidor->id;
+                $notificaciones_distribuidor->save();
+            }
+        }
 
         return redirect('demanda-distribuidor')->with('msj', 'Su demanda de distribuidor ha sido creada exitosamente');
     }

@@ -42,7 +42,7 @@ class UsuarioController extends Controller
         if ($entidad[0] == 'P'){
             $productor = DB::table('productor')
                             ->where('id', '=', $entidad[1])
-                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
                             ->get()
                             ->first();
 
@@ -50,12 +50,14 @@ class UsuarioController extends Controller
             session(['perfilNombre' => $productor->nombre]);
             session(['perfilLogo' => $productor->logo]);
             session(['perfilSaldo' => $productor->saldo]);
+            session(['perfilPais' => $productor->pais_id]);
+            session(['perfilProvincia' => $productor->provincia_region_id]);
             session(['perfilTipo' => 'P']);
             session(['perfilSuscripcion' => $productor->tipo_suscripcion]);
         }elseif ($entidad[0] == 'I'){
             $importador = DB::table('importador')
                             ->where('id', '=', $entidad[1])
-                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
                             ->get()
                             ->first();
 
@@ -63,12 +65,14 @@ class UsuarioController extends Controller
             session(['perfilNombre' => $importador->nombre]);
             session(['perfilLogo' => $importador->logo]);
             session(['perfilSaldo' => $importador->saldo]);
+             session(['perfilPais' => $importador->pais_id]);
+            session(['perfilProvincia' => $importador->provincia_region_id]);
             session(['perfilTipo' => 'I']);
             session(['perfilSuscripcion' => $importador->tipo_suscripcion]);
         }elseif ($entidad[0] == 'D'){
             $distribuidor = DB::table('distribuidor')
                             ->where('id', '=', $entidad[1])
-                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
                             ->get()
                             ->first();
 
@@ -76,12 +80,14 @@ class UsuarioController extends Controller
             session(['perfilNombre' => $distribuidor->nombre]);
             session(['perfilLogo' => $distribuidor->logo]);
             session(['perfilSaldo' => $distribuidor->saldo]);
+            session(['perfilPais' => $distribuidor->pais_id]);
+            session(['perfilProvincia' => $distribuidor->provincia_region_id]);
             session(['perfilTipo' => 'D']);
             session(['perfilSuscripcion' => $distribuidor->tipo_suscripcion]);
         }elseif ($entidad[0] == 'H'){
             $horeca = DB::table('horeca')
                             ->where('id', '=', $entidad[1])
-                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id')
                             ->get()
                             ->first();
 
@@ -89,8 +95,9 @@ class UsuarioController extends Controller
             session(['perfilNombre' => $horeca->nombre]);
             session(['perfilLogo' => $horeca->logo]);
             session(['perfilSaldo' => $horeca->saldo]);
+            session(['perfilPais' => $horeca->pais_id]);
+            session(['perfilProvincia' => $horeca->provincia_region_id]);
             session(['perfilTipo' => 'H']);
-            session(['perfilSuscripcion' => $horeca->tipo_suscripcion]);
         }
 
         return redirect('usuario/inicio')->with('msj', 'Se ha cambiado de perfil exitosamente');
@@ -107,7 +114,7 @@ class UsuarioController extends Controller
         if ($user->productor == '1'){
             $productor = DB::table('productor')
                             ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
                             ->get()
                             ->first();
 
@@ -116,11 +123,13 @@ class UsuarioController extends Controller
             session(['perfilLogo' => $productor->logo]);
             session(['perfilSaldo' => $productor->saldo]);
             session(['perfilTipo' => 'P']);
+            session(['perfilPais' => $productor->pais_id]);
+            session(['perfilProvincia' => $productor->provincia_region_id]);
             session(['perfilSuscripcion' => $productor->tipo_suscripcion]);
         }elseif ($user->importador == '1'){
             $importador = DB::table('importador')
                             ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
                             ->get()
                             ->first();
 
@@ -129,11 +138,13 @@ class UsuarioController extends Controller
             session(['perfilLogo' => $importador->logo]);
             session(['perfilSaldo' => $importador->saldo]);
             session(['perfilTipo' => 'I']);
+            session(['perfilPais' => $importador->pais_id]);
+            session(['perfilProvincia' => $importador->provincia_region_id]);
             session(['perfilSuscripcion' => $importador->tipo_suscripcion]);
         }elseif ($user->distribuidor == '1'){
             $distribuidor = DB::table('distribuidor')
                             ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
                             ->get()
                             ->first();
 
@@ -142,11 +153,13 @@ class UsuarioController extends Controller
             session(['perfilLogo' => $distribuidor->logo]);
             session(['perfilSaldo' => $distribuidor->saldo]);
             session(['perfilTipo' => 'D']);
+            session(['perfilPais' => $distribuidor->pais_id]);
+            session(['perfilProvincia' => $distribuidor->provincia_region_id]);
             session(['perfilSuscripcion' => $distribuidor->tipo_suscripcion]);
         }elseif ($user->horeca == '1'){
             $horeca = DB::table('horeca')
                             ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id')
                             ->get()
                             ->first();
 
@@ -155,8 +168,8 @@ class UsuarioController extends Controller
             session(['perfilLogo' => $horeca->logo]);
             session(['perfilSaldo' => $horeca->saldo]);
             session(['perfilTipo' => 'H']);
-            session(['perfilSuscripcion' => $horeca->tipo_suscripcion]);
-
+            session(['perfilPais' => $horeca->pais_id]);
+            session(['perfilProvincia' => $horeca->provincia_region_id]);
         }
 
         return view('usuario.index');

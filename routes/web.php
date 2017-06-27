@@ -170,6 +170,16 @@ Route::get('demanda-producto/demandas-productos-productores', 'DemandaProductoCo
 Route::get('demanda-producto/demandas-bebidas-productores', 'DemandaProductoController@demandas_bebidas_productores')
 ->name('demanda-producto.demandas-bebidas-productores');
 
+Route::get('demanda-producto/demandas-productos-importadores', 'DemandaProductoController@demandas_productos_importadores')
+->name('demanda-producto.demandas-productos-importadores');
+Route::get('demanda-producto/demandas-bebidas-importadores', 'DemandaProductoController@demandas_bebidas_importadores')
+->name('demanda-producto.demandas-bebidas-importadores');
+
+Route::get('demanda-producto/demandas-productos-distribuidores', 'DemandaProductoController@demandas_productos_distribuidores')
+->name('demanda-producto.demandas-productos-distribuidores');
+Route::get('demanda-producto/demandas-bebidas-distribuidores', 'DemandaProductoController@demandas_bebidas_distribuidores')
+->name('demanda-producto.demandas-bebidas-distribuidores');
+
 Route::resource('demanda-producto','DemandaProductoController');
 // ./RUTAS PARA LAS DEMANDAS DE PRODUCTOS ./
 
@@ -190,7 +200,11 @@ Route::get('credito/gastar-creditos-dp/{cant}/{id}', 'CreditoController@gastar_c
 ->name('credito.gastar-creditos-dp');
 
 Route::resource('credito','CreditoController');
-// ./RUTAS PARA LAS CRÉDITOS ./
+// ./RUTAS PARA LOS CRÉDITOS ./
+
+// RUTAS PARA LAS NOTIFICACIONES
+Route::get('notificacion/notificar-productor/{tipo}/{descripcion}/{id}', 'NotificacionController@notificar_p')->name('notificar_p');
+// ./RUTAS PARA LAS NOTIFICACIONES ./
 
 Route::resource('suscripcion', 'SuscripcionController');
 

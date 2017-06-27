@@ -7,6 +7,7 @@ use App\Models\Demanda_Importador;
 use App\Models\Producto;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
+use App\Models\Notificacion_I;
 use DB;
 
 class DemandaImportacionController extends Controller
@@ -68,9 +69,35 @@ class DemandaImportacionController extends Controller
 
     public function store(Request $request)
     {
-        $demanda_importador  = new Demanda_Importador($request->all());
-        $demanda_importador ->save();
+        $demanda_importador = new Demanda_Importador($request->all());
+        $demanda_importador->save();
 
+        $marca = DB::table('marca')
+                    ->select('nombre')
+                    ->where('id', '=', $request->marca_id)
+                    ->first();
+
+        $importadores = DB::table('importador')
+                        ->select('id')
+                        ->where('pais_id', '=', $request->pais_id)
+                        ->get();
+        $cont = 0;
+        foreach ($importadores as $importador){
+            $cont++;
+        }
+
+        if ($cont > 0){
+            foreach ($importadores as $importador){
+                $notificaciones_importador = new Notificacion_I();
+                $notificaciones_importador->creador_id = session('perfilId');
+                $notificaciones_importador->tipo_creador = session('perfilTipo');
+                $notificaciones_importador->titulo = 'Un productor está en la búsqueda de nuevos importadores para su marca '. $marca->nombre;
+                $notificaciones_importador->url='demanda-importador/demandas-disponibles';
+                $notificaciones_importador->importador_id = $importador->id;
+                $notificaciones_importador->save();
+            }
+        }
+        
         return redirect('demanda-importador')->with('msj', 'Su demanda de importador ha sido creada exitosamente');    
     }
 

@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Oferta;
 use App\Models\Producto;
 use App\Models\Pais;
-use App\Models\Provincia_Region;
-use App\Models\Destino_Oferta;
+use App\Models\Provincia_Region; use App\Models\Destino_Oferta;
+use App\Models\Notificacion_I; use App\Models\Notificacion_D; use App\Models\Notificacion_H;
 use DB;
 
 
@@ -103,6 +103,80 @@ class OfertaController extends Controller
                 $destino->pais_id = $request->pais_id;
                 $destino->provincia_region_id = $provincia->id;
                 $destino->save();
+            }
+        }
+
+        $producto = DB::table('producto')
+                    ->select('nombre')
+                    ->where('id', '=', $request->producto_id)
+                    ->first();
+
+        if ($request->visible_importadores == '1'){
+            $importadores = DB::table('importador')
+                                ->select('id')
+                                ->where('pais_id', '=', $request->pais_id)
+                                ->get();
+            $cont=0;
+            foreach ($importadores as $importador){
+                $cont++;
+            }
+
+            if ($cont > 0){
+                foreach ($importadores as $importador){
+                    $notificaciones_importador = new Notificacion_I();
+                    $notificaciones_importador->creador_id = session('perfilId');
+                    $notificaciones_importador->tipo_creador = session('perfilTipo');
+                    $notificaciones_importador->titulo = 'Hay una nueva oferta disponible de '.$producto->nombre.' para tu país.';
+                    $notificaciones_importador->url='oferta/'.$ult_oferta->id;
+                    $notificaciones_importador->importador_id = $importador->id;
+                    $notificaciones_importador->save();   
+                }        
+            }
+        }
+
+        if ($request->visible_distribuidores == '1'){
+            $distribuidores = DB::table('distribuidor')
+                                ->select('id')
+                                ->where('pais_id', '=', $request->pais_id)
+                                ->get();
+            $cont=0;
+            foreach ($distribuidores as $distribuidor){
+                $cont++;
+            }
+
+            if ($cont > 0){
+                foreach ($distribuidores as $distribuidor){
+                    $notificaciones_distribuidor = new Notificacion_D();
+                    $notificaciones_distribuidor->creador_id = session('perfilId');
+                    $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
+                    $notificaciones_distribuidor->titulo = 'Hay una nueva oferta disponible de '.$producto->nombre.' para tu país.';
+                    $notificaciones_distribuidor->url='oferta/'.$ult_oferta->id;
+                    $notificaciones_distribuidor->distribuidor_id = $distribuidor->id;
+                    $notificaciones_distribuidor->save();   
+                }        
+            }
+        }
+
+        if ($request->visible_horecas == '1'){
+            $horecas = DB::table('horeca')
+                                ->select('id')
+                                ->where('pais_id', '=', $request->pais_id)
+                                ->get();
+            $cont=0;
+            foreach ($horecas as $horeca){
+                $cont++;
+            }
+
+            if ($cont > 0){
+                foreach ($horecas as $horeca){
+                    $notificaciones_horeca = new Notificacion_H();
+                    $notificaciones_horeca->creador_id = session('perfilId');
+                    $notificaciones_horeca->tipo_creador = session('perfilTipo');
+                    $notificaciones_horeca->titulo = 'Hay una nueva oferta disponible de '.$producto->nombre.' para tu país.';
+                    $notificaciones_horeca->url='oferta/'.$ult_oferta->id;
+                    $notificaciones_horeca->horeca_id = $horeca->id;
+                    $notificaciones_horeca->save();   
+                }        
             }
         }
 

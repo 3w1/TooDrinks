@@ -169,7 +169,7 @@ class ProductorController extends Controller
         }
 
         $importadores = Importador::orderBy('nombre')
-                            ->select('nombre', 'pais_id', 'provincia_region_id', 'logo', 'persona_contacto')
+                            ->select('id', 'nombre', 'pais_id', 'provincia_region_id', 'logo', 'persona_contacto')
                             ->paginate(6);
 
         return view('productor.listados.importadoresMundiales')->with(compact('importadores', 'check'));
@@ -189,7 +189,7 @@ class ProductorController extends Controller
     public function confirmar_importador($id, $tipo, $imp){
         $fecha = new \DateTime();
 
-          $id_marca = DB::table('importador_marca')
+        $id_marca = DB::table('importador_marca')
          -> select('marca_id')
                         ->where('id','=', $id)
                         -> get()->first();
