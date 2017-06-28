@@ -1,48 +1,41 @@
 @extends('plantillas.main')
-@section('title', 'Planes de Créditos')
-@section('content-left')
-	<div class="box">
-		<div class="box-header">
-			<h3 class="box-title">Planes de Crédito</h3>
+@section('title', 'Planes de Crédito')
 
-			<div class="box-tools">
-                <div class="input-group input-group-sm" style="width: 150px;">
-                	<input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
-                  	<div class="input-group-btn">
-                    	<button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                  	</div>
-                </div>
-            </div>
-		</div>
-
-		<div class="box-body table-responsive no-padding">
-			<table class='table table-condensed table-hover'>
-				<thead>
-					<th><center>Nombre del Plan</th>
-					<th><center>Cantidad de Créditos</th>
-					<th><center>Precio</th>
-					<th><center>Descripción del Plan</th>
-					<th></th>
-					<th></th>
-				</thead>
-				<tbody>
-					@foreach ($creditos as $credito)
-						<tr>
-							<td><center>{{ $credito->plan }}</td>
-							<td><center>{{ $credito->cantidad_creditos }}</td>
-							<td><center>{{ $credito->precio }}</td>
-							<td><center>{{ $credito->descripcion }}</td>
-							<td><center><a class="btn btn-primary" href="{{ route('credito.edit', $credito->id ) }}"><i class="fa fa-edit"></i></a></td>
-							<td><center> 
-								{!! Form::open(['route' => ['credito.destroy', $credito->id], 'method' => 'DELETE']) !!}
-									<button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
-								{!! Form::close() !!}
-							</td>
-						</tr>
-					@endforeach
-				</tbody>
-			</table>
-		</div>
-	</div>
-	{!! $creditos->render() !!}
+@section('items')
+  @if (Session::has('msj'))
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+        </div>
+    @endif
+  <span><strong><h3>Planes de Crédito</h3></strong></span>
 @endsection
+
+@section('content-left')
+   <div class="row">
+      @foreach($creditos as $credito)         
+         <div class="col-md-4 col-xs-6">
+            <div class="thumbnail">
+               <img src="{{ asset('imagenes/monedas.jpg') }}" >
+               <div class="caption">
+                  |	<h3>{{ $credito->plan }}</h3>
+                  	<p>{{ $credito->descripcion }}</p>
+                  	<ul class="nav nav-stacked">
+                     	<li><a><strong>Cantidad de créditos: </strong> {{ $credito->cantidad_creditos }} $</a></li>
+                     	<li><a><strong>Precio: </strong> {{ $credito->precio }} $</a></li>
+                  	</ul>
+                  	<p>
+                     	<a href="{{ route('credito.compra', $credito->id) }}" class="btn btn-primary" role="button">Comprar</a>
+                  	</p>
+               </div>
+            </div>
+         </div>
+      @endforeach
+   </div>
+   <div>
+      <center>{{ $creditos->render() }}</center>
+   </div>
+@endsection
+
+
+

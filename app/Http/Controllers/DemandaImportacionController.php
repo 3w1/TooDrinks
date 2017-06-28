@@ -69,6 +69,8 @@ class DemandaImportacionController extends Controller
 
     public function store(Request $request)
     {
+        $fecha = new \DateTime();
+        
         $demanda_importador = new Demanda_Importador($request->all());
         $demanda_importador->save();
 
@@ -94,6 +96,10 @@ class DemandaImportacionController extends Controller
                 $notificaciones_importador->titulo = 'Un productor está en la búsqueda de nuevos importadores para su marca '. $marca->nombre;
                 $notificaciones_importador->url='demanda-importador/demandas-disponibles';
                 $notificaciones_importador->importador_id = $importador->id;
+                $notificaciones_importador->descripcion = 'Demanda de Importador';
+                $notificaciones_importador->color = 'bg-orange';
+                $notificaciones_importador->icono = 'fa fa-handshake-o';
+                $notificaciones_importador->fecha = $fecha;
                 $notificaciones_importador->save();
             }
         }
@@ -103,7 +109,15 @@ class DemandaImportacionController extends Controller
 
     public function show($id)
     {
-        //
+        $producto = DB::table('producto')
+                    ->orderBy('nombre', 'ASC')
+                    ->select('id', 'nombre')
+                    ->where('id', '=', $id)
+                    ->first();
+
+        return response()->json(
+            $producto->toArray()
+        );
     }
 
     public function edit($id)
@@ -140,5 +154,10 @@ class DemandaImportacionController extends Controller
     public function destroy($id)
     {
        
+    }
+
+    public function solicitar_importacion()
+    {
+        return view('demandaImportacion.solicitarImportacion');  
     }
 }

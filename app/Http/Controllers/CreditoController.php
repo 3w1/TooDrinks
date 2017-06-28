@@ -40,7 +40,7 @@ class CreditoController extends Controller
 
     public function show($id)
     {
-       $credito = Credito::all();
+        $credito = Credito::all();
         return view ('credito.show')->with(compact('credito'));
     }
 
@@ -70,67 +70,88 @@ class CreditoController extends Controller
 
     public function compra($id)
     {  
-
-        $fecha = new \DateTime();
-        //echo $now->format(' H:i:s');
-
-        $idusuario = Auth::user()->id;
-
         $credito = DB::table('credito')
-                          ->where('id', $id)->get()->first();
+                          ->where('id', $id)
+                          ->first();
 
-
-        if(Auth::user()->productor==true){  
-
+        if (session('perfilTipo') == 'P'){
             $saldo = DB::table('productor')
                             ->select('saldo')
-                            ->where('user_id', $idusuario)->get()->first();
+                            ->where('id', '=', session('perfilId'))
+                            ->first();
+
+            $saldoNuevo = $saldo->saldo + $credito->cantidad_creditos;
 
             $actualizacion_saldo = DB::table('productor')
-                                ->where('user_id', '=', $idusuario)
-                                ->update(['saldo' =>$saldo->saldo+$credito->cantidad_creditos]);
+                                    ->where('id', '=', session('perfilId'))
+                                    ->update(['saldo' => $saldoNuevo]);
 
+            session(['perfilSaldo' => $saldoNuevo]);
+
+            //Insertar en la tabla relacion
             $historial_compras = DB::table('productor_credito')->insertGetId(
-                                        ['credito_id' => $id, 'productor_id' => 11, 'total' => $credito->precio, 'fecha_compra' => $fecha]);    
-
-        }
-
-        if(Auth::user()->importador==true){
-
-             $saldo = DB::table('importador')
+                                        ['credito_id' => $id, 'productor_id' => session('perfilId'), 'total' => $credito->precio]);    
+            // ... //
+        }elseif (sesion('perfilTipo') == 'I'){
+            $saldo = DB::table('importador')
                             ->select('saldo')
-                            ->where('user_id', $idusuario)->get()->first();
+                            ->where('id', '=', session('perfilId'))
+                            ->first();
+
+            $saldoNuevo = $saldo + $credito->cantidad_creditos;
 
             $actualizacion_saldo = DB::table('importador')
-                                ->where('user_id', '=', $idusuario)
-                                ->update(['saldo' =>$saldo->saldo+$credito->cantidad_creditos]);
+                                    ->where('id', '=', session('perfilId'))
+                                    ->update(['saldo' => $saldoNuevo]);
 
+            session(['perfilSaldo' => $saldoNuevo]);
+
+            //Insertar en la tabla relacion
             $historial_compras = DB::table('importador_credito')->insertGetId(
-                                        ['credito_id' => $id, 'importador_id' => 11, 'total' => $credito->precio, 'fecha_compra' => $fecha]);
-
-        }
-
-        if(Auth::user()->distribuidor==true){
-
-             $saldo = DB::table('distribuidor')
+                                        ['credito_id' => $id, 'importador_id' => session('perfilId'), 'total' => $credito->precio]);    
+            // ... //
+        }elseif (session('perfilTipo') == 'D'){
+            $saldo = DB::table('distribuidor')
                             ->select('saldo')
-                            ->where('user_id', $idusuario)->get()->first();
+                            ->where('id', '=', session('perfilId'))
+                            ->first();
+
+            $saldoNuevo = $saldo + $credito->cantidad_creditos;
 
             $actualizacion_saldo = DB::table('distribuidor')
-                                ->where('user_id', '=', $idusuario)
-                                ->update(['saldo' =>$saldo->saldo+$credito->cantidad_creditos]);
+                                    ->where('id', '=', session('perfilId'))
+                                    ->update(['saldo' => $saldoNuevo]);
 
-             $historial_compras = DB::table('distribuidor_credito')->insertGetId(
-                                        ['credito_id' => $id, 'idistribuidor_id' => 11, 'total' => $credito->precio, 'fecha_compra' => $fecha]);
+            session(['perfilSaldo' => $saldoNuevo]);
+
+            //Insertar en la tabla relacion
+            $historial_compras = DB::table('distribuidor_credito')->insertGetId(
+                                        ['credito_id' => $id, 'distribuidor_id' => session('perfilId'), 'total' => $credito->precio]);    
+            // ... //
+        }elseif (session('perfilTipo') == 'H'){
+            $saldo = DB::table('horeca')
+                            ->select('saldo')
+                            ->where('id', '=', session('perfilId'))
+                            ->first();
+
+            $saldoNuevo = $saldo + $credito->cantidad_creditos;
+
+            $actualizacion_saldo = DB::table('horeca')
+                                    ->where('id', '=', session('perfilId'))
+                                    ->update(['saldo' => $saldoNuevo]);
+
+            session(['perfilSaldo' => $saldoNuevo]);
+
+            //Insertar en la tabla relacion
+            $historial_compras = DB::table('horeca_credito')->insertGetId(
+                                        ['credito_id' => $id, 'horeca_id' => session('perfilId'), 'total' => $credito->precio]);    
+            // ... //
         }
 
-        $factura=PDF::loadview('credito.FacturaCredito',['credito'=>$credito]);
-        return $factura->stream('factura_credito.pdf');
+        return redirect('usuario/inicio')->with('msj', 'Su plan de crédito ha sido agregado exitosamente');
+       // $factura=PDF::loadview('credito.FacturaCredito',['credito'=>$credito]);
+        //return $factura->stream('factura_credito.pdf');
            //return $pdf->download('prueba.pdf');
-    }
-
-    public function generar_factura(){
-        
     }
 
     public function gastar_creditos_CO($cant, $id){

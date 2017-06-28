@@ -35,6 +35,8 @@ class NotificacionController extends Controller
     }
 
     public function notificar_p($tipo, $descripcion, $productor_id){
+        $fecha = new \DateTime();
+
     	$notificaciones_productor = new Notificacion_P();
         $notificaciones_productor->creador_id = session('perfilId');
         $notificaciones_productor->tipo_creador = session('perfilTipo');
@@ -45,18 +47,21 @@ class NotificacionController extends Controller
             $notificaciones_productor->descripcion = 'Demanda de Producto';
             $notificaciones_productor->color = 'bg-aqua';
             $notificaciones_productor->icono = 'fa fa-clipboard';
+            $notificaciones_productor->fecha = $fecha;
         }elseif ($tipo == 'AI'){
             $notificaciones_productor->titulo = session('perfilNombre') . ' ha indicado que importa tu marca '. $descripcion;
             $notificaciones_productor->url='productor/confirmar-importadores';
             $notificaciones_productor->descripcion = 'Nuevo Importador';
             $notificaciones_productor->color = 'bg-blue';
             $notificaciones_productor->icono = 'fa fa-hand-pointer-o';
+            $notificaciones_productor->fecha = $fecha;
         }elseif($tipo =='AD'){
             $notificaciones_productor->titulo = session('perfilNombre') . ' ha indicado que distribuye tu marca '. $descripcion;
             $notificaciones_productor->url='productor/confirmar-distribuidores';
             $notificaciones_productor->descripcion = 'Nuevo Distribuidor';
             $notificaciones_productor->color = 'bg-red';
             $notificaciones_productor->icono = 'fa fa-hand-pointer-o';
+            $notificaciones_productor->fecha = $fecha;
         }
         
         $notificaciones_productor->productor_id = $productor_id;

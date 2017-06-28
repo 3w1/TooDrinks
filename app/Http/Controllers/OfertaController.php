@@ -68,6 +68,8 @@ class OfertaController extends Controller
 
     public function store(Request $request)
     {
+        $fecha = new \DateTime();
+
         if ( (session('perfilSuscripcion') == 'G') || (session('perfilSuscripcion') == 'B') ){
             $creditos = 1;
         }else{
@@ -129,9 +131,10 @@ class OfertaController extends Controller
                     $notificaciones_importador->titulo = 'Hay una nueva oferta disponible de '.$producto->nombre.' para tu país.';
                     $notificaciones_importador->url='oferta/'.$ult_oferta->id;
                     $notificaciones_importador->importador_id = $importador->id;
-                    $notificaciones_productor->descripcion = 'Nueva Oferta';
-                    $notificaciones_productor->color = 'bg-purple';
-                    $notificaciones_productor->icono = 'fa fa-asterisk';
+                    $notificaciones_importador->descripcion = 'Nueva Oferta';
+                    $notificaciones_importador->color = 'bg-purple';
+                    $notificaciones_importador->icono = 'fa fa-asterisk';
+                    $notificaciones_importador->fecha = $fecha;
                     $notificaciones_importador->save();   
                 }        
             }
@@ -155,9 +158,10 @@ class OfertaController extends Controller
                     $notificaciones_distribuidor->titulo = 'Hay una nueva oferta disponible de '.$producto->nombre.' para tu país.';
                     $notificaciones_distribuidor->url='oferta/'.$ult_oferta->id;
                     $notificaciones_distribuidor->distribuidor_id = $distribuidor->id;
-                    $notificaciones_productor->descripcion = 'Nueva Oferta';
-                    $notificaciones_productor->color = 'bg-purple';
-                    $notificaciones_productor->icono = 'fa fa-asterisk';
+                    $notificaciones_distribuidor->descripcion = 'Nueva Oferta';
+                    $notificaciones_distribuidor->color = 'bg-purple';
+                    $notificaciones_distribuidor->icono = 'fa fa-asterisk';
+                    $notificaciones_distribuidor->fecha = $fecha;
                     $notificaciones_distribuidor->save();   
                 }        
             }
@@ -181,9 +185,10 @@ class OfertaController extends Controller
                     $notificaciones_horeca->titulo = 'Hay una nueva oferta disponible de '.$producto->nombre.' para tu país.';
                     $notificaciones_horeca->url='oferta/'.$ult_oferta->id;
                     $notificaciones_horeca->horeca_id = $horeca->id;
-                    $notificaciones_productor->descripcion = 'Nueva Oferta';
-                    $notificaciones_productor->color = 'bg-purple';
-                    $notificaciones_productor->icono = 'fa fa-asterisk';
+                    $notificaciones_horeca->descripcion = 'Nueva Oferta';
+                    $notificaciones_horeca->color = 'bg-purple';
+                    $notificaciones_horeca->icono = 'fa fa-asterisk';
+                    $notificaciones_horeca->fecha = $fecha;
                     $notificaciones_horeca->save();   
                 }        
             }

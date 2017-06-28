@@ -66,7 +66,7 @@
          </li>
       <li><a href=""><i class="fa fa-circle-o"></i> Opiniones</a></li>
       <li><a href=""><i class="fa fa-circle-o"></i> Banners Publicitarios</a></li>
-      <li><a href=""><i class="fa fa-circle-o"></i> Planes de Crédito</a></li>
+      <li><a href="{{ route('credito.index') }}"><i class="fa fa-circle-o"></i> Planes de Crédito</a></li>
 
       @if(session('perfilTipo') == 'P')
          <li class="header">Opciones de Productor</li>
@@ -344,7 +344,7 @@
                   </a>
                   <ul class="treeview-menu">
                      <li><a href="{{ route('demanda-producto.create') }}"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
+                     <li><a href="{{ route('demanda-producto.index') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
                   </ul>
                </li>
             </ul>

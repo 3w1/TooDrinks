@@ -142,6 +142,8 @@ Route::get('producto/agregar/{id}-{marca}', 'ProductoController@agregar')->name(
 Route::get('producto/listado-de-productos/{id}-{marca}', 'ProductoController@listado')->name('producto.listado');
 Route::get('producto/detalle-de-producto/{id}', 'ProductoController@detalle')->name('producto.detalle');
 
+Route::get('producto/buscar/{nombre}', 'ProductoController@buscar')->name('producto.buscar');
+
 Route::post('producto/updateImagen', 'ProductoController@updateImagen')->name('producto.updateImagen');
 Route::resource('producto','ProductoController');
 // ./RUTAS PARA LOS PRODUCTOS ./
@@ -155,6 +157,9 @@ Route::resource('oferta','OfertaController');
 // RUTAS PARA LAS DEMANDAS DE IMPORTADORES
 Route::get('demanda-importador/demandas-disponibles', 'DemandaImportacionController@demandas_disponibles')
 ->name('demanda-importador.demandas-disponibles');
+
+Route::get('demanda-importador/solicitar-importacion', 'DemandaImportacionController@solicitar_importacion')
+->name('demanda-importador.solicitar-importacion');
 
 Route::resource('demanda-importador','DemandaImportacionController');
 // ./RUTAS PARA LAS DEMANDAS DE IMPORTADORES ./
@@ -186,7 +191,7 @@ Route::resource('demanda-producto','DemandaProductoController');
 // ./RUTAS PARA LAS DEMANDAS DE PRODUCTOS ./
 
 // RUTAS PARA LOS CRÉDITOS
-Route::get('credito/compra/{id}','CreditoController@compra')->name('compra');
+Route::get('credito/compra/{id}','CreditoController@compra')->name('credito.compra');
 Route::get('credito/generar_factura','CreditoController@generar_factura')->name('credito.generar-factura');
 
 Route::get('credito/gastar-creditos-co/{cant}/{id}', 'CreditoController@gastar_creditos_CO')

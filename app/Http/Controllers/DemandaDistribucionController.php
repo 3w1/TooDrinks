@@ -82,6 +82,8 @@ class DemandaDistribucionController extends Controller
 
     public function store(Request $request)
     {
+        $fecha = new \DateTime();
+        
         $demanda_distribuidor  = new Demanda_Distribuidor($request->all());
         $demanda_distribuidor ->save();
 
@@ -112,6 +114,10 @@ class DemandaDistribucionController extends Controller
                 
                 $notificaciones_distribuidor->url='demanda-distribuidor/demandas-disponibles';
                 $notificaciones_distribuidor->distribuidor_id = $distribuidor->id;
+                $notificaciones_distribuidor->descripcion = 'Demanda de Distribuidor';
+                $notificaciones_distribuidor->color = 'bg-green';
+                $notificaciones_distribuidor->icono = 'fa fa-handshake-o';
+                $notificaciones_distribuidor->fecha = $fecha;
                 $notificaciones_distribuidor->save();
             }
         }
