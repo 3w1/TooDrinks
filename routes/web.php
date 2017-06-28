@@ -83,7 +83,9 @@ Route::post('productor/updateAvatar', 'ProductorController@updateAvatar')->name(
 Route::resource('productor','ProductorController');
 
 
-Route::get('notificaciones', 'MailsController@notificaciones')->name('notificaciones');
+Route::get('notificaciones_productor', 'MailsController@notificaciones_productor')->name('notificaciones');
+Route::get('notificaciones_importador', 'MailsController@notificaciones_importador')->name('notificaciones');
+Route::get('notificaciones_distribuidor', 'MailsController@notificaciones_distribuidor')->name('notificaciones');
 // ./RUTAS PARA LOS PRODUCTORES ./
 
 // RUTAS PARA LOS IMPORTADORES

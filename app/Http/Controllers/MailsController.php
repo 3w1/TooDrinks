@@ -96,25 +96,85 @@ class MailsController extends Controller
         //
     }
 
-        public function notificaciones()
+        public function notificaciones_Productor()
     {
          $fecha = new \DateTime();
 
          $notificaciones_del_dia = DB::table('notificacion_p')
-         -> select('id_usuario')
+         -> select('productor_id')
                         ->where('fecha','=', $fecha)
-                        ->groupBy ('id_usuario')  -> get();
+                        ->groupBy ('productor_id')  -> get();
 
           foreach ($notificaciones_del_dia as $notificacion) {
                      $notificacion_por_usuario = DB::table('notificacion_p')
                         ->where('fecha', '=', $fecha)
-                        ->where('id_usuario','=', $notificacion->id_usuario)
+                        ->where('productor_id','=', $notificacion->productor_id)
                         -> get();
                      $notificaciones = $notificacion_por_usuario->toArray();
 
                         $usuario = DB::table('productor')
                         ->select('email')
-                        ->where('id', '=', $notificacion->id_usuario)
+                        ->where('id', '=', $notificacion->productor_id)
+                        -> get()->first();
+                         $user=$usuario->email;
+
+                      Mail::send('emails.notificaciones',['notificaciones'=>$notificaciones], function($msj) use ($user) {
+                                $msj->subject('TooDrinks. Notificaciones del Dia.');
+                                $msj->to($user);
+                            });
+
+                }
+            }
+
+    public function notificaciones_Importador()
+    {
+         $fecha = new \DateTime();
+
+         $notificaciones_del_dia = DB::table('notificacion_i')
+         -> select('importador_id')
+                        ->where('fecha','=', $fecha)
+                        ->groupBy ('importador_id')  -> get();
+
+          foreach ($notificaciones_del_dia as $notificacion) {
+                     $notificacion_por_usuario = DB::table('notificacion_i')
+                        ->where('fecha', '=', $fecha)
+                        ->where('importador_id','=', $notificacion->importador_id)
+                        -> get();
+                     $notificaciones = $notificacion_por_usuario->toArray();
+
+                        $usuario = DB::table('importador')
+                        ->select('email')
+                        ->where('id', '=', $notificacion->importador_id)
+                        -> get()->first();
+                         $user=$usuario->email;
+
+                      Mail::send('emails.notificaciones',['notificaciones'=>$notificaciones], function($msj) use ($user) {
+                                $msj->subject('TooDrinks. Notificaciones del Dia.');
+                                $msj->to($user);
+                            });
+
+                }
+            }
+
+        public function notificaciones_distribuidor()
+    {
+         $fecha = new \DateTime();
+
+         $notificaciones_del_dia = DB::table('notificacion_d')
+         -> select('distribuidor_id')
+                        ->where('fecha','=', $fecha)
+                        ->groupBy ('distribuidor_id')  -> get();
+
+          foreach ($notificaciones_del_dia as $notificacion) {
+                     $notificacion_por_usuario = DB::table('notificacion_d')
+                        ->where('fecha', '=', $fecha)
+                        ->where('distribuidor_id','=', $notificacion->distribuidor_id)
+                        -> get();
+                     $notificaciones = $notificacion_por_usuario->toArray();
+
+                        $usuario = DB::table('distribuidor')
+                        ->select('email')
+                        ->where('id', '=', $notificacion->distribuidor_id)
                         -> get()->first();
                          $user=$usuario->email;
 
@@ -125,9 +185,6 @@ class MailsController extends Controller
 
                 }
 
-       
-
-      
     }
 
 
