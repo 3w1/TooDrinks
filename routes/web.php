@@ -204,6 +204,8 @@ Route::resource('credito','CreditoController');
 
 // RUTAS PARA LAS NOTIFICACIONES
 Route::get('notificacion/notificar-productor/{tipo}/{descripcion}/{id}', 'NotificacionController@notificar_p')->name('notificar_p');
+
+Route::resource('notificacion', 'NotificacionController');
 // ./RUTAS PARA LAS NOTIFICACIONES ./
 
 Route::resource('suscripcion', 'SuscripcionController');

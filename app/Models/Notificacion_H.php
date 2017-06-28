@@ -9,7 +9,7 @@ class Notificacion_H extends Model
      protected $table = "notificacion_h";
 
     protected $fillable = [
-        'creador_id', 'tipo_creador', 'horeca_id', 'titulo', 'url', 
+        'creador_id', 'tipo_creador', 'horeca_id', 'titulo', 'url', 'descripcion', 'color', 'icono',
     ];
 
     public function horeca(){

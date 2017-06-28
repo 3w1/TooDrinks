@@ -166,7 +166,7 @@ class ImportadorController extends Controller
         // ... //
 
         //Notificar al productor
-        $url = 'notificacion/notificar-productor/AIM/'.$marca->nombre.'/'.$marca->productor_id;
+        $url = 'notificacion/notificar-productor/AI/'.$marca->nombre.'/'.$marca->productor_id;
         return redirect($url);
         // ... //
        

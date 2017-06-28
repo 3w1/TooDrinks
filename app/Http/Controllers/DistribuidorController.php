@@ -156,7 +156,7 @@ class DistribuidorController extends Controller
         $marca->distribuidores()->attach(session('perfilId'), ['status' => '0']);
 
         //Notificar al productor
-        $url = 'notificacion/notificar-productor/ADM/'.$marca->nombre.'/'.$marca->productor_id;
+        $url = 'notificacion/notificar-productor/AD/'.$marca->nombre.'/'.$marca->productor_id;
         return redirect($url);
         // ... //
     }

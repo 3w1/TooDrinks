@@ -100,8 +100,11 @@ class ProductoController extends Controller
             $notificaciones_productor->creador_id = session('perfilId');
             $notificaciones_productor->tipo_creador = session('perfilTipo');
             $notificaciones_productor->titulo = session('perfilNombre') . ' ha creado un producto en tu marca '. $productor->nombre;
-            $notificaciones_productor->url='producto/detalle-de-producto/'.$ult_producto->id;
+            $notificaciones_productor->url='productor/confirmar-productos/';
             $notificaciones_productor->productor_id = $productor->productor_id;
+            $notificaciones_productor->descripcion = 'Nuevo Producto';
+            $notificaciones_productor->color = 'bg-yellow';
+            $notificaciones_productor->icono = 'fa fa-plus-square-o';
             $notificaciones_productor->save();            
         }
 

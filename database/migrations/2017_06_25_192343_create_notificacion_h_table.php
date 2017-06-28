@@ -20,6 +20,9 @@ class CreateNotificacionHTable extends Migration
             $table->integer('horeca_id');
             $table->string('titulo');
             $table->string('url');
+            $table->string('descripcion');
+            $table->string('color');
+            $table->string('icono');
             $table->timestamps();
 
              $table->foreign('horeca_id')

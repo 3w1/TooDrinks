@@ -20,6 +20,9 @@ class CreateNotificacionPTable extends Migration
             $table->integer('productor_id');
             $table->string('titulo');
             $table->string('url');
+            $table->string('descripcion');
+            $table->string('color');
+            $table->string('icono');
             $table->timestamps();
 
             $table->foreign('productor_id')

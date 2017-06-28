@@ -8,9 +8,6 @@
    <div class="navbar-custom-menu">
       <ul class="nav navbar-nav">
 
-         <!-- DROPDOWN DE MENSAJES-->
-         @include('plantillas.partes.subpartes.dropdownMensajes')
-         <!-- DROPDOWN DE MENSAJES-->
 
          <!-- DROPDOWN DE NOTIFICACIONES -->
          @include('plantillas.partes.subpartes/dropdownNotificaciones')

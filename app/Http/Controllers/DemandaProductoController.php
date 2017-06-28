@@ -198,6 +198,9 @@ class DemandaProductoController extends Controller
                         $notificaciones_importador->titulo = 'Estan solicitando tu producto '. $producto->nombre;
                         $notificaciones_importador->url='demanda-producto/demandas-productos-importadores';
                         $notificaciones_importador->importador_id = $importador->importador_id;
+                        $notificaciones_productor->descripcion = 'Demanda de Producto';
+                        $notificaciones_productor->color = 'bg-aqua';
+                        $notificaciones_productor->icono = 'fa fa-clipboard';
                         $notificaciones_importador->save();
                     }
                 }else{
@@ -224,6 +227,9 @@ class DemandaProductoController extends Controller
                         $notificaciones_distribuidor->titulo = 'Estan solicitando tu producto '. $producto->nombre;
                         $notificaciones_distribuidor->url='demanda-producto/demandas-productos-distribuidores';
                         $notificaciones_distribuidor->distribuidor_id = $distribuidor->distribuidor_id;
+                        $notificaciones_productor->descripcion = 'Demanda de Producto';
+                        $notificaciones_productor->color = 'bg-aqua';
+                        $notificaciones_productor->icono = 'fa fa-clipboard';
                         $notificaciones_distribuidor->save();
                     }
                 }else{
@@ -247,6 +253,9 @@ class DemandaProductoController extends Controller
                             $notificaciones_importador->titulo = 'Estan solicitando tu producto '. $producto->nombre;
                             $notificaciones_importador->url='demanda-producto/demandas-productos-importadores';
                             $notificaciones_importador->importador_id = $importador->importador_id;
+                            $notificaciones_productor->descripcion = 'Demanda de Producto';
+                            $notificaciones_productor->color = 'bg-aqua';
+                            $notificaciones_productor->icono = 'fa fa-clipboard';
                             $notificaciones_importador->save();
                         }
                     }else{

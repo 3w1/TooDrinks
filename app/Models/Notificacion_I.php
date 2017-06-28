@@ -9,7 +9,7 @@ class Notificacion_I extends Model
     protected $table = "notificacion_i";
 
     protected $fillable = [
-        'creador_id', 'tipo_creador', 'importador_id', 'titulo', 'url', 
+        'creador_id', 'tipo_creador', 'importador_id', 'titulo', 'url', 'descripcion', 'color', 'icono',
     ];
 
     public function importador(){

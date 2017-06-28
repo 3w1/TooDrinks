@@ -20,6 +20,9 @@ class CreateNotificacionDTable extends Migration
             $table->integer('distribuidor_id');
             $table->string('titulo');
             $table->string('url');
+            $table->string('descripcion');
+            $table->string('color');
+            $table->string('icono');
             $table->timestamps();
 
              $table->foreign('distribuidor_id')

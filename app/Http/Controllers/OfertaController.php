@@ -129,6 +129,9 @@ class OfertaController extends Controller
                     $notificaciones_importador->titulo = 'Hay una nueva oferta disponible de '.$producto->nombre.' para tu país.';
                     $notificaciones_importador->url='oferta/'.$ult_oferta->id;
                     $notificaciones_importador->importador_id = $importador->id;
+                    $notificaciones_productor->descripcion = 'Nueva Oferta';
+                    $notificaciones_productor->color = 'bg-purple';
+                    $notificaciones_productor->icono = 'fa fa-asterisk';
                     $notificaciones_importador->save();   
                 }        
             }
@@ -152,6 +155,9 @@ class OfertaController extends Controller
                     $notificaciones_distribuidor->titulo = 'Hay una nueva oferta disponible de '.$producto->nombre.' para tu país.';
                     $notificaciones_distribuidor->url='oferta/'.$ult_oferta->id;
                     $notificaciones_distribuidor->distribuidor_id = $distribuidor->id;
+                    $notificaciones_productor->descripcion = 'Nueva Oferta';
+                    $notificaciones_productor->color = 'bg-purple';
+                    $notificaciones_productor->icono = 'fa fa-asterisk';
                     $notificaciones_distribuidor->save();   
                 }        
             }
@@ -175,6 +181,9 @@ class OfertaController extends Controller
                     $notificaciones_horeca->titulo = 'Hay una nueva oferta disponible de '.$producto->nombre.' para tu país.';
                     $notificaciones_horeca->url='oferta/'.$ult_oferta->id;
                     $notificaciones_horeca->horeca_id = $horeca->id;
+                    $notificaciones_productor->descripcion = 'Nueva Oferta';
+                    $notificaciones_productor->color = 'bg-purple';
+                    $notificaciones_productor->icono = 'fa fa-asterisk';
                     $notificaciones_horeca->save();   
                 }        
             }
