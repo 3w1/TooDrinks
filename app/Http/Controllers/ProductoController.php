@@ -67,7 +67,8 @@ class ProductoController extends Controller
 
     public function store(Request $request)
     {
-        
+        $fecha = new \DateTime();
+
         $file = Input::file('imagen');   
         $image = Image::make(Input::file('imagen'));
 
@@ -105,6 +106,7 @@ class ProductoController extends Controller
             $notificaciones_productor->descripcion = 'Nuevo Producto';
             $notificaciones_productor->color = 'bg-yellow';
             $notificaciones_productor->icono = 'fa fa-plus-square-o';
+            $notificaciones_productor->fecha = $fecha;
             $notificaciones_productor->save();            
         }
 
