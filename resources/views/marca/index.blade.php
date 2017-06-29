@@ -14,6 +14,7 @@
 @section('content-left')
 	<div class="row">
 		@foreach($marcas as $marca)
+         @if ($marca->id != '0')
 			<?php
             $productos = DB::table('producto')
                            ->select('id', 'confirmado')
@@ -67,6 +68,7 @@
             		</div>
          		</div>
        		</div>
+            @endif
 		@endforeach
 	</div>
 	<div>

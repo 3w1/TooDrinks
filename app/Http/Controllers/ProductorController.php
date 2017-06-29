@@ -158,7 +158,7 @@ class ProductorController extends Controller
                             ->where('id', '=', $id)
                             ->update(['productor_id' => session('perfilId'), 'reclamada' => '1' ]);
 
-        return redirect('productor/mis-marcas')->with('msj', 'Se ha agregado exitosamente una marca a su propiedad');
+        return redirect('marca')->with('msj', 'Se ha agregado exitosamente una marca a su propiedad');
     }
 
     public function listado_importadores(){

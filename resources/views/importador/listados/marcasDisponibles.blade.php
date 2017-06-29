@@ -9,6 +9,7 @@
 	
 	<div class="row">
 		@foreach($marcas as $marca)
+		@if ($marca->id != '0')
 			<?php 
 				$productor = DB::table('productor')
 								->select('nombre')
@@ -60,6 +61,7 @@
 	            	</div>
 	         	</div>
 	        </div>
+	        @endif
 	    @endforeach
 	</div>
 

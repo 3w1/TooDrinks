@@ -148,10 +148,11 @@ class CreditoController extends Controller
             // ... //
         }
 
-        return redirect('usuario/inicio')->with('msj', 'Su plan de crédito ha sido agregado exitosamente');
-       // $factura=PDF::loadview('credito.FacturaCredito',['credito'=>$credito]);
+     //   return redirect('usuario/inicio')->with('msj', 'Su plan de crédito ha sido agregado exitosamente');
+        $factura=PDF::loadview('credito.FacturaCredito',['credito'=>$credito]);
         //return $factura->stream('factura_credito.pdf');
-           //return $pdf->download('prueba.pdf');
+        return $factura->download('factura_compra_creditos.pdf');
+        //return redirect('usuario/inicio')->with('msj', 'Su plan de crédito ha sido agregado exitosamente');
     }
 
     public function gastar_creditos_CO($cant, $id){
