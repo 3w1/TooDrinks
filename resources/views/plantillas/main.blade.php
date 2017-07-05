@@ -149,7 +149,9 @@
                 
                 <!-- right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-4 connectedSortable">
-              @include('plantillas.partes.content-right')
+                  @yield('content-right')
+                  @include('plantillas.partes.content-right')
+                  
                 </section>
                 <!-- right col -->
               </div>

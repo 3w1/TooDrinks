@@ -223,5 +223,6 @@ Route::resource('pais', 'PaisController');
 
 Route::resource('mails', 'MailsController');
 
+Route::resource('solicitar-importacion', 'SolicitudImportacionController');
 
-
+Route::resource('solicitar-distribucion', 'SolicitudDistribucionController');

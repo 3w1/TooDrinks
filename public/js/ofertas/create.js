@@ -27,7 +27,7 @@ function cargarProductos() {
 
     document.getElementById("productos").innerHTML = "<option value=''>Seleccione un producto..</option>";
         
-    var marca = document.getElementById('marca').value;
+    var marca = document.getElementById('marca').value+".1";
 	var route = "http://localhost:8000/producto/"+marca+"";
                     
     $.ajax({

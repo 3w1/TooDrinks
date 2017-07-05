@@ -41,7 +41,7 @@
                   <i class="fa fa-hand-pointer-o bg-blue"></i>
 
                   <div class="timeline-item">
-                     <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
+                     <span class="time"><i class="fa fa-clock-o"></i> {{ date('d-m-Y', strtotime($demandaBebida->created_at)) }}</span>
 
                      <h3 class="timeline-header">@if ($demandaBebida->tipo_creador == 'I') 
                         Un importador @elseif ($demandaBebida->tipo_creador == 'D') Un Distribuidor @else Un Horeca @endif está demandando un tipo de bebida que tu posees.</h3>

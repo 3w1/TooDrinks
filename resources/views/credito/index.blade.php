@@ -18,7 +18,7 @@
             <div class="thumbnail">
                <img src="{{ asset('imagenes/monedas.jpg') }}" >
                <div class="caption">
-                  |	<h3>{{ $credito->plan }}</h3>
+                  	<h3>{{ $credito->plan }}</h3>
                   	<p>{{ $credito->descripcion }}</p>
                   	<ul class="nav nav-stacked">
                      	<li><a><strong>Cantidad de créditos: </strong> {{ $credito->cantidad_creditos }} $</a></li>

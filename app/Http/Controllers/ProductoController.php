@@ -127,12 +127,25 @@ class ProductoController extends Controller
 
     public function show($id)
     {
-        $productos = DB::table('producto')
+        $tipo = explode('.', $id);
+
+        if ($tipo[1] == '1'){
+            $productos = DB::table('producto')
                     ->select('id', 'nombre')
                     ->orderBy('nombre')
-                    ->where('marca_id', '=', $id)
+                    ->where('marca_id', '=', $tipo[0])
                     ->get();
-
+        }elseif ($tipo[1] == '2'){
+            $productos = DB::table('producto')
+                    ->select('id', 'nombre', 'nombre_seo', 'imagen')
+                    ->orderBy('nombre')
+                    ->where('nombre', 'ILIKE', '%'.$tipo[0].'%')
+                    ->get();
+        }elseif ($tipo[1] == '3'){
+            $productos = Producto::orderBy('nombre')->where('id', '=', $tipo[0])->with('bebida', 'clase_bebida', 'marca')
+                        ->first();
+        }
+       
         return response()->json(
             $productos->toArray()
         );
@@ -146,7 +159,29 @@ class ProductoController extends Controller
                         ->get()
                         ->first();
 
-        return view('producto.show')->with(compact('producto', 'productor'));
+        $comentarios = DB::table('opinion')
+                        ->orderBy('fecha', 'DESC')
+                        ->where('producto_id', '=', $id)
+                        ->take(6)
+                        ->get();
+
+
+        $cont = 0;
+        foreach ($comentarios as $comentario)
+            $cont++;
+
+        $comentarioPerfil = DB::table('opinion')
+                            ->where('tipo_creador', '=', session('perfilTipo'))
+                            ->where('creador_id', '=', session('perfilId'))
+                            ->where('producto_id', '=', $id)
+                            ->first();
+
+        $existe = 0;
+        if ( $comentarioPerfil != null)
+            $existe = '1';
+
+
+        return view('producto.show')->with(compact('producto', 'productor', 'comentarios', 'cont', 'comentarioPerfil', 'existe'));
     }
 
     public function edit($id)

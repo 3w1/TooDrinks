@@ -19,4 +19,8 @@ class Bebida extends Model
     public function productos(){
     	return $this->hasMany('App\Models\Producto');
     }
+
+    public function demandas_productos(){
+        return $this->hasMany('App\Models\Demanda_Producto');
+    }
 }

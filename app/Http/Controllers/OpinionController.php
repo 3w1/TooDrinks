@@ -49,8 +49,14 @@ class OpinionController extends Controller
     public function store(Request $request)
     {
         $opinion = new Opinion($request->all());
+        $opinion->tipo_creador = session('perfilTipo');
+        $opinion->creador_id = session('perfilId');
+        $opinion->valoracion = '5';
+        $opinion->fecha = new \DateTime();
+        $opinion->editada = '0';
         $opinion->save();
-        return redirect()->action('OpinionController@index');
+
+        return redirect('producto/detalle-de-producto/'.$request->producto_id)->with('msj', 'Su comentario ha sido almacenado exitosamente');
     }
 
     /**

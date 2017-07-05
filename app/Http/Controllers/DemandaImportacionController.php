@@ -17,7 +17,7 @@ class DemandaImportacionController extends Controller
         $this->middleware('auth');
     }
     
-    public function index()
+    public function index(Request $request)
     {
         $cont = 0;
 
@@ -109,15 +109,7 @@ class DemandaImportacionController extends Controller
 
     public function show($id)
     {
-        $producto = DB::table('producto')
-                    ->orderBy('nombre', 'ASC')
-                    ->select('id', 'nombre')
-                    ->where('id', '=', $id)
-                    ->first();
-
-        return response()->json(
-            $producto->toArray()
-        );
+        
     }
 
     public function edit($id)

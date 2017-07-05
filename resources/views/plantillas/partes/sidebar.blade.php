@@ -215,14 +215,14 @@
                   </ul>
                </li>
                <li>
-                  <a href="#"><i class="fa fa-circle-o"></i> Importar Marca
+                  <a href="#"><i class="fa fa-circle-o"></i> Importar Producto
                      <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                      </span>
                   </a>
                   <ul class="treeview-menu">
-		            <li><a href=""><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
+		            <li><a href="{{ route('solicitar-importacion.create') }}"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
+                    <li><a href="{{ route('solicitar-importacion.index') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
                   </ul>
                </li>
             </ul>
@@ -245,6 +245,7 @@
 
       @if(session('perfilTipo') == 'D')
          <!-- SECCIÓN DE IMPORTADORES -->
+         <li class="header">Opciones de Distribuidor</li>
          <li class="treeview">
              <a href="#">
                <i class="fa fa-share"></i> <span>Marcas</span>
@@ -289,14 +290,14 @@
                   </ul>
                </li>
                <li>
-                  <a href="#"><i class="fa fa-share"></i> Distribuir Marca
+                  <a href="#"><i class="fa fa-share"></i> Distribuir Producto
                      <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
-                     <li><a href="#"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
+                     <li><a href="{{ route('solicitar-distribucion.create') }}"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
+                     <li><a href="{{ route('solicitar-distribucion.index') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
                   </ul>
                </li>
             </ul>

@@ -48,7 +48,7 @@ class DemandaProductoController extends Controller
     public function demandas_bebidas_productores(){
 
         $demandasBebidas = DB::table('demanda_producto')
-                                ->select('demanda_producto.*')
+                                ->select('demanda_producto.id', 'demanda_producto.titulo', 'demanda_producto.descripcion', 'demanda_producto.tipo_creador', 'demanda_producto.bebida_id')
                                 ->join('producto', 'demanda_producto.bebida_id', '=', 'producto.bebida_id')
                                 ->join('marca', 'producto.marca_id', '=', 'marca.id')
                                 ->join('productor', 'marca.productor_id', '=', 'productor.id')

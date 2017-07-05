@@ -53,4 +53,9 @@ class Producto extends Model
     	return $this->hasMany('App\Models\Opinion');
     }
 
+    public function scopeNombre ($query, $nombre)
+    {
+        return $query->where('nombre', 'ILIKE', '%'.$nombre.'%');
+    }
+
 }
