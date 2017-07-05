@@ -15,21 +15,7 @@
          </p>
       </li>
 
-      <!-- INICIO DEL MENU INFERIOR DE LAS OPCIONES DE LA CUENTA DE USUARIO -->
-      <li class="user-body">
-         <div class="row">
-            <div class="col-xs-4 text-center">
-               <a href="#">Productos</a>
-            </div>
-            <div class="col-xs-4 text-center">
-               <a href="#">Ofertas</a>
-            </div>
-            <div class="col-xs-4 text-center">
-               <a href="#">Marcas</a>
-            </div>
-         </div>
-      </li>
-      <!-- FIN DEL MENU INFERIOR DE CUENTA DE USUARIO -->
+     
 
       <!-- INICIO DEL MENU DEL FOOTER DE CUENTA DE USUARIO-->
       <li class="user-footer">

@@ -42,7 +42,7 @@ class NotificacionController extends Controller
         $notificaciones_productor->tipo_creador = session('perfilTipo');
 
         if ($tipo == 'DP'){
-        	$notificaciones_productor->titulo = 'Estan solicitando tu producto '. $descripcion;
+        	$notificaciones_productor->titulo = 'Estan damandando tu producto '. $descripcion;
         	$notificaciones_productor->url='demanda-producto/demandas-productos-productores';
             $notificaciones_productor->descripcion = 'Demanda de Producto';
             $notificaciones_productor->color = 'bg-aqua';
@@ -62,6 +62,20 @@ class NotificacionController extends Controller
             $notificaciones_productor->color = 'bg-red';
             $notificaciones_productor->icono = 'fa fa-hand-pointer-o';
             $notificaciones_productor->fecha = $fecha;
+        }elseif ($tipo == 'SIM'){
+            $notificaciones_productor->titulo = 'Estan solicitando la importación de tu producto '. $descripcion;
+            $notificaciones_productor->url='productor/solicitudes-importacion';
+            $notificaciones_productor->descripcion = 'Nueva Solicitud de Importación';
+            $notificaciones_productor->color = 'bg-orange';
+            $notificaciones_productor->icono = 'fa fa-user-plus';
+            $notificaciones_productor->fecha = $fecha;
+        }elseif ($tipo == 'SDM'){
+            $notificaciones_productor->titulo = 'Estan solicitando la distribución de tu producto '. $descripcion;
+            $notificaciones_productor->url='productor/solicitudes-distribucion';
+            $notificaciones_productor->descripcion = 'Nueva Solicitud de Distribución';
+            $notificaciones_productor->color = 'bg-green';
+            $notificaciones_productor->icono = 'fa fa-user-plus';
+            $notificaciones_productor->fecha = $fecha;
         }
         
         $notificaciones_productor->productor_id = $productor_id;
@@ -73,6 +87,10 @@ class NotificacionController extends Controller
             return redirect('marca')->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
         }elseif($tipo == 'AD'){
             return redirect('marca')->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
+        }elseif($tipo == 'SIM'){
+            return redirect('solicitar-importacion')->with('msj', 'Su solicitud ha sido creada exitosamente. Debe esperar que lo contacte el productor.');
+        }elseif ($tipo == 'SDM'){
+            return redirect('solicitar-distribucion')->with('msj', 'Su solicitud ha sido creada exitosamente. Debe esperar que lo contacte el Productor / Importador');
         }
     }
 }

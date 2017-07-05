@@ -1,4 +1,4 @@
-@extends('plantillas.usuario.mainUsuario')
+@extends('plantillas.main')
 @section('title', 'Modificar Usuario'.$usuario->nombre)
 @section('content-left')
 

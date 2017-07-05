@@ -59,36 +59,15 @@ class DistribuidorController extends Controller
             $url = 'importador/'.session('importadorId');
             return redirect($url)->with('msj', 'Se ha registrado exitosamente su distribuidor');   
         }
-    }
+    }*/
 
     public function show($id)
     {
         $distribuidor = Distribuidor::find($id);
-        $cont=0;
-        $cont2=0;
-
-        session(['distribuidorId' => $id]);
-        session(['distribuidorNombre' => $distribuidor->nombre]);
-        session(['distribuidorLogo' => $distribuidor->logo]);
-
-        foreach($distribuidor->marcas as $marca)
-            $cont++;
-
-        $ofertas = DB::table('oferta')
-                        ->orderBy('titulo')
-                        ->select('id')
-                        ->where([
-                            ['tipo_creador', 'D'],
-                            ['creador_id', $id],
-                        ])->get();
-
-        foreach($ofertas as $oferta)
-            $cont2++;
-
-        return view('distribuidor.show')->with(compact('distribuidor', 'cont', 'cont2'));
+        return view('distribuidor.show')->with(compact('distribuidor'));
     }
 
-    public function edit($id)
+    /*public function edit($id)
     {
         $distribuidor = Distribuidor::find($id);
 

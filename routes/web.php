@@ -206,6 +206,12 @@ Route::get('credito/gastar-creditos-dd/{cant}/{id}/{perfil}', 'CreditoController
 Route::get('credito/gastar-creditos-dp/{cant}/{id}', 'CreditoController@gastar_creditos_DP' )
 ->name('credito.gastar-creditos-dp');
 
+Route::get('credito/gastar-creditos-dip/{cant}/{id}', 'CreditoController@gastar_creditos_DIP' )
+->name('credito.gastar-creditos-dip');
+
+Route::get('credito/gastar-creditos-ddp/{cant}/{id}', 'CreditoController@gastar_creditos_DDP' )
+->name('credito.gastar-creditos-ddp');
+
 Route::resource('credito','CreditoController');
 // ./RUTAS PARA LOS CRÉDITOS ./
 
@@ -223,6 +229,8 @@ Route::resource('pais', 'PaisController');
 
 Route::resource('mails', 'MailsController');
 
+Route::get('demandas-importacion', 'SolicitudImportacionController@demandas_importacion')->name('demandas-importacion');
 Route::resource('solicitar-importacion', 'SolicitudImportacionController');
 
+Route::get('demandas-distribucion', 'SolicitudDistribucionController@demandas_distribucion')->name('demandas-distribucion');
 Route::resource('solicitar-distribucion', 'SolicitudDistribucionController');

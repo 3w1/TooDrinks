@@ -150,7 +150,8 @@
             <ul class="treeview-menu">
                <li><a href="{{ route('demanda-producto.demandas-productos-productores') }}"><i class="fa fa-circle-o"></i> Productos</a></li>
                <li><a href="{{ route('demanda-producto.demandas-bebidas-productores') }}"><i class="fa fa-circle-o"></i> Bebidas</a></li>
-               <li><a href="#"><i class="fa fa-circle-o"></i> Importación</a></li>
+               <li><a href="{{ route('demandas-importacion')}}"><i class="fa fa-circle-o"></i> Importación</a></li>
+               <li><a href="{{ route('demandas-distribucion')}}"><i class="fa fa-circle-o"></i> Distribución</a></li>
             </ul>
          </li>
          <li><a href="{{ route('productor.listado-importadores') }}"><i class="fa fa-circle-o"></i> Listado de Importadores</a></li>
@@ -237,6 +238,7 @@
                <li><a href="{{ route('demanda-importador.demandas-disponibles') }}"><i class="fa fa-circle-o"></i> Importadores</a></li>
                <li><a href="{{ route('demanda-producto.demandas-productos-importadores') }}"><i class="fa fa-circle-o"></i> Productos</a></li>
                <li><a href="{{ route('demanda-producto.demandas-bebidas-importadores') }}"><i class="fa fa-circle-o"></i> Bebidas</a></li>
+               <li><a href="{{ route('demandas-distribucion')}}"><i class="fa fa-circle-o"></i> Distribución</a></li>
             </ul>
          </li>
          <li><a href="{{ route('importador.listado-distribuidores') }}"><i class="fa fa-circle-o"></i> Listado de Distribuidores</a></li>

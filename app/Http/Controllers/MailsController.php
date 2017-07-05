@@ -96,14 +96,14 @@ class MailsController extends Controller
         //
     }
 
-        public function notificaciones_Productor()
+    public function notificaciones_Productor()
     {
-         $fecha = new \DateTime();
+        $fecha = new \DateTime();
 
-         $notificaciones_del_dia = DB::table('notificacion_p')
-         -> select('productor_id')
-                        ->where('fecha','=', $fecha)
-                        ->groupBy ('productor_id')  -> get();
+        $notificaciones_del_dia = DB::table('notificacion_p')
+                                    ->select('productor_id')
+                                    ->where('fecha','=', $fecha)
+                                    ->groupBy ('productor_id')  -> get();
 
           foreach ($notificaciones_del_dia as $notificacion) {
                      $notificacion_por_usuario = DB::table('notificacion_p')
