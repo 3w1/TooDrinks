@@ -165,7 +165,6 @@ class ProductoController extends Controller
                         ->take(6)
                         ->get();
 
-
         $cont = 0;
         foreach ($comentarios as $comentario)
             $cont++;

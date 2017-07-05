@@ -21,8 +21,6 @@ class OpinionController extends Controller
     public function index()
     {
 
-        $opiniones = Opinion::paginate(1);
-        return view('opinion.index')->with(compact('opiniones'));
     }
 
     /**
@@ -51,7 +49,6 @@ class OpinionController extends Controller
         $opinion = new Opinion($request->all());
         $opinion->tipo_creador = session('perfilTipo');
         $opinion->creador_id = session('perfilId');
-        $opinion->valoracion = '5';
         $opinion->fecha = new \DateTime();
         $opinion->editada = '0';
         $opinion->save();
@@ -78,24 +75,9 @@ class OpinionController extends Controller
      */
     public function edit($id)
     {
-        $productos = DB::table('producto')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre')
-                        ->get();
        
-        $opinion = Opinion::find($id);
-
-
-        return view('opinion.edit')->with(compact('opinion', 'productos'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         
@@ -103,22 +85,12 @@ class OpinionController extends Controller
         $opinion->fill($request->all());
         $opinion->save();
 
-        return redirect()->action('OpinionController@index');
+        return redirect('producto/detalle-de-producto/'.$request->producto_id)->with('msj', 'Su comentario ha sido modificado exitosamente');
         
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        $opinion = Opinion::find($id);
-        $opinion->delete();
-
-        return redirect()->action('OpinionController@index');
 
     }
 }

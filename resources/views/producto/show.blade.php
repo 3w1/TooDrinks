@@ -116,9 +116,42 @@
                      <div class="comment-text">
                         <span class="username">
                            {{ $perfil->nombre }}
-                           <span class="text-muted pull-right">{{ date('d-m-Y', strtotime($comentario->created_at)) }}</span>
+                           <span class="text-muted pull-right">   
+                              @if ( $comentario->valoracion == '1')
+                                 <i class="fa fa-star" style="color: orange;"></i>
+                                 <i class="fa fa-star-o"></i>
+                                 <i class="fa fa-star-o"></i>
+                                 <i class="fa fa-star-o"></i>
+                                 <i class="fa fa-star-o"></i>
+                              @elseif ($comentario->valoracion == '2') 
+                                 <i class="fa fa-star" style="color: orange;"></i>
+                                 <i class="fa fa-star" style="color: orange;"></i>
+                                 <i class="fa fa-star-o"></i>
+                                 <i class="fa fa-star-o"></i>
+                                 <i class="fa fa-star-o"></i>
+                              @elseif ($comentario->valoracion == '3')
+                                 <i class="fa fa-star" style="color: orange;"></i>
+                                 <i class="fa fa-star" style="color: orange;"></i>
+                                 <i class="fa fa-star" style="color: orange;"></i>
+                                 <i class="fa fa-star-o"></i>
+                                 <i class="fa fa-star-o"></i>
+                              @elseif ($comentario->valoracion == '4')
+                                 <i class="fa fa-star" style="color: orange;"></i>
+                                 <i class="fa fa-star" style="color: orange;"></i>
+                                 <i class="fa fa-star" style="color: orange;"></i>
+                                 <i class="fa fa-star" style="color: orange;"></i>
+                                 <i class="fa fa-star-o"></i>
+                              @elseif ($comentario->valoracion == '5')
+                                 <i class="fa fa-star" style="color: orange;"></i>
+                                 <i class="fa fa-star" style="color: orange;"></i>
+                                 <i class="fa fa-star" style="color: orange;"></i>
+                                 <i class="fa fa-star" style="color: orange;"></i>
+                                 <i class="fa fa-star" style="color: orange;"></i> 
+                              @endif
+                           </span>
                         </span>
                         {{ $comentario->comentario }}
+                        
                      </div>
                   </div>
                @endforeach
@@ -145,14 +178,36 @@
       
             <div class="img-push">
                @if ($existe == '0')
+                  <span class="text-muted pull-left"> 
+                     <a href="#"><i class="fa fa-star-o" style="color: black;" id="1" onclick="valorar(this.id);"></i></a>
+                     <a href="#"><i class="fa fa-star-o" style="color: black;" id="2" onclick="valorar(this.id);"></i></a>
+                     <a href="#"><i class="fa fa-star-o" style="color: black;" id="3" onclick="valorar(this.id);"></i></a>
+                     <a href="#"><i class="fa fa-star-o" style="color: black;" id="4" onclick="valorar(this.id);"></i></a>
+                     <a href="#"><i class="fa fa-star-o" style="color: black;" id="5" onclick="valorar(this.id);"></i></a>
+                  </span>
                   {!! Form::open(['route' => 'opinion.store', 'method' => 'POST']) !!}
+                     {!! Form::hidden('valoracion', '0', ['id' => 'valoracion1']) !!}
                      {!! Form::hidden('producto_id', $producto->id) !!}
-                     {!! Form::text('comentario', null, ['class' => 'form-control input-sm', 'placeholder' => 'Presione Enter para dejar su comentario']) !!}
+                     {!! Form::text('comentario', null, ['class' => 'form-control input-sm', 'placeholder' => 'Valore y presione Enter para dejar su comentario']) !!}
+                     <span class="text-muted pull-right">
+                        <br>{!! Form::submit('Opinar', ['class' => 'btn btn-success btn-xs']) !!}
+                     </span>
                   {!! Form::close() !!}
                @else
-                  {!! Form::open(['route' => 'opinion.store', 'method' => 'POST']) !!}
+                  <span class="text-muted pull-left" id="valoracionOculta" style="display: none;"> 
+                     <a href="#"><i class="fa fa-star-o" style="color: black;" id="1.u" onclick="modificarValoracion(this.id);"></i></a>
+                     <a href="#"><i class="fa fa-star-o" style="color: black;" id="2.u" onclick="modificarValoracion(this.id);"></i></a>
+                     <a href="#"><i class="fa fa-star-o" style="color: black;" id="3.u" onclick="modificarValoracion(this.id);"></i></a>
+                     <a href="#"><i class="fa fa-star-o" style="color: black;" id="4.u" onclick="modificarValoracion(this.id);"></i></a>
+                     <a href="#"><i class="fa fa-star-o" style="color: black;" id="5.u" onclick="modificarValoracion(this.id);"></i></a>
+                  </span>
+                  {!! Form::open(['route' => ['opinion.update', $comentarioPerfil->id],  'method' => 'PUT']) !!}
+                     {!! Form::hidden('valoracion', $comentarioPerfil->valoracion, ['id' => 'valoracion2']) !!}
                      {!! Form::hidden('producto_id', $producto->id) !!}
                      {!! Form::text('comentario', $comentarioPerfil->comentario, ['class' => 'form-control input-sm', 'id' => 'comentarioPerfil', 'disabled']) !!}
+                     <span class="text-muted pull-right" style="display: none;" id="btnOculto">
+                        <br>{!! Form::submit('Opinar', ['class' => 'btn btn-success btn-xs']) !!}
+                     </span>
                   {!! Form::close() !!}
                   <div id="info" style="display: block;">
                      Ya has dejado tu comentario sobre este producto. Click <a href="#" onclick="modificarComentario();">aquí</a> para modificarlo...
