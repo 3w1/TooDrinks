@@ -72,11 +72,22 @@ class MarcaController extends Controller
         return redirect('marca')->with('msj', 'Su marca ha sido creada exitosamente');
     }
     
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $marca = Marca::find($id);
 
         return view('marca.show')->with(compact('marca'));
+    }
+
+    public function descripcion($id){
+        $marca = DB::table('marca')
+                    ->select('descripcion', 'website')
+                    ->where('id', '=', $id)
+                    ->first();
+
+        return response()->json(
+            $marca
+        );
     }
 
     public function edit($id)

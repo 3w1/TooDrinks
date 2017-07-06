@@ -46,8 +46,21 @@ class ProductorController extends Controller
         return redirect('usuario')->with('msj', 'Su productor se ha agregado con éxito');*/
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        if ($request->ajax()){
+           //Método para buscar un productor específico
+            $productor = DB::table('productor')
+                    ->select('id', 'nombre')
+                    ->orderBy('nombre')
+                    ->where('nombre', 'ILIKE', '%'.$id.'%')
+                    ->get();
+
+            return response()->json(
+                $productor->toArray()
+            );
+        }
+
         $productor = Productor::find($id);
         return view('productor.show')->with(compact('productor'));
     }

@@ -130,19 +130,23 @@ class ProductoController extends Controller
         $tipo = explode('.', $id);
 
         if ($tipo[1] == '1'){
+            //Mostrar Productos de una Marca específica
             $productos = DB::table('producto')
                     ->select('id', 'nombre')
                     ->orderBy('nombre')
                     ->where('marca_id', '=', $tipo[0])
                     ->get();
         }elseif ($tipo[1] == '2'){
+            //Método para buscar un producto específico
             $productos = DB::table('producto')
                     ->select('id', 'nombre', 'nombre_seo', 'imagen')
                     ->orderBy('nombre')
                     ->where('nombre', 'ILIKE', '%'.$tipo[0].'%')
                     ->get();
         }elseif ($tipo[1] == '3'){
-            $productos = Producto::orderBy('nombre')->where('id', '=', $tipo[0])->with('bebida', 'clase_bebida', 'marca')
+            //Cargar la información de un producto específico para confirmar 
+            //la solicitud de importación o distribución del mismo.
+            $productos = Producto::where('id', '=', $tipo[0])->with('bebida', 'clase_bebida', 'marca')
                         ->first();
         }
        
@@ -151,7 +155,7 @@ class ProductoController extends Controller
         );
     }
 
-    public function detalle($id){
+    public function detalle(Request $request, $id){
         $producto = Producto::find($id);
 
         $productor = Productor::find($producto->marca->productor_id)
@@ -179,6 +183,14 @@ class ProductoController extends Controller
         if ( $comentarioPerfil != null)
             $existe = '1';
 
+        //Mostrar los datos de un producto específico para aprobarlo por el AdminWeb
+        if ($request->ajax()){
+            $producto = Producto::where('id', '=', $id)->with('pais', 'provincia_region', 'marca', 'bebida', 'clase_bebida')
+                        ->first();
+            return response()->json(
+                $producto->toArray()
+            );
+        }
 
         return view('producto.show')->with(compact('producto', 'productor', 'comentarios', 'cont', 'comentarioPerfil', 'existe'));
     }
