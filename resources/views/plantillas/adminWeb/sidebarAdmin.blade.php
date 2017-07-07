@@ -23,8 +23,8 @@
       <ul class="treeview-menu">
          <li><a href="{{ route('admin.marcas-sin-aprobar') }}"><i class="fa fa-circle-o"></i> Aprobar Marcas</a></li>
          <li><a href="{{ route('admin.marcas-sin-propietario') }}"><i class="fa fa-circle-o"></i> Asociar Marca / Productor</a></li>
-         <li><a href="#"><i class="fa fa-circle-o"></i> Confirmar Importador / Marca</a></li>
-         <li><a href="#"><i class="fa fa-circle-o"></i> Confirmar Distribuidor / Marca</a></li>
+         <li><a href="{{ route('admin.confirmar-importadores') }}"><i class="fa fa-circle-o"></i> Confirmar Importador / Marca</a></li>
+         <li><a href="{{ route('admin.confirmar-distribuidores') }}"><i class="fa fa-circle-o"></i> Confirmar Distribuidor / Marca</a></li>
          <li><a href="#"><i class="fa fa-circle-o"></i> Crear Marca</a></li>
       </ul>
    </li>

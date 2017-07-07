@@ -235,6 +235,12 @@ Route::prefix('admin')->group(function () {
 
     Route::get('marcas-sin-propietario', 'AdminController@marcas_sin_propietario')->name('admin.marcas-sin-propietario');
     Route::post('asociar-marca-productor', 'AdminController@asociar_marca_productor')->name('admin.asociar-marca-productor');
+
+    Route::get('confirmar-importadores-marcas', 'AdminController@confirmar_importadores')->name('admin.confirmar-importadores');
+    Route::get('confirmar-importador-marca/{id}/{tipo}', 'AdminController@confirmar_importador')->name('admin.confirmar-importador');
+
+   	Route::get('confirmar-distribuidores-marcas', 'AdminController@confirmar_distribuidores')->name('admin.confirmar-distribuidores');
+    Route::get('confirmar-distribuidor-marca/{id}/{tipo}', 'AdminController@confirmar_distribuidor')->name('admin.confirmar-distribuidor');
 });
 Route::resource('admin', 'AdminController');
 // ./RUTAS PARA EL ADMIN WEB ./

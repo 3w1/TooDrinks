@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Marca; use App\Models\Producto;
+use App\Models\Productor;
 use DB;
 
 class AdminController extends Controller
@@ -146,6 +147,85 @@ class AdminController extends Controller
                                        'reclamada' => '1'
                                     ]);
 
+        $importadores = DB::table('importador_marca')
+                            ->where('marca_id', '=', $request->marca_id)
+                            ->get();
+
+        foreach ($importadores as $importador)
+            Productor::find($request->productor_id)->importadores()->attach($importador->importador_id);
+
+        $distribuidores = DB::table('distribuidor_marca')
+                            ->where('marca_id', '=', $request->marca_id)
+                            ->get();
+
+        foreach ($distribuidores as $distribuidor)
+            Productor::find($request->productor_id)->distribuidores()->attach($distribuidor->distribuidor_id);
+
         return redirect('admin/marcas-sin-propietario')->with('msj', 'Se ha asociado correctamente el productor a la marca');
+    }
+
+    public function confirmar_importadores(){
+        $solicitudes = DB::table('importador_marca')
+                    ->select('importador_marca.*')
+                    ->orderBy('created_at', 'DESC')
+                    ->join('marca', 'importador_marca.marca_id', '=', 'marca.id')
+                    ->where('marca.productor_id', '=', '0')
+                    ->where('importador_marca.status', '=', '0')
+                    ->paginate(9);
+
+        return view('adminWeb.confirmarImportadores')->with(compact('solicitudes'));
+    }
+
+    public function confirmar_importador($id, $tipo){
+        $solicitud = DB::table('importador_marca')
+                        ->where('id', '=', $id)
+                        ->first();
+
+        if ($tipo == 'S'){
+            $actualizacion = DB::table('importador_marca')
+                                ->where('id', '=', $id)
+                                ->update(['status' => '1']);
+
+            $productor = Productor::find(0);
+            $productor->importadores()->attach($solicitud->importador_id);
+
+            return redirect('admin/confirmar-importadores-marcas')->with('msj', 'La relación Importador / Marca ha sido confirmada exitosamente');
+        }else{
+            DB::table('importador_marca')->where('id', '=', $id)->delete();
+
+            return redirect('admin/confirmar-importadores-marcas')->with('msj', 'La relación Importador / Marca ha sido eliminada exitosamente');
+        }
+    }
+
+     public function confirmar_distribuidores(){
+        $solicitudes = DB::table('distribuidor_marca')
+                    ->select('distribuidor_marca.*')
+                    ->orderBy('created_at', 'DESC')
+                    ->join('marca', 'distribuidor_marca.marca_id', '=', 'marca.id')
+                    ->where('marca.productor_id', '=', '0')
+                    ->where('distribuidor_marca.status', '=', '0')
+                    ->paginate(9);
+
+        return view('adminWeb.confirmarDistribuidores')->with(compact('solicitudes'));
+    }
+
+    public function confirmar_distribuidor($id, $tipo){
+        $solicitud = DB::table('distribuidor_marca')
+                        ->where('id', '=', $id)
+                        ->first();
+
+        if ($tipo == 'S'){
+            $actualizacion = DB::table('distribuidor_marca')
+                                ->where('id', '=', $id)
+                                ->update(['status' => '1']);
+
+            Productor::find(0)->distribuidores()->attach($solicitud->distribuidor_id);
+
+            return redirect('admin/confirmar-distribuidores-marcas')->with('msj', 'La relación Distribuidor / Marca ha sido confirmada exitosamente');
+        }else{
+            DB::table('distribuidor_marca')->where('id', '=', $id)->delete();
+
+            return redirect('admin/confirmar-distribuidores-marcas')->with('msj', 'La relación Distribuidor / Marca ha sido eliminada exitosamente');
+        }
     }
 }
