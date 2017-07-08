@@ -27,11 +27,15 @@ class ImportadorController extends Controller
     }
 
     public function create()
-    {   
-        
+    {      
+        $paises = DB::table('pais')
+                    ->orderBy('pais')
+                    ->pluck('pais', 'id');
+
+        return view('adminWeb.perfiles.crearImportador')->with(compact('paises'));
     }
 
-    /*public function store(Request $request)
+    public function store(Request $request)
     {
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
@@ -48,14 +52,8 @@ class ImportadorController extends Controller
         $importador->logo = $nombre;
         $importador->save();
 
-        if ( $request->who == 'U'){
-             return redirect('usuario')->with('msj', 'Se ha registrado exitosamente su Importador');
-        }else{
-            $importador->productores()->attach(session('productorId'));
-            $url = 'productor/'.session('productorId');
-            return redirect($url)->with('msj', 'Se ha registrado exitosamente su Importador');
-        }
-    }*/
+        return redirect('admin')->with('msj', 'Se ha creado el Importador exitosamente');
+    }
 
     public function show($id)
     {

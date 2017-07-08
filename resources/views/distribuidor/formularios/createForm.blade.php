@@ -1,9 +1,11 @@
-	{!! Html::script('js/distribuidores/create.js') !!}
+{!! Html::script('js/distribuidores/create.js') !!}
+
+{!! Form::open(['route' => 'distribuidor.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 
 	{!! Form::hidden('saldo', '0') !!}
-	{!! Form::hidden('user_id', Auth::user()->id) !!}
-	{!! Form::hidden('reclamada', '1') !!}
-	{!! Form::hidden('estado_datos', '1') !!}
+	{!! Form::hidden('user_id', '0') !!}
+	{!! Form::hidden('reclamada', '0') !!}
+	{!! Form::hidden('estado_datos', '0') !!}
 
 	<div class="form-group">
 		{!! Form::label('nombre', 'Nombre') !!}
@@ -93,7 +95,7 @@
 
 	<div class="form-group">
 		{!! Form::label('tipo_suscripcion', 'Tipo de Suscripción') !!}
-		{!! Form::text('tipo_suscripcion', null, ['class' => 'form-control', 'placeholder' => 'Tipo de Suscripción'] ) !!}
+		{!! Form::select('tipo_suscripcion', ['B' => 'Básica', 'A' => 'Avanzada', 'P' => 'Premium'], null, ['class' => 'form-control'] ) !!}
 	</div>
 
 	<div class="form-group">
@@ -104,4 +106,5 @@
 	<div class="form-group">
 		{!! Form::submit('Agregar Distribuidor', ['class' => 'btn btn-primary']) !!}
 	</div>
+{!! Form::close() !!}
 		

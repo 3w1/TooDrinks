@@ -15,7 +15,11 @@
 		{!! Form::hidden('aprobada', '0') !!}
 	@endif
 
-	{!! Form::hidden('publicada', '0') !!}
+	@if (session('perfilTipo') == 'AD')
+		{!! Form::hidden('publicada', '1') !!}
+	@else
+		{!! Form::hidden('publicada', '0') !!}
+	@endif
 
 	<div class="form-group">
 		{!! Form::label ('nombre','Nombre') !!}

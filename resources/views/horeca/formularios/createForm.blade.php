@@ -1,8 +1,11 @@
-	{!! Html::script('js/horecas/create.js') !!}
+{!! Html::script('js/horecas/create.js') !!}
 
-	{!! Form::hidden('user_id', Auth::user()->id) !!}
-	{!! Form::hidden('reclamada', '1') !!}
-	{!! Form::hidden('estado_datos', '1') !!}
+
+{!! Form::open(['route' => 'horeca.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+
+	{!! Form::hidden('user_id', '0') !!}
+	{!! Form::hidden('reclamada', '0') !!}
+	{!! Form::hidden('estado_datos', '0') !!}
 	{!! Form::hidden('saldo', '0') !!}
 
 	<div class="form-group">
@@ -106,3 +109,5 @@
 	<div class="form-group">
 		{!! Form::submit('Agregar Horeca', ['class' => 'btn btn-primary']) !!}
 	</div>
+	
+{!! Form::close() !!}

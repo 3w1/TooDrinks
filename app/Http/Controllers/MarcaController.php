@@ -69,7 +69,12 @@ class MarcaController extends Controller
             //NOTIFICAR A PRODUCTORES QUE HAY UNA NUEVA MARCA DISPONIBLES
         }   
 
-        return redirect('marca')->with('msj', 'Su marca ha sido creada exitosamente');
+        if (session('perfilTipo') == 'AD'){
+            return redirect('admin')->with('msj', 'La marca ha sido creada exitosamente');
+        }else{
+            return redirect('marca')->with('msj', 'Su marca ha sido creada exitosamente');
+        }
+        
     }
     
     public function show(Request $request, $id)

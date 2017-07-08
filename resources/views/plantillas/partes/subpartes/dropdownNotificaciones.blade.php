@@ -1,5 +1,18 @@
 <li class="dropdown notifications-menu">
-   @if (session('perfilTipo') == 'P')
+  @if (session('perfilTipo') == 'AD')
+    <?php 
+      $notificaciones = DB::table('notificacion_admin')
+                           ->select('titulo', 'url', 'color', 'icono')
+                           ->orderBy('created_at', 'DESC')
+                           ->take(5)
+                           ->get();
+      $cont = 0;
+      foreach($notificaciones as $notificacion){
+         $cont++;
+      }
+
+    ?>
+  @elseif (session('perfilTipo') == 'P')
       <?php 
          $notificaciones = DB::table('notificacion_p')
                            ->select('titulo', 'url', 'color', 'icono')

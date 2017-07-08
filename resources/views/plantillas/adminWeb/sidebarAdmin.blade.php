@@ -25,7 +25,7 @@
          <li><a href="{{ route('admin.marcas-sin-propietario') }}"><i class="fa fa-circle-o"></i> Asociar Marca / Productor</a></li>
          <li><a href="{{ route('admin.confirmar-importadores') }}"><i class="fa fa-circle-o"></i> Confirmar Importador / Marca</a></li>
          <li><a href="{{ route('admin.confirmar-distribuidores') }}"><i class="fa fa-circle-o"></i> Confirmar Distribuidor / Marca</a></li>
-         <li><a href="#"><i class="fa fa-circle-o"></i> Crear Marca</a></li>
+         <li><a href=""><i class="fa fa-circle-o"></i> Crear Marca</a></li>
       </ul>
    </li>
 
@@ -50,10 +50,10 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href=""><i class="fa fa-circle-o"></i> Crear Productor</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i> Crear Importador</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i> Crear Distribuidor</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i> Crear Horeca</a></li>
+         <li><a href="{{ route('productor.create') }}"><i class="fa fa-circle-o"></i> Crear Productor</a></li>
+         <li><a href="{{ route('importador.create') }}"><i class="fa fa-circle-o"></i> Crear Importador</a></li>
+         <li><a href="{{ route('distribuidor.create') }}"><i class="fa fa-circle-o"></i> Crear Distribuidor</a></li>
+         <li><a href="{{ route('horeca.create') }}"><i class="fa fa-circle-o"></i> Crear Horeca</a></li>
       </ul>
    </li>
 

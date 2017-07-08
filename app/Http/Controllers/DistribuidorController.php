@@ -28,10 +28,14 @@ class DistribuidorController extends Controller
 
     public function create()
     {
-        
+        $paises = DB::table('pais')
+                    ->orderBy('pais')
+                    ->pluck('pais', 'id');
+
+        return view('adminWeb.perfiles.crearDistribuidor')->with(compact('paises'));
     }
 
-   /* public function store(Request $request)
+    public function store(Request $request)
     {
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
@@ -48,18 +52,8 @@ class DistribuidorController extends Controller
         $distribuidor->logo = $nombre;
         $distribuidor->save();
 
-        if ($request->who == 'U'){
-             return redirect('usuario')->with('msj', 'Se ha registrado exitosamente su distribuidor');
-        }elseif ($request->who == 'P'){
-            $distribuidor->productores()->attach(session('productorId'));
-            $url = 'productor/'.session('productorId');
-            return redirect($url)->with('msj', 'Se ha registrado exitosamente su distribuidor');
-        }elseif ($request->who == 'I'){
-            $distribuidor->importadores()->attach(session('importadorId'));
-            $url = 'importador/'.session('importadorId');
-            return redirect($url)->with('msj', 'Se ha registrado exitosamente su distribuidor');   
-        }
-    }*/
+        return redirect('admin')->with('msj', 'Se ha creado el Distribuidor exitosamente');
+    }
 
     public function show($id)
     {

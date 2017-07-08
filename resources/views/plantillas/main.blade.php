@@ -1,54 +1,56 @@
-@if (Auth::user()->productor == '1')
-   <?php 
-      $productores = DB::table('productor')
-                        ->select('id', 'nombre')
-                        ->where('user_id', '=', Auth::user()->id)
-                        ->get();
+@if (Auth::user()->rol != 'AD')
+  @if (Auth::user()->productor == '1')
+     <?php 
+        $productores = DB::table('productor')
+                          ->select('id', 'nombre')
+                          ->where('user_id', '=', Auth::user()->id)
+                          ->get();
 
-      foreach ($productores as $productor)
-         $id_entidad[] = $productor->id; 
-         $nombre_entidad[] = $productor->nombre;
-         $tipo_entidad[] = 'P';  
-   ?>
-@endif
-@if (Auth::user()->importador == '1')
-   <?php 
-      $importadores = DB::table('importador')
-                        ->select('id', 'nombre')
-                        ->where('user_id', '=', Auth::user()->id)
-                        ->get();
+        foreach ($productores as $productor)
+           $id_entidad[] = $productor->id; 
+           $nombre_entidad[] = $productor->nombre;
+           $tipo_entidad[] = 'P';  
+     ?>
+  @endif
+  @if (Auth::user()->importador == '1')
+     <?php 
+        $importadores = DB::table('importador')
+                          ->select('id', 'nombre')
+                          ->where('user_id', '=', Auth::user()->id)
+                          ->get();
 
-      foreach ($importadores as $importador)
-         $id_entidad[] = $importador->id; 
-         $nombre_entidad[] = $importador->nombre;
-         $tipo_entidad[] = 'I';   
-      ?>
-@endif
-@if (Auth::user()->distribuidor == '1')
-   <?php 
-      $distribuidores = DB::table('distribuidor')
-                           ->select('id', 'nombre')
-                           ->where('user_id', '=', Auth::user()->id)
-                           ->get();
+        foreach ($importadores as $importador)
+           $id_entidad[] = $importador->id; 
+           $nombre_entidad[] = $importador->nombre;
+           $tipo_entidad[] = 'I';   
+        ?>
+  @endif
+  @if (Auth::user()->distribuidor == '1')
+     <?php 
+        $distribuidores = DB::table('distribuidor')
+                             ->select('id', 'nombre')
+                             ->where('user_id', '=', Auth::user()->id)
+                             ->get();
 
-      foreach ($distribuidores as $distribuidor)
-            $id_entidad[] = $distribuidor->id; 
-            $nombre_entidad[] = $distribuidor->nombre;
-            $tipo_entidad[] = 'D';  
-      ?>
-@endif
-@if (Auth::user()->horeca == '1')
-   <?php 
-      $horecas = DB::table('horeca')
-                     ->select('id', 'nombre')
-                     ->where('user_id', '=', Auth::user()->id)
-                     ->get();
+        foreach ($distribuidores as $distribuidor)
+              $id_entidad[] = $distribuidor->id; 
+              $nombre_entidad[] = $distribuidor->nombre;
+              $tipo_entidad[] = 'D';  
+        ?>
+  @endif
+  @if (Auth::user()->horeca == '1')
+     <?php 
+        $horecas = DB::table('horeca')
+                       ->select('id', 'nombre')
+                       ->where('user_id', '=', Auth::user()->id)
+                       ->get();
 
-      foreach ($horecas as $horeca)
-         $id_entidad[] = $horeca->id; 
-         $nombre_entidad[] = $horeca->nombre;
-         $tipo_entidad[] = 'H';   
-      ?>
+        foreach ($horecas as $horeca)
+           $id_entidad[] = $horeca->id; 
+           $nombre_entidad[] = $horeca->nombre;
+           $tipo_entidad[] = 'H';   
+        ?>
+  @endif
 @endif
 
 <!DOCTYPE html>
@@ -83,12 +85,14 @@
                   {!! Form::open(['route' => 'usuario.cambiar-perfil', 'method' => 'POST']) !!}
                      <div class="form-group">
                         <select class="form-control" name="entidad">
-                           <?php 
-                              $longitud = count($id_entidad);
-                              for ($i=0; $i<$longitud; $i++ ){
-                                 echo "<option value='".$tipo_entidad[$i].".".$id_entidad[$i]."'>".$tipo_entidad[$i]." - ".$nombre_entidad[$i]."</option>";
-                              }
-                           ?>
+                           @if (Auth::user()->rol != 'AD')
+                              <?php 
+                                 $longitud = count($id_entidad);
+                                 for ($i=0; $i<$longitud; $i++ ){
+                                    echo "<option value='".$tipo_entidad[$i].".".$id_entidad[$i]."'>".$tipo_entidad[$i]." - ".$nombre_entidad[$i]."</option>";
+                                 }
+                              ?>
+                           @endif
                         </select>
                      </div>  
                </div>

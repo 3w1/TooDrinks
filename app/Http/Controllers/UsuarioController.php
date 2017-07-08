@@ -104,72 +104,90 @@ class UsuarioController extends Controller
     }
 
     public function inicio(){
-        return view('usuario.index');
+        if (session('perfilTipo') == 'AD'){
+            return view('adminWeb.index');
+        }else{
+            return view('usuario.index');
+        }
     }
 
     public function index()
     {
         $user = User::find(Auth::user()->id);
 
-        if ($user->productor == '1'){
-            $productor = DB::table('productor')
-                            ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
-                            ->get()
-                            ->first();
+        if ($user->rol == 'AD'){
 
-            session(['perfilId' => $productor->id]);
-            session(['perfilNombre' => $productor->nombre]);
-            session(['perfilLogo' => $productor->logo]);
-            session(['perfilSaldo' => $productor->saldo]);
-            session(['perfilTipo' => 'P']);
-            session(['perfilPais' => $productor->pais_id]);
-            session(['perfilProvincia' => $productor->provincia_region_id]);
-            session(['perfilSuscripcion' => $productor->tipo_suscripcion]);
-        }elseif ($user->importador == '1'){
-            $importador = DB::table('importador')
-                            ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
-                            ->get()
-                            ->first();
+            session(['perfilId' => $user->id]);
+            session(['perfilNombre' => $user->nombre." ".$user->apellido]);
+            session(['perfilLogo' => $user->avatar]);
+            session(['perfilTipo' => 'AD']);
+            session(['perfilPais' => $user->pais_id]);
+            session(['perfilProvincia' => $user->provincia_region_id]);
 
-            session(['perfilId' => $importador->id]);
-            session(['perfilNombre' => $importador->nombre]);
-            session(['perfilLogo' => $importador->logo]);
-            session(['perfilSaldo' => $importador->saldo]);
-            session(['perfilTipo' => 'I']);
-            session(['perfilPais' => $importador->pais_id]);
-            session(['perfilProvincia' => $importador->provincia_region_id]);
-            session(['perfilSuscripcion' => $importador->tipo_suscripcion]);
-        }elseif ($user->distribuidor == '1'){
-            $distribuidor = DB::table('distribuidor')
-                            ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
-                            ->get()
-                            ->first();
+            return view('adminWeb.index');
 
-            session(['perfilId' => $distribuidor->id]);
-            session(['perfilNombre' => $distribuidor->nombre]);
-            session(['perfilLogo' => $distribuidor->logo]);
-            session(['perfilSaldo' => $distribuidor->saldo]);
-            session(['perfilTipo' => 'D']);
-            session(['perfilPais' => $distribuidor->pais_id]);
-            session(['perfilProvincia' => $distribuidor->provincia_region_id]);
-            session(['perfilSuscripcion' => $distribuidor->tipo_suscripcion]);
-        }elseif ($user->horeca == '1'){
-            $horeca = DB::table('horeca')
-                            ->where('user_id', '=', Auth::user()->id)
-                            ->select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id')
-                            ->get()
-                            ->first();
+        }else{
 
-            session(['perfilId' => $horeca->id]);
-            session(['perfilNombre' => $horeca->nombre]);
-            session(['perfilLogo' => $horeca->logo]);
-            session(['perfilSaldo' => $horeca->saldo]);
-            session(['perfilTipo' => 'H']);
-            session(['perfilPais' => $horeca->pais_id]);
-            session(['perfilProvincia' => $horeca->provincia_region_id]);
+            if ($user->productor == '1'){
+                $productor = DB::table('productor')
+                                ->where('user_id', '=', Auth::user()->id)
+                                ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
+                                ->get()
+                                ->first();
+
+                session(['perfilId' => $productor->id]);
+                session(['perfilNombre' => $productor->nombre]);
+                session(['perfilLogo' => $productor->logo]);
+                session(['perfilSaldo' => $productor->saldo]);
+                session(['perfilTipo' => 'P']);
+                session(['perfilPais' => $productor->pais_id]);
+                session(['perfilProvincia' => $productor->provincia_region_id]);
+                session(['perfilSuscripcion' => $productor->tipo_suscripcion]);
+            }elseif ($user->importador == '1'){
+                $importador = DB::table('importador')
+                                ->where('user_id', '=', Auth::user()->id)
+                                ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
+                                ->get()
+                                ->first();
+
+                session(['perfilId' => $importador->id]);
+                session(['perfilNombre' => $importador->nombre]);
+                session(['perfilLogo' => $importador->logo]);
+                session(['perfilSaldo' => $importador->saldo]);
+                session(['perfilTipo' => 'I']);
+                session(['perfilPais' => $importador->pais_id]);
+                session(['perfilProvincia' => $importador->provincia_region_id]);
+                session(['perfilSuscripcion' => $importador->tipo_suscripcion]);
+            }elseif ($user->distribuidor == '1'){
+                $distribuidor = DB::table('distribuidor')
+                                ->where('user_id', '=', Auth::user()->id)
+                                ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
+                                ->get()
+                                ->first();
+
+                session(['perfilId' => $distribuidor->id]);
+                session(['perfilNombre' => $distribuidor->nombre]);
+                session(['perfilLogo' => $distribuidor->logo]);
+                session(['perfilSaldo' => $distribuidor->saldo]);
+                session(['perfilTipo' => 'D']);
+                session(['perfilPais' => $distribuidor->pais_id]);
+                session(['perfilProvincia' => $distribuidor->provincia_region_id]);
+                session(['perfilSuscripcion' => $distribuidor->tipo_suscripcion]);
+            }elseif ($user->horeca == '1'){
+                $horeca = DB::table('horeca')
+                                ->where('user_id', '=', Auth::user()->id)
+                                ->select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id')
+                                ->get()
+                                ->first();
+
+                session(['perfilId' => $horeca->id]);
+                session(['perfilNombre' => $horeca->nombre]);
+                session(['perfilLogo' => $horeca->logo]);
+                session(['perfilSaldo' => $horeca->saldo]);
+                session(['perfilTipo' => 'H']);
+                session(['perfilPais' => $horeca->pais_id]);
+                session(['perfilProvincia' => $horeca->provincia_region_id]);
+            }
         }
 
         return view('usuario.index');

@@ -22,13 +22,17 @@ class ProductorController extends Controller
     }
 
     public function create()
-    {
-        
+    {   
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+
+        return view('adminWeb.perfiles.crearProductor')->with(compact('paises'));    
     }
 
     public function store(Request $request)
-    {  
-        /*$file = Input::file('logo');   
+    {   
+        $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
         $path = public_path().'/imagenes/productores/';
@@ -43,7 +47,7 @@ class ProductorController extends Controller
         $productor->logo = $nombre; 
         $productor->save();
 
-        return redirect('usuario')->with('msj', 'Su productor se ha agregado con éxito');*/
+        return redirect('admin')->with('msj', 'Se ha creado el Productor exitosamente');
     }
 
     public function show(Request $request, $id)
