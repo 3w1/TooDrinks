@@ -10,11 +10,22 @@ use DB;
 
 class MailsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function correo_invitacion(Request $request){
+
+        //dd($request->productores[0]);
+        foreach ($request->productores as $prod){
+            $productor = Productor::find($prod)->toArray();
+            $productor['tipo'] = 'P';
+
+            Mail::send('emails.invitacion', ['productor'=>$productor], function($msj) use ($productor){
+                $msj->subject('Invitación a TooDrinks');
+                $msj->to($productor['email']);
+            });
+        }
+
+        return redirect('admin/correo-de-invitacion')->with('msj-success', 'Los correos de invitación han sido enviados exitosamente');
+    }
+
     public function index()
     {
         $productor = Productor::find(10)->toArray();
@@ -30,67 +41,31 @@ class MailsController extends Controller
         return view('auth.register')->with(compact('id'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //

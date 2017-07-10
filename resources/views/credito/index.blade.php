@@ -1,4 +1,5 @@
 @extends('plantillas.main')
+
 @section('title', 'Planes de Crédito')
 
 @section('items')

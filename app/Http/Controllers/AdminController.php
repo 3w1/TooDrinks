@@ -9,66 +9,31 @@ use DB;
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         return view('adminWeb.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
@@ -82,9 +47,9 @@ class AdminController extends Controller
     public function marcas_sin_aprobar(){
         $marcas = Marca::orderBy('nombre')
                     ->where('publicada', '=', '0')
-                    ->paginate(9);
+                    ->paginate(7);
 
-        return view('adminWeb.marcasSinAprobar')->with(compact('marcas'));
+        return view('adminWeb.aprobaciones.marcasSinAprobar')->with(compact('marcas'));
     }
 
     public function aprobar_marca($id, Request $request){
@@ -98,7 +63,7 @@ class AdminController extends Controller
                             ->update(['publicada' => '1']);
         }
 
-        return redirect('admin/marcas-sin-aprobar')->with('msj', 'La marca ha sido aprobada y publicada exitosamente');
+        return redirect('admin/marcas-sin-aprobar')->with('msj-success', 'La marca ha sido aprobada y publicada exitosamente');
     }
 
     public function rechazar_marca(Request $request, $id){
@@ -110,7 +75,7 @@ class AdminController extends Controller
                     ->where('publicado', '=', '0')
                     ->paginate(8);
 
-        return view('adminWeb.productosSinAprobar')->with(compact('productos'));
+        return view('adminWeb.aprobaciones.productosSinAprobar')->with(compact('productos'));
     }
 
     public function aprobar_producto($id, Request $request){
@@ -137,7 +102,7 @@ class AdminController extends Controller
                     ->where('publicada', '=', '1')
                     ->paginate(9);
 
-        return view('adminWeb.marcasSinPropietario')->with(compact('marcas'));
+        return view('adminWeb.marca.marcasSinPropietario')->with(compact('marcas'));
     }
 
     public function asociar_marca_productor(Request $request){
@@ -161,7 +126,7 @@ class AdminController extends Controller
         foreach ($distribuidores as $distribuidor)
             Productor::find($request->productor_id)->distribuidores()->attach($distribuidor->distribuidor_id);
 
-        return redirect('admin/marcas-sin-propietario')->with('msj', 'Se ha asociado correctamente el productor a la marca');
+        return redirect('admin/marcas-sin-propietario')->with('msj-success', 'Se ha asociado correctamente el productor a la marca');
     }
 
     public function confirmar_importadores(){
@@ -171,9 +136,9 @@ class AdminController extends Controller
                     ->join('marca', 'importador_marca.marca_id', '=', 'marca.id')
                     ->where('marca.productor_id', '=', '0')
                     ->where('importador_marca.status', '=', '0')
-                    ->paginate(9);
+                    ->paginate(8);
 
-        return view('adminWeb.confirmarImportadores')->with(compact('solicitudes'));
+        return view('adminWeb.confirmaciones.confirmarImportadores')->with(compact('solicitudes'));
     }
 
     public function confirmar_importador($id, $tipo){
@@ -189,11 +154,11 @@ class AdminController extends Controller
             $productor = Productor::find(0);
             $productor->importadores()->attach($solicitud->importador_id);
 
-            return redirect('admin/confirmar-importadores-marcas')->with('msj', 'La relación Importador / Marca ha sido confirmada exitosamente');
+            return redirect('admin/confirmar-importadores-marcas')->with('msj-success', 'La relación Importador / Marca ha sido confirmada exitosamente');
         }else{
             DB::table('importador_marca')->where('id', '=', $id)->delete();
 
-            return redirect('admin/confirmar-importadores-marcas')->with('msj', 'La relación Importador / Marca ha sido eliminada exitosamente');
+            return redirect('admin/confirmar-importadores-marcas')->with('msj-success', 'La relación Importador / Marca ha sido eliminada exitosamente');
         }
     }
 
@@ -206,7 +171,7 @@ class AdminController extends Controller
                     ->where('distribuidor_marca.status', '=', '0')
                     ->paginate(9);
 
-        return view('adminWeb.confirmarDistribuidores')->with(compact('solicitudes'));
+        return view('adminWeb.confirmaciones.confirmarDistribuidores')->with(compact('solicitudes'));
     }
 
     public function confirmar_distribuidor($id, $tipo){
@@ -221,11 +186,19 @@ class AdminController extends Controller
 
             Productor::find(0)->distribuidores()->attach($solicitud->distribuidor_id);
 
-            return redirect('admin/confirmar-distribuidores-marcas')->with('msj', 'La relación Distribuidor / Marca ha sido confirmada exitosamente');
+            return redirect('admin/confirmar-distribuidores-marcas')->with('msj-success', 'La relación Distribuidor / Marca ha sido confirmada exitosamente');
         }else{
             DB::table('distribuidor_marca')->where('id', '=', $id)->delete();
 
-            return redirect('admin/confirmar-distribuidores-marcas')->with('msj', 'La relación Distribuidor / Marca ha sido eliminada exitosamente');
+            return redirect('admin/confirmar-distribuidores-marcas')->with('msj-success', 'La relación Distribuidor / Marca ha sido eliminada exitosamente');
         }
+    }
+
+    public function correo_invitacion(){
+        $productores = Productor::where('user_id', '=', '0')
+                        ->orderBy('nombre')
+                        ->paginate(10);
+
+        return view('adminWeb.perfilesSinUsuario')->with(compact('productores'));
     }
 }

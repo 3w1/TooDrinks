@@ -220,6 +220,7 @@ Route::get('notificaciones_productor', 'MailsController@notificaciones_productor
 Route::get('notificaciones_importador', 'MailsController@notificaciones_importador')->name('notificaciones');
 Route::get('notificaciones_distribuidor', 'MailsController@notificaciones_distribuidor')->name('notificaciones');
 
+Route::post('correo-invitacion', 'MailsController@correo_invitacion')->name('mails.invitacion');
 Route::resource('mails', 'MailsController');
 // ./RUTAS PARA LOS MAILS ./
 
@@ -241,6 +242,30 @@ Route::prefix('admin')->group(function () {
 
    	Route::get('confirmar-distribuidores-marcas', 'AdminController@confirmar_distribuidores')->name('admin.confirmar-distribuidores');
     Route::get('confirmar-distribuidor-marca/{id}/{tipo}', 'AdminController@confirmar_distribuidor')->name('admin.confirmar-distribuidor');
+
+    Route::get('marcas', 'MarcaController@index')->name('admin.marcas');
+    Route::get('crear-marca', 'MarcaController@create')->name('admin.crear-marca');
+    Route::get('detalle-de-marca/{id}', 'MarcaController@show')->name('admin.detalle-marca');
+
+    Route::get('productos', 'ProductoController@index')->name('admin.productos');
+    Route::get('crear-producto', 'ProductoController@create')->name('admin.crear-producto');
+    Route::get('crear-producto/{id}/{marca}', 'ProductoController@agregar')->name('admin.crear-producto-marca');
+	Route::get('detalle-de-producto/{id}', 'ProductoController@detalle')->name('admin.detalle-producto');
+	Route::get('catalogo-de-productos/{id}/{marca}', 'ProductoController@listado')->name('admin.productos-marca');
+
+	Route::get('crear-productor', 'ProductorController@create')->name('admin.crear-productor');
+	Route::get('crear-importador', 'ImportadorController@create')->name('admin.crear-importador');
+	Route::get('crear-distribuidor', 'DistribuidorController@create')->name('admin.crear-distribuidor');
+	Route::get('crear-horeca', 'HorecaController@create')->name('admin.crear-horeca');
+
+	Route::get('listado-de-suscripciones', 'SuscripcionController@index')->name('admin.suscripciones');
+	Route::get('crear-suscripcion', 'SuscripcionController@create')->name('admin.crear-suscripcion');
+
+	Route::get('listado-de-planes-de-credito', 'CreditoController@index')->name('admin.creditos');
+	Route::get('crear-plan-de-credito', 'CreditoController@create')->name('admin.crear-credito');
+	Route::get('modificar-plan-de-credito/{id}', 'CreditoController@edit')->name('admin.modificar-credito');
+
+	Route::get('correo-de-invitacion', 'AdminController@correo_invitacion')->name('admin.correo-invitacion');
 });
 Route::resource('admin', 'AdminController');
 // ./RUTAS PARA EL ADMIN WEB ./

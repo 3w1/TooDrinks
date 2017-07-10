@@ -25,7 +25,8 @@
          <li><a href="{{ route('admin.marcas-sin-propietario') }}"><i class="fa fa-circle-o"></i> Asociar Marca / Productor</a></li>
          <li><a href="{{ route('admin.confirmar-importadores') }}"><i class="fa fa-circle-o"></i> Confirmar Importador / Marca</a></li>
          <li><a href="{{ route('admin.confirmar-distribuidores') }}"><i class="fa fa-circle-o"></i> Confirmar Distribuidor / Marca</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i> Crear Marca</a></li>
+         <li><a href="{{ route('admin.marcas')}}"><i class="fa fa-circle-o"></i> Listado de Marcas</a></li>
+         <li><a href="{{ route('admin.crear-marca')}}"><i class="fa fa-circle-o"></i> Crear Marca</a></li>
       </ul>
    </li>
 
@@ -38,7 +39,8 @@
       </a>
       <ul class="treeview-menu">
          <li><a href="{{ route('admin.productos-sin-aprobar') }}"><i class="fa fa-circle-o"></i> Aprobar Productos</a></li>
-         <li><a href="#"><i class="fa fa-circle-o"></i> Crear Producto</a></li>
+         <li><a href="{{ route('admin.productos')}}"><i class="fa fa-circle-o"></i> Listado de Productos</a></li>
+         <li><a href="{{ route('admin.crear-producto')}}"><i class="fa fa-circle-o"></i> Crear Producto</a></li>
       </ul>
    </li>
 
@@ -50,10 +52,10 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href="{{ route('productor.create') }}"><i class="fa fa-circle-o"></i> Crear Productor</a></li>
-         <li><a href="{{ route('importador.create') }}"><i class="fa fa-circle-o"></i> Crear Importador</a></li>
-         <li><a href="{{ route('distribuidor.create') }}"><i class="fa fa-circle-o"></i> Crear Distribuidor</a></li>
-         <li><a href="{{ route('horeca.create') }}"><i class="fa fa-circle-o"></i> Crear Horeca</a></li>
+         <li><a href="{{ route('admin.crear-productor') }}"><i class="fa fa-circle-o"></i> Crear Productor</a></li>
+         <li><a href="{{ route('admin.crear-importador') }}"><i class="fa fa-circle-o"></i> Crear Importador</a></li>
+         <li><a href="{{ route('admin.crear-distribuidor') }}"><i class="fa fa-circle-o"></i> Crear Distribuidor</a></li>
+         <li><a href="{{ route('admin.crear-horeca') }}"><i class="fa fa-circle-o"></i> Crear Horeca</a></li>
       </ul>
    </li>
 
@@ -65,8 +67,8 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href=""><i class="fa fa-circle-o"></i> Lista de Suscripciones</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i> Crear Suscripcion</a></li>
+         <li><a href="{{ route('admin.suscripciones') }}"><i class="fa fa-circle-o"></i> Lista de Suscripciones</a></li>
+         <li><a href="{{ route('admin.crear-suscripcion') }}"><i class="fa fa-circle-o"></i> Crear Suscripcion</a></li>
       </ul>
    </li>
 
@@ -78,8 +80,21 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href=""><i class="fa fa-circle-o"></i> Lista de Planes</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i> Crear Plan</a></li>
+         <li><a href="{{ route('admin.creditos') }}"><i class="fa fa-circle-o"></i> Lista de Planes</a></li>
+         <li><a href="{{ route('admin.crear-credito') }}"><i class="fa fa-circle-o"></i> Crear Plan</a></li>
+      </ul>
+   </li>
+
+    <li class="treeview">
+      <a href="#">
+         <i class="fa fa-share"></i> <span>Emails</span>
+         <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+         </span>
+      </a>
+      <ul class="treeview-menu">
+         <li><a href="{{ route('admin.correo-invitacion') }}"><i class="fa fa-circle-o"></i> Correo de Invitación</a></li>
+         <li><a href="{{ route('admin.crear-credito') }}"><i class="fa fa-circle-o"></i> Notificaciones Diarias</a></li>
       </ul>
    </li>
 

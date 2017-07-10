@@ -42,31 +42,47 @@
 
          <!-- Content Wrapper. Contains page content -->
          <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
+
             <section class="content-header">
-               @yield('title-header')
+               <h1>@yield('title-header')
+               <small>@yield('title-complement')</small></h1>
+               <ol class="breadcrumb">
+                  <li><a href="#"><i class="fa fa-dashboard"></i> Breadcrumbs</a></li>
+                  <li class="active">En construcción</li>
+               </ol>
             </section>
 
-            <!-- Main content -->
             <section class="content">
-               <!-- Small boxes (Stat box) -->
                <div class="row">
                   @yield('items') 
                </div>
-    
-               <!-- Main row -->
+
                <div class="row">
-                  <!-- Left col -->
-                  <section class="col-lg-12 connectedSortable">
+                  <div class="col-md-9" id="contenido">
+                     <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10">
+                            @yield('alertas')
+                        </div>
+                        <div class="col-md-1"></div>
+                     </div>
+                     
                      @yield('content-left')
-                  </section>
-                  <!-- /.Left col -->
+
+                  </div>
+                  <div class="col-md-3">
+                     @yield('content-right')
+                  </div>
                </div>
-               <!-- /.row (main row) -->
+
+               <div class="row">
+                  <div class="col-md-9">
+                     <center>@yield('pagination')</center>
+                  </div>
+               </div>
             </section>
-            <!-- /.content -->
+
          </div>
-         <!-- /.content-wrapper -->
       </div>
      
 	   {!! Html::script('bootstrap/js/jquery-3.2.1.min.js') !!}

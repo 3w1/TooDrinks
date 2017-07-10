@@ -21,20 +21,26 @@ class CreditoController extends Controller
     
     public function index()
     {
-        $creditos=Credito::paginate(10);
-        return view ('credito.index')->with (compact('creditos'));
+        $creditos=Credito::orderBy('cantidad_creditos')->paginate(9);
+
+        if (session('perfilTipo') == 'AD'){
+            return view('adminWeb.listados.creditos')->with(compact('creditos'));
+        }else{
+            return view('credito.index')->with(compact('creditos'));
+        }
+        
     }
 
     public function create()
     {
-      return view ('credito.create');
+        return view ('credito.create');
     }
 
     public function store(CreditoCreateRequest $request)
     {
         $credito=new Credito($request->all());
         $credito->save();
-        return redirect()->action('CreditoController@index');
+        return redirect('credito')->with('msj', 'El plan de crédito ha sido creado exitosamente');
     }
 
 
@@ -57,15 +63,12 @@ class CreditoController extends Controller
         $credito->fill($request->all());
         $credito->save();
 
-        return redirect()->action('CreditoController@index');
+        return redirect('credito')->with('msj', 'El plan de crédito ha sido modificado exitosamente');
     }
 
     public function destroy($id)
     {
-         $credito = Credito::find($id);
-        $credito->delete();
-
-        return redirect()->action('CreditoController@index');
+       
     }
 
     public function compra($id)

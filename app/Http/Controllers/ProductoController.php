@@ -20,6 +20,15 @@ class ProductoController extends Controller
     
     public function index()
     {
+        if (session('perfilTipo') == 'AD'){
+            $productos = Producto::orderBy('nombre')
+                            ->paginate(7);
+
+            $marca = '0';
+
+            return view('adminWeb.listados.productos')->with(compact('productos', 'marca'));
+        }
+
         $productos = DB::table('producto')
                         ->where('tipo_creador', '=', 'U')
                         ->where('creador_id', '=', Auth::user()->id)
@@ -48,6 +57,10 @@ class ProductoController extends Controller
                     ->orderBy('nombre')
                     ->pluck('nombre', 'id');
 
+        if (session('perfilTipo') == 'AD'){
+            return view('adminWeb.producto.create')->with(compact('marcas', 'paises', 'tipos_bebidas', 'marca'));
+        }
+        
         return view('producto.create')->with(compact('marcas', 'paises', 'tipos_bebidas', 'usuario', 'id', 'marca'));
     }
 
@@ -61,6 +74,10 @@ class ProductoController extends Controller
         $tipos_bebidas = DB::table('bebida')
                     ->orderBy('nombre')
                     ->pluck('nombre', 'id');
+
+        if (session('perfilTipo') == 'AD'){
+            return view('adminWeb.producto.create')->with(compact('marcas', 'paises', 'tipos_bebidas', 'marca'));
+        }
 
         return view('producto.create')->with(compact('id', 'marca', 'paises', 'tipos_bebidas', 'usuario'));
     }
@@ -121,6 +138,10 @@ class ProductoController extends Controller
         $productos = Marca::find($id)
                             ->productos()
                             ->paginate(8);
+
+        if (session('perfilTipo') == 'AD'){
+            return view('adminWeb.listados.productos')->with(compact('productos', 'marca'));
+        }
 
         return view('producto.listado')->with(compact('productos', 'marca'));
     }
@@ -192,7 +213,11 @@ class ProductoController extends Controller
             );
         }
 
-        return view('producto.show')->with(compact('producto', 'productor', 'comentarios', 'cont', 'comentarioPerfil', 'existe'));
+        if (session('perfilTipo') == 'AD'){
+            return view('adminWeb.producto.detalleProducto')->with(compact('producto', 'productor', 'comentarios', 'cont'));
+        }else{
+            return view('producto.show')->with(compact('producto', 'productor', 'comentarios', 'cont', 'comentarioPerfil', 'existe'));
+        }
     }
 
     public function edit($id)
@@ -205,6 +230,10 @@ class ProductoController extends Controller
         $producto = Producto::find($id);
         $producto->fill($request->all());
         $producto->save();
+
+        if (session('perfilTipo') == 'AD'){
+            return redirect('admin/detalle-producto/'.$request->id)->with('msj-success', 'Los datos del producto han sido actualizados exitosamente');
+        }
 
        return redirect('producto/detalle-de-producto/'.$request->id)->with('msj', 'Los datos de su producto han sido actualizados exitosamente');
     }
@@ -224,6 +253,10 @@ class ProductoController extends Controller
         $actualizacion = DB::table('producto')
                             ->where('id', '=', $request->id)
                             ->update(['imagen' => $nombre ]);
+
+        if (session('perfilTipo') == 'AD'){
+            return redirect('admin/detalle-producto/'.$request->id)->with('msj-success', 'La imagen del producto ha sido actualizada exitosamente');
+        }
 
         return redirect('producto/detalle-de-producto/'.$request->id)->with('msj', 'La imagen del producto ha sido actualizada exitosamente');
     }

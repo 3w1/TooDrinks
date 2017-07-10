@@ -1,9 +1,9 @@
 @extends('plantillas.adminWeb.mainAdmin')
 @section('title', 'Crear Importador')
 
-@section('items')
+@section('title-header')
+   Crear Importador
 @endsection
-
 @section('content-left')
 
 	@include('importador.formularios.createForm')

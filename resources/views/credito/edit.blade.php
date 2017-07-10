@@ -1,5 +1,10 @@
-@extends('plantillas.main')
-@section('title', 'Modificar Crédito'. $credito->plan)
+@extends('plantillas.adminWeb.mainAdmin')
+@section('title', 'Modificar Plan '. $credito->plan)
+
+@section('title-header')
+  Modificar Plan de Crédito
+@endsection
+
 @section('content-left')
 
 	{!! Html::script('js/creditos/edit.js') !!}

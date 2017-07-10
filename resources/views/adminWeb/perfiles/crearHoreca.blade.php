@@ -1,7 +1,8 @@
 @extends('plantillas.adminWeb.mainAdmin')
 @section('title', 'Crear Horeca')
 
-@section('items')
+@section('title-header')
+   Crear Horeca
 @endsection
 
 @section('content-left')
