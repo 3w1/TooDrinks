@@ -2,14 +2,14 @@
 @section('title', 'Inicio')
 
 @section('items')
-  @if (Session::has('msj'))
-    <div class="alert alert-success alert-dismissable">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
-    </div>
-  @endif
-	<div class="col-lg-3 col-xs-6">
-          <!-- small box -->
+   @if (Session::has('msj-success'))
+      <div class="alert alert-success alert-dismissable">
+         <button type="button" class="close" data-dismiss="alert">&times;</button>
+         <strong>¡Enhorabuena!</strong> {{Session::get('msj-success')}}.
+      </div>
+   @endif
+   <div class="col-lg-3 col-xs-6">
+      <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
               <h3>150</h3>

@@ -216,9 +216,9 @@ Route::resource('pais', 'PaisController');
 // ./RUTAS PARA LOS PAISES ./
 
 // RUTAS PARA LOS MAILS
-Route::get('notificaciones_productor', 'MailsController@notificaciones_productor')->name('notificaciones');
-Route::get('notificaciones_importador', 'MailsController@notificaciones_importador')->name('notificaciones');
-Route::get('notificaciones_distribuidor', 'MailsController@notificaciones_distribuidor')->name('notificaciones');
+Route::get('notificaciones_productor', 'MailsController@notificaciones_productor')->name('mails.notificaciones-p');
+Route::get('notificaciones_importador', 'MailsController@notificaciones_importador')->name('mails.notificaciones-i');
+Route::get('notificaciones_distribuidor', 'MailsController@notificaciones_distribuidor')->name('mails.notificaciones-d');
 
 Route::post('correo-invitacion', 'MailsController@correo_invitacion')->name('mails.invitacion');
 Route::resource('mails', 'MailsController');

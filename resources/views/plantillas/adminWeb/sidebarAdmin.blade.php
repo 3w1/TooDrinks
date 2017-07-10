@@ -94,7 +94,18 @@
       </a>
       <ul class="treeview-menu">
          <li><a href="{{ route('admin.correo-invitacion') }}"><i class="fa fa-circle-o"></i> Correo de Invitación</a></li>
-         <li><a href="{{ route('admin.crear-credito') }}"><i class="fa fa-circle-o"></i> Notificaciones Diarias</a></li>
+         <li>
+            <a href="#"><i class="fa fa-circle-o"></i> Notificaciones Diaras
+               <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+               </span>
+            </a>
+            <ul class="treeview-menu">
+               <li><a href="{{ route('mails.notificaciones-p') }}"><i class="fa fa-circle-o"></i> Notificar Productores</a></li>
+               <li><a href="{{ route('mails.notificaciones-i') }}"><i class="fa fa-circle-o"></i> Notificar Importadores</a></li>
+               <li><a href="{{ route('mails.notificaciones-d') }}"><i class="fa fa-circle-o"></i> Notificar Distribuidores</a></li>
+            </ul>
+         </li>
       </ul>
    </li>
 
