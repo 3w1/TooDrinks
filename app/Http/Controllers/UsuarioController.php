@@ -129,7 +129,7 @@ class UsuarioController extends Controller
             if ($user->productor == '1'){
                 $productor = Productor::where('user_id', '=', Auth::user()->id)
                                         ->first();
-
+                                        
                 session(['perfilId' => $productor->id]);
                 session(['perfilNombre' => $productor->nombre]);
                 session(['perfilLogo' => $productor->logo]);

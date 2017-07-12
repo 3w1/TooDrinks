@@ -31,6 +31,17 @@ class DemandaDistribucionController extends Controller
     }
 
     public function demandas_disponibles(){
+        $notificaciones_pendientes_DD = DB::table('notificacion_d')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'DD')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_DD as $notificacion){
+            $act = DB::table('notificacion_d')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
+
         $provincia_origen = DB::table('distribuidor')
                         ->where('id', '=', session('perfilId'))
                         ->select('provincia_region_id')
@@ -93,6 +104,11 @@ class DemandaDistribucionController extends Controller
                     ->where('id', '=', $request->marca_id)
                     ->first();
 
+        $ult_demanda = DB::table('demanda_distribuidor')
+                        ->select('id')
+                        ->orderBy('created_at', 'DESC')
+                        ->first();
+
         $distribuidores = DB::table('distribuidor')
                         ->select('id')
                         ->where('provincia_region_id', '=', $request->provincia_region_id)
@@ -115,7 +131,7 @@ class DemandaDistribucionController extends Controller
                     $notificaciones_distribuidor->titulo = 'Un importador está en la búsqueda de nuevos distribuidores para su marca '. $marca->nombre;
                 }
                 
-                $notificaciones_distribuidor->url='demanda-distribuidor/demandas-disponibles';
+                $notificaciones_distribuidor->url='demanda-distribuidor/'.$ult_demanda->id;
                 
                 $notificaciones_distribuidor->descripcion = 'Demanda de Distribuidor';
                 $notificaciones_distribuidor->color = 'bg-green';
@@ -131,7 +147,33 @@ class DemandaDistribucionController extends Controller
 
     public function show($id)
     {
-        //
+        if (session('perfilSuscripcion') != 'Premium'){
+            $deduccion = DB::table('deduccion_credito_distribuidor')
+                            ->where('distribuidor_id', '=', session('perfilId'))
+                            ->where('tipo_deduccion', '=', 'DD')
+                            ->where('accion_id', '=', $id)
+                            ->first();
+            
+            if ($deduccion == null){
+                $restringido = '1';
+            }else{
+                $restringido = '0';
+            }
+        }else{
+            $restringido = '0';
+        }
+
+        $demandaDistribuidor = Demanda_Distribuidor::find($id);
+
+        $visitas = $demandaDistribuidor->cantidad_visitas + 1;
+
+        $act = DB::table('demanda_distribuidor')
+                ->where('id', '=', $id)
+                ->update(['cantidad_visitas' => $visitas ]);
+
+        $demandaDistribuidor->cantidad_visitas = $visitas;
+
+        return view('demandaDistribucion.show')->with(compact('demandaDistribuidor', 'restringido'));
     }
 
     public function edit($id)

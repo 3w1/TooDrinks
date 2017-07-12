@@ -146,24 +146,6 @@ class ImportadorController extends Controller
         //return redirect('marca')->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
     }
 
-    public function listado_ofertas(){
-        $importador = DB::table('importador')
-                            ->where('id', '=', session('perfilId') )
-                            ->select('pais_id')
-                            ->get()
-                            ->first();
-
-        $ofertas = DB::table('oferta')
-                    ->select('oferta.*')
-                    ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
-                    ->where('oferta.visible_importadores', '=', '1')
-                    ->where('destino_oferta.pais_id', '=', $importador->pais_id)
-                    ->groupBy('oferta.id')
-                    ->paginate(6);
-
-        return view('importador.listados.ofertasDisponibles')->with(compact('ofertas'));
-    }
-
     public function solicitar_importacion(){
         $accion = 'Solicitar';
 

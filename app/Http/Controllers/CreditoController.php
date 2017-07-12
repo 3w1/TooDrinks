@@ -231,7 +231,7 @@ class CreditoController extends Controller
         return redirect('demanda-importador/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
     }
 
-    public function gastar_creditos_DD($cant, $id, $perfil){
+    public function gastar_creditos_DD($cant, $id){
         $fecha = new \DateTime();
 
         $saldo = session('perfilSaldo') - $cant;
@@ -246,13 +246,22 @@ class CreditoController extends Controller
         $deduccion->descripcion = 'Ver demanda de distribuidor';
         $deduccion->cantidad_creditos = $cant;
         $deduccion->fecha = $fecha;
+        $deduccion->tipo_deduccion = 'DD';
+        $deduccion->accion_id = $id;
         $deduccion->save();
 
-        if ($perfil == 'P'){
-            return redirect('productor/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
-        }else{
-            return redirect('importador/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
-        }
+        $demanda = DB::table('demanda_distribuidor')
+                        ->where('id', '=', $id)
+                        ->select('cantidad_contactos')
+                        ->first();
+
+        $contactos = $demanda->cantidad_contactos + 1;
+
+        $act = DB::table('demanda_distribuidor')
+                ->where('id', '=', $id)
+                ->update(['cantidad_contactos' => $contactos]);
+
+        return redirect('demanda-distribuidor/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
     }
 
     public function gastar_creditos_DP($cant, $id){

@@ -319,7 +319,7 @@
             </a>
             <ul class="treeview-menu">
                <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
-               <li><a href="{{ route('importador.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles
+               <li><a href="{{ route('oferta.importadores') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles
                   <span class="pull-right-container">
                      @if($cont_NO > 0) <small class="label pull-right bg-purple">{{$cont_NO}}</small>@endif
                   </span>
@@ -428,7 +428,7 @@
             </a>
             <ul class="treeview-menu">
                <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
-               <li><a href="{{ route('distribuidor.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles
+               <li><a href="{{ route('oferta.distribuidores') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles
                   <span class="pull-right-container">
                      @if($cont_NO > 0) <small class="label pull-right bg-purple">{{$cont_NO}}</small>@endif
                   </span>
@@ -505,7 +505,7 @@
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="{{ route('horeca.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
+               <li><a href="{{ route('oferta.horecas') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
             </ul>
          </li>
          <li>

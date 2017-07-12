@@ -22,7 +22,7 @@ class Productor extends Model
     	return $this->belongsTo('App\Models\Pais');
     }
 
-    public function paises_impportaciones(){
+    public function paises_importaciones(){
         return $this->belongsToMany('App\Models\Pais', 'productor_pais')->withTimestamps();
     }
 

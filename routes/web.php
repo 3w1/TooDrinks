@@ -61,6 +61,9 @@ Route::get('productor/confirmar-producto/{id}-{tipo}', 'ProductorController@conf
 
 Route::get('productor/ver-listado-importadores', 'ProductorController@listado_importadores')->name('productor.listado-importadores');
 
+Route::get('productor/seleccionar-paises', 'ProductorController@listado_paises')->name('productor.paises');
+Route::post('productor/guardar-paises', 'ProductorController@guardar_paises')->name('productor.guardar-paises');
+
 Route::post('productor/updateAvatar', 'ProductorController@updateAvatar')->name('productor.updateAvatar');
 Route::resource('productor','ProductorController');
 // ./RUTAS PARA LOS PRODUCTORES ./
@@ -123,6 +126,10 @@ Route::resource('producto','ProductoController');
 // RUTAS PARA LAS OFERTAS
 Route::get('oferta/{id}-{producto}/crear-oferta', 'OfertaController@crear_oferta')->name('oferta.crear-oferta');
 
+Route::get('oferta/ofertas-disponibles-importadores', 'OfertaController@ofertas_importadores')->name('oferta.importadores');
+Route::get('oferta/ofertas-disponibles-distribuidores', 'OfertaController@ofertas_distribuidores')->name('oferta.distribuidores');
+Route::get('oferta/ofertas-disponibles-horecas', 'OfertaController@ofertas_horecas')->name('oferta.horecas');
+
 Route::resource('oferta','OfertaController');
 // ./RUTAS PARA LAS OFERTAS ./
 
@@ -182,7 +189,7 @@ Route::get('credito/gastar-creditos-co/{cant}/{id}', 'CreditoController@gastar_c
 Route::get('credito/gastar-creditos-di/{cant}/{id}', 'CreditoController@gastar_creditos_DI' )
 ->name('credito.gastar-creditos-di');
 
-Route::get('credito/gastar-creditos-dd/{cant}/{id}/{perfil}', 'CreditoController@gastar_creditos_DD' )
+Route::get('credito/gastar-creditos-dd/{cant}/{id}', 'CreditoController@gastar_creditos_DD' )
 ->name('credito.gastar-creditos-dd');
 
 Route::get('credito/gastar-creditos-dp/{cant}/{id}', 'CreditoController@gastar_creditos_DP' )

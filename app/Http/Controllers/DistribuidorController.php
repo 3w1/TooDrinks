@@ -179,21 +179,4 @@ class DistribuidorController extends Controller
 
         return view('distribuidor.detalleProducto')->with(compact('producto', 'bebida', 'productor', 'perfil'));
     }
-
-    public function listado_ofertas(){
-        $distribuidor = DB::table('distribuidor')
-                            ->where('id', '=', session('perfilId') )
-                            ->select('pais_id', 'provincia_region_id')
-                            ->get()
-                            ->first();
-
-        $ofertas = DB::table('oferta')
-                    ->select('oferta.*')
-                    ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
-                    ->where('oferta.visible_distribuidores', '=', '1')
-                    ->where('destino_oferta.provincia_region_id', '=', $distribuidor->provincia_region_id)
-                    ->paginate(6);
-
-        return view('distribuidor.listados.ofertasDisponibles')->with(compact('ofertas'));
-    }
 }

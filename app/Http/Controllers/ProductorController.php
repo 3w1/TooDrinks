@@ -386,4 +386,23 @@ class ProductorController extends Controller
             return redirect('productor/confirmar-productos')->with('msj', 'Producto eliminado exitosamente');
         }
     }
+
+    public function listado_paises(){
+        $paises = DB::table('pais')
+                    ->select('id', 'pais')
+                    ->orderBy('pais', 'ASC')
+                    ->where('id', '!=', session('perfilPais'))
+                    ->get();
+
+        return view('productor.seleccionarPaises')->with(compact('paises'));
+    }
+
+    public function guardar_paises(Request $request){
+        foreach ($request->paises as $pais){
+            Productor::find(session('perfilId'))
+                    ->paises_importaciones()->attach($pais);
+        }
+
+        return redirect('usuario/inicio')->with('msj', 'Los datos de los países han sido guardados exitosamente');
+    }
 }

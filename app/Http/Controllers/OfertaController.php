@@ -30,6 +30,89 @@ class OfertaController extends Controller
         return view('oferta.index')->with(compact('ofertas'));
     }
 
+    public function ofertas_importadores(){
+        $notificaciones_pendientes_NO = DB::table('notificacion_i')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'NO')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_NO as $notificacion){
+            $act = DB::table('notificacion_i')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
+
+        $importador = DB::table('importador')
+                            ->where('id', '=', session('perfilId') )
+                            ->select('pais_id')
+                            ->first();
+
+        $ofertas = DB::table('oferta')
+                    ->select('oferta.*')
+                    ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
+                    ->where('oferta.visible_importadores', '=', '1')
+                    ->where('destino_oferta.pais_id', '=', $importador->pais_id)
+                    ->groupBy('oferta.id')
+                    ->paginate(6);
+
+        return view('importador.listados.ofertasDisponibles')->with(compact('ofertas'));
+    }
+
+    public function ofertas_distribuidores(){
+        $notificaciones_pendientes_NO = DB::table('notificacion_d')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'NO')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_NO as $notificacion){
+            $act = DB::table('notificacion_d')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
+        
+        $distribuidor = DB::table('distribuidor')
+                            ->where('id', '=', session('perfilId') )
+                            ->select('pais_id', 'provincia_region_id')
+                            ->first();
+
+        $ofertas = DB::table('oferta')
+                    ->select('oferta.*')
+                    ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
+                    ->where('oferta.visible_distribuidores', '=', '1')
+                    ->where('destino_oferta.provincia_region_id', '=', $distribuidor->provincia_region_id)
+                    ->paginate(6);
+
+        return view('distribuidor.listados.ofertasDisponibles')->with(compact('ofertas'));
+    }
+
+    public function ofertas_horecas(){
+        $notificaciones_pendientes_NO = DB::table('notificacion_h')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'NO')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_NO as $notificacion){
+            $act = DB::table('notificacion_h')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
+        
+        $horeca = DB::table('horeca')
+                            ->where('id', '=', session('perfilId') )
+                            ->select('provincia_region_id')
+                            ->get()
+                            ->first();
+
+        $ofertas = DB::table('oferta')
+                    ->select('oferta.*')
+                    ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
+                    ->where('oferta.visible_horecas', '=', '1')
+                    ->where('destino_oferta.provincia_region_id', '=', $horeca->provincia_region_id)
+                    ->paginate(6);
+
+        return view('horeca.listados.ofertasDisponibles')->with(compact('ofertas'));
+    }
+
     public function create()
     {   
 
