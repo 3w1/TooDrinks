@@ -223,6 +223,7 @@ Route::resource('opinion','OpinionController');
 // ./RUTAS PARA LAS OPINIONES ./
 
 // RUTAS PARA LOS PAISES
+Route::get('pais/paises-destino', 'PaisController@paises_destino');
 Route::resource('pais', 'PaisController');
 // ./RUTAS PARA LOS PAISES ./
 

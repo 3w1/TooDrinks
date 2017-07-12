@@ -107,7 +107,7 @@
       </div>
       <div class="pull-left info">
          <p>{{ session('perfilNombre') }} (P)</p>
-         <a><i class="fa fa-circle text-success"></i> Créditos: {{ session('perfilSaldo') }}</a>
+         <a href="{{ route('productor.edit', session('perfilId')) }}">Editar Perfil <i class="fa fa-edit"></i></a>
       </div>
 
    @elseif (session('perfilTipo') == 'I')

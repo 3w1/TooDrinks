@@ -80,6 +80,10 @@
 	</div>
 
 	<div class="form-group" id="estados"></div>
+
+	<div class="row">
+		<br>
+	</div>
 	
 	@if( session('perfilTipo') == 'P')
 		<div class="form-group">

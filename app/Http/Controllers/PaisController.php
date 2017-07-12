@@ -56,15 +56,20 @@ class PaisController extends Controller
         );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         
+    }
+
+    public function paises_destino(){
+        $paises_elegidos = DB::table('productor_pais')
+                            ->select('pais_id')
+                            ->where('productor_id', '=', session('perfilId'))
+                            ->get();
+
+        return response()->json(
+            $paises_elegidos->toArray()
+        );
     }
 
     /**

@@ -125,10 +125,31 @@ class OfertaController extends Controller
             $tipo = '2';
         }
 
-        $paises = DB::table('pais')
+        if (session('perfilTipo') == 'P'){
+            $paises_posibles = DB::table('pais')
+                    ->select('pais.id')
+                    ->join('productor_pais', 'pais.id', '=', 'productor_pais.pais_id')
+                    ->where('productor_pais.productor_id', '=', session('perfilId'))
+                    ->first();
+
+            if ($paises_posibles != null){
+                $paises = DB::table('pais')
+                        ->join('productor_pais', 'pais.id', '=', 'productor_pais.pais_id')
+                        ->where('productor_pais.productor_id', '=', session('perfilId'))
+                        ->orderBy('pais.pais')
+                        ->pluck('pais.pais', 'pais.id');
+
+            }else{
+                $paises = DB::table('pais')
                         ->orderBy('pais')
                         ->pluck('pais', 'id');
-
+            }
+        }else{
+            $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+        }
+        
         if ( session('perfilTipo') == 'P'){
             $marcas = DB::table('marca')
                         ->orderBy('nombre')

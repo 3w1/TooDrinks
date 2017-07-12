@@ -75,7 +75,7 @@ class ProductorController extends Controller
 
     public function edit($id)
     {
-       /* $productor = Productor::find($id);
+        $productor = Productor::find($id);
        
         $paises = DB::table('pais')
                         ->orderBy('pais')
@@ -86,18 +86,38 @@ class ProductorController extends Controller
                         ->where('pais_id', '=', $productor->pais_id)
                         ->pluck('provincia', 'id');
 
-       return view('productor.edit')->with(compact('productor','paises', 'provincias'));*/
+        $paises_destino = DB::table('pais')
+                    ->select('id', 'pais')
+                    ->orderBy('pais', 'ASC')
+                    ->where('id', '!=', session('perfilPais'))
+                    ->get();
+
+       return view('productor.edit')->with(compact('productor','paises', 'provincias', 'paises_destino'));
 
     }
 
     public function update(Request $request, $id)
     {
-        /*$productor = Productor::find($id);
+        $productor = Productor::find($id);
         $productor->fill($request->all());
         $productor->save();
 
+        $paises = DB::table('productor_pais')
+                    ->where('productor_id', '=', session('perfilPais'))
+                    ->first();
+
+        if ($paises == null){
+            Productor::find(session('perfilId'))
+                    ->paises_importaciones()->attach(session('perfilPais'));
+        }
+
+        foreach ($request->paises as $pais){
+            Productor::find(session('perfilId'))
+                    ->paises_importaciones()->attach($pais);
+        }
+
         $url = 'productor/'.$id.'/edit';
-        return redirect($url)->with('msj', 'Sus datos se han actualizado con éxito');*/
+        return redirect($url)->with('msj', 'Sus datos han sido actualizados exitosamente');
     }
 
     public function updateAvatar(Request $request){
@@ -398,6 +418,15 @@ class ProductorController extends Controller
     }
 
     public function guardar_paises(Request $request){
+        $paises = DB::table('productor_pais')
+                    ->where('productor_id', '=', session('perfilPais'))
+                    ->first();
+
+        if ($paises == null){
+            Productor::find(session('perfilId'))
+                    ->paises_importaciones()->attach(session('perfilPais'));
+        }
+
         foreach ($request->paises as $pais){
             Productor::find(session('perfilId'))
                     ->paises_importaciones()->attach($pais);

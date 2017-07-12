@@ -68,10 +68,25 @@ class DemandaImportacionController extends Controller
                         ->get()
                         ->first();
 
-        $paises = DB::table('pais')
-                    ->orderBy('pais')
-                    ->where('id', '<>', $pais_origen->pais_id)
-                    ->pluck('pais', 'id');
+        $paises_posibles = DB::table('pais')
+                    ->select('pais.id')
+                    ->join('productor_pais', 'pais.id', '=', 'productor_pais.pais_id')
+                    ->where('productor_pais.productor_id', '=', session('perfilId'))
+                    ->first();
+
+        if ($paises_posibles == null){
+            $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->where('id', '<>', session('perfilPais'))
+                        ->pluck('pais', 'id');
+        }else{
+            $paises = DB::table('pais')
+                        ->join('productor_pais', 'pais.id', '=', 'productor_pais.pais_id')
+                        ->where('productor_pais.productor_id', '=', session('perfilId'))
+                        ->where('productor_pais.pais_id', '<>', session('perfilPais'))
+                        ->orderBy('pais.pais')
+                        ->pluck('pais.pais', 'pais.id');
+        }
 
         return view('demandaImportacion.create')->with(compact('marcas', 'paises'));
     }

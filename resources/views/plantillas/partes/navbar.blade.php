@@ -7,7 +7,11 @@
       
    <div class="navbar-custom-menu">
       <ul class="nav navbar-nav">
-
+         <li class="active">
+            <a href="#">
+               Créditos: {{session('perfilSaldo')}} <i class="fa fa-asterisk"></i>
+            </a>
+         </li>
 
          <!-- DROPDOWN DE NOTIFICACIONES -->
          @include('plantillas.partes.subpartes/dropdownNotificaciones')

@@ -14,7 +14,7 @@ function cargarProvincias() {
 			type:'GET',
 			success:function(ans){
 			    for (var i = 0; i < ans.length; i++ ){
-					document.getElementById("estados").innerHTML += "<label class='checkbox-inline'><input type='checkbox' name='provincias[]' value='"+ans[i].id +"'>"+ans[i].provincia+"</label>";
+					document.getElementById("estados").innerHTML += "<div class='col-md-3'><label class='checkbox-inline'><input type='checkbox' name='provincias[]' value='"+ans[i].id +"'>"+ans[i].provincia+"</label></div>";
 		        }
 			}
 		});
