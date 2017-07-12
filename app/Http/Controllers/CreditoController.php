@@ -213,9 +213,22 @@ class CreditoController extends Controller
         $deduccion->descripcion = 'Ver demanda de importador';
         $deduccion->cantidad_creditos = $cant;
         $deduccion->fecha = $fecha;
+        $deduccion->tipo_deduccion = 'DI';
+        $deduccion->accion_id = $id;
         $deduccion->save();
 
-        return redirect('productor/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
+        $demanda = DB::table('demanda_importador')
+                        ->where('id', '=', $id)
+                        ->select('cantidad_contactos')
+                        ->first();
+
+        $contactos = $demanda->cantidad_contactos + 1;
+
+        $act = DB::table('demanda_importador')
+                ->where('id', '=', $id)
+                ->update(['cantidad_contactos' => $contactos]);
+
+        return redirect('demanda-importador/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
     }
 
     public function gastar_creditos_DD($cant, $id, $perfil){
@@ -254,8 +267,6 @@ class CreditoController extends Controller
 
             $deduccion = new Deduccion_Credito_Productor();
             $deduccion->productor_id = session('perfilId');
-            $deduccion->tipo_deduccion = 'DP';
-            $deduccion->accion_id = $id;
         }elseif (session('perfilTipo') == 'I'){
             $act = DB::table('importador')
                     ->where('id', '=', session('perfilId'))
@@ -275,6 +286,57 @@ class CreditoController extends Controller
         $deduccion->descripcion = 'Ver demanda de producto';
         $deduccion->cantidad_creditos = $cant;
         $deduccion->fecha = $fecha;
+        $deduccion->tipo_deduccion = 'DP';
+        $deduccion->accion_id = $id;
+        $deduccion->save();
+
+        $demanda = DB::table('demanda_producto')
+                        ->where('id', '=', $id)
+                        ->select('cantidad_contactos')
+                        ->first();
+
+        $contactos = $demanda->cantidad_contactos + 1;
+
+        $act = DB::table('demanda_producto')
+                ->where('id', '=', $id)
+                ->update(['cantidad_contactos' => $contactos]);
+
+        return redirect('demanda-producto/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
+    }
+
+    public function gastar_creditos_DB($cant, $id){
+        $fecha = new \DateTime();
+        $saldo = session('perfilSaldo') - $cant;
+        session(['perfilSaldo' => $saldo]);    
+
+        if (session('perfilTipo') == 'P'){
+            $act = DB::table('productor')
+                    ->where('id', '=', session('perfilId'))
+                    ->update(['saldo' => $saldo ]);
+
+            $deduccion = new Deduccion_Credito_Productor();
+            $deduccion->productor_id = session('perfilId');
+        }elseif (session('perfilTipo') == 'I'){
+            $act = DB::table('importador')
+                    ->where('id', '=', session('perfilId'))
+                    ->update(['saldo' => $saldo ]);
+
+            $deduccion = new Deduccion_Credito_Importador();
+            $deduccion->importador_id = session('perfilId');
+        }else{
+            $act = DB::table('distribuidor')
+                    ->where('id', '=', session('perfilId'))
+                    ->update(['saldo' => $saldo ]);
+
+            $deduccion = new Deduccion_Credito_Distribuidor();
+            $deduccion->distribuidor_id = session('perfilId');
+        }
+       
+        $deduccion->descripcion = 'Ver demanda de bebida';
+        $deduccion->cantidad_creditos = $cant;
+        $deduccion->fecha = $fecha;
+        $deduccion->tipo_deduccion = 'DB';
+        $deduccion->accion_id = $id;
         $deduccion->save();
 
         $demanda = DB::table('demanda_producto')
@@ -305,9 +367,22 @@ class CreditoController extends Controller
         $deduccion->descripcion = 'Ver demanda de importación';
         $deduccion->cantidad_creditos = $cant;
         $deduccion->fecha = $fecha;
+        $deduccion->tipo_deduccion = 'SI';
+        $deduccion->accion_id = $id;
         $deduccion->save();
 
-        return redirect('importador/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
+        $solicitud = DB::table('solicitud_importacion')
+                        ->where('id', '=', $id)
+                        ->select('cantidad_contactos')
+                        ->first();
+
+        $contactos = $solicitud->cantidad_contactos + 1;
+
+        $act = DB::table('solicitud_importacion')
+                ->where('id', '=', $id)
+                ->update(['cantidad_contactos' => $contactos]);
+
+        return redirect('solicitar-importacion/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
     }
 
     public function gastar_creditos_DDP($cant, $id){
@@ -333,9 +408,22 @@ class CreditoController extends Controller
         $deduccion->descripcion = 'Ver demanda de distribución';
         $deduccion->cantidad_creditos = $cant;
         $deduccion->fecha = $fecha;
+        $deduccion->tipo_deduccion = 'SD';
+        $deduccion->accion_id = $id;
         $deduccion->save();
 
-        return redirect('distribuidor/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
+        $solicitud = DB::table('solicitud_distribucion')
+                        ->where('id', '=', $id)
+                        ->select('cantidad_contactos')
+                        ->first();
+
+        $contactos = $solicitud->cantidad_contactos + 1;
+
+        $act = DB::table('solicitud_distribucion')
+                ->where('id', '=', $id)
+                ->update(['cantidad_contactos' => $contactos]);
+
+        return redirect('solicitar-distribucion/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
     }
 }
 

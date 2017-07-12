@@ -9,7 +9,7 @@ class Deduccion_Credito_Importador extends Model
     protected $table = "deduccion_credito_importador";
 
     protected $fillable = [
-        'importador_id', 'fecha', 'descripcion', 'cantidad_creditos', 
+        'importador_id', 'fecha', 'descripcion', 'cantidad_creditos', 'tipo_deduccion', 'accion_id',
     ];
 
     public function importador(){

@@ -14,6 +14,8 @@ class CreateDeduccionCreditoDistribuidorTable extends Migration
             $table->date('fecha');
             $table->text('descripcion');
             $table->integer('cantidad_creditos');
+            $table->string('tipo_deduccion');
+            $table->integer('accion_id');
             $table->timestamps();
 
             $table->foreign('distribuidor_id')

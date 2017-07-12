@@ -32,6 +32,11 @@ class SolicitudDistribucionController extends Controller
         $solicitudDistribucion->fecha = $fecha;
         $solicitudDistribucion->save();
 
+        $ult_solicitud = DB::table('solicitud_distribucion')
+                            ->select('id')
+                            ->orderBy('created_at', 'DESC')
+                            ->first();
+
         $productor = DB::table('producto')
                         ->select('productor.id', 'productor.pais_id', 'producto.nombre', 'producto.marca_id')
                         ->join('marca', 'producto.marca_id', '=', 'marca.id')
@@ -40,10 +45,21 @@ class SolicitudDistribucionController extends Controller
                         ->first();
 
         if ($productor->pais_id == session('perfilPais')){
-            //Notificar al productor
-            $url = 'notificacion/notificar-productor/SD/'.$productor->nombre.'/'.$productor->id;
-            return redirect($url);
-            // ... //
+            //NOTIFICAR AL PRODUCTOR
+            $notificaciones_productor = new Notificacion_P();
+            $notificaciones_productor->creador_id = session('perfilId');
+            $notificaciones_productor->tipo_creador = session('perfilTipo');
+            $notificaciones_productor->titulo = 'Estan solicitando la distribucion de tu producto '. $productor->nombre;
+            $notificaciones_productor->url='solicitar-distribucion/'.$ult_solicitud->id;
+            $notificaciones_productor->descripcion = 'Nueva Solicitud de Distribucion';
+            $notificaciones_productor->color = 'bg-green';
+            $notificaciones_productor->icono = 'fa fa-user-plus';
+            $notificaciones_productor->tipo ='SD';
+            $notificaciones_productor->productor_id = $productor->id;
+            $notificaciones_productor->fecha = $fecha;
+            $notificaciones_productor->leida = '0';
+            $notificaciones_productor->save();
+            // *** //
         }else{
             $importadores = DB::table('importador_marca')
                                 ->select('importador_marca.importador_id')
@@ -63,30 +79,74 @@ class SolicitudDistribucionController extends Controller
                     $notificaciones_importador->creador_id = session('perfilId');
                     $notificaciones_importador->tipo_creador = session('perfilTipo');
                     $notificaciones_importador->titulo = 'Estan demandando la distribución de un producto que tu importas: '. $productor->nombre;
-                    $notificaciones_importador->url='importador/solicitudes-distribucion';
+                    $notificaciones_importador->url='solicitar-distribucion/'.$ult_solicitud->id;
                     $notificaciones_importador->importador_id = $importador->importador_id;
                     $notificaciones_importador->descripcion = 'Solicitud de Distribución';
                     $notificaciones_importador->color = 'bg-green';
                     $notificaciones_importador->icono = 'fa fa-user-plus';
                     $notificaciones_importador->fecha = $fecha;
-                    $notificaciones_importador->tipo = 'SI';
+                    $notificaciones_importador->tipo = 'SD';
                     $notificaciones_importador->leida = '0';
                     $notificaciones_importador->save();
                 }
             }else{
-               //Notificar al productor
-                $url = 'notificacion/notificar-productor/SD/'.$productor->nombre.'/'.$productor->id;
-                return redirect($url);
-                // ... //
+               //NOTIFICAR AL PRODUCTOR
+                $notificaciones_productor = new Notificacion_P();
+                $notificaciones_productor->creador_id = session('perfilId');
+                $notificaciones_productor->tipo_creador = session('perfilTipo');
+                $notificaciones_productor->titulo = 'Estan solicitando la distribucion de tu producto '. $productor->nombre;
+                $notificaciones_productor->url='solicitar-distribucion/'.$ult_solicitud->id;
+                $notificaciones_productor->descripcion = 'Nueva Solicitud de Distribucion';
+                $notificaciones_productor->color = 'bg-green';
+                $notificaciones_productor->icono = 'fa fa-user-plus';
+                $notificaciones_productor->tipo ='SD';
+                $notificaciones_productor->productor_id = $productor->id;
+                $notificaciones_productor->fecha = $fecha;
+                $notificaciones_productor->leida = '0';
+                $notificaciones_productor->save();
+                // *** //
             }
         }
-
         return redirect('solicitar-distribucion')->with('msj', 'Su solicitud ha sido creada exitosamente. Debe esperar la aprobación del Productor / Importador');
     }
 
     public function show($id)
     {
-        //
+        if (session('perfilSuscripcion') != 'Premium'){
+            if (session('perfilTipo') == 'P'){
+                $deduccion = DB::table('deduccion_credito_productor')
+                            ->where('productor_id', '=', session('perfilId'))
+                            ->where('tipo_deduccion', '=', 'SD')
+                            ->where('accion_id', '=', $id)
+                            ->first();
+            }elseif (session('perfilTipo') == 'I'){
+                $deduccion = DB::table('deduccion_credito_importador')
+                            ->where('importador_id', '=', session('perfilId'))
+                            ->where('tipo_deduccion', '=', 'SD')
+                            ->where('accion_id', '=', $id)
+                            ->first();
+            }
+            
+            if ($deduccion == null){
+                $restringido = '1';
+            }else{
+                $restringido = '0';
+            }
+        }else{
+            $restringido = '0';
+        }
+
+        $demandaDistribucion = Solicitud_Distribucion::find($id);
+
+        $visitas = $demandaDistribucion->cantidad_visitas + 1;
+
+        $act = DB::table('solicitud_distribucion')
+                ->where('id', '=', $id)
+                ->update(['cantidad_visitas' => $visitas ]);
+
+        $demandaDistribucion->cantidad_visitas = $visitas;
+
+        return view('solicitudDistribucion.show')->with(compact('demandaDistribucion', 'restringido'));
     }
 
     public function edit($id)
@@ -112,6 +172,17 @@ class SolicitudDistribucionController extends Controller
 
     public function demandas_distribucion(){
         if (session('perfilTipo') == 'P'){
+            $notificaciones_pendientes_SD = DB::table('notificacion_p')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'SD')
+                                        ->get();
+
+            foreach ($notificaciones_pendientes_SD as $notificacion){
+                $act = DB::table('notificacion_p')
+                        ->where('id', '=', $notificacion->id)
+                        ->update(['leida' => '1']);
+            }
+
             $demandasDistribucion = DB::table('solicitud_distribucion')
                                 ->select('solicitud_distribucion.*', 'producto.nombre')
                                 ->join('producto', 'solicitud_distribucion.producto_id', '=', 'producto.id')
@@ -121,6 +192,16 @@ class SolicitudDistribucionController extends Controller
                                 ->where('solicitud_distribucion.status', '=', '1')
                                 ->paginate(8);
         }elseif (session('perfilTipo') == 'I'){
+            $notificaciones_pendientes_SD = DB::table('notificacion_i')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'SD')
+                                        ->get();
+
+            foreach ($notificaciones_pendientes_SD as $notificacion){
+                $act = DB::table('notificacion_i')
+                        ->where('id', '=', $notificacion->id)
+                        ->update(['leida' => '1']);
+            }
             $demandasDistribucion = DB::table('solicitud_distribucion')
                                 ->select('solicitud_distribucion.*', 'producto.nombre')
                                 ->join('producto', 'solicitud_distribucion.producto_id', '=', 'producto.id')

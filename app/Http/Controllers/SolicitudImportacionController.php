@@ -30,6 +30,11 @@ class SolicitudImportacionController extends Controller
         $solicitudImportacion->fecha = $fecha;
         $solicitudImportacion->save();
 
+        $ult_solicitud = DB::table('solicitud_importacion')
+                            ->select('id')
+                            ->orderBy('created_at', 'DESC')
+                            ->first();
+
         $productor = DB::table('producto')
                         ->select('productor.id', 'producto.nombre')
                         ->join('marca', 'producto.marca_id', '=', 'marca.id')
@@ -37,15 +42,52 @@ class SolicitudImportacionController extends Controller
                         ->where('producto.id', '=', $request->producto_id )
                         ->first();
 
-        //Notificar al productor
-        $url = 'notificacion/notificar-productor/SI/'.$productor->nombre.'/'.$productor->id;
-        return redirect($url);
-        // ... //
+        //NOTIFICAR AL PRODUCTOR
+        $notificaciones_productor = new Notificacion_P();
+        $notificaciones_productor->creador_id = session('perfilId');
+        $notificaciones_productor->tipo_creador = session('perfilTipo');
+        $notificaciones_productor->titulo = 'Estan solicitando la importación de tu producto '. $productor->nombre;
+        $notificaciones_productor->url='solicitar-importacion/'.$ult_solicitud->id;
+        $notificaciones_productor->descripcion = 'Nueva Solicitud de Importación';
+        $notificaciones_productor->color = 'bg-orange';
+        $notificaciones_productor->icono = 'fa fa-user-plus';
+        $notificaciones_productor->tipo ='SI';
+        $notificaciones_productor->productor_id = $productor->id;
+        $notificaciones_productor->fecha = $fecha;
+        $notificaciones_productor->leida = '0';
+        $notificaciones_productor->save();
+        // *** //
     }
 
     public function show($id)
     {
-        //
+        if (session('perfilSuscripcion') != 'Premium'){
+            $deduccion = DB::table('deduccion_credito_productor')
+                            ->where('productor_id', '=', session('perfilId'))
+                            ->where('tipo_deduccion', '=', 'SI')
+                            ->where('accion_id', '=', $id)
+                            ->first();
+
+            if ($deduccion == null){
+                $restringido = '1';
+            }else{
+                $restringido = '0';
+            }
+        }else{
+            $restringido = '0';
+        }
+
+        $demandaImportacion = Solicitud_Importacion::find($id);
+
+        $visitas = $demandaImportacion->cantidad_visitas + 1;
+
+        $act = DB::table('solicitud_importacion')
+                ->where('id', '=', $id)
+                ->update(['cantidad_visitas' => $visitas ]);
+
+        $demandaImportacion->cantidad_visitas = $visitas;
+
+        return view('solicitudImportacion.show')->with(compact('demandaImportacion', 'restringido'));
     }
 
     public function edit($id)
@@ -70,6 +112,17 @@ class SolicitudImportacionController extends Controller
     }
 
     public function demandas_importacion(){
+        $notificaciones_pendientes_SI = DB::table('notificacion_p')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'SI')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_SI as $notificacion){
+            $act = DB::table('notificacion_p')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
+
         $demandasImportacion = DB::table('solicitud_importacion')
                                 ->select('solicitud_importacion.*', 'producto.nombre')
                                 ->join('producto', 'solicitud_importacion.producto_id', '=', 'producto.id')

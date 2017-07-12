@@ -188,6 +188,9 @@ Route::get('credito/gastar-creditos-dd/{cant}/{id}/{perfil}', 'CreditoController
 Route::get('credito/gastar-creditos-dp/{cant}/{id}', 'CreditoController@gastar_creditos_DP' )
 ->name('credito.gastar-creditos-dp');
 
+Route::get('credito/gastar-creditos-db/{cant}/{id}', 'CreditoController@gastar_creditos_DB' )
+->name('credito.gastar-creditos-db');
+
 Route::get('credito/gastar-creditos-dip/{cant}/{id}', 'CreditoController@gastar_creditos_DIP' )
 ->name('credito.gastar-creditos-dip');
 

@@ -42,7 +42,7 @@ class DemandaProductoController extends Controller
                     ->where('id', '=', $notificacion->id)
                     ->update(['leida' => '1']);
         }
-        
+
         $demandasProductos = DB::table('demanda_producto')
                                 ->select('demanda_producto.*', 'producto.nombre', 'producto.marca_id', 'marca.productor_id')
                                 ->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
@@ -56,9 +56,19 @@ class DemandaProductoController extends Controller
     }
 
     public function demandas_bebidas_productores(){
+        $notificaciones_pendientes_DB = DB::table('notificacion_p')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'DB')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_DB as $notificacion){
+            $act = DB::table('notificacion_p')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
 
         $demandasBebidas = DB::table('demanda_producto')
-                                ->select('demanda_producto.id', 'demanda_producto.titulo', 'demanda_producto.descripcion', 'demanda_producto.tipo_creador', 'demanda_producto.bebida_id')
+                                ->select('demanda_producto.*')
                                 ->join('producto', 'demanda_producto.bebida_id', '=', 'producto.bebida_id')
                                 ->join('marca', 'producto.marca_id', '=', 'marca.id')
                                 ->join('productor', 'marca.productor_id', '=', 'productor.id')
@@ -72,6 +82,16 @@ class DemandaProductoController extends Controller
     }
 
     public function demandas_productos_importadores(){
+        $notificaciones_pendientes_DP = DB::table('notificacion_i')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'DP')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_DP as $notificacion){
+            $act = DB::table('notificacion_i')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
            
         $demandasProductos = DB::table('demanda_producto')
                                 ->select('demanda_producto.*', 'producto.nombre', 'producto.marca_id')
@@ -87,6 +107,16 @@ class DemandaProductoController extends Controller
     }
 
     public function demandas_bebidas_importadores(){
+        $notificaciones_pendientes_DB = DB::table('notificacion_i')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'DB')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_DB as $notificacion){
+            $act = DB::table('notificacion_i')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
 
         $demandasBebidas = DB::table('demanda_producto')
                                 ->select('demanda_producto.*')
@@ -104,7 +134,17 @@ class DemandaProductoController extends Controller
     }
 
     public function demandas_productos_distribuidores(){
-           
+        $notificaciones_pendientes_DP = DB::table('notificacion_d')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'DP')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_DP as $notificacion){
+            $act = DB::table('notificacion_d')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
+
         $demandasProductos = DB::table('demanda_producto')
                                 ->select('demanda_producto.*', 'producto.nombre', 'producto.marca_id')
                                 ->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
@@ -119,6 +159,16 @@ class DemandaProductoController extends Controller
     }
 
     public function demandas_bebidas_distribuidores(){
+        $notificaciones_pendientes_DB = DB::table('notificacion_d')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'DP')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_DB as $notificacion){
+            $act = DB::table('notificacion_d')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
 
         $demandasBebidas = DB::table('demanda_producto')
                                 ->select('demanda_producto.*')
@@ -345,11 +395,13 @@ class DemandaProductoController extends Controller
             if (session('perfilTipo') == 'P'){
                 $deduccion = DB::table('deduccion_credito_productor')
                             ->where('productor_id', '=', session('perfilId'))
+                            ->where('tipo_deduccion', '=', 'DP')
                             ->where('accion_id', '=', $id)
                             ->first();
             }elseif (session('perfilTipo') == 'I'){
                 $deduccion = DB::table('deduccion_credito_importador')
                             ->where('importador_id', '=', session('perfilId'))
+                            ->where('tipo_deduccion', '=', 'DP')
                             ->where('accion_id', '=', $id)
                             ->first();
             }elseif (session('perfilTipo') == 'D'){

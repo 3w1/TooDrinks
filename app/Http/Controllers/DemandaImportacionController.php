@@ -29,19 +29,28 @@ class DemandaImportacionController extends Controller
     }
 
     public function demandas_disponibles(){
-        if (session('perfilTipo') == 'I'){
-            $pais_origen = DB::table('importador')
+        $notificaciones_pendientes_DI = DB::table('notificacion_i')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'DI')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_DI as $notificacion){
+            $act = DB::table('notificacion_i')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
+
+        $pais_origen = DB::table('importador')
                             ->where('id', '=', session('perfilId'))
                             ->select('pais_id')
                             ->get()
                             ->first();
 
-            $demandasImportadores = DB::table('demanda_importador')
+        $demandasImportadores = DB::table('demanda_importador')
                                         ->orderBy('created_at', 'DESC')
                                         ->where('pais_id', '=', $pais_origen->pais_id)
                                         ->where('status', '=', '1')
                                         ->paginate(10);
-        }
 
         return view('demandaImportacion.demandasDisponibles')->with(compact('demandasImportadores'));
     }
@@ -80,6 +89,11 @@ class DemandaImportacionController extends Controller
                     ->where('id', '=', $request->marca_id)
                     ->first();
 
+        $ult_demanda = DB::table('demanda_importador')
+                        ->select('id')
+                        ->orderBy('created_at', 'DESC')
+                        ->first();
+
         $importadores = DB::table('importador')
                         ->select('id')
                         ->where('pais_id', '=', $request->pais_id)
@@ -95,14 +109,14 @@ class DemandaImportacionController extends Controller
                 $notificaciones_importador->creador_id = session('perfilId');
                 $notificaciones_importador->tipo_creador = session('perfilTipo');
                 $notificaciones_importador->titulo = 'Un productor está en la búsqueda de nuevos importadores para su marca '. $marca->nombre;
-                $notificaciones_importador->url='demanda-importador/demandas-disponibles';
+                $notificaciones_importador->url='demanda-importador/'.$ult_demanda->id;
                 $notificaciones_importador->importador_id = $importador->id;
                 $notificaciones_importador->descripcion = 'Demanda de Importador';
                 $notificaciones_importador->color = 'bg-orange';
                 $notificaciones_importador->icono = 'fa fa-handshake-o';
                 $notificaciones_importador->tipo ='DI';
                 $notificaciones_importador->fecha = $fecha;
-                $notificaciones_importddor->leida ='0';
+                $notificaciones_importador->leida ='0';
                 $notificaciones_importador->save();
             }
         }
@@ -112,7 +126,33 @@ class DemandaImportacionController extends Controller
 
     public function show($id)
     {
-        
+        if (session('perfilSuscripcion') != 'Premium'){
+            $deduccion = DB::table('deduccion_credito_importador')
+                            ->where('importador_id', '=', session('perfilId'))
+                            ->where('tipo_deduccion', '=', 'DI')
+                            ->where('accion_id', '=', $id)
+                            ->first();
+            
+            if ($deduccion == null){
+                $restringido = '1';
+            }else{
+                $restringido = '0';
+            }
+        }else{
+            $restringido = '0';
+        }
+
+        $demandaImportador = Demanda_Importador::find($id);
+
+        $visitas = $demandaImportador->cantidad_visitas + 1;
+
+        $act = DB::table('demanda_importador')
+                ->where('id', '=', $id)
+                ->update(['cantidad_visitas' => $visitas ]);
+
+        $demandaImportador->cantidad_visitas = $visitas;
+
+        return view('demandaImportacion.show')->with(compact('demandaImportador', 'restringido'));
     }
 
     public function edit($id)

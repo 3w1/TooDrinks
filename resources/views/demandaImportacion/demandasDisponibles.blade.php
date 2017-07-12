@@ -13,17 +13,6 @@
 @endsection
 
 @section('content-left')
-   @if ( (session('perfilSuscripcion') != 'Premium') )
-      @if (session('perfilSaldo') < '30')
-         <div class="alert alert-danger">
-            No tiene créditos suficientes para ver la información de contacto de los productores. Por favor compre créditos. <a href="{{ route('credito.index') }">Ver Planes de Crédito</a> O consiga una Suscripción Advanced o Premium. <a href="">Ver Suscripciones</a> 
-         </div>
-      @else
-         <div class="alert alert-danger">
-           Se le descontarán 30 créditos de su saldo. Para ver demandas sin pagar créditos debe obtener una Suscripción Premium. 
-         </div>
-      @endif
-   @endif
    <div class="row">
       
       <div class="col-md-12">
@@ -65,15 +54,7 @@
                         </div>
                
                         <div class="timeline-footer">
-                           @if (session('perfilSuscripcion') == 'P')
-                              <a class="btn btn-primary btn-xs" href="{{ route('productor.show', $demandaImportador->productor_id) }}">¡Contactar!</a>
-                           @else
-                              @if (session('perfilSaldo') >= '30')
-                                 <a class="btn btn-primary btn-xs" href="{{ route('credito.gastar-creditos-di', ['30', $demandaImportador->productor_id]) }}">¡Contactar! 30 <i class="fa fa-certificate"></i></a>
-                              @else 
-                                 <button class="btn btn-primary btn-xs" disabled>¡Contactar! 30 <i class="fa fa-certificate"></i></button>
-                              @endif
-                           @endif
+                           <a class="btn btn-primary btn-xs" href="{{ route('demanda-importador.show', $demandaImportador->id) }}">¡Más Detalles!</a>
                         </div>
                      </div>
                   </li>

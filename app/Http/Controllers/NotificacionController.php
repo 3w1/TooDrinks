@@ -135,20 +135,6 @@ class NotificacionController extends Controller
             $notificaciones_productor->color = 'bg-red';
             $notificaciones_productor->icono = 'fa fa-hand-pointer-o';
             $notificaciones_productor->tipo ='AD';
-        }elseif ($tipo == 'SI'){
-            $notificaciones_productor->titulo = 'Estan solicitando la importación de tu producto '. $descripcion;
-            $notificaciones_productor->url='demandas-importacion';
-            $notificaciones_productor->descripcion = 'Nueva Solicitud de Importación';
-            $notificaciones_productor->color = 'bg-orange';
-            $notificaciones_productor->icono = 'fa fa-user-plus';
-            $notificaciones_productor->tipo ='SI';
-        }elseif ($tipo == 'SD'){
-            $notificaciones_productor->titulo = 'Estan solicitando la distribución de tu producto '. $descripcion;
-            $notificaciones_productor->url='demandas-distribucion';
-            $notificaciones_productor->descripcion = 'Nueva Solicitud de Distribución';
-            $notificaciones_productor->color = 'bg-green';
-            $notificaciones_productor->icono = 'fa fa-user-plus';
-            $notificaciones_productor->tipo ='SD';
         }
         
         $notificaciones_productor->productor_id = $productor_id;

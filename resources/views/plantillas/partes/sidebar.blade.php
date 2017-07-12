@@ -38,6 +38,66 @@
          }
       }
    ?>
+@elseif (session('perfilTipo') == 'I')
+   <?php 
+      $notificaciones_pendientes = DB::table('notificacion_i')
+                                    ->where('importador_id', '=', session('perfilId'))
+                                    ->where('leida', '=', '0')
+                                    ->select('id', 'tipo')
+                                    ->get();
+
+      $confirmaciones = 0; $demandas = 0;
+      $cont_AD = 0; $cont_NO = 0;
+      $cont_SD = 0; $cont_DP = 0; $cont_DB = 0; $cont_DI = 0;
+
+      foreach($notificaciones_pendientes as $notificacion){
+         if ($notificacion->tipo == 'AD'){
+            $confirmaciones++;
+            $cont_AD++;
+         }elseif ($notificacion->tipo == 'NO'){
+            $cont_NO++;
+         }elseif ($notificacion->tipo == 'SD'){
+            $demandas++;
+            $cont_SD++;
+         }elseif ($notificacion->tipo == 'DP'){
+            $demandas++;
+            $cont_DP++;
+         }elseif ($notificacion->tipo == 'DB'){
+            $demandas++;
+            $cont_DB++;
+         }elseif ($notificacion->tipo == 'DI'){
+            $demandas++;
+            $cont_DI++;
+         }
+      }
+   ?>
+@elseif (session('perfilTipo') == 'D')
+   <?php 
+      $notificaciones_pendientes = DB::table('notificacion_d')
+                                    ->where('distribuidor_id', '=', session('perfilId'))
+                                    ->where('leida', '=', '0')
+                                    ->select('id', 'tipo')
+                                    ->get();
+
+      $demandas = 0;
+      $cont_NO = 0;
+      $cont_DP = 0; $cont_DB = 0; $cont_DD = 0;
+
+      foreach($notificaciones_pendientes as $notificacion){
+         if ($notificacion->tipo == 'NO'){
+            $cont_NO++;
+         }elseif ($notificacion->tipo == 'DP'){
+            $demandas++;
+            $cont_DP++;
+         }elseif ($notificacion->tipo == 'DB'){
+            $demandas++;
+            $cont_DB++;
+         }elseif ($notificacion->tipo == 'DD'){
+            $demandas++;
+            $cont_DD++;
+         }
+      }
+   ?>
 @endif
 
 <div class="user-panel">
@@ -254,11 +314,16 @@
             <a href="#"><i class="fa fa-share"></i> Ofertas
                <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
+                  @if($cont_NO > 0)<small class="label pull-right bg-purple">{{$cont_NO}}</small>@endif
                </span>
             </a>
             <ul class="treeview-menu">
                <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
-               <li><a href="{{ route('importador.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
+               <li><a href="{{ route('importador.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles
+                  <span class="pull-right-container">
+                     @if($cont_NO > 0) <small class="label pull-right bg-purple">{{$cont_NO}}</small>@endif
+                  </span>
+               </a></li>
                <li><a href="{{ route('oferta.crear-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
             </ul>
          </li>
@@ -308,13 +373,30 @@
             <a href="#"><i class="fa fa-share"></i> Demandas
                <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
+                  @if($demandas > 0)<small class="label pull-right bg-blue">{{$demandas}}</small>@endif
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="{{ route('demanda-importador.demandas-disponibles') }}"><i class="fa fa-circle-o"></i> Importadores</a></li>
-               <li><a href="{{ route('demanda-producto.demandas-productos-importadores') }}"><i class="fa fa-circle-o"></i> Productos</a></li>
-               <li><a href="{{ route('demanda-producto.demandas-bebidas-importadores') }}"><i class="fa fa-circle-o"></i> Bebidas</a></li>
-               <li><a href="{{ route('demandas-distribucion')}}"><i class="fa fa-circle-o"></i> Distribución</a></li>
+               <li><a href="{{ route('demanda-importador.demandas-disponibles') }}"><i class="fa fa-circle-o"></i> Importadores
+                  <span class="pull-right-container">
+                     @if($cont_DI > 0) <small class="label pull-right bg-orange">{{$cont_DI}}</small>@endif
+                  </span>
+               </a></li>
+               <li><a href="{{ route('demanda-producto.demandas-productos-importadores') }}"><i class="fa fa-circle-o"></i> Productos
+                  <span class="pull-right-container">
+                     @if($cont_DP > 0) <small class="label pull-right bg-aqua">{{$cont_DP}}</small>@endif
+                  </span>
+               </a></li>
+               <li><a href="{{ route('demanda-producto.demandas-bebidas-importadores') }}"><i class="fa fa-circle-o"></i> Bebidas
+                  <span class="pull-right-container">
+                     @if($cont_DB > 0) <small class="label pull-right bg-yellow">{{$cont_DB}}</small>@endif
+                  </span>
+               </a></li>
+               <li><a href="{{ route('demandas-distribucion')}}"><i class="fa fa-circle-o"></i> Distribución
+                  <span class="pull-right-container">
+                     @if($cont_AD > 0) <small class="label pull-right bg-red">{{$cont_AD}}</small>@endif
+                  </span>
+               </a></li>
             </ul>
          </li>
          <li><a href="{{ route('importador.listado-distribuidores') }}"><i class="fa fa-circle-o"></i> Listado de Distribuidores</a></li>
@@ -341,11 +423,16 @@
             <a href="#"><i class="fa fa-share"></i> Ofertas
                <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
+                  @if($cont_NO > 0)<small class="label pull-right bg-purple">{{$cont_NO}}</small>@endif
                </span>
             </a>
             <ul class="treeview-menu">
                <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
-               <li><a href="{{ route('distribuidor.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
+               <li><a href="{{ route('distribuidor.ofertas-disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles
+                  <span class="pull-right-container">
+                     @if($cont_NO > 0) <small class="label pull-right bg-purple">{{$cont_NO}}</small>@endif
+                  </span>
+               </a></li>
                <li><a href="{{ route('oferta.crear-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
             </ul>
          </li>
@@ -384,12 +471,25 @@
             <a href="#"><i class="fa fa-share"></i> Demandas
                <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
+                  @if($demandas > 0)<small class="label pull-right bg-red">{{$demandas}}</small>@endif
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="{{ route('demanda-distribuidor.demandas-disponibles') }}"><i class="fa fa-circle-o"></i> Distribuidores</a></li>
-               <li><a href="{{ route('demanda-producto.demandas-productos-distribuidores') }}"><i class="fa fa-circle-o"></i> Productos</a></li>
-               <li><a href="{{ route('demanda-producto.demandas-bebidas-distribuidores') }}"><i class="fa fa-circle-o"></i> Bebidas</a></li>
+               <li><a href="{{ route('demanda-distribuidor.demandas-disponibles') }}"><i class="fa fa-circle-o"></i> 
+                  <span class="pull-right-container">
+                     @if($cont_DD > 0) <small class="label pull-right bg-green">{{$cont_DD}}</small>@endif
+                  </span>
+               Distribuidores</a></li>
+               <li><a href="{{ route('demanda-producto.demandas-productos-distribuidores') }}"><i class="fa fa-circle-o"></i> Productos
+                  <span class="pull-right-container">
+                     @if($cont_DP > 0) <small class="label pull-right bg-aqua">{{$cont_DP}}</small>@endif
+                  </span>
+               </a></li>
+               <li><a href="{{ route('demanda-producto.demandas-bebidas-distribuidores') }}"><i class="fa fa-circle-o"></i> Bebidas
+                  <span class="pull-right-container">
+                     @if($cont_DB > 0) <small class="label pull-right bg-yellow">{{$cont_DB}}</small>@endif
+                  </span>
+               </a></li>
             </ul>
          </li>
          <!-- FIN DE SECCIÓN DE DISTRIBUIDORES -->

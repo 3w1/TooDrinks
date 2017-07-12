@@ -23,7 +23,7 @@
                      ->first();
       }
    ?>
-   @include('demandaProducto.modales.datosContacto')
+
    @section('title-header')
       <h3><b>{{ $demandaProducto->titulo }}</b></h3>
    @endsection
@@ -76,7 +76,7 @@
       <div class="col-md-10 col-xs-12"> 
          <div class="panel panel-default panel-success">
             <div class="panel-heading"><h4><b> 
-               @if ($demandaProducto->producto->id != '0') 
+               @if ($demandaProducto->producto_id != '0') 
                   Demanda de Producto: 
                @else 
                   Demanda de Bebida: 
@@ -93,7 +93,11 @@
                      @if (session('perfilSaldo') < '30')
                         <a class="btn btn-danger" disabled>¡Me Interesa!</a>
                      @else
-                        <a href="{{ route('credito.gastar-creditos-dp', ['30', $demandaProducto->id]) }}" class="btn btn-warning">¡Me Interesa! <b>(30 <i class="fa fa-certificate"></i>)</b></a>
+                        @if ($demandaProducto->producto_id != '0')
+                           <a href="{{ route('credito.gastar-creditos-dp', ['30', $demandaProducto->id]) }}" class="btn btn-warning">¡Me Interesa! <b>(30 <i class="fa fa-certificate"></i>)</b></a>
+                        @else
+                           <a href="{{ route('credito.gastar-creditos-db', ['30', $demandaProducto->id]) }}" class="btn btn-warning">¡Me Interesa! <b>(30 <i class="fa fa-certificate"></i>)</b></a>
+                        @endif
                      @endif
                   </center></li>
                @else
