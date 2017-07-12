@@ -16,7 +16,7 @@
 	@endsection
 
 	<div class="form-group">
-		@if ( (session('perfilSuscripcion') == 'G') || (session('perfilSuscripcion') == 'B') )
+		@if ( (session('perfilSuscripcion') == 'Gratis') || (session('perfilSuscripcion') == 'Basic') )
 			@if (session('perfilSaldo') >= '25')
 				<div class="alert alert-danger">
 			        Se le descontarán <strong>25 Créditos</strong> de su saldo para crear la oferta. Para crear una oferta sin créditos debe tener Suscripción Advanced o Premium.

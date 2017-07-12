@@ -56,6 +56,7 @@
          <li><a href="{{ route('admin.crear-importador') }}"><i class="fa fa-circle-o"></i> Crear Importador</a></li>
          <li><a href="{{ route('admin.crear-distribuidor') }}"><i class="fa fa-circle-o"></i> Crear Distribuidor</a></li>
          <li><a href="{{ route('admin.crear-horeca') }}"><i class="fa fa-circle-o"></i> Crear Horeca</a></li>
+         <li><a href="#"><i class="fa fa-circle-o"></i> Crear AdminWeb</a></li>
       </ul>
    </li>
 

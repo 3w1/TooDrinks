@@ -3,6 +3,8 @@
 {!! Form::open(['route' => 'oferta.store', 'method' => 'POST']) !!}
 	{!! Form::hidden('tipo_creador', session('perfilTipo')) !!}
 	{!! Form::hidden('creador_id', session('perfilId')) !!}
+	{!! Form::hidden('cantidad_visitas', '0') !!}
+	{!! Form::hidden('cantidad_contactos', '0') !!}
 
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
 
@@ -104,7 +106,7 @@
     @endif
 
     <div class="form-group">
-    	@if ( (session('perfilSuscripcion') == 'G') || (session('perfilSuscripcion') == 'B') )
+    	@if ( (session('perfilSuscripcion') == 'Gratis') || (session('perfilSuscripcion') == 'Basic') )
 	    	@if (session('perfilSaldo') >= '25')
 				{!! Form::submit('Crear Oferta', ['class' => 'btn btn-primary']) !!}
 			@else

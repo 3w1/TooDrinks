@@ -85,7 +85,8 @@ class DemandaDistribucionController extends Controller
         $fecha = new \DateTime();
         
         $demanda_distribuidor  = new Demanda_Distribuidor($request->all());
-        $demanda_distribuidor ->save();
+        $demanda_distribuidor->fecha = $fecha;
+        $demanda_distribuidor->save();
 
         $marca = DB::table('marca')
                     ->select('nombre')
@@ -106,6 +107,8 @@ class DemandaDistribucionController extends Controller
                 $notificaciones_distribuidor = new Notificacion_D();
                 $notificaciones_distribuidor->creador_id = session('perfilId');
                 $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
+                $notificaciones_distribuidor->distribuidor_id = $distribuidor->id;
+                $notificaciones_distribuidor->tipo = 'DD';
                 if (session('perfilTipo') == 'P'){
                     $notificaciones_distribuidor->titulo = 'Un productor está en la búsqueda de nuevos distribuidores para su marca '. $marca->nombre;
                 }else{
@@ -113,11 +116,12 @@ class DemandaDistribucionController extends Controller
                 }
                 
                 $notificaciones_distribuidor->url='demanda-distribuidor/demandas-disponibles';
-                $notificaciones_distribuidor->distribuidor_id = $distribuidor->id;
+                
                 $notificaciones_distribuidor->descripcion = 'Demanda de Distribuidor';
                 $notificaciones_distribuidor->color = 'bg-green';
                 $notificaciones_distribuidor->icono = 'fa fa-handshake-o';
                 $notificaciones_distribuidor->fecha = $fecha;
+                $notificaciones_distribuidor->leida ='0';
                 $notificaciones_distribuidor->save();
             }
         }

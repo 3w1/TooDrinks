@@ -14,7 +14,7 @@ class CreateCreditoTable extends Migration
         	$table->integer('cantidad_creditos');
         	$table->double('precio', 6, 2);
         	$table->text('descripcion');
-          $table->timestamps();
+          	$table->timestamps();
         });
 
         Schema::create('productor_credito', function (Blueprint $table){

@@ -27,7 +27,11 @@ class ProductorController extends Controller
                         ->orderBy('pais')
                         ->pluck('pais', 'id');
 
-        return view('adminWeb.perfiles.crearProductor')->with(compact('paises'));    
+        $suscripciones = DB::table('suscripcion')
+                        ->orderBy('precio')
+                        ->pluck('suscripcion', 'id');
+
+        return view('adminWeb.perfiles.crearProductor')->with(compact('paises', 'suscripciones'));    
     }
 
     public function store(Request $request)
@@ -121,47 +125,6 @@ class ProductorController extends Controller
 
     }
 
-    //FUNCION QUE LE PERMITE AL PRODUCTOR REGISTRAR UN IMPORTADOR DE SU PROPIEDAD
-    /*public function registrar_importador(){
-        $perfil = 'I';
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        return view('productor.registrarPerfil')->with(compact('perfil', 'paises'));
-    }
-
-    //FUNCION QUE PERMITE VER LOS IMPORTADORES ASOCIADOS A UN PRODUCTOR
-    public function ver_importadores(){
-        
-        $importadores = Productor::find(session('productorId'))
-                                    ->importadores()
-                                    ->paginate(8);
-
-        return view('productor.listados.importadores')->with(compact('importadores'));
-    }
-
-    //FUNCION QUE LE PERMITE AL PRODUCTOR REGISTRAR UN DISTRIBUIDOR DE SU PROPIEDAD
-    public function registrar_distribuidor(){
-        $perfil = 'D';
-
-       $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        return view('productor.registrarPerfil')->with(compact('perfil', 'paises'));
-    }
-
-    //FUNCION QUE PERMITE VER LOS DISTRIBUIDORES ASOCIADOS A UN PRODUCTOR
-    public function ver_distribuidores(){
-        $distribuidores = Productor::find(session('productorId'))
-                                    ->distribuidores()
-                                    ->paginate(8);
-
-        return view('productor.listados.distribuidores')->with(compact('distribuidores'));
-    }*/
-
     public function listado_marcas(){
         $marcas = Marca::orderBy('nombre', 'ASC')
                         ->where('productor_id', '=', '0')
@@ -216,7 +179,7 @@ class ProductorController extends Controller
                         ->where('id','=', $id_marca->marca_id)
                         -> get()->first();
 
-         $productor = Productor::find(session('perfilId'));
+        $productor = Productor::find(session('perfilId'));
 
         if ($tipo == 'S'){
             $actualizacion = DB::table('importador_marca')
@@ -235,6 +198,8 @@ class ProductorController extends Controller
             $notificaciones_importador->color = 'bg-blue';
             $notificaciones_importador->icono = 'fa fa-thumbs-o-up';
             $notificaciones_importador->fecha = $fecha;
+            $notificaciones_importador->tipo = 'CI';
+            $notificaciones_importador->leida = '0';
             $notificaciones_importador->save();
 
             return redirect('productor/confirmar-importadores')->with('msj', 'Solicitud aprobada exitosamente');
@@ -248,10 +213,12 @@ class ProductorController extends Controller
             $notificaciones_importador->titulo = 'El productor ' . $productor->nombre . ' lo ha rechazado como importador de la marca '. $nombre_marca->nombre;
             $notificaciones_importador->url='marca';
             $notificaciones_importador->importador_id = $imp;
-            $notificaciones_importador->descripcion = "Rechazo de Importador";
+            $notificaciones_importador->descripcion = "Denegación de Importador";
             $notificaciones_importador->color = 'bg-red';
             $notificaciones_importador->icono = 'fa fa-thumbs-o-down';
             $notificaciones_importador->fecha = $fecha;
+            $notificaciones_importador->tipo = 'CI';
+            $notificaciones_importador->leida = '0';
             $notificaciones_importador->save();
 
             return redirect('productor/confirmar-importadores')->with('msj', 'Solicitud denegada exitosamente');
@@ -270,6 +237,7 @@ class ProductorController extends Controller
     }
 
     public function confirmar_distribuidor($id, $tipo, $dist){
+        $fecha = new \DateTime();
         if ($tipo == 'S'){
             $actualizacion = DB::table('distribuidor_marca')
                                 ->where('id', '=', $id)
@@ -299,6 +267,8 @@ class ProductorController extends Controller
             $notificaciones_distribuidor->color = 'bg-blue';
             $notificaciones_distribuidor->icono = 'fa fa-thumbs-o-up';
             $notificaciones_distribuidor->fecha = $fecha;
+            $notificaciones_distribuidor->tipo = 'CD';
+            $notificaciones_distribuidor->leida = '0';
             $notificaciones_distribuidor->save();
 
             return redirect('productor/confirmar-distribuidores')->with('msj', 'Solicitud aprobada exitosamente');
@@ -311,10 +281,12 @@ class ProductorController extends Controller
             $notificaciones_distribuidor->titulo = 'El productor ' . $productor->nombre  . 'lo ha rechazado como distribuidor de la marca: '. $nombre_marca->nombre;
             $notificaciones_distribuidor->url='marca';
             $notificaciones_distribuidor->distribuidor_id = $dist;
-            $notificaciones_distribuidor->descripcion = "Rechazo de Distribuidor";
+            $notificaciones_distribuidor->descripcion = "Denegación de Distribuidor";
             $notificaciones_distribuidor->color = 'bg-red';
             $notificaciones_distribuidor->icono = 'fa fa-thumbs-o-down';
             $notificaciones_distribuidor->fecha = $fecha;
+            $notificaciones_distribuidor->tipo = 'CD';
+            $notificaciones_distribuidor->leida = '0';
             $notificaciones_distribuidor->save();
 
             return redirect('productor/confirmar-distribuidores')->with('msj', 'Solicitud denegada exitosamente');
@@ -334,6 +306,7 @@ class ProductorController extends Controller
     }
 
     public function confirmar_producto($id, $tipo){
+        $fecha = new \DateTime();
         $producto = DB::table('producto')
                         ->select('creador_id', 'tipo_creador', 'nombre')
                         ->where('id', '=', $id)
@@ -352,9 +325,12 @@ class ProductorController extends Controller
                 $notificaciones_importador->titulo = session('perfilNombre') . ' ha confirmado el producto '. $producto->nombre;
                 $notificaciones_importador->url='producto/detalle-de-producto/'.$id;
                 $notificaciones_importador->importador_id = $producto->creador_id;
-                $notificaciones_importador->descripcion = "Confirmación de Distribuidor";
-                $notificaciones_importador->color = 'bg-blue';
-                $notificaciones_importador->icono = 'fa fa-thumbs-o-up';
+                $notificaciones_importador->descripcion = "Confirmación de Producto";
+                $notificaciones_importador->color = 'bg-yellow';
+                $notificaciones_importador->icono = 'fa fa-check-square-o';
+                $notificaciones_importador->fecha = $fecha;
+                $notificaciones_importador->tipo = 'CP';
+                $notificaciones_importador->leida = '0';
                 $notificaciones_importador->save(); 
             }elseif ($producto->tipo_creador == 'D'){
                 $notificaciones_distribuidor = new Notificacion_D();
@@ -363,31 +339,48 @@ class ProductorController extends Controller
                 $notificaciones_distribuidor->titulo = session('perfilNombre') . ' ha confirmado el producto '. $producto->nombre;
                 $notificaciones_distribuidor->url='producto/detalle-de-producto/'.$id;
                 $notificaciones_distribuidor->distribuidor_id = $producto->creador_id;
-                $notificaciones_importador->descripcion = "Rechazo de Distribuidor";
-                $notificaciones_importador->color = 'bg-rede';
-                $notificaciones_importador->icono = 'fa fa-thumbs-down';
+                $notificaciones_distribuidor->descripcion = "Confirmación de Producto";
+                $notificaciones_distribuidor->color = 'bg-rede';
+                $notificaciones_distribuidor->icono = 'fa fa-check-square-o';
+                $notificaciones_distribuidor->fecha = $fecha;
+                $notificaciones_distribuidor->tipo = 'CP';
+                $notificaciones_distribuidor->leida = '0';
                 $notificaciones_distribuidor->save(); 
             }
             return redirect('productor/confirmar-productos')->with('msj', 'Producto aprobado exitosamente');
         }else{
-            DB::table('producto')->where('id', '=', $id)->delete();
+            DB::table('producto')
+                ->where('id', '=', $id)
+                ->update(['marca_id' => '0']);
 
             if ($producto->tipo_creador == 'I'){
                 $notificaciones_importador = new Notificacion_I();
                 $notificaciones_importador->creador_id = session('perfilId');
                 $notificaciones_importador->tipo_creador = session('perfilTipo');
-                $notificaciones_importador->titulo = session('perfilNombre') . ' ha rechazado el producto '. $producto->nombre;
+                $notificaciones_importador->titulo = session('perfilNombre') . ' ha indicado que el producto '. $producto->nombre.' no pertenece a su marca.';
                 $notificaciones_importador->url='producto/detalle-de-producto/'.$id;
                 $notificaciones_importador->importador_id = $producto->creador_id;
+                $notificaciones_importador->descripcion = "Denegación de Producto";
+                $notificaciones_importador->color = 'bg-red';
+                $notificaciones_importador->icono = 'fa fa-exclamation-circle';
+                $notificaciones_importador->fecha = $fecha;
+                $notificaciones_importador->tipo = 'CP';
+                $notificaciones_importador->leida = '0';
                 $notificaciones_importador->save(); 
             }elseif ($producto->tipo_creador == 'D'){
                 $notificaciones_distribuidor = new Notificacion_D();
                 $notificaciones_distribuidor->creador_id = session('perfilId');
                 $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
-                $notificaciones_distribuidor->titulo = session('perfilNombre') . ' ha rechazado el producto '. $producto->nombre;
+                $notificaciones_distribuidor->titulo = session('perfilNombre') . ' ha indicado que el producto '. $producto->nombre.' no pertenece a su marca.';
                 $notificaciones_distribuidor->url='producto/detalle-de-producto/'.$id;
                 $notificaciones_distribuidor->distribuidor_id = $producto->creador_id;
-                $notificaciones_distribuidor->save(); 
+                $notificaciones_distribuidor->descripcion = "Denegación de Producto";
+                $notificaciones_distribuidor->color = 'bg-red';
+                $notificaciones_distribuidor->icono = 'fa fa-exclamation-cirlce';
+                $notificaciones_distribuidor->fecha = $fecha;
+                $notificaciones_distribuidor->tipo = 'CP';
+                $notificaciones_distribuidor->leida = '0';
+                $notificaciones_distribuidor->save();
             }
 
             return redirect('productor/confirmar-productos')->with('msj', 'Producto eliminado exitosamente');

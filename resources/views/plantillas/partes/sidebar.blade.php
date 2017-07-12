@@ -1,3 +1,45 @@
+@if (session('perfilTipo') == 'P')
+   <?php 
+      $notificaciones_pendientes = DB::table('notificacion_p')
+                                    ->where('productor_id', '=', session('perfilId'))
+                                    ->where('leida', '=', '0')
+                                    ->select('id', 'tipo')
+                                    ->get();
+
+      $confirmaciones = 0; $demandas = 0;
+      $cont_NM = 0; $cont_NP = 0; $cont_AI = 0; $cont_AD = 0;
+      $cont_SI = 0; $cont_SD = 0; $cont_DP = 0; $cont_DB = 0;
+
+      foreach($notificaciones_pendientes as $notificacion){
+         if ($notificacion->tipo == 'NM'){
+            $confirmaciones++;
+            $cont_NM++;
+         }elseif ($notificacion->tipo == 'NP'){
+            $confirmaciones++;
+            $cont_NP++;
+         }elseif ($notificacion->tipo == 'AI'){
+            $confirmaciones++;
+            $cont_AI++;
+         }elseif ($notificacion->tipo == 'AD'){
+            $confirmaciones++;
+            $cont_AD++;
+         }elseif ($notificacion->tipo == 'SI'){
+            $demandas++;
+            $cont_SI++;
+         }elseif ($notificacion->tipo == 'SD'){
+            $demandas++;
+            $cont_SD++;
+         }elseif ($notificacion->tipo == 'DP'){
+            $demandas++;
+            $cont_DP++;
+         }elseif ($notificacion->tipo == 'DB'){
+            $demandas++;
+            $cont_DB++;
+         }
+      }
+   ?>
+@endif
+
 <div class="user-panel">
    @if (session('perfilTipo') == 'P')
       <div class="pull-left image">
@@ -100,7 +142,7 @@
             <a href="#">
                <i class="fa fa-share"></i> <span>Solicitudes</span>
                <span class="pull-right-container">
-                 <i class="fa fa-angle-left pull-right"></i>
+                  <i class="fa fa-angle-left pull-right"></i>
                </span>
             </a>
             <ul class="treeview-menu">
@@ -132,26 +174,60 @@
             <a href="#"><i class="fa fa-share"></i> Confirmaciones
                <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
+                  @if($confirmaciones > 0)<small class="label pull-right bg-orange">{{$confirmaciones}}</small>@endif
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="{{ route('productor.confirmar-importadores') }}"><i class="fa fa-circle-o"></i> Importadores</a></li>
-               <li><a href="{{ route('productor.confirmar-distribuidores') }}"><i class="fa fa-circle-o"></i> Distribuidores</a></li>
-               <li><a href=""><i class="fa fa-circle-o"></i> Marcas</a></li>
-               <li><a href="{{ route('productor.confirmar-productos') }}"><i class="fa fa-circle-o"></i> Productos</a></li>
+               <li><a href="{{ route('productor.confirmar-importadores') }}"><i class="fa fa-circle-o"></i> Importadores
+                  <span class="pull-right-container">
+                     @if($cont_AI > 0) <small class="label pull-right bg-blue">{{$cont_AI}}</small>@endif
+                  </span>
+               </a></li>
+               <li><a href="{{ route('productor.confirmar-distribuidores') }}"><i class="fa fa-circle-o"></i> Distribuidores
+                  <span class="pull-right-container">
+                     @if($cont_AD > 0) <small class="label pull-right bg-red">{{$cont_AD}}</small>@endif
+                  </span>
+               </a></li>
+               <li><a href=""><i class="fa fa-circle-o"></i> Marcas
+                  <span class="pull-right-container">
+                     @if($cont_NM > 0) <small class="label pull-right bg-purple">{{$cont_NM}}</small>@endif
+                  </span>
+               </a></li>
+               <li><a href="{{ route('productor.confirmar-productos') }}"><i class="fa fa-circle-o"></i> Productos
+                  <span class="pull-right-container">
+                     @if($cont_NP > 0) <small class="label pull-right bg-yellow">{{$cont_NP}}</small>@endif
+                  </span>
+               </a></li>
             </ul>
          </li>
          <li class="treeview">
             <a href="#"><i class="fa fa-share"></i> Demandas
                <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
+                  @if($demandas > 0)<small class="label pull-right bg-blue">{{$demandas}}</small>@endif
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="{{ route('demanda-producto.demandas-productos-productores') }}"><i class="fa fa-circle-o"></i> Productos</a></li>
-               <li><a href="{{ route('demanda-producto.demandas-bebidas-productores') }}"><i class="fa fa-circle-o"></i> Bebidas</a></li>
-               <li><a href="{{ route('demandas-importacion')}}"><i class="fa fa-circle-o"></i> Importación</a></li>
-               <li><a href="{{ route('demandas-distribucion')}}"><i class="fa fa-circle-o"></i> Distribución</a></li>
+               <li><a href="{{ route('demanda-producto.demandas-productos-productores') }}"><i class="fa fa-circle-o"></i> Productos
+                  <span class="pull-right-container">
+                     @if($cont_DP > 0) <small class="label pull-right bg-aqua">{{$cont_DP}}</small>@endif
+                  </span>
+               </a></li>
+               <li><a href="{{ route('demanda-producto.demandas-bebidas-productores') }}"><i class="fa fa-circle-o"></i> Bebidas
+                  <span class="pull-right-container">
+                     @if($cont_DB > 0) <small class="label pull-right bg-yellow">{{$cont_DB}}</small>@endif
+                  </span>
+               </a></li>
+               <li><a href="{{ route('demandas-importacion')}}"><i class="fa fa-circle-o"></i> Importación
+                  <span class="pull-right-container">
+                     @if($cont_SI > 0) <small class="label pull-right bg-orange">{{$cont_SI}}</small>@endif
+                  </span>
+               </a></li>
+               <li><a href="{{ route('demandas-distribucion')}}"><i class="fa fa-circle-o"></i> Distribución
+                  <span class="pull-right-container">
+                     @if($cont_SD > 0) <small class="label pull-right bg-green">{{$cont_SD}}</small>@endif
+                  </span>
+               </a></li>
             </ul>
          </li>
          <li><a href="{{ route('productor.listado-importadores') }}"><i class="fa fa-circle-o"></i> Listado de Importadores</a></li>

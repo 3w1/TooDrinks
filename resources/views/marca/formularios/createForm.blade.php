@@ -8,11 +8,9 @@
 	@if (session('perfilTipo') == 'P')
 		{!! Form::hidden('productor_id', session('perfilId')) !!}
 		{!! Form::hidden('reclamada', '1') !!}
-		{!! Form::hidden('aprobada', '1') !!}
 	@else
 		{!! Form::hidden('productor_id', '0') !!}
 		{!! Form::hidden('reclamada', '0') !!}
-		{!! Form::hidden('aprobada', '0') !!}
 	@endif
 
 	@if (session('perfilTipo') == 'AD')

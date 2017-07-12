@@ -16,6 +16,8 @@
                {!! Form::hidden('producto_id', null, ['id' => 'producto_id']) !!}
                {!! Form::hidden('provincia_region_id', session('perfilProvincia') ) !!}
                {!! Form::hidden('status', '1') !!}
+               {!! Form::hidden('cantidad_visitas', '0') !!}
+               {!! Form::hidden('cantidad_contactos', '0') !!}
                {!! Form::submit("Confirmar", ['class' => 'btn btn-primary'])!!}
             {!! Form::close() !!}
          </div>

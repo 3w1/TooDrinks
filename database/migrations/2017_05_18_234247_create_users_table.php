@@ -10,6 +10,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
+            $table->enum('rol', ['AD', 'US', 'MB', 'SA']);
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
@@ -27,9 +28,10 @@ class CreateUsersTable extends Migration
             $table->boolean('importador'); 
             $table->boolean('distribuidor'); 
             $table->boolean('horeca'); 
+            $table->boolean('multinacional');
             $table->boolean('activado');
             $table->integer('cantidad_entidades');
-            $table->string('codigo_confirmacion');
+            $table->string('codigo_confirmacion')->nullable();
             $table->rememberToken();
             $table->timestamps();
 

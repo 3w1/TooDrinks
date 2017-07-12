@@ -34,6 +34,86 @@ class NotificacionController extends Controller
         return view('notificaciones.index')->with(compact('notificaciones'));
     }
 
+    public function marcar_leida($id){
+        if (session('perfilTipo') == 'P'){
+            $notificacion = DB::table('notificacion_p')
+                            ->select('url')
+                            ->where('id', '=', $id)
+                            ->first();
+
+            $act = DB::table('notificacion_p')
+                    ->where('id', '=', $id)
+                    ->update(['leida' => '1']);
+
+            return redirect($notificacion->url);
+        }
+
+        if (session('perfilTipo') == 'I'){
+            $notificacion = DB::table('notificacion_i')
+                            ->select('url')
+                            ->where('id', '=', $id)
+                            ->first();
+
+            $act = DB::table('notificacion_i')
+                    ->where('id', '=', $id)
+                    ->update(['leida' => '1']);
+
+            return redirect($notificacion->url);
+        }
+
+        if (session('perfilTipo') == 'D'){
+            $notificacion = DB::table('notificacion_d')
+                            ->select('url')
+                            ->where('id', '=', $id)
+                            ->first();
+
+            $act = DB::table('notificacion_d')
+                    ->where('id', '=', $id)
+                    ->update(['leida' => '1']);
+
+            return redirect($notificacion->url);
+        }
+
+        if (session('perfilTipo') == 'H'){
+            $notificacion = DB::table('notificacion_h')
+                            ->select('url')
+                            ->where('id', '=', $id)
+                            ->first();
+
+            $act = DB::table('notificacion_h')
+                    ->where('id', '=', $id)
+                    ->update(['leida' => '1']);
+
+            return redirect($notificacion->url);
+        }
+
+        if (session('perfilTipo') == 'US'){
+            $notificacion = DB::table('notificacion_u')
+                            ->select('url')
+                            ->where('id', '=', $id)
+                            ->first();
+
+            $act = DB::table('notificacion_u')
+                    ->where('id', '=', $id)
+                    ->update(['leida' => '1']);
+
+            return redirect($notificacion->url);
+        }
+
+        if (session('perfilTipo') == 'AD'){
+            $notificacion = DB::table('notificacion_admin')
+                            ->select('url')
+                            ->where('id', '=', $id)
+                            ->first();
+
+            $act = DB::table('notificacion_admin')
+                    ->where('id', '=', $id)
+                    ->update(['leida' => '1']);
+
+            return redirect($notificacion->url);
+        }
+    }
+
     public function notificar_p($tipo, $descripcion, $productor_id){
         $fecha = new \DateTime();
 
@@ -41,44 +121,39 @@ class NotificacionController extends Controller
         $notificaciones_productor->creador_id = session('perfilId');
         $notificaciones_productor->tipo_creador = session('perfilTipo');
 
-        if ($tipo == 'DP'){
-        	$notificaciones_productor->titulo = 'Estan damandando tu producto '. $descripcion;
-        	$notificaciones_productor->url='demanda-producto/demandas-productos-productores';
-            $notificaciones_productor->descripcion = 'Demanda de Producto';
-            $notificaciones_productor->color = 'bg-aqua';
-            $notificaciones_productor->icono = 'fa fa-clipboard';
-            $notificaciones_productor->fecha = $fecha;
-        }elseif ($tipo == 'AI'){
+        if ($tipo == 'AI'){
             $notificaciones_productor->titulo = session('perfilNombre') . ' ha indicado que importa tu marca '. $descripcion;
             $notificaciones_productor->url='productor/confirmar-importadores';
             $notificaciones_productor->descripcion = 'Nuevo Importador';
             $notificaciones_productor->color = 'bg-blue';
             $notificaciones_productor->icono = 'fa fa-hand-pointer-o';
-            $notificaciones_productor->fecha = $fecha;
+            $notificaciones_productor->tipo ='AI';
         }elseif($tipo =='AD'){
             $notificaciones_productor->titulo = session('perfilNombre') . ' ha indicado que distribuye tu marca '. $descripcion;
             $notificaciones_productor->url='productor/confirmar-distribuidores';
             $notificaciones_productor->descripcion = 'Nuevo Distribuidor';
             $notificaciones_productor->color = 'bg-red';
             $notificaciones_productor->icono = 'fa fa-hand-pointer-o';
-            $notificaciones_productor->fecha = $fecha;
-        }elseif ($tipo == 'SIM'){
+            $notificaciones_productor->tipo ='AD';
+        }elseif ($tipo == 'SI'){
             $notificaciones_productor->titulo = 'Estan solicitando la importación de tu producto '. $descripcion;
-            $notificaciones_productor->url='productor/solicitudes-importacion';
+            $notificaciones_productor->url='demandas-importacion';
             $notificaciones_productor->descripcion = 'Nueva Solicitud de Importación';
             $notificaciones_productor->color = 'bg-orange';
             $notificaciones_productor->icono = 'fa fa-user-plus';
-            $notificaciones_productor->fecha = $fecha;
-        }elseif ($tipo == 'SDM'){
+            $notificaciones_productor->tipo ='SI';
+        }elseif ($tipo == 'SD'){
             $notificaciones_productor->titulo = 'Estan solicitando la distribución de tu producto '. $descripcion;
-            $notificaciones_productor->url='productor/solicitudes-distribucion';
+            $notificaciones_productor->url='demandas-distribucion';
             $notificaciones_productor->descripcion = 'Nueva Solicitud de Distribución';
             $notificaciones_productor->color = 'bg-green';
             $notificaciones_productor->icono = 'fa fa-user-plus';
-            $notificaciones_productor->fecha = $fecha;
+            $notificaciones_productor->tipo ='SD';
         }
         
         $notificaciones_productor->productor_id = $productor_id;
+        $notificaciones_productor->fecha = $fecha;
+        $notificaciones_productor->leida = '0';
         $notificaciones_productor->save();
 
         if ($tipo == 'DP'){
@@ -87,9 +162,9 @@ class NotificacionController extends Controller
             return redirect('marca')->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
         }elseif($tipo == 'AD'){
             return redirect('marca')->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
-        }elseif($tipo == 'SIM'){
+        }elseif($tipo == 'SI'){
             return redirect('solicitar-importacion')->with('msj', 'Su solicitud ha sido creada exitosamente. Debe esperar que lo contacte el productor.');
-        }elseif ($tipo == 'SDM'){
+        }elseif ($tipo == 'SD'){
             return redirect('solicitar-distribucion')->with('msj', 'Su solicitud ha sido creada exitosamente. Debe esperar que lo contacte el Productor / Importador');
         }
     }

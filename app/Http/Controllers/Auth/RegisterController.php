@@ -60,17 +60,18 @@ class RegisterController extends Controller
         ]);
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return User
-     */
     protected function create(array $data)
     {
         $data['codigo_confirmacion'] = str_random(25);
 
+        if ($data['tipo_entidad'] == 'U'){
+            $data['rol'] = 'US';
+        }else{
+            $data['rol'] = 'MB';
+        }
+        
         $user = User::create([
+            'rol' => $data['rol'],
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
@@ -88,11 +89,13 @@ class RegisterController extends Controller
             'importador' => '0',
             'distribuidor' => '0',
             'horeca' => '0',
+            'multinacional' => '0',
             'activado' => '0',
+            'cantidad_entidades' => '0',
             'codigo_confirmacion' => $data['codigo_confirmacion'],
             'remember_token' => $data['_token']
         ]);
-
+        
         $ult_user = DB::table('users')
                         ->select('id')
                         ->orderBy('id', 'DESC')
@@ -101,19 +104,44 @@ class RegisterController extends Controller
 
         $data['id_usuario'] = $ult_user->id;
 
-        if ($data['tipo_entidad'] == 'P'){
-            $act_p = DB::table('productor')
+        if ($data['id_entidad'] != '0'){
+            if ($data['tipo_entidad'] == 'P'){
+                $act_p = DB::table('productor')
                             ->where('id', '=', $data['id_entidad'])
                             ->update(['user_id' => $ult_user->id]);
-            $act_u = DB::table('users')
+
+                $act_u = DB::table('users')
                             ->where('id', '=', $ult_user->id)
-                            ->update(['productor' => '1']);
+                            ->update(['productor' => '1',
+                                      'cantidad_entidades' => '1'
+                                    ]);
+            }elseif ($data['tipo_entidad'] == 'I'){
+                $act_i = DB::table('importador')
+                            ->where('id', '=', $data['id_entidad'])
+                            ->update(['user_id' => $ult_user->id]);
+
+                $act_u = DB::table('users')
+                            ->where('id', '=', $ult_user->id)
+                            ->update(['importador' => '1',
+                                      'cantidad_entidades' => '1'
+                                    ]);
+            }elseif ($data['tipo_entidad'] == 'D'){
+                $act_d = DB::table('distribuidor')
+                            ->where('id', '=', $data['id_entidad'])
+                            ->update(['user_id' => $ult_user->id]);
+
+                $act_u = DB::table('users')
+                            ->where('id', '=', $ult_user->id)
+                            ->update(['distribuidor' => '1',
+                                      'cantidad_entidades' => '1'
+                                    ]);
+            }
         }
-        
-        Mail::send('emails.confirmarCorreo', ['data' => $data] , function($msj) use ($data){
+
+        /*Mail::send('emails.confirmarCorreo', ['data' => $data] , function($msj) use ($data){
             $msj->subject('Confirmación de cuenta TooDrinks');
             $msj->to($data['email']);
-        });
+        });*/
 
         return $user;
     }

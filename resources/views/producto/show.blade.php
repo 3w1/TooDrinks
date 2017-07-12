@@ -188,6 +188,8 @@
                   {!! Form::open(['route' => 'opinion.store', 'method' => 'POST']) !!}
                      {!! Form::hidden('valoracion', '0', ['id' => 'valoracion1']) !!}
                      {!! Form::hidden('producto_id', $producto->id) !!}
+                     {!! Form::hidden('publicada', '0') !!}
+                     
                      {!! Form::text('comentario', null, ['class' => 'form-control input-sm', 'placeholder' => 'Valore y presione Enter para dejar su comentario']) !!}
                      <span class="text-muted pull-right">
                         <br>{!! Form::submit('Opinar', ['class' => 'btn btn-success btn-xs']) !!}

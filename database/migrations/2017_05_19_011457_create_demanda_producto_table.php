@@ -21,8 +21,9 @@ class CreateDemandaProductoTable extends Migration
             $table->integer('cantidad_minima')->default(0);
             $table->integer('cantidad_maxima')->defautl(0);
             $table->date('fecha_creacion');
-            $table->date('fecha_caducidad');
             $table->boolean('status');
+            $table->integer('cantidad_visitas');
+            $table->integer('cantidad_contactos');
             $table->timestamps();
 
             $table->foreign('producto_id')

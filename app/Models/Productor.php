@@ -11,7 +11,7 @@ class Productor extends Model
     protected $fillable = [
         'user_id', 'nombre', 'nombre_seo', 'descripcion', 'direccion', 'codigo_postal', 'pais_id', 'provincia_region_id', 'logo', 
         'persona_contacto', 'telefono', 'telefono_opcional', 'email', 'website', 'facebook', 'twitter', 'instagram',
-        'reclamada', 'latitud', 'longitud', 'estado_datos', 'tipo_suscripcion', 'saldo', 
+        'reclamada', 'latitud', 'longitud', 'estado_datos', 'suscripcion_id', 'saldo', 'invitacion', 'fecha_invitacion',
     ];
 
     public function user(){
@@ -20,6 +20,10 @@ class Productor extends Model
 
     public function pais(){
     	return $this->belongsTo('App\Models\Pais');
+    }
+
+    public function paises_impportaciones(){
+        return $this->belongsToMany('App\Models\Pais', 'productor_pais')->withTimestamps();
     }
 
     public function provincia_region(){
@@ -43,15 +47,19 @@ class Productor extends Model
     }
 
     public function creditos(){
-    	return $this->belongsToMany('App\Models\Credito', 'credito_productor')->withPivot('total', 'fecha_compra')->withTimestamps();
-    }
-
-    public function deducciones_creditos_productores(){
-        return $this->hasMany('App\Models\Deduccion_Credito_Productor');
+    	return $this->belongsToMany('App\Models\Credito', 'productor_credito')->withPivot('total', 'fecha_compra')->withTimestamps();
     }
 
     public function suscripcion(){
         return $this->belongsTo('App\Models\Suscripcion');
+    }
+
+    public function pagos_suscripciones(){
+        return $this->belongsToMany('App\Models\Suscripcion', 'productor_suscripcion')->withPivot('pago', 'fecha_compra')->withTimestamps();
+    }
+
+    public function deducciones_creditos_productores(){
+        return $this->hasMany('App\Models\Deduccion_Credito_Productor');
     }
 
     public function notificaciones_p(){

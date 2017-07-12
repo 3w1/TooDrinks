@@ -13,11 +13,17 @@
 @endsection
 
 @section('content-left')
-   @if ( (session('perfilSuscripcion') != 'P') && (session('perfilSaldo') < '30') )
+   @if ( (session('perfilSuscripcion') != 'Premium') )
+      @if (session('perfilSaldo') < '30')
          <div class="alert alert-danger">
-            No tiene créditos suficientes para ver la información de contacto de los productores. Por favor compre créditos. <a href="">Ver Planes de Crédito</a> O consiga una Suscripción Advanced o Premium. <a href="">Ver Suscripciones</a> 
+            No tiene créditos suficientes para ver la información de contacto de los productores. Por favor compre créditos. <a href="{{ route('credito.index') }}">Ver Planes de Crédito</a> O consiga una Suscripción Advanced o Premium. <a href="">Ver Suscripciones</a> 
+         </div>
+      @else
+         <div class="alert alert-danger">
+           Se le descontarán 30 créditos de su saldo. Para ver demandas sin pagar créditos debe obtener una Suscripción Premium. 
          </div>
       @endif
+   @endif
    <div class="row">
       
       <div class="col-md-12">

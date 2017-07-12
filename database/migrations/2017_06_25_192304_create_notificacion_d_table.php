@@ -18,11 +18,14 @@ class CreateNotificacionDTable extends Migration
             $table->integer('creador_id');
             $table->enum('tipo_creador', ['P', 'I', 'D', 'H', 'U']);
             $table->integer('distribuidor_id');
+            $table->string('tipo');
             $table->string('titulo');
             $table->string('url');
             $table->string('descripcion');
             $table->string('color');
             $table->string('icono');
+            $table->date('fecha');
+            $table->boolean('leida');
             $table->timestamps();
 
              $table->foreign('distribuidor_id')
@@ -32,11 +35,6 @@ class CreateNotificacionDTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
          Schema::dropIfExists('notifiacion_d');

@@ -8,10 +8,10 @@
 @section('content-left')
    @section('alertas')
       @if (Session::has('msj-success'))
-         <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>¡Enhorabuena!</strong> {{Session::get('msj-success')}}.
-         </div>
+        <div class="alert alert-success alert-dismissable">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>¡Enhorabuena!</strong> {{Session::get('msj-success')}}.
+       </div>
       @endif
    @endsection
 

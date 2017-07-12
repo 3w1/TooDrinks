@@ -17,10 +17,11 @@ class CreateOpinionTable extends Migration
         	$table->string('comentario');
         	$table->date('fecha');
         	$table->boolean('editada');
-        	$table->date('fecha_ultima_edicion');
-          $table->timestamps();
+        	$table->date('fecha_ultima_edicion')_>nullable();
+        	$table->boolean('publicada');
+         	$table->timestamps();
 
-          $table->foreign('producto_id')
+          	$table->foreign('producto_id')
                   ->references('id')->on('producto')
                   ->onDelete('restrict')
                   ->onUpdate('cascade');

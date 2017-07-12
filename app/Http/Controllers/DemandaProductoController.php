@@ -32,7 +32,17 @@ class DemandaProductoController extends Controller
     }
 
     public function demandas_productos_productores(){
-           
+        $notificaciones_pendientes_DP = DB::table('notificacion_p')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'DP')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_DP as $notificacion){
+            $act = DB::table('notificacion_p')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
+        
         $demandasProductos = DB::table('demanda_producto')
                                 ->select('demanda_producto.*', 'producto.nombre', 'producto.marca_id', 'marca.productor_id')
                                 ->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
@@ -164,7 +174,13 @@ class DemandaProductoController extends Controller
         }
                
         $demanda_producto->status = '1';
+        $demanda_producto->fecha_creacion = $fecha;
         $demanda_producto ->save();
+
+        $ult_demanda = DB::table('demanda_producto')
+                        ->select('id')
+                        ->orderBy('created_at', 'DESC')
+                        ->first();
 
         if ($request->tipo_producto == 'P'){
             $productor = DB::table('producto')
@@ -175,10 +191,21 @@ class DemandaProductoController extends Controller
                         ->first();
 
             if (session('perfilTipo') == 'I'){
-
-                $url = 'notificacion/notificar-productor/DP/'.$producto->nombre.'/'.$productor->id;
-                return redirect($url);
-
+                //NOTIFICAR AL PRODUCTOR
+                    $notificaciones_productor = new Notificacion_P();
+                    $notificaciones_productor->creador_id = session('perfilId');
+                    $notificaciones_productor->tipo_creador = session('perfilTipo');
+                    $notificaciones_productor->titulo = 'Estan demandando tu producto '. $producto->nombre;
+                    $notificaciones_productor->url='demanda-producto/'.$ult_demanda->id;
+                    $notificaciones_productor->descripcion = 'Demanda de Producto';
+                    $notificaciones_productor->color = 'bg-aqua';
+                    $notificaciones_productor->icono = 'fa fa-clipboard';
+                    $notificaciones_productor->tipo ='DP';
+                    $notificaciones_productor->productor_id = $productor->id;
+                    $notificaciones_productor->fecha = $fecha;
+                    $notificaciones_productor->leida = '0';
+                    $notificaciones_productor->save();
+                // *** //
             }elseif (session('perfilTipo') == 'D'){
                 $importadores = DB::table('importador_marca')
                                     ->select('importador_marca.importador_id')
@@ -193,22 +220,39 @@ class DemandaProductoController extends Controller
                 }
 
                 if ($cont > 0){
+                    //NOTIFICAR A LOS IMPORTADORES
                     foreach ($importadores as $importador){
                         $notificaciones_importador = new Notificacion_I();
                         $notificaciones_importador->creador_id = session('perfilId');
                         $notificaciones_importador->tipo_creador = session('perfilTipo');
                         $notificaciones_importador->titulo = 'Estan solicitando tu producto '. $producto->nombre;
-                        $notificaciones_importador->url='demanda-producto/demandas-productos-importadores';
+                        $notificaciones_importador->url='demanda-producto/'.$ult_demanda->id;
                         $notificaciones_importador->importador_id = $importador->importador_id;
                         $notificaciones_importador->descripcion = 'Demanda de Producto';
                         $notificaciones_importador->color = 'bg-aqua';
                         $notificaciones_importador->icono = 'fa fa-clipboard';
+                        $notificaciones_importador->tipo ='DP';
                         $notificaciones_importador->fecha = $fecha;
+                        $notificaciones_importador->leida = '0';
                         $notificaciones_importador->save();
                     }
+                    // *** //
                 }else{
-                    $url = 'notificacion/notificar-productor/DP/'.$producto->nombre.'/'.$productor->id;
-                    return redirect($url);
+                    //NOTIFICAR AL PRODUCTOR
+                        $notificaciones_productor = new Notificacion_P();
+                        $notificaciones_productor->creador_id = session('perfilId');
+                        $notificaciones_productor->tipo_creador = session('perfilTipo');
+                        $notificaciones_productor->titulo = 'Estan demandando tu producto '. $producto->nombre;
+                        $notificaciones_productor->url='demanda-producto/'.$ult_demanda->id;
+                        $notificaciones_productor->descripcion = 'Demanda de Producto';
+                        $notificaciones_productor->color = 'bg-aqua';
+                        $notificaciones_productor->icono = 'fa fa-clipboard';
+                        $notificaciones_productor->tipo ='DP';
+                        $notificaciones_productor->productor_id = $productor->id;
+                        $notificaciones_productor->fecha = $fecha;
+                        $notificaciones_productor->leida = '0';
+                        $notificaciones_productor->save();
+                    // *** //
                 }
             }else{
                 $distribuidores = DB::table('distribuidor_marca')
@@ -223,19 +267,23 @@ class DemandaProductoController extends Controller
                 }
 
                 if ($cont > 0 ){
+                    // NOTIFICAR A LOS DISTRIBUIDORES
                     foreach ($distribuidores as $distribuidor){
                         $notificaciones_distribuidor = new Notificacion_D();
                         $notificaciones_distribuidor->creador_id = session('perfilId');
                         $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
                         $notificaciones_distribuidor->titulo = 'Estan solicitando tu producto '. $producto->nombre;
-                        $notificaciones_distribuidor->url='demanda-producto/demandas-productos-distribuidores';
+                        $notificaciones_distribuidor->url='demanda-producto/'.$ult_demanda->id;
                         $notificaciones_distribuidor->distribuidor_id = $distribuidor->distribuidor_id;
                         $notificaciones_distribuidor->descripcion = 'Demanda de Producto';
                         $notificaciones_distribuidor->color = 'bg-aqua';
                         $notificaciones_distribuidor->icono = 'fa fa-clipboard';
+                        $notificaciones_distribuidor->tipo ='DP';
                         $notificaciones_distribuidor->fecha = $fecha;
+                        $notificaciones_distribuidor->leida = '0';
                         $notificaciones_distribuidor->save();
                     }
+                    // *** //
                 }else{
                     $importadores = DB::table('importador_marca')
                                     ->select('importador_marca.importador_id')
@@ -250,22 +298,39 @@ class DemandaProductoController extends Controller
                     }
 
                     if ($cont2 > 0 ){
+                        //NOTIFICAR A LOS IMPORTADORES SI NO EXISTEN DISTRIBUIDORES
                         foreach ($importadores as $importador){
                             $notificaciones_importador = new Notificacion_I();
                             $notificaciones_importador->creador_id = session('perfilId');
                             $notificaciones_importador->tipo_creador = session('perfilTipo');
                             $notificaciones_importador->titulo = 'Estan solicitando tu producto '. $producto->nombre;
-                            $notificaciones_importador->url='demanda-producto/demandas-productos-importadores';
+                            $notificaciones_importador->url='demanda-producto/'.$ult_demanda->id;
                             $notificaciones_importador->importador_id = $importador->importador_id;
                             $notificaciones_importador->descripcion = 'Demanda de Producto';
                             $notificaciones_importador->color = 'bg-aqua';
                             $notificaciones_importador->icono = 'fa fa-clipboard';
+                            $notificaciones_importador->tipo ='DP';
                             $notificaciones_importador->fecha = $fecha;
+                            $notificaciones_importador->leida = '0';
                             $notificaciones_importador->save();
                         }
+                        // *** //
                     }else{
-                        $url = 'notificacion/notificar-productor/DP/'.$producto->nombre.'/'.$productor->id;
-                        return redirect($url);
+                        //NOTIFICAR AL PRODUCTOR COMO ÚLTIMO RECURSO
+                            $notificaciones_productor = new Notificacion_P();
+                            $notificaciones_productor->creador_id = session('perfilId');
+                            $notificaciones_productor->tipo_creador = session('perfilTipo');
+                            $notificaciones_productor->titulo = 'Estan demandando tu producto '. $producto->nombre;
+                            $notificaciones_productor->url='demanda-producto/'.$ult_demanda->id;
+                            $notificaciones_productor->descripcion = 'Demanda de Producto';
+                            $notificaciones_productor->color = 'bg-aqua';
+                            $notificaciones_productor->icono = 'fa fa-clipboard';
+                            $notificaciones_productor->tipo ='DP';
+                            $notificaciones_productor->productor_id = $productor->id;
+                            $notificaciones_productor->fecha = $fecha;
+                            $notificaciones_productor->leida = '0';
+                            $notificaciones_productor->save();
+                        // *** //
                     }
                 }
             }
@@ -276,9 +341,45 @@ class DemandaProductoController extends Controller
 
     public function show($id)
     {
+        if (session('perfilSuscripcion') != 'Premium'){
+            if (session('perfilTipo') == 'P'){
+                $deduccion = DB::table('deduccion_credito_productor')
+                            ->where('productor_id', '=', session('perfilId'))
+                            ->where('accion_id', '=', $id)
+                            ->first();
+            }elseif (session('perfilTipo') == 'I'){
+                $deduccion = DB::table('deduccion_credito_importador')
+                            ->where('importador_id', '=', session('perfilId'))
+                            ->where('accion_id', '=', $id)
+                            ->first();
+            }elseif (session('perfilTipo') == 'D'){
+                $deduccion = DB::table('deduccion_credito_distribuidor')
+                            ->where('distribuidor_id', '=', session('perfilId'))
+                            ->where('tipo_deduccion', '=', 'DP')
+                            ->where('accion_id', '=', $id)
+                            ->first();
+            }
+
+            if ($deduccion == null){
+                $restringido = '1';
+            }else{
+                $restringido = '0';
+            }
+        }else{
+            $restringido = '0';
+        }
+
         $demandaProducto = Demanda_Producto::find($id);
 
-        return view('demandaProducto.show')->with(compact('demandaProducto'));
+        $visitas = $demandaProducto->cantidad_visitas + 1;
+
+        $act = DB::table('demanda_producto')
+                ->where('id', '=', $id)
+                ->update(['cantidad_visitas' => $visitas ]);
+
+        $demandaProducto->cantidad_visitas = $visitas;
+
+        return view('demandaProducto.show')->with(compact('demandaProducto', 'restringido'));
     }
 
     public function edit($id)

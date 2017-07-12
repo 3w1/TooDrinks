@@ -25,7 +25,9 @@ class SolicitudImportacionController extends Controller
 
     public function store(Request $request)
     {
+        $fecha = new \DateTime();
         $solicitudImportacion =new Solicitud_Importacion($request->all());
+        $solicitudImportacion->fecha = $fecha;
         $solicitudImportacion->save();
 
         $productor = DB::table('producto')
@@ -36,7 +38,7 @@ class SolicitudImportacionController extends Controller
                         ->first();
 
         //Notificar al productor
-        $url = 'notificacion/notificar-productor/SIM/'.$productor->nombre.'/'.$productor->id;
+        $url = 'notificacion/notificar-productor/SI/'.$productor->nombre.'/'.$productor->id;
         return redirect($url);
         // ... //
     }

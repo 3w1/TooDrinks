@@ -10,7 +10,7 @@ class Marca extends Model
 
     protected $fillable = [
         'productor_id', 'creador_id', 'tipo_creador', 'nombre', 'nombre_seo', 'descripcion', 'pais_id', 
-        'provincia_region_id', 'logo', 'website', 'reclamada', 'aprobada', 'publicada',
+        'provincia_region_id', 'logo', 'website', 'reclamada', 'publicada',
     ];
 
     public function productor(){

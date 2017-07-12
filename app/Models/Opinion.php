@@ -9,7 +9,7 @@ class Opinion extends Model
      protected $table = "opinion";
 
     protected $fillable = [
-        'tipo_creador', 'creador_id', 'producto_id', 'valoracion', 'comentario', 'fecha', 'editada', 'fecha_ultima_edicion',
+        'tipo_creador', 'creador_id', 'producto_id', 'valoracion', 'comentario', 'fecha', 'editada', 'fecha_ultima_edicion', 'publicada',
     ];
     
     public function producto(){

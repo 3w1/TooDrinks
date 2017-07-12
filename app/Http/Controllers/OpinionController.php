@@ -23,11 +23,6 @@ class OpinionController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {   
         $productos = DB::table('producto')
@@ -38,12 +33,6 @@ class OpinionController extends Controller
         return view('opinion.create')->with(compact('productos'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $opinion = new Opinion($request->all());

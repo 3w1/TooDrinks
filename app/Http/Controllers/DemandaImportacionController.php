@@ -72,6 +72,7 @@ class DemandaImportacionController extends Controller
         $fecha = new \DateTime();
         
         $demanda_importador = new Demanda_Importador($request->all());
+        $demanda_importador->fecha = $fecha;
         $demanda_importador->save();
 
         $marca = DB::table('marca')
@@ -99,7 +100,9 @@ class DemandaImportacionController extends Controller
                 $notificaciones_importador->descripcion = 'Demanda de Importador';
                 $notificaciones_importador->color = 'bg-orange';
                 $notificaciones_importador->icono = 'fa fa-handshake-o';
+                $notificaciones_importador->tipo ='DI';
                 $notificaciones_importador->fecha = $fecha;
+                $notificaciones_importddor->leida ='0';
                 $notificaciones_importador->save();
             }
         }

@@ -24,6 +24,11 @@ class Pais extends Model
     	return $this->hasMany('App\Models\Productor');
     }
 
+    public function productores_importaciones(){
+        return $this->belongsToMany('App\Models\Productor', 'productor_pais')->withTimestamps();
+    }
+
+
     public function importadores(){
     	return $this->hasMany('App\Models\Importador');
     }
@@ -40,8 +45,8 @@ class Pais extends Model
         return $this->hasMany('App\Models\Marca');
     }
 
-    public function clases_bebidas(){
-        return $this->hasMany('App\Models\Clase_Bebida');
+    public function bebidas(){
+        return $this->hasMany('App\Models\Bebida');
     }
 
     public function productos(){
@@ -67,4 +72,5 @@ class Pais extends Model
     public function impresiones_banners(){
     	return $this->hasMany('App\Models\Impresion_Banner');
     }
+
 }

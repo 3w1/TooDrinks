@@ -2,10 +2,10 @@
 @section('title', 'Inicio')
 
 @section('items')
-   @if (Session::has('msj-success'))
+   @if (Session::has('msj'))
       <div class="alert alert-success alert-dismissable">
          <button type="button" class="close" data-dismiss="alert">&times;</button>
-         <strong>¡Enhorabuena!</strong> {{Session::get('msj-success')}}.
+         <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
       </div>
    @endif
    <div class="col-lg-3 col-xs-6">

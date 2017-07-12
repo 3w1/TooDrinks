@@ -9,7 +9,7 @@ class Notificacion_P extends Model
     protected $table = "notificacion_p";
 
     protected $fillable = [
-        'creador_id', 'tipo_creador', 'productor_id', 'titulo', 'url', 'descripcion', 'color', 'icono',
+        'creador_id', 'tipo_creador', 'productor_id', 'tipo', 'titulo', 'url', 'descripcion', 'color', 'icono', 'fehca', 'leida',
     ];
 
     public function productor(){

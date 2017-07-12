@@ -27,7 +27,9 @@ class SolicitudDistribucionController extends Controller
 
     public function store(Request $request)
     {
+        $fecha = new \DateTime();
         $solicitudDistribucion =new Solicitud_Distribucion($request->all());
+        $solicitudDistribucion->fecha = $fecha;
         $solicitudDistribucion->save();
 
         $productor = DB::table('producto')
@@ -39,7 +41,7 @@ class SolicitudDistribucionController extends Controller
 
         if ($productor->pais_id == session('perfilPais')){
             //Notificar al productor
-            $url = 'notificacion/notificar-productor/SDM/'.$productor->nombre.'/'.$productor->id;
+            $url = 'notificacion/notificar-productor/SD/'.$productor->nombre.'/'.$productor->id;
             return redirect($url);
             // ... //
         }else{
@@ -67,11 +69,13 @@ class SolicitudDistribucionController extends Controller
                     $notificaciones_importador->color = 'bg-green';
                     $notificaciones_importador->icono = 'fa fa-user-plus';
                     $notificaciones_importador->fecha = $fecha;
+                    $notificaciones_importador->tipo = 'SI';
+                    $notificaciones_importador->leida = '0';
                     $notificaciones_importador->save();
                 }
             }else{
                //Notificar al productor
-                $url = 'notificacion/notificar-productor/SDM/'.$productor->nombre.'/'.$productor->id;
+                $url = 'notificacion/notificar-productor/SD/'.$productor->nombre.'/'.$productor->id;
                 return redirect($url);
                 // ... //
             }

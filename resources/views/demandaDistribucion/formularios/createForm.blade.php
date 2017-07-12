@@ -2,6 +2,8 @@
 	
 	{!! Form::hidden('tipo_creador', session('perfilTipo')) !!}
 	{!! Form::hidden('creador_id', session('perfilId')) !!}
+	{!! Form::hidden('cantidad_visitas', '0') !!}
+	{!! Form::hidden('cantidad_contactos', '0') !!}
 
 	<div class="form-group">
 		{!! Form::label('marca', 'Seleccione la marca que desea distribuir') !!}

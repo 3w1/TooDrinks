@@ -7,7 +7,11 @@
       
    <div class="navbar-custom-menu">
       <ul class="nav navbar-nav">
-
+         
+         <!-- DROPDOWN DE NOTIFICACIONES -->
+         @include('plantillas.partes.subpartes/dropdownNotificaciones')
+         <!-- DROPDOWN DE NOTIFICACIONES -->
+         
          <!-- INICIO DEL MENU PARA LA CUENTA DE USUARIO -->
          @include('plantillas.partes/subpartes/dropdownUsuario')
          <!-- FIN DEL MENU PARA LA CUENTA DE USUARIO -->

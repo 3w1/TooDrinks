@@ -101,7 +101,7 @@ class ProductoController extends Controller
         $producto->imagen = $nombre;
         $producto->save();
 
-        $productor = DB::table('marca')
+        /*$productor = DB::table('marca')
                         ->select('productor_id', 'nombre')
                         ->where('id', '=', $request->marca_id)
                         ->get()
@@ -125,7 +125,7 @@ class ProductoController extends Controller
             $notificaciones_productor->icono = 'fa fa-plus-square-o';
             $notificaciones_productor->fecha = $fecha;
             $notificaciones_productor->save();            
-        }
+        }*/
 
         if ($request->usuario == '1'){
             return redirect('producto')->with('msj', 'Su producto ha sido agregado exitosamente');

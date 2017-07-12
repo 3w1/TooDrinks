@@ -13,7 +13,7 @@
 @endsection
 
 @section('content-left')
-   @if ( (session('perfilSuscripcion') != 'P') )
+   @if ( (session('perfilSuscripcion') != 'Premium') )
       @if (session('perfilSaldo') < '30')
          <div class="alert alert-danger">
             No tiene créditos suficientes para ver la información de las demandas de distribución de productos. Por favor compre créditos. <a href="{{ route('credito.index') }">Ver Planes de Crédito</a> O consiga una Suscripción Advanced o Premium. <a href="">Ver Suscripciones</a> 

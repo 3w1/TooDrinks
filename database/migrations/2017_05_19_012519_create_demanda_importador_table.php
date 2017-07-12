@@ -13,8 +13,11 @@ class CreateDemandaImportadorTable extends Migration
         	$table->integer('productor_id');
         	$table->integer('marca_id');
         	$table->integer('pais_id');
-          $table->boolean('status');
-          $table->timestamps();
+          	$table->boolean('status');
+          	$table->date('fecha');
+          	$table->integer('cantidad_visitas');
+          	$table->integer('cantidad_contactos');
+          	$table->timestamps();
 
             $table->foreign('marca_id')
                   ->references('id')->on('marca')

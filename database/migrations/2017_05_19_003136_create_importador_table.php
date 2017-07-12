@@ -31,8 +31,10 @@ class CreateImportadorTable extends Migration
             $table->double('latitud', 10, 8);
             $table->double('longitud', 10, 8);
             $table->boolean('estado_datos');
-            $table->string('tipo_suscripcion');
+            $table->integer('suscripcion_id');
             $table->integer('saldo');
+            $table->boolean('invitacion');
+            $table->date('fecha_invitacion')->nullable();;
             $table->timestamps();
 
             $table->foreign('user_id')
@@ -40,15 +42,20 @@ class CreateImportadorTable extends Migration
       			  ->onDelete('restrict')
       			  ->onUpdate('cascade');
 
-      		$table->foreign('pais_id')
+      		  $table->foreign('pais_id')
       			  ->references('id')->on('pais')
       			  ->onDelete('restrict')
       			  ->onUpdate('cascade');
 
-      		$table->foreign('provincia_region_id')
+      		  $table->foreign('provincia_region_id')
       			  ->references('id')->on('provincia_region')
       			  ->onDelete('restrict')
       			  ->onUpdate('cascade');
+
+            $table->foreign('suscripcion_id')
+              ->references('id')->on('suscripcion')
+              ->onDelete('restrict')
+              ->onUpdate('cascade');
         });
 
 		Schema::create('productor_importador', function (Blueprint $table){
@@ -66,6 +73,7 @@ class CreateImportadorTable extends Migration
       			  ->references('id')->on('importador')
       			  ->onDelete('restrict')
       			  ->onUpdate('cascade');
+
 		});
     }
 

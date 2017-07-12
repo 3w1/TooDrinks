@@ -9,8 +9,8 @@ class Producto extends Model
     protected $table = "producto";
 
      protected $fillable = [
-        'nombre', 'nombre_seo', 'descripcion', 'pais_id', 'provincia_region_id', 'clase_bebida_id', 'marca_id', 
-        'imagen', 'ano_produccion', 'tipo_creador', 'creador_id', 'publicado', 'confirmado', 'bebida_id',
+        'tipo_creador', 'creador_id', 'nombre', 'nombre_seo', 'descripcion', 'pais_id', 'provincia_region_id', 'bebida_id', 
+        'clase_bebida_id', 'marca_id', 'imagen', 'ano_produccion',  'publicado', 'confirmado', 
     ];
 
     public function pais(){
@@ -31,6 +31,18 @@ class Producto extends Model
 
     public function marca(){
     	return $this->belongsTo('App\Models\Marca');
+    }
+
+    public function importadores(){
+        return $this->belongsToMany('App\Models\Importador')->withPivot('status')->withTimestamps();
+    }
+
+    public function distribuidores(){
+        return $this->belongsToMany('App\Models\Distribuidor')->withPivot('status')->withTimestamps();
+    }
+
+    public function horecas(){
+        return $this->belongsToMany('App\Models\Horeca')->withPivot('status')->withTimestamps();
     }
 
     public function ofertas(){

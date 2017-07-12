@@ -32,7 +32,11 @@ class DistribuidorController extends Controller
                     ->orderBy('pais')
                     ->pluck('pais', 'id');
 
-        return view('adminWeb.perfiles.crearDistribuidor')->with(compact('paises'));
+        $suscripciones = DB::table('suscripcion')
+                        ->orderBy('precio')
+                        ->pluck('suscripcion', 'id');
+
+        return view('adminWeb.perfiles.crearDistribuidor')->with(compact('paises', 'suscripciones'));
     }
 
     public function store(Request $request)

@@ -73,6 +73,8 @@ class CreditoController extends Controller
 
     public function compra($id)
     {  
+        $fecha = new \Datetime();
+
         $credito = DB::table('credito')
                           ->where('id', $id)
                           ->first();
@@ -93,15 +95,15 @@ class CreditoController extends Controller
 
             //Insertar en la tabla relacion
             $historial_compras = DB::table('productor_credito')->insertGetId(
-                                        ['credito_id' => $id, 'productor_id' => session('perfilId'), 'total' => $credito->precio]);    
+                                        ['credito_id' => $id, 'productor_id' => session('perfilId'), 'total' => $credito->precio, 'fecha_compra' => $fecha]);    
             // ... //
-        }elseif (sesion('perfilTipo') == 'I'){
+        }elseif (session('perfilTipo') == 'I'){
             $saldo = DB::table('importador')
                             ->select('saldo')
                             ->where('id', '=', session('perfilId'))
                             ->first();
 
-            $saldoNuevo = $saldo + $credito->cantidad_creditos;
+            $saldoNuevo = $saldo->saldo + $credito->cantidad_creditos;
 
             $actualizacion_saldo = DB::table('importador')
                                     ->where('id', '=', session('perfilId'))
@@ -111,7 +113,7 @@ class CreditoController extends Controller
 
             //Insertar en la tabla relacion
             $historial_compras = DB::table('importador_credito')->insertGetId(
-                                        ['credito_id' => $id, 'importador_id' => session('perfilId'), 'total' => $credito->precio]);    
+                                        ['credito_id' => $id, 'importador_id' => session('perfilId'), 'total' => $credito->precio, 'fecha_compra' => $fecha]);    
             // ... //
         }elseif (session('perfilTipo') == 'D'){
             $saldo = DB::table('distribuidor')
@@ -119,7 +121,7 @@ class CreditoController extends Controller
                             ->where('id', '=', session('perfilId'))
                             ->first();
 
-            $saldoNuevo = $saldo + $credito->cantidad_creditos;
+            $saldoNuevo = $saldo->saldo + $credito->cantidad_creditos;
 
             $actualizacion_saldo = DB::table('distribuidor')
                                     ->where('id', '=', session('perfilId'))
@@ -129,7 +131,7 @@ class CreditoController extends Controller
 
             //Insertar en la tabla relacion
             $historial_compras = DB::table('distribuidor_credito')->insertGetId(
-                                        ['credito_id' => $id, 'distribuidor_id' => session('perfilId'), 'total' => $credito->precio]);    
+                                        ['credito_id' => $id, 'distribuidor_id' => session('perfilId'), 'total' => $credito->precio, 'fecha_compra' => $fecha]);    
             // ... //
         }elseif (session('perfilTipo') == 'H'){
             $saldo = DB::table('horeca')
@@ -137,7 +139,7 @@ class CreditoController extends Controller
                             ->where('id', '=', session('perfilId'))
                             ->first();
 
-            $saldoNuevo = $saldo + $credito->cantidad_creditos;
+            $saldoNuevo = $saldo->saldo + $credito->cantidad_creditos;
 
             $actualizacion_saldo = DB::table('horeca')
                                     ->where('id', '=', session('perfilId'))
@@ -147,7 +149,7 @@ class CreditoController extends Controller
 
             //Insertar en la tabla relacion
             $historial_compras = DB::table('horeca_credito')->insertGetId(
-                                        ['credito_id' => $id, 'horeca_id' => session('perfilId'), 'total' => $credito->precio]);    
+                                        ['credito_id' => $id, 'horeca_id' => session('perfilId'), 'total' => $credito->precio, 'fecha_compra' => $fecha]);    
             // ... //
         }
 
@@ -159,6 +161,8 @@ class CreditoController extends Controller
     }
 
     public function gastar_creditos_CO($cant, $id){
+        $fecha = new \Datetime();
+
         $saldo = session('perfilSaldo') - $cant;
         session(['perfilSaldo' => $saldo]); 
 
@@ -190,11 +194,13 @@ class CreditoController extends Controller
 
         $deduccion->cantidad_creditos = $cant;
         $deduccion->descripcion = "Crear Oferta";
+        $deduccion->fecha = $fecha;
         $deduccion->save();
         return redirect('oferta')->with('msj', 'Su oferta ha sido creada exitosamente. Se han descontado '.$cant.' créditos de su saldo.');
     }
 
     public function gastar_creditos_DI($cant, $id){
+        $fecha = new \DateTime();
         $saldo = session('perfilSaldo') - $cant;
         session(['perfilSaldo' => $saldo]);    
 
@@ -206,12 +212,15 @@ class CreditoController extends Controller
         $deduccion->importador_id = session('perfilId');
         $deduccion->descripcion = 'Ver demanda de importador';
         $deduccion->cantidad_creditos = $cant;
+        $deduccion->fecha = $fecha;
         $deduccion->save();
 
         return redirect('productor/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
     }
 
     public function gastar_creditos_DD($cant, $id, $perfil){
+        $fecha = new \DateTime();
+
         $saldo = session('perfilSaldo') - $cant;
         session(['perfilSaldo' => $saldo]);    
 
@@ -223,6 +232,7 @@ class CreditoController extends Controller
         $deduccion->distribuidor_id = session('perfilId');
         $deduccion->descripcion = 'Ver demanda de distribuidor';
         $deduccion->cantidad_creditos = $cant;
+        $deduccion->fecha = $fecha;
         $deduccion->save();
 
         if ($perfil == 'P'){
@@ -233,6 +243,7 @@ class CreditoController extends Controller
     }
 
     public function gastar_creditos_DP($cant, $id){
+        $fecha = new \DateTime();
         $saldo = session('perfilSaldo') - $cant;
         session(['perfilSaldo' => $saldo]);    
 
@@ -243,6 +254,8 @@ class CreditoController extends Controller
 
             $deduccion = new Deduccion_Credito_Productor();
             $deduccion->productor_id = session('perfilId');
+            $deduccion->tipo_deduccion = 'DP';
+            $deduccion->accion_id = $id;
         }elseif (session('perfilTipo') == 'I'){
             $act = DB::table('importador')
                     ->where('id', '=', session('perfilId'))
@@ -261,12 +274,25 @@ class CreditoController extends Controller
        
         $deduccion->descripcion = 'Ver demanda de producto';
         $deduccion->cantidad_creditos = $cant;
+        $deduccion->fecha = $fecha;
         $deduccion->save();
+
+        $demanda = DB::table('demanda_producto')
+                        ->where('id', '=', $id)
+                        ->select('cantidad_contactos')
+                        ->first();
+
+        $contactos = $demanda->cantidad_contactos + 1;
+
+        $act = DB::table('demanda_producto')
+                ->where('id', '=', $id)
+                ->update(['cantidad_contactos' => $contactos]);
 
         return redirect('demanda-producto/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
     }
 
     public function gastar_creditos_DIP($cant, $id){
+        $fecha = new \DateTime();
         $saldo = session('perfilSaldo') - $cant;
         session(['perfilSaldo' => $saldo]);    
 
@@ -278,12 +304,14 @@ class CreditoController extends Controller
         $deduccion->productor_id = session('perfilId');
         $deduccion->descripcion = 'Ver demanda de importación';
         $deduccion->cantidad_creditos = $cant;
+        $deduccion->fecha = $fecha;
         $deduccion->save();
 
         return redirect('importador/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
     }
 
     public function gastar_creditos_DDP($cant, $id){
+        $fecha = new \DateTime();
         $saldo = session('perfilSaldo') - $cant;
         session(['perfilSaldo' => $saldo]);    
 
@@ -304,6 +332,7 @@ class CreditoController extends Controller
        
         $deduccion->descripcion = 'Ver demanda de distribución';
         $deduccion->cantidad_creditos = $cant;
+        $deduccion->fecha = $fecha;
         $deduccion->save();
 
         return redirect('distribuidor/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');

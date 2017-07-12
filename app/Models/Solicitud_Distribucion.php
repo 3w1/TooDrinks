@@ -9,7 +9,7 @@ class Solicitud_Distribucion extends Model
     protected $table = "solicitud_distribucion";
 
     protected $fillable = [
-    	'distribuidor_id', 'producto_id', 'provincia_region_id', 'status', 
+    	'distribuidor_id', 'producto_id', 'provincia_region_id', 'status', 'fecha', 'cantidad_visitas', 'cantidad_contactos',
     ]; 
 
 

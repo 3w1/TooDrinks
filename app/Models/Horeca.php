@@ -30,6 +30,14 @@ class Horeca extends Model
         return $this->belongsToMany('App\Models\Credito', 'horeca_credito')->withPivot('total', 'fecha_compra')->withTimestamps();
     }
 
+    public function distribuidores(){
+        return $this->belongsToMany('App\Models\Distribuidor', 'importador_distribuidor')->withTimestamps();
+    }
+
+    public function productos(){
+        return $this->belongsToMany('App\Models\Producto', 'horeca_producto')->withPivot('status')->withTimestamps();
+    }
+
     public function deducciones_creditos_horecas(){
         return $this->hasMany('App\Models\Deduccion_Credito_Horeca');
     }

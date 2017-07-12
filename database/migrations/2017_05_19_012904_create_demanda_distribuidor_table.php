@@ -10,12 +10,15 @@ class CreateDemandaDistribuidorTable extends Migration
     {
         Schema::create('demanda_distribuidor', function (Blueprint $table){
         	$table->increments('id');
-          $table->enum('tipo_creador', ['P', 'I']);
+          	$table->enum('tipo_creador', ['P', 'I']);
         	$table->integer('creador_id');
         	$table->integer('marca_id');
         	$table->integer('provincia_region_id');
-         $table->boolean('status');
-         $table->timestamps();
+         	$table->boolean('status');
+         	$table->date('fecha');
+         	$table->integer('cantidad_visitas');
+         	$table->integer('cantidad_contactos');
+         	$table->timestamps();
 
             $table->foreign('marca_id')
                   ->references('id')->on('marca')

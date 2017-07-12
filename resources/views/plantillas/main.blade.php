@@ -1,4 +1,4 @@
-@if (Auth::user()->rol != 'AD')
+@if ( (Auth::user()->rol != 'AD') && (Auth::user()->rol != 'US') )
   @if (Auth::user()->productor == '1')
      <?php 
         $productores = DB::table('productor')
@@ -85,7 +85,7 @@
                   {!! Form::open(['route' => 'usuario.cambiar-perfil', 'method' => 'POST']) !!}
                      <div class="form-group">
                         <select class="form-control" name="entidad">
-                           @if (Auth::user()->rol != 'AD')
+                           @if ( (Auth::user()->rol != 'AD') && (Auth::user()->rol != 'US') )
                               <?php 
                                  $longitud = count($id_entidad);
                                  for ($i=0; $i<$longitud; $i++ ){

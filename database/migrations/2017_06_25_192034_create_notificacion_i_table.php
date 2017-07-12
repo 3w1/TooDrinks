@@ -18,11 +18,14 @@ class CreateNotificacionITable extends Migration
             $table->integer('creador_id');
             $table->enum('tipo_creador', ['P', 'I', 'D', 'H', 'U']);
             $table->integer('importador_id');
+            $table->string('tipo');
             $table->string('titulo');
             $table->string('url');
             $table->string('descripcion');
             $table->string('color');
             $table->string('icono');
+            $table->date('fecha');
+            $table->boolean('leida');
             $table->timestamps();
 
              $table->foreign('importador_id')

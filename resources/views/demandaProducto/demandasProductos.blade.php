@@ -12,24 +12,13 @@
 @endsection
 
 @section('content-left')
-  @if ( (session('perfilSuscripcion') != 'P') )
-      @if (session('perfilSaldo') < '30')
-         <div class="alert alert-danger">
-            No tiene créditos suficientes para ver la información de las demandas de producto. Por favor compre créditos. <a href="{{ route('credito.index') }}">Ver Planes de Crédito</a> O consiga una Suscripción Premium. <a href="">Ver Suscripciones</a> 
-         </div>
-      @else
-         <div class="alert alert-danger">
-           Se le descontarán 30 créditos de su saldo. Para ver demandas sin pagar créditos debe obtener una Suscripción Premium. 
-         </div>
-      @endif
-   @endif
    <div class="row">
       <div class="col-md-12">
          <ul class="timeline">
             <li class="time-label">
-                  <span class="bg-green">
-                    Demandas de Productos Específicos
-                  </span>
+               <span class="bg-green">
+                  Demandas de Productos Específicos
+               </span>
             </li>
             
             @foreach($demandasProductos as $demandaProducto)
@@ -49,15 +38,7 @@
                      </div>
             
                      <div class="timeline-footer">
-                        @if (session('perfilSuscripcion') == 'P')
-                           <a class="btn btn-primary btn-xs" href="{{ route('demanda-producto.show', $demandaProducto->id) }}">¡Más Detalles!</a>
-                        @else
-                           @if (session('perfilSaldo') >= '30')
-                              <a class="btn btn-primary btn-xs" href="{{ route('credito.gastar-creditos-dp', ['30', $demandaProducto->id]) }}">¡Más Detalles! 30 <i class="fa fa-certificate"></i></a>
-                           @else 
-                              <button class="btn btn-primary btn-xs" disabled>¡Más Detalles! 30 <i class="fa fa-certificate"></i></button>
-                           @endif
-                        @endif
+                        <a class="btn btn-primary btn-xs" href="{{ route('demanda-producto.show', $demandaProducto->id) }}">¡Más Detalles!</a>
                      </div>
                   </div>
                </li>

@@ -1,6 +1,8 @@
 {!! Form::open(['route' => 'demanda-importador.store', 'method' => 'POST']) !!}
 
 	{!! Form::hidden('productor_id', session('perfilId')) !!}
+	{!! Form::hidden('cantidad_visitas', '0') !!}
+	{!! Form::hidden('cantidad_contactos', '0') !!}
 
 	<div class="form-group">
 		{!! Form::label('marca', 'Marca que desea importar') !!}

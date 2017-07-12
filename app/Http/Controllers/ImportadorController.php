@@ -32,7 +32,11 @@ class ImportadorController extends Controller
                     ->orderBy('pais')
                     ->pluck('pais', 'id');
 
-        return view('adminWeb.perfiles.crearImportador')->with(compact('paises'));
+        $suscripciones = DB::table('suscripcion')
+                        ->orderBy('precio')
+                        ->pluck('suscripcion', 'id');
+
+        return view('adminWeb.perfiles.crearImportador')->with(compact('paises', 'suscripciones'));
     }
 
     public function store(Request $request)
@@ -111,35 +115,6 @@ class ImportadorController extends Controller
     {
 
     }*/
-
-     //FUNCION QUE LE PERMITE AL IMPORTADOR REGISTRAR UN DISTRIBUIDOR ASOCIADO
-    /*public function registrar_distribuidor(){
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        return view('importador.registrarDistribuidor')->with(compact('paises'));
-    }
-
-    //FUNCION QUE PERMITE VER LOS DISTRIBUIDORES ASOCIADOS A UN IMPORTADOR
-    public function ver_distribuidores(){
-        $distribuidores = Importador::find(session('importadorId'))
-                                    ->distribuidores()
-                                    ->paginate(6);
-
-        return view('importador.listados.distribuidores')->with(compact('distribuidores'));
-    }
-
-    //FUNCION QUE LE PERMITE AL IMPORTADOR REGISTRAR UNA MARCA
-    public function registrar_marca(){
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        return view('importador.registrarMarca')->with(compact('paises'));
-    }*/
     
     public function listado_marcas(){
         $accion = 'Asociar';
@@ -169,48 +144,6 @@ class ImportadorController extends Controller
         // ... //
        
         //return redirect('marca')->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
-    }
-
-    /*//FUNCION QUE LE PERMITE AL IMPORTADOR REGISTRAR UN PRODUCTO ASOCIADO A SU MARCA 
-    public function registrar_producto($id, $marca){
-
-        $paises = DB::table('pais')
-                    ->orderBy('pais')
-                    ->pluck('pais', 'id');
-
-        $clases_bebidas = DB::table('clase_bebida')
-                    ->orderBy('clase')
-                    ->pluck('clase', 'id');
-
-        return view('importador.registrarProducto')->with(compact('id', 'marca', 'paises', 'clases_bebidas'));
-    }*/
-
-    //FUNCION QUE LE PERMITE AL IMPORTADOR VER EL LISTADO DE PRODUCTOS ASOCIADOS A UNA MARCA
-    public function ver_productos($id, $marca){
-        
-        $productos = Marca::find($id)
-                            ->productos()
-                            ->paginate(8);
-
-        return view('importador.listados.productos')->with(compact('productos', 'marca'));
-    }
-
-    public function ver_detalle_producto($id, $producto){
-        $perfil = 'I';
-
-        $producto = Producto::find($id);
-        
-        $bebida = Bebida::find($producto->clase_bebida->bebida_id)
-                        ->select('nombre', 'caracteristicas')
-                        ->get()
-                        ->first();
-
-        $productor = Productor::find($producto->marca->productor_id)
-                        ->select('nombre')
-                        ->get()
-                        ->first();
-
-        return view('importador.detalleProducto')->with(compact('producto', 'bebida', 'productor', 'perfil'));
     }
 
     public function listado_ofertas(){

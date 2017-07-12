@@ -10,8 +10,8 @@ class Importador extends Model
 
     protected $fillable = [
         'user_id', 'nombre', 'nombre_seo', 'descripcion', 'direccion', 'codigo_postal', 'pais_id', 'provincia_region_id', 'logo', 
-        'persona_contacto', 'telefono', 'telefono_opcional', 'email', 'website', 'facebook', 'twitter', 
-        'instagram', 'reclamada', 'latitud', 'longitud', 'estado_datos', 'tipo_suscripcion', 'saldo', 
+        'persona_contacto', 'telefono', 'telefono_opcional', 'email', 'website', 'facebook', 'twitter', 'instagram', 'reclamada', 
+        'latitud', 'longitud', 'estado_datos', 'suscripcion_id', 'saldo', 'invitacion', 'fecha_invitacion',
     ];
 
     public function user(){
@@ -27,15 +27,19 @@ class Importador extends Model
     }
 
     public function productores(){
-        return $this->belongsToMany('App\Models\Productor', 'productor_importador')->withTimestamps();;
+        return $this->belongsToMany('App\Models\Productor', 'productor_importador')->withTimestamps();
     }
 
      public function distribuidores(){
-        return $this->belongsToMany('App\Models\Distribuidor', 'importador_distribuidor')->withTimestamps();;
+        return $this->belongsToMany('App\Models\Distribuidor', 'importador_distribuidor')->withTimestamps();
     }
 
-     public function marcas(){
-        return $this->belongsToMany('App\Models\Marca', 'importador_marca')->withTimestamps();;
+    public function marcas(){
+        return $this->belongsToMany('App\Models\Marca', 'importador_marca')->withPivot('status')->withTimestamps();
+    }
+
+    public function productos(){
+        return $this->belongsToMany('App\Models\Producto', 'importador_producto')->withPivot('status')->withTimestamps();
     }
 
     public function ofertas(){
@@ -43,15 +47,18 @@ class Importador extends Model
     }
 
     public function creditos(){
-    	return $this->belongsToMany('App\Models\Credito', 'credito_importador')->withPivot('total', 'fecha_compra')->withTimestamps();
+    	return $this->belongsToMany('App\Models\Credito', 'importador_credito')->withPivot('total', 'fecha_compra')->withTimestamps();
+    }
+    public function suscripcion(){
+        return $this->belongsTo('App\Models\Suscripcion');
+    }
+
+    public function pagos_suscripciones(){
+        return $this->belongsToMany('App\Models\Suscripcion', 'importador_suscripcion')->withPivot('pago', 'fecha_compra')->withTimestamps();
     }
 
     public function deducciones_creditos_importadores(){
     	return $this->hasMany('App\Models\Deduccion_Credito_Importador');
-    }
-
-    public function suscripcion(){
-        return $this->belongsTo('App\Models\Suscripcion');
     }
 
     public function notificaciones_i(){

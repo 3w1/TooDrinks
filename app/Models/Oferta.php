@@ -11,7 +11,7 @@ class Oferta extends Model
      protected $fillable = [
         'producto_id', 'tipo_creador', 'creador_id', 'titulo', 'descripcion', 'precio_unitario', 'precio_lote', 
         'cantidad_producto', 'cantidad_caja', 'cantidad_minima', 'envio', 'costo_envio', 'visible_importadores',
-        'visible_distribuidores', 'visible_horecas',
+        'visible_distribuidores', 'visible_horecas', 'cantidad_visitas', 'cantidad_contactos', 'fecha', 'status',
     ];
 
     public function producto(){

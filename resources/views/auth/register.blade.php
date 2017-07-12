@@ -24,9 +24,7 @@
 
                             {!! Form::hidden('estado_datos', '1') !!}
                             {!! Form::hidden('id_entidad', $id) !!}
-                            {!! Form::hidden('tipo_entidad', $tipo) !!}
-
-
+                                
                             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                 <label for="name" class="col-md-4 control-label">Nombre de Usuario</label>
 
@@ -109,7 +107,7 @@
                             <div class="form-group">
                                 {!! Form::label('país', 'País', ['class' => 'col-md-4 control-label']) !!}
                                 <div class="col-md-6">
-                                    {!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();']) !!}
+                                    {!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();']) !!}
                                 </div>
                             </div>
 
@@ -135,6 +133,17 @@
                                      {!! Form::text('telefono_opcional', null, ['class' => 'form-control', 'placeholder' => 'Teléfono Opcional'] ) !!}
                                 </div>
                             </div>
+                            
+                            @if ($id == '0')
+                                <div class="form-group">
+                                    {!! Form::label('tipo', 'Tipo de Usuario', ['class' => 'col-md-4 control-label']) !!}
+                                    <div class="col-md-6">
+                                        {!! Form::select('tipo_entidad', ['U' => 'Usuario', 'P' => 'Productor', 'I' => 'Importador', 'D' => 'Distribuidor', 'H' => 'Horeca', 'M' => 'Multinacional'], null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción']) !!}
+                                    </div>
+                                </div>
+                            @else
+                                {!! Form::hidden('tipo_entidad', $tipo) !!}
+                            @endif
 
                             {!! Form::hidden('avatar', 'icono-usuario.jpg') !!}
 

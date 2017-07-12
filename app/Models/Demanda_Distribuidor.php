@@ -9,7 +9,7 @@ class Demanda_Distribuidor extends Model
     protected $table = "demanda_distribuidor";
 
     protected $fillable = [
-    	'tipo_creador', 'creador_id', 'marca_id', 'provincia_region_id', 'status', 
+    	'tipo_creador', 'creador_id', 'marca_id', 'provincia_region_id', 'status', 'fecha', 'cantidad_visitas', 'cantidad_contactos',
     ]; 
 
 

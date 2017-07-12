@@ -9,7 +9,7 @@ class Solicitud_Importacion extends Model
     protected $table = "solicitud_importacion";
 
     protected $fillable = [
-    	'importador_id', 'producto_id', 'pais_id', 'status', 
+    	'importador_id', 'producto_id', 'pais_id', 'status', 'fecha', 'cantidad_visitas', 'cantidad_contactos',
     ]; 
 
 

@@ -5,6 +5,11 @@
 	</div>
 
 	<div class="form-group">
+		{!! Form::label('creditos', 'Creditos Disponibles') !!}
+		{!! Form::text('creditos_disponibles', null, ['class' => 'form-control', 'placeholder' => 'Cantidad de Créditos'] ) !!}
+	</div>
+
+	<div class="form-group">
 		{!! Form::label('precio', 'Precio') !!}
 		{!! Form::text('precio', null, ['class' => 'form-control', 'placeholder' => 'Precio'] ) !!}
 	</div>

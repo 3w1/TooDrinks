@@ -14,6 +14,9 @@ class CreateSolicitudDistribucionTable extends Migration
             $table->integer('producto_id');
             $table->integer('provincia_region_id');
             $table->boolean('status');
+            $table->date('fecha');
+            $table->integer('cantidad_visitas');
+            $table->integer('cantidad_contactos');
             $table->timestamps();
 
             $table->foreign('producto_id')

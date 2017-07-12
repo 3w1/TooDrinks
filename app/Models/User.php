@@ -12,9 +12,9 @@ class User extends Authenticatable
     protected $table = "users";
 
     protected $fillable = [
-        'name', 'email', 'password', 'nombre', 'apellido', 'direccion', 'telefono', 'telefono_opcional', 
+        'rol', 'name', 'email', 'password', 'nombre', 'apellido', 'direccion', 'telefono', 'telefono_opcional', 
         'codigo_postal', 'pais_id', 'provincia_region_id', 'avatar', 'estado_datos', 'productor', 'importador',
-        'distribuidor', 'horeca', 'activado', 'codigo_confirmacion', 'remember_token', 'cantidad_entidades',
+        'distribuidor', 'horeca', 'multinacional', 'activado', 'codigo_confirmacion', 'remember_token', 'cantidad_entidades',
     ];
 
     protected $hidden = [
@@ -47,5 +47,9 @@ class User extends Authenticatable
 
     public function opiniones(){
         return $this->hasMany('App\Models\Opinion');
+    }
+
+    public function notificaciones(){
+        return $this->hasMany('App\Models\Notificacion_Admin');
     }
 }

@@ -40,41 +40,32 @@ class UsuarioController extends Controller
         $entidad = explode(".", $request->entidad);
 
         if ($entidad[0] == 'P'){
-            $productor = DB::table('productor')
-                            ->where('id', '=', $entidad[1])
-                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
-                            ->get()
-                            ->first();
+            $productor = Productor::where('id', '=', $entidad[1])
+                                    ->first();
 
             session(['perfilId' => $productor->id]);
             session(['perfilNombre' => $productor->nombre]);
             session(['perfilLogo' => $productor->logo]);
             session(['perfilSaldo' => $productor->saldo]);
+            session(['perfilTipo' => 'P']);
             session(['perfilPais' => $productor->pais_id]);
             session(['perfilProvincia' => $productor->provincia_region_id]);
-            session(['perfilTipo' => 'P']);
-            session(['perfilSuscripcion' => $productor->tipo_suscripcion]);
+            session(['perfilSuscripcion' => $productor->suscripcion->suscripcion]);
         }elseif ($entidad[0] == 'I'){
-            $importador = DB::table('importador')
-                            ->where('id', '=', $entidad[1])
-                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
-                            ->get()
-                            ->first();
+            $importador = Importador::where('id', '=', $entidad[1])
+                                    ->first();
 
             session(['perfilId' => $importador->id]);
             session(['perfilNombre' => $importador->nombre]);
             session(['perfilLogo' => $importador->logo]);
             session(['perfilSaldo' => $importador->saldo]);
-             session(['perfilPais' => $importador->pais_id]);
+            session(['perfilPais' => $importador->pais_id]);
             session(['perfilProvincia' => $importador->provincia_region_id]);
             session(['perfilTipo' => 'I']);
-            session(['perfilSuscripcion' => $importador->tipo_suscripcion]);
+            session(['perfilSuscripcion' => $importador->suscripcion->suscripcion]);
         }elseif ($entidad[0] == 'D'){
-            $distribuidor = DB::table('distribuidor')
-                            ->where('id', '=', $entidad[1])
-                            ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
-                            ->get()
-                            ->first();
+            $distribuidor = Distribuidor::where('id', '=', $entidad[1])
+                                        ->first();
 
             session(['perfilId' => $distribuidor->id]);
             session(['perfilNombre' => $distribuidor->nombre]);
@@ -83,7 +74,7 @@ class UsuarioController extends Controller
             session(['perfilPais' => $distribuidor->pais_id]);
             session(['perfilProvincia' => $distribuidor->provincia_region_id]);
             session(['perfilTipo' => 'D']);
-            session(['perfilSuscripcion' => $distribuidor->tipo_suscripcion]);
+            session(['perfilSuscripcion' => $distribuidor->suscripcion->suscripcion]);
         }elseif ($entidad[0] == 'H'){
             $horeca = DB::table('horeca')
                             ->where('id', '=', $entidad[1])
@@ -126,14 +117,18 @@ class UsuarioController extends Controller
 
             return view('adminWeb.index');
 
+        }elseif ($user->rol == 'US'){
+            session(['perfilId' => $user->id]);
+            session(['perfilNombre' => $user->nombre." ".$user->apellido]);
+            session(['perfilLogo' => $user->avatar]);
+            session(['perfilTipo' => 'US']);
+            session(['perfilPais' => $user->pais_id]);
+            session(['perfilProvincia' => $user->provincia_region_id]);
         }else{
 
             if ($user->productor == '1'){
-                $productor = DB::table('productor')
-                                ->where('user_id', '=', Auth::user()->id)
-                                ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
-                                ->get()
-                                ->first();
+                $productor = Productor::where('user_id', '=', Auth::user()->id)
+                                        ->first();
 
                 session(['perfilId' => $productor->id]);
                 session(['perfilNombre' => $productor->nombre]);
@@ -142,13 +137,10 @@ class UsuarioController extends Controller
                 session(['perfilTipo' => 'P']);
                 session(['perfilPais' => $productor->pais_id]);
                 session(['perfilProvincia' => $productor->provincia_region_id]);
-                session(['perfilSuscripcion' => $productor->tipo_suscripcion]);
+                session(['perfilSuscripcion' => $productor->suscripcion->suscripcion]);
             }elseif ($user->importador == '1'){
-                $importador = DB::table('importador')
-                                ->where('user_id', '=', Auth::user()->id)
-                                ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
-                                ->get()
-                                ->first();
+                $importador = Importador::where('user_id', '=', Auth::user()->id)
+                                        ->first();
 
                 session(['perfilId' => $importador->id]);
                 session(['perfilNombre' => $importador->nombre]);
@@ -157,13 +149,10 @@ class UsuarioController extends Controller
                 session(['perfilTipo' => 'I']);
                 session(['perfilPais' => $importador->pais_id]);
                 session(['perfilProvincia' => $importador->provincia_region_id]);
-                session(['perfilSuscripcion' => $importador->tipo_suscripcion]);
+                session(['perfilSuscripcion' => $importador->suscripcion->suscripcion]);
             }elseif ($user->distribuidor == '1'){
-                $distribuidor = DB::table('distribuidor')
-                                ->where('user_id', '=', Auth::user()->id)
-                                ->select('id', 'nombre', 'logo', 'saldo', 'tipo_suscripcion', 'pais_id', 'provincia_region_id')
-                                ->get()
-                                ->first();
+                $distribuidor = Distribuidor::where('user_id', '=', Auth::user()->id)
+                                        ->first();
 
                 session(['perfilId' => $distribuidor->id]);
                 session(['perfilNombre' => $distribuidor->nombre]);
@@ -172,7 +161,7 @@ class UsuarioController extends Controller
                 session(['perfilTipo' => 'D']);
                 session(['perfilPais' => $distribuidor->pais_id]);
                 session(['perfilProvincia' => $distribuidor->provincia_region_id]);
-                session(['perfilSuscripcion' => $distribuidor->tipo_suscripcion]);
+                session(['perfilSuscripcion' => $distribuidor->suscripcion->suscripcion]);
             }elseif ($user->horeca == '1'){
                 $horeca = DB::table('horeca')
                                 ->where('user_id', '=', Auth::user()->id)
@@ -298,166 +287,5 @@ class UsuarioController extends Controller
 
         return redirect()->action('UsuarioController@index');
 
-    }
-
-    //FUNCION QUE LE PERMITE AL USUARIO REGISTRAR UN PRODUCTOR DE SU PROPIEDAD
-    public function registrar_productor(){
-        $perfil = 'P';
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        return view('usuario.registrarPerfil')->with(compact('perfil', 'paises'));
-    }
-
-    //FUNCION QUE PERMITE VER LOS PRODUCTORES PERTENECIENTES A U USUARIO
-    public function ver_productores(){
-        $usuario = User::find(Auth::user()->id);
-
-        $productores = DB::table('productor')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', Auth::user()->id)
-                        ->paginate(4);
-
-        return view('usuario.listados.productores')->with(compact('usuario', 'productores'));
-    }
-
-    //FUNCION QUE LE PERMITE AL USUARIO REGISTRAR UN IMPORTADOR DE SU PROPIEDAD
-    public function registrar_importador(){
-        $perfil = 'I';
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        return view('usuario.registrarPerfil')->with(compact('perfil', 'paises'));
-    }
-
-    //FUNCION QUE PERMITE VER LOS IMPORTADORES PERTENECIENTES A U USUARIO
-    public function ver_importadores(){
-        $usuario = User::find(Auth::user()->id);
-
-        $importadores = DB::table('importador')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', Auth::user()->id)
-                        ->paginate(8);
-
-        return view('usuario.listados.importadores')->with(compact('usuario', 'importadores'));
-    }
-
-    //FUNCION QUE LE PERMITE AL USUARIO REGISTRAR UN DISTRIBUIDOR DE SU PROPIEDAD
-    public function registrar_distribuidor(){
-        $perfil = 'D';
-
-       $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        return view('usuario.registrarPerfil')->with(compact('perfil', 'paises'));
-    }
-
-    //FUNCION QUE PERMITE VER LOS DISTRIBUIDORES PERTENECIENTES A U USUARIO
-    public function ver_distribuidores(){
-        $usuario = User::find(Auth::user()->id);
-
-        $distribuidores = DB::table('distribuidor')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', Auth::user()->id)
-                        ->paginate(8);
-
-        return view('usuario.listados.distribuidores')->with(compact('usuario', 'distribuidores'));
-    }
-
-    //FUNCION QUE LE PERMITE AL USUARIO REGISTRAR UN HORECA DE SU PROPIEDAD
-    public function registrar_horeca(){
-        $perfil = 'H';
-
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-
-        return view('usuario.registrarPerfil')->with(compact('perfil', 'paises'));
-    }
-
-    //FUNCION QUE PERMITE VER LOS HORECAS PERTENECIENTES A U USUARIO
-    public function ver_horecas(){
-        $usuario = User::find(Auth::user()->id);
-
-        $horecas = DB::table('horeca')
-                        ->orderBy('nombre')
-                        ->select('id', 'nombre', 'telefono', 'email', 'saldo', 'logo', 'pais_id')
-                        ->where('user_id', Auth::user()->id)
-                        ->paginate(8);
-
-        return view('usuario.listados.horecas')->with(compact('usuario', 'horecas'));
-    }
-
-    public function listado_productores(){
-        $productores = Productor::orderBy('nombre', 'ASC')
-                        ->where('user_id', '=', '0')
-                        ->paginate(6);
-
-        return view('usuario.listados.productoresDisponibles')->with(compact('productores'));
-    }
-
-    public function reclamar_productor($id){
-        $actualizacion = DB::table('productor')
-                            ->where('id', '=', $id)
-                            ->update(['user_id' => Auth::user()->id ]);
-
-        return redirect('usuario/mis-productores')->with('msj', 'Se ha agregado exitosamente un productor a su propiedad');
-
-    }
-
-    public function listado_importadores(){
-        $importadores = Importador::orderBy('nombre', 'ASC')
-                        ->where('user_id', '=', '0')
-                        ->paginate(6);
-
-        return view('usuario.listados.importadoresDisponibles')->with(compact('importadores'));
-    }
-
-    public function reclamar_importador($id){
-        $actualizacion = DB::table('importador')
-                            ->where('id', '=', $id)
-                            ->update(['user_id' => Auth::user()->id ]);
-
-        return redirect('usuario/mis-importadores')->with('msj', 'Se ha agregado exitosamente un importador a su propiedad');
-    }
-
-    public function listado_distribuidores(){
-        $distribuidores = Distribuidor::orderBy('nombre', 'ASC')
-                        ->where('user_id', '=', '0')
-                        ->paginate(6);
-
-        return view('usuario.listados.distribuidoresDisponibles')->with(compact('distribuidores'));
-    }
-
-    public function reclamar_distribuidor($id){
-        $actualizacion = DB::table('distribuidor')
-                            ->where('id', '=', $id)
-                            ->update(['user_id' => Auth::user()->id ]);
-
-        return redirect('usuario/mis-distribuidores')->with('msj', 'Se ha agregado exitosamente un distribuidor a su propiedad');
-    }
-
-    public function listado_horecas(){
-        $horecas = Horeca::orderBy('nombre', 'ASC')
-                        ->where('user_id', '=', '0')
-                        ->paginate(6);
-
-        return view('usuario.listados.horecasDisponibles')->with(compact('horecas'));
-    }
-
-    public function reclamar_horeca($id){
-        $actualizacion = DB::table('horeca')
-                            ->where('id', '=', $id)
-                            ->update(['user_id' => Auth::user()->id ]);
-
-        return redirect('usuario/mis-horecas')->with('msj', 'Se ha agregado exitosamente un horeca a su propiedad');
     }
 }

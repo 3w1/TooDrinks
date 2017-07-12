@@ -12,7 +12,6 @@ class CreateClaseBebidaTable extends Migration
             $table->increments('id');
             $table->integer('bebida_id');
             $table->string('clase');
-            $table->integer('pais_id');
             $table->text('caracteristicas');
             $table->timestamps();
 
@@ -20,11 +19,6 @@ class CreateClaseBebidaTable extends Migration
       			  ->references('id')->on('bebida')
       			  ->onDelete('restrict')
       			  ->onUpdate('cascade');
-
-            $table->foreign('pais_id')
-                  ->references('id')->on('pais')
-                  ->onDelete('restrict')
-                  ->onUpdate('cascade');
         });
     }
 

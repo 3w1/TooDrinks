@@ -28,7 +28,11 @@
                   <i class="{{ $notificacion->icono }} {{ $notificacion->color }}"></i>
                   <div class="timeline-item">
                      <span class="time"><i class="fa fa-clock-o"></i> {{ date('d-m-Y', strtotime($notificacion->created_at)) }}</span>
-                     <h3 class="timeline-header"><a href="{{ url($notificacion->url) }}">{{ $notificacion->titulo }}</a></h3>
+                    @if($notificacion->leida == '1')
+                     	<h3 class="timeline-header"><a href="{{ url($notificacion->url) }}" style="color:#151515;">{{ $notificacion->titulo }}</a></h3>
+                    @else
+                    	<h3 class="timeline-header"><a href="{{ route('notificacion.leida', $notificacion->id) }}">{{ $notificacion->titulo }}</a></h3>
+                    @endif
                   </div>
                </li>
                

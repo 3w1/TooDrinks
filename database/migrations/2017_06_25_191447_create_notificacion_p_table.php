@@ -6,11 +6,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateNotificacionPTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('notificacion_p', function (Blueprint $table){
@@ -18,11 +13,14 @@ class CreateNotificacionPTable extends Migration
             $table->integer('creador_id');
             $table->enum('tipo_creador', ['P', 'I', 'D', 'H', 'U']);
             $table->integer('productor_id');
+            $table->string('tipo');
             $table->string('titulo');
             $table->string('url');
             $table->string('descripcion');
             $table->string('color');
             $table->string('icono');
+            $table->date('fecha');
+            $table->boolean('leida');
             $table->timestamps();
 
             $table->foreign('productor_id')

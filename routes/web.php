@@ -20,7 +20,7 @@ Route::get('/', function () {
     return redirect()->action('UsuarioController@index');
 });
 
-Route::get('registrarse/{tipo}${id}${token}', 'Auth\RegisterController@registrarse');
+Route::get('registrarse/{tipo}${id}${token}', 'Auth\RegisterController@registrarse')->name('registrarse');
 // ./RUTAS DE INICIO Y AUTENTICACIÓN ./
 
 //  RUTAS PARA LOS USUARIOS
@@ -200,6 +200,7 @@ Route::resource('credito','CreditoController');
 // RUTAS PARA LAS NOTIFICACIONES
 Route::get('notificacion/notificar-productor/{tipo}/{descripcion}/{id}', 'NotificacionController@notificar_p')->name('notificar_p');
 
+Route::get('notifiacion/marcar-leida/{id}', 'NotificacionController@marcar_leida')->name('notificacion.leida');
 Route::resource('notificacion', 'NotificacionController');
 // ./RUTAS PARA LAS NOTIFICACIONES ./
 
@@ -221,6 +222,7 @@ Route::get('notificaciones_importador', 'MailsController@notificaciones_importad
 Route::get('notificaciones_distribuidor', 'MailsController@notificaciones_distribuidor')->name('mails.notificaciones-d');
 
 Route::post('correo-invitacion', 'MailsController@correo_invitacion')->name('mails.invitacion');
+
 Route::resource('mails', 'MailsController');
 // ./RUTAS PARA LOS MAILS ./
 

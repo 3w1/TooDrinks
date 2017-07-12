@@ -6,6 +6,7 @@
 	{!! Form::hidden('reclamada', '0') !!}
 	{!! Form::hidden('estado_datos', '0') !!}
 	{!! Form::hidden('saldo', '0') !!}
+	{!! Form::hidden('invitacion', '0') !!}
 
 	<div class="form-group">
 		{!! Form::label('nombre', 'Nombre') !!}
@@ -95,8 +96,8 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('tipo_suscripcion', 'Tipo de Suscripción') !!}
-		{!! Form::select('tipo_suscripcion', ['B' => 'Básica', 'A' => 'Avanzada', 'P' => 'Premium'], null, ['class' => 'form-control'] ) !!}
+		{!! Form::label('suscripcion', 'Tipo de Suscripción') !!}
+		{!! Form::select('suscripcion_id', $suscripciones, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una suscripción..'] ) !!}
 	</div>
 
 	<div class="form-group">
