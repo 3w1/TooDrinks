@@ -24,7 +24,11 @@
 					$existe = 1;
 				}
 		 	?>
-		 @endif
+		@else
+			<?php 
+				$existe = 1;
+			?>
+		@endif
 		<div class="box">
 			<div class="box-header">
 				<h3 class="box-title">PANEL DE USUARIO</h3>

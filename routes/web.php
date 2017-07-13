@@ -117,7 +117,7 @@ Route::get('producto/agregar/{id}-{marca}', 'ProductoController@agregar')->name(
 Route::get('producto/listado-de-productos/{id}-{marca}', 'ProductoController@listado')->name('producto.listado');
 Route::get('producto/detalle-de-producto/{id}', 'ProductoController@detalle')->name('producto.detalle');
 
-Route::get('producto/buscar/{nombre}', 'ProductoController@buscar')->name('producto.buscar');
+Route::get('producto/verificar-producto/{id}', 'ProductoController@verificar_producto');
 
 Route::post('producto/updateImagen', 'ProductoController@updateImagen')->name('producto.updateImagen');
 Route::resource('producto','ProductoController');

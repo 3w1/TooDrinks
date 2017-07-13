@@ -164,15 +164,41 @@ class ProductoController extends Controller
                     ->orderBy('nombre')
                     ->where('nombre', 'ILIKE', '%'.$tipo[0].'%')
                     ->get();
-        }elseif ($tipo[1] == '3'){
-            //Cargar la información de un producto específico para confirmar 
-            //la solicitud de importación o distribución del mismo.
-            $productos = Producto::where('id', '=', $tipo[0])->with('bebida', 'clase_bebida', 'marca')
-                        ->first();
         }
        
         return response()->json(
             $productos->toArray()
+        );
+    }
+
+    //Método para verificar la información de un producto
+    //para que pueda ser solicitado para importación
+    public function verificar_producto($id){
+        $productor = DB::table('producto')
+                        ->select('productor.id')
+                        ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                        ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                        ->where('producto.id', '=', $id)
+                        ->first();
+
+        $paises_productor = DB::table('productor_pais')
+                                ->select('pais_id')
+                                ->where('productor_id', '=', $productor->id)
+                                ->get();
+        $check = 0;
+        foreach ($paises_productor as $pais){
+            if ($pais->pais_id == session('perfilPais')){
+                $check = 1;
+            }
+        }
+
+        $producto = Producto::where('id', '=', $id)->with('bebida', 'clase_bebida', 'marca')
+                    ->first()->toArray();
+
+        $producto['check'] = $check;
+
+        return response()->json(
+            $producto
         );
     }
 

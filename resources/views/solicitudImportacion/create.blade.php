@@ -7,7 +7,10 @@
 @endsection
 
 @section('content-left')
-
+	<div class="alert alert-danger alert-dismissable" style="display: none;" id="alerta">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <div id="mensaje"></div>
+    </div>
 	@include('solicitudImportacion.modales.confirmarImportacion')
 	@section('title-header')
 		<h3><b>Solicitar Importación</b></h3>
