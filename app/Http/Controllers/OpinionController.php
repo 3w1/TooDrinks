@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Opinion;
 use App\Models\User;
 use App\Models\Producto;
-use App\Models\Pais;
-use App\Models\Provincia_Region;
+use App\Models\Pais; use App\Models\Provincia_Region;
+use App\Models\Notificacion_Admin;
 use DB;
 
 
@@ -41,6 +41,25 @@ class OpinionController extends Controller
         $opinion->fecha = new \DateTime();
         $opinion->editada = '0';
         $opinion->save();
+
+        $producto = DB::table('producto')
+                    ->select('nombre')
+                    ->where('id', '=', $request->producto_id)
+                    ->first();
+
+        $notificaciones_admin = new Notificacion_Admin();
+        $notificaciones_admin->creador_id = session('perfilId');
+        $notificaciones_admin->tipo_creador = session('perfilTipo');
+        $notificaciones_admin->titulo = session('perfilNombre') . ' ha dejado una nueva opinion en el producto '.$producto->nombre;
+        $notificaciones_admin->url='admin/opiniones-sin-aprobar';
+        $notificaciones_admin->user_id = 0;
+        $notificaciones_admin->descripcion = 'Nueva Opinion';
+        $notificaciones_admin->color = 'bg-maroon';
+        $notificaciones_admin->icono = 'fa fa-commenting-o';
+        $notificaciones_admin->fecha = new \DateTime();
+        $notificaciones_admin->tipo = 'OP';
+        $notificaciones_admin->leida = '0';
+        $notificaciones_admin->save();
 
         return redirect('producto/detalle-de-producto/'.$request->producto_id)->with('msj', 'Su comentario ha sido almacenado exitosamente');
     }

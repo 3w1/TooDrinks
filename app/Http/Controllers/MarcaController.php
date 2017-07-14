@@ -7,6 +7,7 @@ use App\Models\Marca;
 use App\Models\Pais;
 use App\Models\Provincia_Region; 
 use App\Models\Productor; use App\Models\Importador; use App\Models\Distribuidor;
+use App\Models\Notificacion_Admin;
 use DB; use Input; use Image;
 
 class MarcaController extends Controller
@@ -57,6 +58,8 @@ class MarcaController extends Controller
 
     public function store(Request $request)
     {
+        $fecha = new \DateTime();
+        
         $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
@@ -74,15 +77,27 @@ class MarcaController extends Controller
 
         if (session('perfilTipo') == 'I'){
             $marca->importadores()->attach(session('perfilId'), ['status' => '0']);
-            //NOTIFICAR A PRODUCTORES QUE HAY UNA NUEVA MARCA DISPONIBLES
         }elseif (session('perfilTipo') == 'D'){
             $marca->distribuidores()->attach(session('perfilId'), ['status' => '0']);
-            //NOTIFICAR A PRODUCTORES QUE HAY UNA NUEVA MARCA DISPONIBLES
-        }   
+        }       
 
         if (session('perfilTipo') == 'AD'){
             return redirect('admin')->with('msj-success', 'La marca ha sido creada exitosamente');
         }
+
+        $notificaciones_admin = new Notificacion_Admin();
+        $notificaciones_admin->creador_id = session('perfilId');
+        $notificaciones_admin->tipo_creador = session('perfilTipo');
+        $notificaciones_admin->titulo = session('perfilNombre') . ' ha creado una nueva marca';
+        $notificaciones_admin->url='admin/marcas-sin-aprobar';
+        $notificaciones_admin->user_id = 0;
+        $notificaciones_admin->descripcion = 'Nueva Marca';
+        $notificaciones_admin->color = 'bg-purple';
+        $notificaciones_admin->icono = 'fa fa-plus-circle';
+        $notificaciones_admin->fecha = $fecha;
+        $notificaciones_admin->tipo = 'NM';
+        $notificaciones_admin->leida = '0';
+        $notificaciones_admin->save();
 
         return redirect('marca')->with('msj', 'Su marca ha sido creada exitosamente');
     }

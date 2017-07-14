@@ -51,15 +51,9 @@ class HorecaController extends Controller
         return redirect('admin')->with('msj', 'Se ha creado el Horeca exitosamente');
     }
 
-    /*public function show($id)
+    public function show($id)
     {
-        $horeca = Horeca::find($id);
-
-        session(['horecaId' => $id]);
-        session(['horecaNombre' => $horeca->nombre]);
-        session(['horecaLogo' => $horeca->logo]);
         
-        return view('horeca.show')->with(compact('horeca'));
     }
 
     public function edit($id)
@@ -85,7 +79,7 @@ class HorecaController extends Controller
         $horeca->save();
 
         $url = 'horeca/'.$id.'/edit';
-       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');
+       return redirect($url)->with('msj', 'Sus datos han sido actualizados exitosamente.');
     }
 
     public function updateAvatar(Request $request){
@@ -105,11 +99,11 @@ class HorecaController extends Controller
                             ->update(['logo' => $nombre ]);
        
        $url = 'horeca/'.$request->id.'/edit';
-       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');
+       return redirect($url)->with('msj', 'Su imagen de perfil ha sido actualizada exitosamente.');
     }
 
     public function destroy($id)
     {
 
-    }*/
+    }
 }

@@ -203,23 +203,11 @@ class UsuarioController extends Controller
         $usuario->save();  
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
        
@@ -245,7 +233,7 @@ class UsuarioController extends Controller
         $usuario->save();
 
         $url = 'usuario/'.Auth::user()->id.'/edit';
-        return redirect($url)->with('status', 'Sus datos han sido actualizados con éxito');
+        return redirect($url)->with('status', 'Sus datos han sido actualizados exitosamente');
     }
 
     public function updateAvatar(Request $request){
@@ -271,15 +259,9 @@ class UsuarioController extends Controller
                             ->update(['avatar' => $nombre ]);
        
        $url = 'usuario/'.Auth::user()->id.'/edit';
-       return redirect($url)->with('status', 'Su imagen de perfil ha sido cambiada con éxito');
+       return redirect($url)->with('status', 'Su imagen de perfil ha sido cambiada exitosamente');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $usuario = User::find($id);

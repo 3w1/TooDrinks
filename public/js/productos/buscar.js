@@ -1,4 +1,6 @@
 function buscarProducto() {
+    document.getElementById("alerta").style.display = 'none';
+    
     document.getElementById("productos").innerHTML = "";
         
     var nombre = document.getElementById('busqueda').value+".2";
@@ -29,6 +31,8 @@ function cargarProducto($id){
         success:function(ans){
             console.log(ans);
             if (ans.check == '1'){
+                document.getElementById("alerta").style.display = 'none';
+
                 document.getElementById("infoProducto").innerHTML = "<div class='panel-heading'><h4><b>Producto: "+ans.nombre+"</b></h4></div><ul class='list-group'>";
                 document.getElementById("infoProducto").innerHTML += "<li class='list-group-item'><b>Nombre SEO: </b>"+ans.nombre_seo+"</li>";
                 document.getElementById("infoProducto").innerHTML += "<li class='list-group-item'><b>Descripción: </b>"+ans.descripcion+"</li>";

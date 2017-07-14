@@ -117,7 +117,7 @@
       </div>
       <div class="pull-left info">
          <p>{{ session('perfilNombre') }} (I)</p>
-         <a><i class="fa fa-circle text-success"></i> Créditos: {{ session('perfilSaldo') }}</a>
+         <a href="{{ route('importador.edit', session('perfilId')) }}">Editar Perfil <i class="fa fa-edit"></i></a>
       </div>
 
    @elseif (session('perfilTipo') == 'D')
@@ -127,7 +127,7 @@
       </div>
       <div class="pull-left info">
          <p>{{ session('perfilNombre') }} (D)</p>
-         <a><i class="fa fa-circle text-success"></i> Créditos: {{ session('perfilSaldo') }}</a>
+         <a href="{{ route('distribuidor.edit', session('perfilId')) }}">Editar Perfil <i class="fa fa-edit"></i></a>
       </div>
 
    @elseif (session('perfilTipo') == 'H')
@@ -136,7 +136,7 @@
       </div>
       <div class="pull-left info">
          <p>{{ session('perfilNombre') }} (H)</p>
-         <a><i class="fa fa-circle text-success"></i> Créditos: {{ session('perfilSaldo') }}</a>
+         <a href="{{ route('horeca.edit', session('perfilId')) }}">Editar Perfil <i class="fa fa-edit"></i></a>
       </div>
    @else
       <div class="pull-left image">

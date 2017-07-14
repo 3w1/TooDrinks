@@ -30,6 +30,14 @@
         <div class="panel-body">
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="tab1default">
+                	<div class="row">
+                		<div class="col-md-4"></div>
+	       				<div class="col-sm-6 col-md-4">
+	         				<a href="" class="thumbnail" data-toggle='modal' data-target="#myModal"><img src="{{ asset('imagenes/productores/thumbnails') }}/{{ $productor->logo }}"></a>
+	       				</div>
+	       				<div class="col-md-4"></div>
+                	</div>
+                	
                 	<div class="form-group">
 						{!! Form::label('nombre', 'Nombre') !!}
 						{!! Form::text('nombre', $productor->nombre, ['class' => 'form-control'] ) !!}
@@ -132,9 +140,5 @@
 	</div>
 
     {!! Form::close() !!}
-
-
-	<!--@include('productor.formularios.editForm')-->
-	
 	
 @endsection

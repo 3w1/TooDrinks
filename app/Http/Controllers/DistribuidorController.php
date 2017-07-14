@@ -6,12 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Distribuidor;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
-use App\Models\Marca;
-use App\Models\Producto;
-use App\Models\Bebida;
-use App\Models\Productor;
-use App\Models\Oferta;
-use App\Models\Destino_Oferta;
+use App\Models\Marca; use App\Models\Producto;
+use App\Models\Bebida; use App\Models\Productor;
+use App\Models\Oferta; use App\Models\Destino_Oferta; 
+use App\Models\Notificacion_P; use App\Models\Notificacion_Admin;
 use DB; use Auth; use Input; use Image;
 
 class DistribuidorController extends Controller
@@ -65,7 +63,7 @@ class DistribuidorController extends Controller
         return view('distribuidor.show')->with(compact('distribuidor'));
     }
 
-    /*public function edit($id)
+    public function edit($id)
     {
         $distribuidor = Distribuidor::find($id);
 
@@ -88,7 +86,7 @@ class DistribuidorController extends Controller
         $distribuidor->save();
 
         $url = 'distribuidor/'.$id.'/edit';
-       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');
+       return redirect($url)->with('msj', 'Sus datos han sido actualizados exitosamente.');
     }
 
     public function updateAvatar(Request $request){
@@ -108,13 +106,13 @@ class DistribuidorController extends Controller
                             ->update(['logo' => $nombre ]);
        
        $url = 'distribuidor/'.$request->id.'/edit';
-       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');
+       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada exitosamente.');
     }
 
     public function destroy($id)
     {
          
-    }*/
+    }
 
      public function listado_marcas(){
         $marcas = DB::table('marca')
@@ -132,10 +130,41 @@ class DistribuidorController extends Controller
 
         $marca->distribuidores()->attach(session('perfilId'), ['status' => '0']);
 
-        //Notificar al productor
-        $url = 'notificacion/notificar-productor/AD/'.$marca->nombre.'/'.$marca->productor_id;
-        return redirect($url);
-        // ... //
+        if ($marca->productor_id == '0'){
+            //NOTIFICAR AL ADMIN WEB
+            $notificaciones_admin = new Notificacion_Admin();
+            $notificaciones_admin->creador_id = session('perfilId');
+            $notificaciones_admin->tipo_creador = session('perfilTipo');
+            $notificaciones_admin->titulo = session('perfilNombre') . ' ha indicado que distribuye la marca '.$marca->nombre;
+            $notificaciones_admin->url='admin/confirmar-distribuidores-marcas';
+            $notificaciones_admin->user_id = 0;
+            $notificaciones_admin->descripcion = 'Asociación Distribuidor / Marca';
+            $notificaciones_admin->color = 'bg-red';
+            $notificaciones_admin->icono = 'fa fa-hand-pointer-o';
+            $notificaciones_admin->fecha = new \DateTime();
+            $notificaciones_admin->tipo = 'AD';
+            $notificaciones_admin->leida = '0';
+            $notificaciones_admin->save();
+            // *** //
+        }else{
+            //NOTIFICAR AL PRODUCTOR
+            $notificaciones_productor = new Notificacion_P();
+            $notificaciones_productor->creador_id = session('perfilId');
+            $notificaciones_productor->tipo_creador = session('perfilTipo');
+            $notificaciones_productor->titulo = session('perfilNombre') . ' ha indicado que distribuye tu marca '.$marca->nombre;
+            $notificaciones_productor->url='productor/confirmar-distribuidores';
+            $notificaciones_productor->descripcion = 'Nuevo Distribuidor';
+            $notificaciones_productor->color = 'bg-red';
+            $notificaciones_productor->icono = 'fa fa-hand-pointer-o';
+            $notificaciones_productor->tipo ='AD';
+            $notificaciones_productor->productor_id = $marca->productor_id;
+            $notificaciones_productor->fecha = new \DateTime();
+            $notificaciones_productor->leida = '0';
+            $notificaciones_productor->save();
+            // *** //
+        }
+
+        return redirect('marca')->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
     }
 
      //FUNCION QUE LE PERMITE AL DISTRIBUIDOR REGISTRAR UN PRODUCTO ASOCIADO A SU MARCA 

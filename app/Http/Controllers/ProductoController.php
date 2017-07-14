@@ -8,7 +8,7 @@ use App\Models\Pais;
 use App\Models\Provincia_Region;
 use App\Models\Clase_Bebida;
 use App\Models\Marca; use App\Models\Bebida;
-use App\Models\Productor; use App\Models\Notificacion_P;
+use App\Models\Productor; use App\Models\Notificacion_P; use App\Models\Notificacion_Admin;
 use DB; use Image; use Input; use Auth;
 
 class ProductoController extends Controller
@@ -101,32 +101,26 @@ class ProductoController extends Controller
         $producto->imagen = $nombre;
         $producto->save();
 
-        /*$productor = DB::table('marca')
-                        ->select('productor_id', 'nombre')
-                        ->where('id', '=', $request->marca_id)
-                        ->get()
-                        ->first();
-
         $ult_producto = DB::table('producto')
                             ->select('id')
                             ->orderBY('id', 'DESC')
                             ->get()
                             ->first();
 
-        if ( $productor->productor_id != '0'){
-            $notificaciones_productor = new Notificacion_P();
-            $notificaciones_productor->creador_id = session('perfilId');
-            $notificaciones_productor->tipo_creador = session('perfilTipo');
-            $notificaciones_productor->titulo = session('perfilNombre') . ' ha creado un producto en tu marca '. $productor->nombre;
-            $notificaciones_productor->url='productor/confirmar-productos/';
-            $notificaciones_productor->productor_id = $productor->productor_id;
-            $notificaciones_productor->descripcion = 'Nuevo Producto';
-            $notificaciones_productor->color = 'bg-yellow';
-            $notificaciones_productor->icono = 'fa fa-plus-square-o';
-            $notificaciones_productor->fecha = $fecha;
-            $notificaciones_productor->save();            
-        }*/
-
+        $notificaciones_admin = new Notificacion_Admin();
+        $notificaciones_admin->creador_id = session('perfilId');
+        $notificaciones_admin->tipo_creador = session('perfilTipo');
+        $notificaciones_admin->titulo = session('perfilNombre') . ' ha creado un nuevo producto en la marca '. $request->marca_nombre;
+        $notificaciones_admin->url='admin/productos-sin-aprobar';
+        $notificaciones_admin->user_id = 0;
+        $notificaciones_admin->descripcion = 'Nuevo Producto';
+        $notificaciones_admin->color = 'bg-yellow';
+        $notificaciones_admin->icono = 'fa fa-plus-square-o';
+        $notificaciones_admin->fecha = $fecha;
+        $notificaciones_admin->tipo = 'NP';
+        $notificaciones_admin->leida = '0';
+        $notificaciones_admin->save();            
+    
         if ($request->usuario == '1'){
             return redirect('producto')->with('msj', 'Su producto ha sido agregado exitosamente');
         }else{
@@ -173,7 +167,9 @@ class ProductoController extends Controller
 
     //Método para verificar la información de un producto
     //para que pueda ser solicitado para importación
+    //Si el productor ha marcado como destino el país desde el cual se solicita
     public function verificar_producto($id){
+        //Consulto el productor propietario del producto solicitado
         $productor = DB::table('producto')
                         ->select('productor.id')
                         ->join('marca', 'producto.marca_id', '=', 'marca.id')
@@ -181,15 +177,25 @@ class ProductoController extends Controller
                         ->where('producto.id', '=', $id)
                         ->first();
 
+        //Consulto los paises marcados como destino por el productor
         $paises_productor = DB::table('productor_pais')
                                 ->select('pais_id')
                                 ->where('productor_id', '=', $productor->id)
                                 ->get();
+
         $check = 0;
+        $cont = 0;
         foreach ($paises_productor as $pais){
+            $cont++;
             if ($pais->pais_id == session('perfilPais')){
                 $check = 1;
             }
+        }
+
+        //Si el productor aun no ha marcado los paises a los que quiere exportar
+        //Permito la solicitud
+        if ($cont == '0'){
+            $check = 1;
         }
 
         $producto = Producto::where('id', '=', $id)->with('bebida', 'clase_bebida', 'marca')

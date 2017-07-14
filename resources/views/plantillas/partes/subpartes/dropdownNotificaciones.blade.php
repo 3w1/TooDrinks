@@ -120,7 +120,9 @@
    @endif
    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
       <i class="fa fa-bell-o"></i>
-      <span class="label label-success">{{ $cont }}</span>
+      @if ($cont > 0 )
+         <span class="label label-success">{{ $cont }}</span>
+      @endif
    </a>
 
    <ul class="dropdown-menu">

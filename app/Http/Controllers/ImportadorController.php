@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Importador; use App\Models\Distribuidor; use App\Models\User;
 use App\Models\Pais; use App\Models\Provincia_Region; use App\Models\Marca;
-use App\Models\Producto;
-use App\Models\Bebida;
+use App\Models\Producto; use App\Models\Bebida;
 use App\Models\Productor;
-use App\Models\Oferta;
-use App\Models\Destino_Oferta;
+use App\Models\Oferta; use App\Models\Destino_Oferta;
 use App\Models\Demanda_Distribuidor; use App\Models\Demanda_Producto;
-use App\Models\Notificacion_P;
+use App\Models\Notificacion_P; use App\Models\Notificacion_Admin;
 use DB; use Auth; use Input; use Image;
 
 class ImportadorController extends Controller
@@ -65,7 +63,7 @@ class ImportadorController extends Controller
         return view('importador.show')->with(compact('importador'));
     }
 
-   /* public function edit($id)
+   public function edit($id)
     {
         $importador = Importador::find($id);
 
@@ -88,7 +86,7 @@ class ImportadorController extends Controller
         $importador->save();
 
         $url = 'importador/'.$id.'/edit';
-       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');
+       return redirect($url)->with('msj', 'Sus datos han sido actualizados exitosamente.');
     }
 
     public function updateAvatar(Request $request){
@@ -108,10 +106,10 @@ class ImportadorController extends Controller
                             ->update(['logo' => $nombre ]);
        
        $url = 'importador/'.$request->id.'/edit';
-       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');
+       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada exitosamente.');
     }
 
-    public function destroy($id)
+    /*public function destroy($id)
     {
 
     }*/
@@ -137,13 +135,42 @@ class ImportadorController extends Controller
         //Asociar importador a la marca
         $marca->importadores()->attach(session('perfilId'), ['status' => '0']);
         // ... //
+        
+        if ($marca->productor_id == '0'){
+            //NOTIFICAR AL ADMIN WEB
+            $notificaciones_admin = new Notificacion_Admin();
+            $notificaciones_admin->creador_id = session('perfilId');
+            $notificaciones_admin->tipo_creador = session('perfilTipo');
+            $notificaciones_admin->titulo = session('perfilNombre') . ' ha indicado que importa la marca '.$marca->nombre;
+            $notificaciones_admin->url='admin/confirmar-importadores-marcas';
+            $notificaciones_admin->user_id = 0;
+            $notificaciones_admin->descripcion = 'Asociación Importador / Marca';
+            $notificaciones_admin->color = 'bg-blue';
+            $notificaciones_admin->icono = 'fa fa-hand-pointer-o';
+            $notificaciones_admin->fecha = new \DateTime();
+            $notificaciones_admin->tipo = 'AI';
+            $notificaciones_admin->leida = '0';
+            $notificaciones_admin->save();
+            // *** //
+        }else{
+            //NOTIFICAR AL PRODUCTOR
+            $notificaciones_productor = new Notificacion_P();
+            $notificaciones_productor->creador_id = session('perfilId');
+            $notificaciones_productor->tipo_creador = session('perfilTipo');
+            $notificaciones_productor->titulo = session('perfilNombre') . ' ha indicado que importa tu marca '.$marca->nombre;
+            $notificaciones_productor->url='productor/confirmar-importadores';
+            $notificaciones_productor->descripcion = 'Nuevo Importador';
+            $notificaciones_productor->color = 'bg-blue';
+            $notificaciones_productor->icono = 'fa fa-hand-pointer-o';
+            $notificaciones_productor->tipo ='AI';
+            $notificaciones_productor->productor_id = $marca->productor_id;
+            $notificaciones_productor->fecha = new \DateTime();
+            $notificaciones_productor->leida = '0';
+            $notificaciones_productor->save();
+            // *** //
+        }
 
-        //Notificar al productor
-        $url = 'notificacion/notificar-productor/AI/'.$marca->nombre.'/'.$marca->productor_id;
-        return redirect($url);
-        // ... //
-       
-        //return redirect('marca')->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
+        return redirect('marca')->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
     }
 
     public function solicitar_importacion(){

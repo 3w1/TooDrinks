@@ -42,7 +42,7 @@
 				@if ($existe == '0')
 					<div class="alert alert-danger alert-dismissable">
 			            <button type="button" class="close" data-dismiss="alert">&times;</button>
-			            <strong> Debes seleccionar los países donde deseas establecer relaciones laborales. De lo contrario, te podrán enviar solicitudes desde cualquier país del mundo.  <a href="{{ route('productor.paises')}}">Click Aqui</a></strong>.
+			            <strong> Debes seleccionar los países donde deseas establecer relaciones laborales. De lo contrario, te podrán enviar solicitudes desde cualquier país del mundo.  Para ello, debes ir a tu <a href="{{ route('productor.edit', session('perfilId'))}}">perfil</a></strong>.
 			        </div> 
 			    @endif
 				<center><h1>ESPACIO EN CONSTRUCCIÓN</h1>

@@ -103,12 +103,20 @@ class ProductorController extends Controller
         $productor->save();
 
         $paises = DB::table('productor_pais')
-                    ->where('productor_id', '=', session('perfilPais'))
+                    ->where('productor_id', '=', session('perfilId'))
                     ->first();
 
         if ($paises == null){
             Productor::find(session('perfilId'))
                     ->paises_importaciones()->attach(session('perfilPais'));
+        }else{
+            $act = DB::table('productor_pais')
+                        ->where('productor_id', '=', session('perfilId'))
+                        ->delete();
+
+            Productor::find(session('perfilId'))
+                    ->paises_importaciones()->attach(session('perfilPais'));
+
         }
 
         foreach ($request->paises as $pais){
@@ -121,7 +129,7 @@ class ProductorController extends Controller
     }
 
     public function updateAvatar(Request $request){
-        /*$file = Input::file('logo');   
+        $file = Input::file('logo');   
         $image = Image::make(Input::file('logo'));
 
         $path = public_path().'/imagenes/productores/';
@@ -137,7 +145,7 @@ class ProductorController extends Controller
                             ->update(['logo' => $nombre ]);
        
        $url = 'productor/'.$request->id.'/edit';
-       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito');*/
+       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada exitosamente');
     }
 
     public function destroy($id)
