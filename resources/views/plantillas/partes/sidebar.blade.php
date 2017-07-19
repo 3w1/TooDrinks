@@ -268,12 +268,12 @@
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="{{ route('demanda-producto.demandas-productos-productores') }}"><i class="fa fa-circle-o"></i> Productos
+               <li><a href="{{ route('demanda-producto.demandas-productos-disponibles') }}"><i class="fa fa-circle-o"></i> Productos
                   <span class="pull-right-container">
                      @if($cont_DP > 0) <small class="label pull-right bg-aqua">{{$cont_DP}}</small>@endif
                   </span>
                </a></li>
-               <li><a href="{{ route('demanda-producto.demandas-bebidas-productores') }}"><i class="fa fa-circle-o"></i> Bebidas
+               <li><a href="{{ route('demanda-producto.demandas-bebidas-disponibles') }}"><i class="fa fa-circle-o"></i> Bebidas
                   <span class="pull-right-container">
                      @if($cont_DB > 0) <small class="label pull-right bg-yellow">{{$cont_DB}}</small>@endif
                   </span>
@@ -319,7 +319,7 @@
             </a>
             <ul class="treeview-menu">
                <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
-               <li><a href="{{ route('oferta.importadores') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles
+               <li><a href="{{ route('oferta.disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles
                   <span class="pull-right-container">
                      @if($cont_NO > 0) <small class="label pull-right bg-purple">{{$cont_NO}}</small>@endif
                   </span>
@@ -382,12 +382,12 @@
                      @if($cont_DI > 0) <small class="label pull-right bg-orange">{{$cont_DI}}</small>@endif
                   </span>
                </a></li>
-               <li><a href="{{ route('demanda-producto.demandas-productos-importadores') }}"><i class="fa fa-circle-o"></i> Productos
+               <li><a href="{{ route('demanda-producto.demandas-productos-disponibles') }}"><i class="fa fa-circle-o"></i> Productos
                   <span class="pull-right-container">
                      @if($cont_DP > 0) <small class="label pull-right bg-aqua">{{$cont_DP}}</small>@endif
                   </span>
                </a></li>
-               <li><a href="{{ route('demanda-producto.demandas-bebidas-importadores') }}"><i class="fa fa-circle-o"></i> Bebidas
+               <li><a href="{{ route('demanda-producto.demandas-bebidas-disponibles') }}"><i class="fa fa-circle-o"></i> Bebidas
                   <span class="pull-right-container">
                      @if($cont_DB > 0) <small class="label pull-right bg-yellow">{{$cont_DB}}</small>@endif
                   </span>
@@ -428,7 +428,7 @@
             </a>
             <ul class="treeview-menu">
                <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
-               <li><a href="{{ route('oferta.distribuidores') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles
+               <li><a href="{{ route('oferta.disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles
                   <span class="pull-right-container">
                      @if($cont_NO > 0) <small class="label pull-right bg-purple">{{$cont_NO}}</small>@endif
                   </span>
@@ -480,12 +480,12 @@
                      @if($cont_DD > 0) <small class="label pull-right bg-green">{{$cont_DD}}</small>@endif
                   </span>
                Distribuidores</a></li>
-               <li><a href="{{ route('demanda-producto.demandas-productos-distribuidores') }}"><i class="fa fa-circle-o"></i> Productos
+               <li><a href="{{ route('demanda-producto.demandas-productos-disponibles') }}"><i class="fa fa-circle-o"></i> Productos
                   <span class="pull-right-container">
                      @if($cont_DP > 0) <small class="label pull-right bg-aqua">{{$cont_DP}}</small>@endif
                   </span>
                </a></li>
-               <li><a href="{{ route('demanda-producto.demandas-bebidas-distribuidores') }}"><i class="fa fa-circle-o"></i> Bebidas
+               <li><a href="{{ route('demanda-producto.demandas-bebidas-disponibles') }}"><i class="fa fa-circle-o"></i> Bebidas
                   <span class="pull-right-container">
                      @if($cont_DB > 0) <small class="label pull-right bg-yellow">{{$cont_DB}}</small>@endif
                   </span>
@@ -505,7 +505,7 @@
                </span>
             </a>
             <ul class="treeview-menu">
-               <li><a href="{{ route('oferta.horecas') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
+               <li><a href="{{ route('oferta.disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles</a></li>
             </ul>
          </li>
          <li>

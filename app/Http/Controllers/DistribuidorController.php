@@ -163,8 +163,7 @@ class DistribuidorController extends Controller
             $notificaciones_productor->save();
             // *** //
         }
-
-        return redirect('marca')->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
+         return redirect('producto/seleccionar-productos/'.$id)->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
     }
 
      //FUNCION QUE LE PERMITE AL DISTRIBUIDOR REGISTRAR UN PRODUCTO ASOCIADO A SU MARCA 

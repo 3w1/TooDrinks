@@ -28,4 +28,17 @@ class Demanda_Producto extends Model
     public function provincia_region(){
     	return $this->belongsTo('App\Models\Provincia_Region');
     }
+
+    public function productores(){
+        return $this->belongsToMany('App\Models\Productor', 'productor_demanda_producto')->withPivot('fecha')->withTimestamps();
+    }
+
+    public function importadores(){
+        return $this->belongsToMany('App\Models\Importador', 'importador_demanda_producto')->withPivot('fecha')->withTimestamps();
+    }
+
+    public function distribuidores(){
+        return $this->belongsToMany('App\Models\Distribuidor', 'distribuidor_demanda_producto')->withPivot('fecha')->withTimestamps();
+    }
+
 }

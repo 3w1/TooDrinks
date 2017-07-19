@@ -93,7 +93,7 @@ class AdminController extends Controller
             // *** //
         }
         $notificacion->creador_id = '0';
-        $notificacion->tipo_creador = 'AD';
+        $notificacion->tipo_creador = 'U';
         $notificacion->titulo = 'El administrador Web ha aprobado la publicación de la marca '.$marca->nombre;
         $notificacion->url='marca/'.$marca->id;
         $notificacion->descripcion = 'Nueva Marca';
@@ -129,7 +129,7 @@ class AdminController extends Controller
             $producto = DB::table('producto')
                         ->select('producto.tipo_creador', 'producto.creador_id', 'producto.nombre', 'producto.id', 'marca.productor_id')
                         ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                        ->where('id', '=', $id)
+                        ->where('producto.id', '=', $id)
                         ->first();
         }else{
             //Aprobar Producto desde la modal
@@ -140,7 +140,7 @@ class AdminController extends Controller
             $producto = DB::table('producto')
                         ->select('producto.tipo_creador', 'producto.creador_id', 'producto.nombre', 'producto.id', 'marca.productor_id')
                         ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                        ->where('id', '=', $request->producto_id)
+                        ->where('producto.id', '=', $request->producto_id)
                         ->first();
         }
 
@@ -163,7 +163,7 @@ class AdminController extends Controller
             // *** //
         }
         $notificacion->creador_id = '0';
-        $notificacion->tipo_creador = 'AD';
+        $notificacion->tipo_creador = 'U';
         $notificacion->titulo = 'El administrador Web ha aprobado la publicación del producto '.$producto->nombre;
         $notificacion->url='producto/'.$producto->id;
         $notificacion->descripcion = 'Nuevo Producto';
@@ -250,7 +250,7 @@ class AdminController extends Controller
         $marca= DB::table('importador_marca')
                 ->select('marca.nombre', 'importador_marca.importador_id')
                 ->join('marca', 'importador_marca.marca_id', '=', 'marca.id')
-                ->where('id','=', $id)
+                ->where('importador_marca.id','=', $id)
                 ->first();
 
         if ($tipo == 'S'){
@@ -264,7 +264,7 @@ class AdminController extends Controller
             //NOTIFICAR AL IMPORTADOR
             $notificaciones_importador = new Notificacion_I();
             $notificaciones_importador->creador_id = '0';
-            $notificaciones_importador->tipo_creador = 'AD';
+            $notificaciones_importador->tipo_creador = 'U';
             $notificaciones_importador->titulo = 'El administrador Web lo ha confirmado como importador de la marca: '. $marca->nombre;
             $notificaciones_importador->url='marca/'.$id;
             $notificaciones_importador->importador_id = $marca->importador_id;
@@ -284,7 +284,7 @@ class AdminController extends Controller
              //NOTIFICAR AL IMPORTADOR
             $notificaciones_importador = new Notificacion_I();
             $notificaciones_importador->creador_id = '0';
-            $notificaciones_importador->tipo_creador = 'AD';
+            $notificaciones_importador->tipo_creador = 'U';
             $notificaciones_importador->titulo = 'El administrador Web lo ha denegado como importador de la marca: '. $marca->nombre;
             $notificaciones_importador->url='marca';
             $notificaciones_importador->importador_id = $marca->importador_id;
@@ -317,7 +317,7 @@ class AdminController extends Controller
          $marca= DB::table('distribuidor_marca')
                 ->select('marca.nombre', 'distribuidor_marca.distribuidor_id')
                 ->join('marca', 'distribuidor_marca.marca_id', '=', 'marca.id')
-                ->where('id','=', $id)
+                ->where('distribuidor_marca.id','=', $id)
                 ->first();
 
         if ($tipo == 'S'){
@@ -330,7 +330,7 @@ class AdminController extends Controller
             //NOTIFICAR AL DISTRIBUIDOR
             $notificaciones_distribuidor = new Notificacion_D();
             $notificaciones_distribuidor->creador_id = '0';
-            $notificaciones_distribuidor->tipo_creador = 'AD';
+            $notificaciones_distribuidor->tipo_creador = 'U';
             $notificaciones_distribuidor->titulo = 'El administrador Web lo ha confirmado como importador de la marca: '. $marca->nombre;
             $notificaciones_distribuidor->url='marca';
             $notificaciones_distribuidor->distribuidor_id = $marca->distribuidor_id;
@@ -350,7 +350,7 @@ class AdminController extends Controller
             //NOTIFICAR AL DISTRIBUIDOR
             $notificaciones_distribuidor = new Notificacion_D();
             $notificaciones_distribuidor->creador_id = '0';
-            $notificaciones_distribuidor->tipo_creador = 'AD';
+            $notificaciones_distribuidor->tipo_creador = 'U';
             $notificaciones_distribuidor->titulo = 'El administrador Web lo ha denegado como importador de la marca: '. $marca->nombre;
             $notificaciones_distribuidor->url='marca';
             $notificaciones_distribuidor->distribuidor_id = $marca->distribuidor_id;

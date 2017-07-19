@@ -184,6 +184,17 @@ class ProductorController extends Controller
     }
 
     public function confirmar_importadores(){
+        $notificaciones_pendientes_DB = DB::table('notificacion_p')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'AI')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_DB as $notificacion){
+            $act = DB::table('notificacion_p')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
+
         $solicitudes = DB::table('importador_marca')
                     ->select('importador_marca.*')
                     ->join('marca', 'importador_marca.marca_id', '=', 'marca.id')
@@ -254,6 +265,17 @@ class ProductorController extends Controller
     }
 
     public function confirmar_distribuidores(){
+        $notificaciones_pendientes_DB = DB::table('notificacion_p')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'AD')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_DB as $notificacion){
+            $act = DB::table('notificacion_p')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
+
         $solicitudes = DB::table('distribuidor_marca')
                     ->select('distribuidor_marca.*')
                     ->join('marca', 'distribuidor_marca.marca_id', '=', 'marca.id')

@@ -24,26 +24,28 @@
    @endsection
 
    @foreach($productos as $producto)
-      <div class="col-md-3 col-xs-6">
-         <div class="thumbnail">
-            <div>
-               <img src="{{ asset('imagenes/productos/thumbnails/') }}/{{ $producto->imagen }}" class="img-responsive">
-            </div>             
-            <div class="caption">
-               <h3>{{ $producto->nombre }}</h3> 
-               <p>
-                  <strong>{{ $producto->bebida->nombre }}</strong> ({{ $producto->clase_bebida->clase }})
-               </p>
-               <p><center>
-                  <a href="#" class="btn btn-info" role="button" onclick="cargarDetalles({{$producto->id}});">Ver Más</a>
-                  <a href="{{ route('admin.aprobar-producto', $producto->id) }}" class="btn btn-primary" role="button">Aprobar</a>
-               </center></p>
-               <p><center>
-                  <a href="#" class="btn btn-danger" role="button">Eliminar</a>
-               </center></p>
+      @if($producto->id != 0)
+         <div class="col-md-3 col-xs-6">
+            <div class="thumbnail">
+               <div>
+                  <img src="{{ asset('imagenes/productos/thumbnails/') }}/{{ $producto->imagen }}" class="img-responsive">
+               </div>             
+               <div class="caption">
+                  <h3>{{ $producto->nombre }}</h3> 
+                  <p>
+                     <strong>{{ $producto->bebida->nombre }}</strong> ({{ $producto->clase_bebida->clase }})
+                  </p>
+                  <p><center>
+                     <a href="#" class="btn btn-info" role="button" onclick="cargarDetalles({{$producto->id}});">Ver Más</a>
+                     <a href="{{ route('admin.aprobar-producto', $producto->id) }}" class="btn btn-primary" role="button">Aprobar</a>
+                  </center></p>
+                  <p><center>
+                     <a href="#" class="btn btn-danger" role="button">Eliminar</a>
+                  </center></p>
+               </div>
             </div>
          </div>
-      </div>
+      @endif
    @endforeach
 @endsection
 

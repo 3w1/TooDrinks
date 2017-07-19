@@ -26,6 +26,10 @@ class Horeca extends Model
     	return $this->belongsTo('App\Models\Provincia_Region');
     }
 
+    public function ofertas_marcadas(){
+        return $this->belongsToMany('App\Models\Oferta', 'horeca_oferta')->withPivot('fecha')->withTimestamps();
+    }
+
     public function creditos(){
         return $this->belongsToMany('App\Models\Credito', 'horeca_credito')->withPivot('total', 'fecha_compra')->withTimestamps();
     }
@@ -35,7 +39,7 @@ class Horeca extends Model
     }
 
     public function productos(){
-        return $this->belongsToMany('App\Models\Producto', 'horeca_producto')->withPivot('status')->withTimestamps();
+        return $this->belongsToMany('App\Models\Producto', 'horeca_producto')->withTimestamps();
     }
 
     public function deducciones_creditos_horecas(){

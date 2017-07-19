@@ -26,7 +26,14 @@
                      	<li><a><strong>Precio: </strong> {{ $credito->precio }} $</a></li>
                   	</ul>
                   	<p>
-                     	<a href="{{ route('credito.compra', $credito->id) }}" class="btn btn-primary" role="button">Comprar</a>
+                        {!! Form::open(['route' => 'payment', 'method' => 'GET' ]) !!}
+                           {!! Form::hidden('id', $credito->id) !!}
+                           {!! Form::hidden('plan', $credito->plan) !!}
+                           {!! Form::hidden('descripcion', $credito->descripcion) !!}
+                           {!! Form::hidden('precio', $credito->precio) !!}
+                           {!! Form::submit('Comprar', ['class' => 'btn btn-primary']) !!}
+                     	<!--<a href="{{ route('payment') }}" class="btn btn-primary" role="button">Comprar</a>-->
+                        {!! Form::close() !!}
                   	</p>
                </div>
             </div>

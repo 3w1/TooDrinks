@@ -21,4 +21,16 @@ class Oferta extends Model
     public function destinos_ofertas(){
     	return $this->hasMany('App\Models\Destino_Oferta');
     }
+
+    public function importadores(){
+        return $this->belongsToMany('App\Models\Importador', 'importador_oferta')->withPivot('fecha')->withTimestamps();
+    }
+
+    public function distribuidores(){
+        return $this->belongsToMany('App\Models\Distribuidor', 'distribuidor_oferta')->withPivot('fecha')->withTimestamps();
+    }
+
+    public function horecas(){
+        return $this->belongsToMany('App\Models\Horeca', 'horeca_oferta')->withPivot('fecha')->withTimestamps();
+    }
 }

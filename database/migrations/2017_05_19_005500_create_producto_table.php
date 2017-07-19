@@ -72,7 +72,6 @@ class CreateProductoTable extends Migration
 			$table->increments('id');
 			$table->integer('distribuidor_id');
 			$table->integer('producto_id');
-			$table->boolean('status');
 			$table->timestamps();
 
 			$table->foreign('distribuidor_id')
@@ -90,7 +89,6 @@ class CreateProductoTable extends Migration
 			$table->increments('id');
 			$table->integer('horeca_id');
 			$table->integer('producto_id');
-			$table->boolean('status');
 			$table->timestamps();
 
 			$table->foreign('horeca_id')

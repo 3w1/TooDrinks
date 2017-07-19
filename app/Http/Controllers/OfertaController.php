@@ -30,87 +30,86 @@ class OfertaController extends Controller
         return view('oferta.index')->with(compact('ofertas'));
     }
 
-    public function ofertas_importadores(){
-        $notificaciones_pendientes_NO = DB::table('notificacion_i')
+    public function ofertas_disponibles(){
+    	if (session('perfilTipo') == 'I'){
+    		$notificaciones_pendientes_NO = DB::table('notificacion_i')
                                         ->where('leida', '=', '0')
                                         ->where('tipo', '=', 'NO')
                                         ->get();
 
-        foreach ($notificaciones_pendientes_NO as $notificacion){
-            $act = DB::table('notificacion_i')
+        	foreach ($notificaciones_pendientes_NO as $notificacion){
+            	$act = DB::table('notificacion_i')
                     ->where('id', '=', $notificacion->id)
                     ->update(['leida' => '1']);
-        }
+        	}
 
-        $importador = DB::table('importador')
-                            ->where('id', '=', session('perfilId') )
-                            ->select('pais_id')
-                            ->first();
+	        $importador = DB::table('importador')
+	                            ->where('id', '=', session('perfilId') )
+	                            ->select('pais_id')
+	                            ->first();
 
-        $ofertas = DB::table('oferta')
-                    ->select('oferta.*')
-                    ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
-                    ->where('oferta.visible_importadores', '=', '1')
-                    ->where('destino_oferta.pais_id', '=', $importador->pais_id)
-                    ->groupBy('oferta.id')
-                    ->paginate(6);
+	        $ofertas = Oferta::select('oferta.*')
+	                    ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
+	                    ->where('oferta.visible_importadores', '=', '1')
+	                    ->where('destino_oferta.pais_id', '=', $importador->pais_id)
+	                    ->groupBy('oferta.id')
+	                    ->paginate(6);
 
-        return view('importador.listados.ofertasDisponibles')->with(compact('ofertas'));
-    }
+	        return view('oferta.ofertasDisponibles')->with(compact('ofertas'));
+    	}
 
-    public function ofertas_distribuidores(){
-        $notificaciones_pendientes_NO = DB::table('notificacion_d')
+    	if (session('perfilTipo') == 'D'){
+    		 $notificaciones_pendientes_NO = DB::table('notificacion_d')
                                         ->where('leida', '=', '0')
                                         ->where('tipo', '=', 'NO')
                                         ->get();
 
-        foreach ($notificaciones_pendientes_NO as $notificacion){
-            $act = DB::table('notificacion_d')
-                    ->where('id', '=', $notificacion->id)
-                    ->update(['leida' => '1']);
-        }
-        
-        $distribuidor = DB::table('distribuidor')
-                            ->where('id', '=', session('perfilId') )
-                            ->select('pais_id', 'provincia_region_id')
-                            ->first();
+	        foreach ($notificaciones_pendientes_NO as $notificacion){
+	            $act = DB::table('notificacion_d')
+	                    ->where('id', '=', $notificacion->id)
+	                    ->update(['leida' => '1']);
+	        }
+	        
+	        $distribuidor = DB::table('distribuidor')
+	                            ->where('id', '=', session('perfilId') )
+	                            ->select('pais_id', 'provincia_region_id')
+	                            ->first();
 
-        $ofertas = DB::table('oferta')
-                    ->select('oferta.*')
-                    ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
-                    ->where('oferta.visible_distribuidores', '=', '1')
-                    ->where('destino_oferta.provincia_region_id', '=', $distribuidor->provincia_region_id)
-                    ->paginate(6);
+	        $ofertas = Oferta::select('oferta.*')
+	                    ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
+	                    ->where('oferta.visible_distribuidores', '=', '1')
+	                    ->where('destino_oferta.provincia_region_id', '=', $distribuidor->provincia_region_id)
+	                    ->paginate(6);
 
-        return view('distribuidor.listados.ofertasDisponibles')->with(compact('ofertas'));
-    }
+	        return view('oferta.ofertasDisponibles')->with(compact('ofertas'));
+    	}
 
-    public function ofertas_horecas(){
-        $notificaciones_pendientes_NO = DB::table('notificacion_h')
+    	if (session('perfilTipo') == 'H'){
+    		$notificaciones_pendientes_NO = DB::table('notificacion_h')
                                         ->where('leida', '=', '0')
                                         ->where('tipo', '=', 'NO')
                                         ->get();
 
-        foreach ($notificaciones_pendientes_NO as $notificacion){
-            $act = DB::table('notificacion_h')
-                    ->where('id', '=', $notificacion->id)
-                    ->update(['leida' => '1']);
-        }
-        
-        $horeca = DB::table('horeca')
-                            ->where('id', '=', session('perfilId') )
-                            ->select('provincia_region_id')
-                            ->get()
-                            ->first();
+	        foreach ($notificaciones_pendientes_NO as $notificacion){
+	            $act = DB::table('notificacion_h')
+	                    ->where('id', '=', $notificacion->id)
+	                    ->update(['leida' => '1']);
+	        }
+	        
+	        $horeca = DB::table('horeca')
+	                            ->where('id', '=', session('perfilId') )
+	                            ->select('provincia_region_id')
+	                            ->get()
+	                            ->first();
 
-        $ofertas = DB::table('oferta')
-                    ->select('oferta.*')
-                    ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
-                    ->where('oferta.visible_horecas', '=', '1')
-                    ->where('destino_oferta.provincia_region_id', '=', $horeca->provincia_region_id)
-                    ->paginate(6);
+	        $ofertas = Oferta::select('oferta.*')
+	                    ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
+	                    ->where('oferta.visible_horecas', '=', '1')
+	                    ->where('destino_oferta.provincia_region_id', '=', $horeca->provincia_region_id)
+	                    ->paginate(6);
 
-        return view('horeca.listados.ofertasDisponibles')->with(compact('ofertas'));
+	        return view('oferta.ofertasDisponibles')->with(compact('ofertas'));
+    	}
     }
 
     public function create()
@@ -313,16 +312,98 @@ class OfertaController extends Controller
         }    
     }
 
+    //Muestra el detalle de una oferta creada por la entidad logueada
     public function show($id)
     {
         $oferta = Oferta::find($id);
-
+        
         $destinos = Destino_Oferta::where('oferta_id', '=', $id)
                                 ->orderBy('provincia_region_id')
                                 ->select('pais_id', 'provincia_region_id')
                                 ->get();
 
         return view('oferta.show')->with(compact('oferta', 'destinos'));   
+    }
+
+    //Muestra el detalle de una oferta disponible
+    public function detalle_oferta($id){
+    	if (session('perfilTipo') == 'I'){
+    		$ofertaMarcada = DB::table('importador_oferta')
+    						->select('id')
+    						->where('importador_id', '=', session('perfilId'))
+    						->where('oferta_id', '=', $id)
+    						->first();
+
+    		if ($ofertaMarcada == null){
+    			$restringido = 1;
+    		}else{
+    			$restringido = 0;
+    		}
+    	}elseif (session('perfilTipo') == 'D'){
+    		$ofertaMarcada = DB::table('distribuidor_oferta')
+    						->select('id')
+    						->where('distribuidor_id', '=', session('perfilId'))
+    						->where('oferta_id', '=', $id)
+    						->first();
+
+    		if ($ofertaMarcada == null){
+    			$restringido = 1;
+    		}else{
+    			$restringido = 0;
+    		}
+    	}elseif (session('perfilTipo') == 'H'){
+    		$ofertaMarcada = DB::table('horeca_oferta')
+    						->select('id')
+    						->where('horeca_id', '=', session('perfilId'))
+    						->where('oferta_id', '=', $id)
+    						->first();
+
+    		if ($ofertaMarcada == null){
+    			$restringido = 1;
+    		}else{
+    			$restringido = 0;
+    		}
+    	}
+    	
+    	$oferta = Oferta::find($id);
+
+        $visitas = $oferta->cantidad_visitas + 1;
+
+        $act = DB::table('oferta')
+                ->where('id', '=', $id)
+                ->update(['cantidad_visitas' => $visitas ]);
+
+        $oferta->cantidad_visitas = $visitas;
+        
+        $destinos = Destino_Oferta::where('oferta_id', '=', $id)
+                                ->orderBy('provincia_region_id')
+                                ->select('pais_id', 'provincia_region_id')
+                                ->get();
+
+        return view('oferta.detalleOferta')->with(compact('oferta', 'destinos', 'restringido')); 
+    }
+
+    //Marca una oferta "de interes" para la entidad loggeada 
+    public function marcar_oferta($id){
+    	$fecha = new \DateTime();
+
+    	$oferta = Oferta::find($id);
+
+    	//Asociar entidad a la oferta
+    	if (session('perfilTipo') == 'I'){
+    		$oferta->importadores()->attach(session('perfilId'), ['fecha' => $fecha ]);
+    	}elseif (session('perfilTipo') == 'D'){
+    		$oferta->distribuidores()->attach(session('perfilId'), ['fecha' => $fecha ]);
+    	}elseif (session('perfilTipo') == 'H'){
+    		$oferta->horecas()->attach(session('perfilId'), ['fecha' => $fecha ]);
+    	}
+        // ... //
+        
+        DB::table('oferta')
+        ->where('id', '=', $id)
+        ->update(['cantidad_contactos' => ($oferta->cantidad_contactos + 1) ]); 
+
+        return redirect('oferta/ver-detalle-oferta/'.$id)->with('msj', 'Se ha agregado la oferta a su lista de Ofertas De Interés');
     }
 
     public function edit($id)

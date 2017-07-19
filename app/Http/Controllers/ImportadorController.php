@@ -170,7 +170,7 @@ class ImportadorController extends Controller
             // *** //
         }
 
-        return redirect('marca')->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
+        return redirect('producto/seleccionar-productos/'.$id)->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
     }
 
     public function solicitar_importacion(){

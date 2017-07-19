@@ -117,6 +117,8 @@ Route::get('producto/agregar/{id}-{marca}', 'ProductoController@agregar')->name(
 Route::get('producto/listado-de-productos/{id}-{marca}', 'ProductoController@listado')->name('producto.listado');
 Route::get('producto/detalle-de-producto/{id}', 'ProductoController@detalle')->name('producto.detalle');
 
+Route::get('producto/seleccionar-productos/{id}', 'ProductoController@seleccionar_productos')->name('producto.seleccionar');
+Route::post('producto/asociar-productos', 'ProductoController@asociar_productos')->name('producto.asociar-productos');
 Route::get('producto/verificar-producto/{id}', 'ProductoController@verificar_producto');
 
 Route::post('producto/updateImagen', 'ProductoController@updateImagen')->name('producto.updateImagen');
@@ -126,9 +128,9 @@ Route::resource('producto','ProductoController');
 // RUTAS PARA LAS OFERTAS
 Route::get('oferta/{id}-{producto}/crear-oferta', 'OfertaController@crear_oferta')->name('oferta.crear-oferta');
 
-Route::get('oferta/ofertas-disponibles-importadores', 'OfertaController@ofertas_importadores')->name('oferta.importadores');
-Route::get('oferta/ofertas-disponibles-distribuidores', 'OfertaController@ofertas_distribuidores')->name('oferta.distribuidores');
-Route::get('oferta/ofertas-disponibles-horecas', 'OfertaController@ofertas_horecas')->name('oferta.horecas');
+Route::get('oferta/ofertas-disponibles', 'OfertaController@ofertas_disponibles')->name('oferta.disponibles');
+Route::get('oferta/ver-detalle-oferta/{id}', 'OfertaController@detalle_oferta')->name('oferta.detalle');
+Route::get('oferta/marcar-oferta/{id}', 'OfertaController@marcar_oferta')->name('oferta.marcar');
 
 Route::resource('oferta','OfertaController');
 // ./RUTAS PARA LAS OFERTAS ./
@@ -151,21 +153,15 @@ Route::resource('demanda-distribuidor','DemandaDistribucionController');
 // ./RUTAS PARA LAS DEMANDAS DE DISTRIBUIDORES ./
 
 // RUTAS PARA LAS DEMANDAS DE PRODUCTOS 
-Route::get('demanda-producto/demandas-productos-productores', 'DemandaProductoController@demandas_productos_productores')
-->name('demanda-producto.demandas-productos-productores');
-Route::get('demanda-producto/demandas-bebidas-productores', 'DemandaProductoController@demandas_bebidas_productores')
-->name('demanda-producto.demandas-bebidas-productores');
+Route::prefix('demanda-producto')->group(function () {
+    Route::get('demandas-productos-disponibles', 'DemandaProductoController@demandas_productos_disponibles')
+    ->name('demanda-producto.demandas-productos-disponibles');
 
-Route::get('demanda-producto/demandas-productos-importadores', 'DemandaProductoController@demandas_productos_importadores')
-->name('demanda-producto.demandas-productos-importadores');
-Route::get('demanda-producto/demandas-bebidas-importadores', 'DemandaProductoController@demandas_bebidas_importadores')
-->name('demanda-producto.demandas-bebidas-importadores');
+    Route::get('demandas-bebidas-disponibles', 'DemandaProductoController@demandas_bebidas_disponibles')
+    ->name('demanda-producto.demandas-bebidas-disponibles');
 
-Route::get('demanda-producto/demandas-productos-distribuidores', 'DemandaProductoController@demandas_productos_distribuidores')
-->name('demanda-producto.demandas-productos-distribuidores');
-Route::get('demanda-producto/demandas-bebidas-distribuidores', 'DemandaProductoController@demandas_bebidas_distribuidores')
-->name('demanda-producto.demandas-bebidas-distribuidores');
-
+    Route::get('marcar-demanda/{id}', 'DemandaProductoController@marcar_demanda')->name('demanda-producto.marcar');
+});
 Route::resource('demanda-producto','DemandaProductoController');
 // ./RUTAS PARA LAS DEMANDAS DE PRODUCTOS ./
 
@@ -282,4 +278,14 @@ Route::prefix('admin')->group(function () {
 });
 Route::resource('admin', 'AdminController');
 // ./RUTAS PARA EL ADMIN WEB ./
+
+Route::get('payment', array(
+    'as' => 'payment',
+    'uses' => 'PaypalController@postPayment',
+));
+ 
+Route::get('payment/status', array(
+    'as' => 'payment.status',
+    'uses' => 'PaypalController@getPaymentStatus',
+));
 

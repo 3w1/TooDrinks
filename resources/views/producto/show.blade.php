@@ -165,8 +165,8 @@
       <!-- /.box-body -->
 
       <div class="box-footer text-center">
-         <div class="box-footer">
-            @if (session('perfilTipo') == 'P')
+         <!--<div class="box-footer">
+            <!--@if (session('perfilTipo') == 'P')
                <img class="img-responsive img-circle img-sm" src="{{ asset('imagenes/productores/thumbnails')}}/{{ session('perfilLogo') }}">
             @elseif (session('perfilTipo') == 'I')
                <img class="img-responsive img-circle img-sm" src="{{ asset('imagenes/importadores/thumbnails')}}/{{ session('perfilLogo') }}">
@@ -216,7 +216,9 @@
                   </div>
                @endif
             </div>
-         </div>
+            <a href="">Ver Todos</a>
+         </div>-->
+         <a href="">Ver Todos</a>
       </div>
    </div>
 @endsection

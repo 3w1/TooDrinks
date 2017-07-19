@@ -39,11 +39,23 @@ class Importador extends Model
     }
 
     public function productos(){
-        return $this->belongsToMany('App\Models\Producto', 'importador_producto')->withPivot('status')->withTimestamps();
+        return $this->belongsToMany('App\Models\Producto', 'importador_producto')->withTimestamps();
     }
 
     public function ofertas(){
     	return $this->hasMany('App\Models\Oferta');
+    }
+
+    public function ofertas_marcadas(){
+        return $this->belongsToMany('App\Models\Oferta', 'importador_oferta')->withPivot('fecha')->withTimestamps();
+    }
+
+    public function demandas_productos(){
+        return $this->hasMany('App\Models\Demanda_Producto');
+    }
+
+    public function demandas_marcadas(){
+        return $this->belongsToMany('App\Models\Demanda_Producto', 'importador_demanda_producto')->withPivot('fecha')->withTimestamps();
     }
 
     public function creditos(){

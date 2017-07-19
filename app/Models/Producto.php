@@ -34,15 +34,15 @@ class Producto extends Model
     }
 
     public function importadores(){
-        return $this->belongsToMany('App\Models\Importador')->withPivot('status')->withTimestamps();
+        return $this->belongsToMany('App\Models\Importador', 'importador_producto')->withTimestamps();
     }
 
     public function distribuidores(){
-        return $this->belongsToMany('App\Models\Distribuidor')->withPivot('status')->withTimestamps();
+        return $this->belongsToMany('App\Models\Distribuidor', 'distribuidor_producto')->withTimestamps();
     }
 
     public function horecas(){
-        return $this->belongsToMany('App\Models\Horeca')->withPivot('status')->withTimestamps();
+        return $this->belongsToMany('App\Models\Horeca', 'horeca_producto')->withTimestamps();
     }
 
     public function ofertas(){

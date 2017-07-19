@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Producto;
-use App\Models\Pais;
-use App\Models\Provincia_Region;
+use App\Models\Pais; use App\Models\Provincia_Region;
 use App\Models\Clase_Bebida;
 use App\Models\Marca; use App\Models\Bebida;
+use App\Models\Importador; use App\Models\Distribuidor;
 use App\Models\Productor; use App\Models\Notificacion_P; use App\Models\Notificacion_Admin;
 use DB; use Image; use Input; use Auth;
 
@@ -140,6 +140,32 @@ class ProductoController extends Controller
         return view('producto.listado')->with(compact('productos', 'marca'));
     }
 
+    public function seleccionar_productos($marca){
+        $productos = Producto::where('marca_id', '=', $marca)
+                        ->orderBy('nombre', 'ASC')
+                        ->paginate();
+
+        $nombre_marca = DB::table('marca')
+                        ->select('nombre')
+                        ->where('id', '=', $marca)
+                        ->first();
+
+        return view('producto.seleccionarProductos')->with(compact('productos','nombre_marca'));
+    }
+
+    public function asociar_productos(Request $request){
+        foreach ($request->productos as $producto){
+            if (session('perfilTipo') == 'I'){
+                Importador::find(session('perfilId'))->productos()->attach($producto);
+            }elseif (session('perfilTipo') == 'D'){
+                Distribuidor::find(session('perfilId'))->productos()->attach($producto);
+            }elseif (session('perfilTipo') == 'H'){
+                Horeca::find(session('perfilId'))->productos()->attach($producto);
+            }
+        }
+        return redirect('marca')->with('msj', 'Los productos han sido asociados a su lista exitosamente.');
+    }
+
     public function show($id)
     {
         $tipo = explode('.', $id);
@@ -225,7 +251,7 @@ class ProductoController extends Controller
         $cont = 0;
         foreach ($comentarios as $comentario)
             $cont++;
-
+            
         $comentarioPerfil = DB::table('opinion')
                             ->where('tipo_creador', '=', session('perfilTipo'))
                             ->where('creador_id', '=', session('perfilId'))
