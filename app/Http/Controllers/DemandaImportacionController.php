@@ -40,17 +40,10 @@ class DemandaImportacionController extends Controller
                     ->update(['leida' => '1']);
         }
 
-        $pais_origen = DB::table('importador')
-                            ->where('id', '=', session('perfilId'))
-                            ->select('pais_id')
-                            ->get()
-                            ->first();
-
-        $demandasImportadores = DB::table('demanda_importador')
-                                        ->orderBy('created_at', 'DESC')
-                                        ->where('pais_id', '=', $pais_origen->pais_id)
-                                        ->where('status', '=', '1')
-                                        ->paginate(10);
+        $demandasImportadores = Demanda_Importador::orderBy('created_at', 'DESC')
+                                ->where('pais_id', '=', session('perfilPais'))
+                                ->where('status', '=', '1')
+                                ->paginate(10);
 
         return view('demandaImportacion.demandasDisponibles')->with(compact('demandasImportadores'));
     }
@@ -154,7 +147,15 @@ class DemandaImportacionController extends Controller
                 $restringido = '0';
             }
         }else{
-            $restringido = '0';
+            $demandaMarcada = DB::table('importador_demanda_importador')
+                                ->where('importador_id', '=', session('perfilId'))
+                                ->where('demanda_importador_id', '=', $id)
+                                ->first();
+            if ($demandaMarcada == null){
+                $restringido = '1';
+            }else{
+                $restringido = '0';
+            }
         }
 
         $demandaImportador = Demanda_Importador::find($id);
@@ -168,6 +169,26 @@ class DemandaImportacionController extends Controller
         $demandaImportador->cantidad_visitas = $visitas;
 
         return view('demandaImportacion.show')->with(compact('demandaImportador', 'restringido'));
+    }
+
+     //Marca una demanda de importador "de interes" para la entidad loggeada 
+    public function marcar_demanda($id){
+        $fecha = new \DateTime();
+
+        $demanda = Demanda_Importador::find($id);
+      
+        //Asociar importador a la demanda
+        DB::table('importador_demanda_importador')->insertGetId(
+                                        ['importador_id' => session('perfilId'), 'demanda_importador_id' => $id, 'fecha' => $fecha]);    
+        // ... //
+        
+        //Aumentar el contador de contactos de la demanda
+        DB::table('demanda_importador')
+        ->where('id', '=', $id)
+        ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
+        // ... //
+
+        return redirect('demanda-importador/'.$id)->with('msj', 'Se ha agregado la demanda de importador a su sección de "Demandas De Interés"');
     }
 
     public function edit($id)
@@ -204,10 +225,5 @@ class DemandaImportacionController extends Controller
     public function destroy($id)
     {
        
-    }
-
-    public function solicitar_importacion()
-    {
-        return view('demandaImportacion.solicitarImportacion');  
     }
 }

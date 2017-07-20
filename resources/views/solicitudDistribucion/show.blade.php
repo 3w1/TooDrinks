@@ -18,14 +18,20 @@
    @endif
 
    <div class="row">
-      @if ($restringido == '1')
-         @if (session('perfilSaldo') < '30')
-            <div class="alert alert-danger">
-               No tiene créditos suficientes para ver la información de las demandas de distribucion. Por favor compre créditos. <a href="{{ route('credito.index') }}">Ver Planes de Crédito</a> O consiga una Suscripción Premium. <a href="">Ver Suscripciones</a> 
-            </div>
+       @if ($restringido == '1')
+         @if (session('perfilSuscripcion') != 'Premium')
+            @if (session('perfilSaldo') < '30')
+               <div class="alert alert-danger">
+                  No tiene créditos suficientes para ver la información de las demandas de distribución. Por favor compre créditos. <a href="{{ route('credito.index') }}">Ver Planes de Crédito</a> O consiga una Suscripción Premium. <a href="">Ver Suscripciones</a> 
+               </div>
+            @else
+               <div class="alert alert-danger">
+                  Se le descontarán 30 créditos de su saldo. Para ver datos de contacto sin pagar créditos debe obtener una Suscripción Premium. 
+               </div>
+            @endif
          @else
-            <div class="alert alert-danger">
-               Se le descontarán 30 créditos de su saldo. Para ver datos de contacto sin pagar créditos debe obtener una Suscripción Premium. 
+            <div class="alert alert-info">
+               <b>Presione el botón de "Me Interesa" para agregar la Demanda de Distribución a su sección de ¡¡Demandas de Interés!!</b> 
             </div>
          @endif
       @endif
@@ -58,14 +64,17 @@
             </div>
              
             <ul class="list-group">
-               <li class="list-group-item"><b>País:</b> {{ $demandaDistribucion->provincia_region->provincia }}</li>
                <li class="list-group-item"><b>Fecha:</b> {{ $demandaDistribucion->created_at->format('d-m-Y') }}</li>
                @if ( $restringido == '1' )
                   <li class="list-group-item"><center>
-                     @if (session('perfilSaldo') < '30')
-                        <a class="btn btn-danger" disabled>¡Me Interesa!</a>
+                     @if (session('perfilSuscripcion') != 'Premium')
+                        @if (session('perfilSaldo') < '30')
+                           <a class="btn btn-danger" disabled>¡Me Interesa!</a>
+                        @else
+                           <a href="{{ route('credito.gastar-creditos-ddp', ['30', $demandaDistribucion->id]) }}" class="btn btn-warning">¡Me Interesa! <b>(30 <i class="fa fa-certificate"></i>)</b></a>
+                        @endif
                      @else
-                        <a href="{{ route('credito.gastar-creditos-ddp', ['30', $demandaDistribucion->id]) }}" class="btn btn-warning">¡Me Interesa! <b>(30 <i class="fa fa-certificate"></i>)</b></a>
+                        <a href="{{ route('solicitar-distribucion.marcar', $demandaDistribucion->id) }}" class="btn btn-warning">¡Me Interesa! <i class="fa fa-thumbs-o-up"></i></a>
                      @endif
                   </center></li>
                @else

@@ -133,7 +133,23 @@ class SolicitudDistribucionController extends Controller
                 $restringido = '0';
             }
         }else{
-            $restringido = '0';
+            if (session('perfilTipo') == 'P'){
+                $demandaMarcada = DB::table('productor_solicitud_distribucion')
+                                ->where('productor_id', '=', session('perfilId'))
+                                ->where('solicitud_distribucion_id', '=', $id)
+                                ->first();
+            }else{
+                $demandaMarcada = DB::table('importador_solicitud_distribucion')
+                                ->where('importador_id', '=', session('perfilId'))
+                                ->where('solicitud_distribucion_id', '=', $id)
+                                ->first();
+            }
+            
+            if ($demandaMarcada == null){
+                $restringido = '1';
+            }else{
+                $restringido = '0';
+            }
         }
 
         $demandaDistribucion = Solicitud_Distribucion::find($id);
@@ -147,6 +163,31 @@ class SolicitudDistribucionController extends Controller
         $demandaDistribucion->cantidad_visitas = $visitas;
 
         return view('solicitudDistribucion.show')->with(compact('demandaDistribucion', 'restringido'));
+    }
+
+    //Marca una solicitud de distribución "de interes" para el productor o importador loggeado
+    public function marcar_solicitud($id){
+        $fecha = new \DateTime();
+
+        $demanda = Solicitud_Distribucion::find($id);
+      
+        //Asociar productor a la solicitud
+        if (session('perfilTipo') == 'P'){
+             DB::table('productor_solicitud_distribucion')->insertGetId(
+                                        ['productor_id' => session('perfilId'), 'solicitud_distribucion_id' => $id, 'fecha' => $fecha]);    
+        }else{
+             DB::table('importador_solicitud_distribucion')->insertGetId(
+                                        ['importador_id' => session('perfilId'), 'solicitud_distribucion_id' => $id, 'fecha' => $fecha]);    
+        }
+        // ... //
+        
+        //Aumentar el contador de contactos de la demanda
+        DB::table('solicitud_distribucion')
+        ->where('id', '=', $id)
+        ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
+        // ... //
+
+        return redirect('solicitar-distribucion/'.$id)->with('msj', 'Se ha agregado la Demanda de Distribución a su sección de "Demandas De Interés"');
     }
 
     public function edit($id)

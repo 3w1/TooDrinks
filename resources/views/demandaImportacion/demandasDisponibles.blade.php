@@ -27,20 +27,6 @@
                ?>
 
                @if ($existe == '0')
-                  <?php 
-                     $marca = DB::table('marca')
-                                    ->select('nombre')
-                                    ->where('id', '=', $demandaImportador->marca_id)
-                                    ->get()
-                                    ->first(); 
-
-                     $productor= DB::table('productor')
-                                    ->select('nombre')
-                                    ->where('id', '=', $demandaImportador->productor_id)
-                                    ->get()
-                                    ->first(); 
-                  ?>
-
                   <li>
                      <i class="fa fa-hand-pointer-o bg-blue"></i>
 
@@ -50,7 +36,7 @@
                         <h3 class="timeline-header">Un productor está buscando importadores para su marca.</h3>
 
                         <div class="timeline-body">
-                           El productor <strong>{{ $productor->nombre }}</strong> ha indicado que está en la búsqueda de nuevos importadores para su marca <strong>{{ $marca->nombre }}</strong> en tu país...
+                           El productor <strong>{{ $demandaImportador->productor->nombre }}</strong> ha indicado que está en la búsqueda de nuevos importadores para su marca <strong>{{ $demandaImportador->marca->nombre }}</strong> en tu país...
                         </div>
                
                         <div class="timeline-footer">
@@ -62,9 +48,10 @@
             @endforeach
          </ul>
       </div>
-   
+      
       <div>
-        {{ $demandasImportadores->render() }}
+         {{$demandasImportadores->render()}}
       </div>
+      
    </div>
 @endsection

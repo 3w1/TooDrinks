@@ -160,7 +160,15 @@ class DemandaDistribucionController extends Controller
                 $restringido = '0';
             }
         }else{
-            $restringido = '0';
+            $demandaMarcada = DB::table('distribuidor_demanda_distribuidor')
+                                ->where('distribuidor_id', '=', session('perfilId'))
+                                ->where('demanda_distribuidor_id', '=', $id)
+                                ->first();
+            if ($demandaMarcada == null){
+                $restringido = '1';
+            }else{
+                $restringido = '0';
+            }
         }
 
         $demandaDistribuidor = Demanda_Distribuidor::find($id);
@@ -174,6 +182,26 @@ class DemandaDistribucionController extends Controller
         $demandaDistribuidor->cantidad_visitas = $visitas;
 
         return view('demandaDistribucion.show')->with(compact('demandaDistribuidor', 'restringido'));
+    }
+
+    //Marca una demanda de distribuidor "de interes" para la entidad loggeada 
+    public function marcar_demanda($id){
+        $fecha = new \DateTime();
+
+        $demanda = Demanda_Distribuidor::find($id);
+      
+        //Asociar distribuidor a la demanda
+        DB::table('distribuidor_demanda_distribuidor')->insertGetId(
+                                        ['distribuidor_id' => session('perfilId'), 'demanda_distribuidor_id' => $id, 'fecha' => $fecha]);    
+        // ... //
+        
+        //Aumentar el contador de contactos de la demanda
+        DB::table('demanda_distribuidor')
+        ->where('id', '=', $id)
+        ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
+        // ... //
+
+        return redirect('demanda-distribuidor/'.$id)->with('msj', 'Se ha agregado la demanda de distribuidor a su sección de "Demandas De Interés"');
     }
 
     public function edit($id)

@@ -136,19 +136,22 @@ Route::resource('oferta','OfertaController');
 // ./RUTAS PARA LAS OFERTAS ./
 
 // RUTAS PARA LAS DEMANDAS DE IMPORTADORES
-Route::get('demanda-importador/demandas-disponibles', 'DemandaImportacionController@demandas_disponibles')
-->name('demanda-importador.demandas-disponibles');
+Route::prefix('demanda-importador')->group(function () {
+    Route::get('demandas-disponibles', 'DemandaImportacionController@demandas_disponibles')
+    ->name('demanda-importador.demandas-disponibles');
 
-Route::get('demanda-importador/solicitar-importacion', 'DemandaImportacionController@solicitar_importacion')
-->name('demanda-importador.solicitar-importacion');
-
+    Route::get('marcar-demanda/{id}', 'DemandaImportacionController@marcar_demanda')->name('demanda-importador.marcar');
+});
 Route::resource('demanda-importador','DemandaImportacionController');
 // ./RUTAS PARA LAS DEMANDAS DE IMPORTADORES ./
 
 // RUTAS PARA LAS DEMANDAS DE DISTRIBUIDORES
-Route::get('demanda-distribuidor/demandas-disponibles', 'DemandaDistribucionController@demandas_disponibles')
-->name('demanda-distribuidor.demandas-disponibles');
+Route::prefix('demanda-distribuidor')->group(function () {
+    Route::get('demandas-disponibles', 'DemandaDistribucionController@demandas_disponibles')
+    ->name('demanda-distribuidor.demandas-disponibles');
 
+     Route::get('marcar-demanda/{id}', 'DemandaDistribucionController@marcar_demanda')->name('demanda-distribuidor.marcar');
+});
 Route::resource('demanda-distribuidor','DemandaDistribucionController');
 // ./RUTAS PARA LAS DEMANDAS DE DISTRIBUIDORES ./
 
@@ -166,11 +169,17 @@ Route::resource('demanda-producto','DemandaProductoController');
 // ./RUTAS PARA LAS DEMANDAS DE PRODUCTOS ./
 
 // RUTAS PARA LAS DEMANDAS DE IMPORTACIÓN
+Route::prefix('solicitar-importacion')->group(function () {
+    Route::get('marcar-solicitud/{id}', 'SolicitudImportacionController@marcar_solicitud')->name('solicitar-importacion.marcar');
+});
 Route::get('demandas-importacion', 'SolicitudImportacionController@demandas_importacion')->name('demandas-importacion');
 Route::resource('solicitar-importacion', 'SolicitudImportacionController');
 // ./RUTAS PARA LAS DEMANDAS DE IMPORTACIÓN ./
 
 // RUTAS PARA LAS DEMANDAS DE DISTRIBUCIÓN
+Route::prefix('solicitar-distribucion')->group(function () {
+    Route::get('marcar-solicitud/{id}', 'SolicitudDistribucionController@marcar_solicitud')->name('solicitar-distribucion.marcar');
+});
 Route::get('demandas-distribucion', 'SolicitudDistribucionController@demandas_distribucion')->name('demandas-distribucion');
 Route::resource('solicitar-distribucion', 'SolicitudDistribucionController');
 // ./RUTAS PARA LAS DEMANDAS DE DISTRIBUCIÓN ./

@@ -12,7 +12,6 @@ class Demanda_Importador extends Model
     	'productor_id', 'marca_id', 'pais_id', 'status', 'fecha', 'cantidad_visitas', 'cantidad_contactos',
     ]; 
 
-
     public function marca(){
     	return $this->belongsTo('App\Models\Marca');
     }
@@ -23,5 +22,9 @@ class Demanda_Importador extends Model
 
     public function pais(){
     	return $this->belongsTo('App\Models\Pais');
+    }
+
+    public function importadores(){
+        return $this->belongsToMany('App\Models\Importador', 'importador_demanda_importador')->withPivot('fecha')->withTimestamps();
     }
 }

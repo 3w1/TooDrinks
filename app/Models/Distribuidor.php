@@ -58,10 +58,6 @@ class Distribuidor extends Model
         return $this->belongsToMany('App\Models\Demanda_Producto', 'distribuidor_demanda_producto')->withPivot('fecha')->withTimestamps();
     }
 
-    public function demandas_productos(){
-    	return $this->hasMany('App\Models\Demanda_Producto');
-    }
-
     public function creditos(){
     	return $this->belongsToMany('App\Models\Credito', 'distribuidor_credito')->withPivot('total', 'fecha_compra')->withTimestamps();
     }

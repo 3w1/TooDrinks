@@ -58,6 +58,10 @@ class Importador extends Model
         return $this->belongsToMany('App\Models\Demanda_Producto', 'importador_demanda_producto')->withPivot('fecha')->withTimestamps();
     }
 
+    public function demandas_importadores(){
+        return $this->belongsToMany('App\Models\Demanda_Importador', 'importador_demanda_importador')->withPivot('fecha')->withTimestamps();
+    }
+
     public function creditos(){
     	return $this->belongsToMany('App\Models\Credito', 'importador_credito')->withPivot('total', 'fecha_compra')->withTimestamps();
     }

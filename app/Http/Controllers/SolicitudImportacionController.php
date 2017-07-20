@@ -74,7 +74,15 @@ class SolicitudImportacionController extends Controller
                 $restringido = '0';
             }
         }else{
-            $restringido = '0';
+            $demandaMarcada = DB::table('productor_solicitud_importacion')
+                                ->where('productor_id', '=', session('perfilId'))
+                                ->where('solicitud_importacion_id', '=', $id)
+                                ->first();
+            if ($demandaMarcada == null){
+                $restringido = '1';
+            }else{
+                $restringido = '0';
+            }
         }
 
         $demandaImportacion = Solicitud_Importacion::find($id);
@@ -88,6 +96,26 @@ class SolicitudImportacionController extends Controller
         $demandaImportacion->cantidad_visitas = $visitas;
 
         return view('solicitudImportacion.show')->with(compact('demandaImportacion', 'restringido'));
+    }
+
+    //Marca una solicitud de importación "de interes" para el productor loggeado
+    public function marcar_solicitud($id){
+        $fecha = new \DateTime();
+
+        $demanda = Solicitud_Importacion::find($id);
+      
+        //Asociar productor a la solicitud
+        DB::table('productor_solicitud_importacion')->insertGetId(
+                                        ['productor_id' => session('perfilId'), 'solicitud_importacion_id' => $id, 'fecha' => $fecha]);    
+        // ... //
+        
+        //Aumentar el contador de contactos de la demanda
+        DB::table('solicitud_importacion')
+        ->where('id', '=', $id)
+        ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
+        // ... //
+
+        return redirect('solicitar-importacion/'.$id)->with('msj', 'Se ha agregado la Demanda de Importación a su sección de "Demandas De Interés"');
     }
 
     public function edit($id)
