@@ -62,31 +62,23 @@
 
    <li class="treeview">
       <a href="#">
-         <i class="fa fa-share"></i> <span>Suscripciones</span>
+         <i class="fa fa-share"></i> <span>Gestión de Banners</span>
          <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href="{{ route('admin.suscripciones') }}"><i class="fa fa-circle-o"></i> Lista de Suscripciones</a></li>
-         <li><a href="{{ route('admin.crear-suscripcion') }}"><i class="fa fa-circle-o"></i> Crear Suscripcion</a></li>
+         <li><a href="{{ route('admin.banners-sin-aprobar') }}"><i class="fa fa-circle-o"></i> Banners Por Revisar</a></li>
+         <li><a href="{{ route('admin.banners-sin-publicar') }}"><i class="fa fa-circle-o"></i> Banners Por Publicar</a></li>
+         <li><a href=""><i class="fa fa-circle-o"></i> Programación por País</a></li>
       </ul>
    </li>
+
+   <li><a href="{{ route('admin.suscripciones') }}"><i class="fa fa-circle-o"></i> Lista de Suscripciones</a></li>
+   
+   <li><a href="{{ route('admin.creditos') }}"><i class="fa fa-circle-o"></i> Lista de Planes</a></li>
 
    <li class="treeview">
-      <a href="#">
-         <i class="fa fa-share"></i> <span>Planes de Crédito</span>
-         <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-         </span>
-      </a>
-      <ul class="treeview-menu">
-         <li><a href="{{ route('admin.creditos') }}"><i class="fa fa-circle-o"></i> Lista de Planes</a></li>
-         <li><a href="{{ route('admin.crear-credito') }}"><i class="fa fa-circle-o"></i> Crear Plan</a></li>
-      </ul>
-   </li>
-
-    <li class="treeview">
       <a href="#">
          <i class="fa fa-share"></i> <span>Emails</span>
          <span class="pull-right-container">

@@ -4,26 +4,20 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBannerTable extends Migration
+class CreateImpresionBannerTable extends Migration
 {
     public function up()
     {
-        Schema::create('banner', function (Blueprint $table){
-            $table->increments('id');
-            $table->integer('creador_id');
-            $table->enum('tipo_creador', ['P', 'I', 'D', 'H', 'U']);
-            $table->string('url_banner');
-            $table->text('descripcion');
-            $table->timestamps();
-        });
-
         Schema::create('impresion_banner', function (Blueprint $table){
             $table->increments('id');
             $table->integer('banner_id');
-            $table->date('fecha_inicio');
-            $table->date('fecha_fin');
-            $table->integer('cantidad_click');
             $table->integer('pais_id');
+            $table->integer('tiempo_publicacion');
+            $table->date('fecha_inicio')->nullable();
+            $table->date('fecha_fin')->nullable();
+            $table->double('pago', 6)->nullable();
+            $table->integer('cantidad_clics');
+            $table->enum('publicado', [0, 1, 2]);
             $table->timestamps();
 
             $table->foreign('banner_id')
@@ -40,7 +34,6 @@ class CreateBannerTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('banner');
         Schema::dropIfExists('impresion_banner');
     }
 }

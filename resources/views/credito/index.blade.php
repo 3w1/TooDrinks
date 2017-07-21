@@ -32,7 +32,6 @@
                            {!! Form::hidden('descripcion', $credito->descripcion) !!}
                            {!! Form::hidden('precio', $credito->precio) !!}
                            {!! Form::submit('Comprar', ['class' => 'btn btn-primary']) !!}
-                     	<!--<a href="{{ route('payment') }}" class="btn btn-primary" role="button">Comprar</a>-->
                         {!! Form::close() !!}
                   	</p>
                </div>

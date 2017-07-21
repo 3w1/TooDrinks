@@ -49,6 +49,8 @@ class PaypalController extends BaseController
 		->setDescription($request->descripcion)
 		->setQuantity(1)
 		->setPrice($request->precio);
+
+		\Session::put('plan_id', $request->id);
  
 		$items[] = $item;
 		$total = $request->precio;
@@ -111,9 +113,11 @@ class PaypalController extends BaseController
 	{
 		// Get the payment ID before session clear
 		$payment_id = \Session::get('paypal_payment_id');
+		$plan_id = \Session::get('plan_id');
  
 		// clear the session payment ID
 		\Session::forget('paypal_payment_id');
+		\Session::forget('plan_id');
  
 		$payerId = \Input::get('PayerID');
 		$token = \Input::get('token');
@@ -133,13 +137,12 @@ class PaypalController extends BaseController
  
 		if ($result->getState() == 'approved') {
  
-			$this->saveOrder();
+			//$this->saveOrder();
  
 			\Session::forget('cart');
- 
-			/*return \Redirect::route('home')
-				->with('message', 'Compra realizada de forma correcta');*/
-				return redirect('credito/compra/1');
+
+			return redirect('credito/compra/'.$plan_id);
+
 		}
 		return \Redirect::route('home')
 			->with('message', 'La compra fue cancelada');

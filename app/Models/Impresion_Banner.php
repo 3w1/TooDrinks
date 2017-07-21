@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Impresion_Banner extends Model
 {
-    protected $table = "banner";
+    protected $table = "impresion_banner";
 
     protected $fillable = [
-        'banner_id', 'fecha_inicio', 'fecha_fin', 'cantidad_click', 'pais_id', 
+        'banner_id', 'pais_id', 'tiempo_publicacion', 'fecha_inicio', 'fecha_fin', 'pago',
+        'cantidad_clics', 'publicado', 
     ];
 
     public function banner(){

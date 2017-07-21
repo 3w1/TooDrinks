@@ -27,6 +27,24 @@
    </div>
    
    <div class="row">
+      <center>
+      <div class="btn-group btn-toggle"> 
+         @if ($oferta->status == '1')
+            <button class="btn btn-primary active" id="on" onclick="cambiar(this.id);">Visible</button>
+            <button class="btn btn-default" id="off" onclick="cambiar(this.id);">No Visible</button>
+         @else
+            <button class="btn btn-default" id="on" onclick="cambiar(this.id);">Visible</button>
+            <button class="btn btn-primary active" id="off" onclick="cambiar(this.id);">No Visible</button>
+         @endif
+         {!! Form::open(['route' => ['oferta.status', $oferta->id], 'method' => 'GET', 'id' => 'formStatus' ]) !!}
+            <input type="hidden" name="status" id="status">
+         {!! Form::close() !!}
+      </div>
+      </center>
+   </div><br>
+  
+   
+   <div class="row">
       <div class="col-md-1"></div>
       <div class="col-md-10 col-xs-12">
         
@@ -55,4 +73,17 @@
      </div>
      <div class="col-md-1"></div>
   </div>
+
+   <script>
+      function cambiar($id){
+         if ($id == 'on'){
+            document.getElementById("status").value = "1";
+         }else{
+            document.getElementById("status").value = "0";
+         }
+
+         document.forms['formStatus'].submit();
+      }
+   </script>
 @endsection
+

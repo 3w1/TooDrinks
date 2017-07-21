@@ -11,8 +11,8 @@ class CreateOfertaTable extends Migration
         Schema::create('oferta', function (Blueprint $table){
         	$table->increments('id');
         	$table->integer('producto_id');
-          	$table->enum('tipo_creador', ['P','I','D']);
-          	$table->integer('creador_id');
+          $table->enum('tipo_creador', ['P','I','D']);
+        	$table->integer('creador_id');
         	$table->string('titulo');
         	$table->text('descripcion');
         	$table->double('precio_unitario', 6, 2);
@@ -22,13 +22,14 @@ class CreateOfertaTable extends Migration
         	$table->integer('cantidad_minima')->default(0);
         	$table->boolean('envio');
         	$table->double('costo_envio', 6, 2)->nullable();
-          	$table->boolean('visible_importadores');
-          	$table->boolean('visible_distribuidores');
-          	$table->boolean('visible_horecas');
-          	$table->integer('cantidad_visitas');
-          	$table->integer('cantidad_contactos');
-          	$table->date('fecha');
-          	$table->timestamps();
+          $table->boolean('visible_importadores');
+        	$table->boolean('visible_distribuidores');
+        	$table->boolean('visible_horecas');
+        	$table->integer('cantidad_visitas');
+        	$table->integer('cantidad_contactos');
+        	$table->date('fecha');
+          $table->boolean('status');
+          $table->timestamps();
 
             $table->foreign('producto_id')
                   ->references('id')->on('producto')

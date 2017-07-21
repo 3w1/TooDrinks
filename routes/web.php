@@ -126,12 +126,15 @@ Route::resource('producto','ProductoController');
 // ./RUTAS PARA LOS PRODUCTOS ./
 
 // RUTAS PARA LAS OFERTAS
-Route::get('oferta/{id}-{producto}/crear-oferta', 'OfertaController@crear_oferta')->name('oferta.crear-oferta');
+Route::prefix('oferta')->group(function () {
+    Route::get('{id}-{producto}/crear-oferta', 'OfertaController@crear_oferta')->name('oferta.crear-oferta');
+    
+    Route::get('ofertas-disponibles', 'OfertaController@ofertas_disponibles')->name('oferta.disponibles');
+    Route::get('ver-detalle-oferta/{id}', 'OfertaController@detalle_oferta')->name('oferta.detalle');
+    Route::get('marcar-oferta/{id}', 'OfertaController@marcar_oferta')->name('oferta.marcar');
 
-Route::get('oferta/ofertas-disponibles', 'OfertaController@ofertas_disponibles')->name('oferta.disponibles');
-Route::get('oferta/ver-detalle-oferta/{id}', 'OfertaController@detalle_oferta')->name('oferta.detalle');
-Route::get('oferta/marcar-oferta/{id}', 'OfertaController@marcar_oferta')->name('oferta.marcar');
-
+    Route::get('cambiar-status/{id}', 'OfertaController@cambiar_status')->name('oferta.status');
+});
 Route::resource('oferta','OfertaController');
 // ./RUTAS PARA LAS OFERTAS ./
 
@@ -213,9 +216,12 @@ Route::resource('credito','CreditoController');
 // ./RUTAS PARA LOS CRÉDITOS ./
 
 // RUTAS PARA LAS NOTIFICACIONES
-Route::get('notificacion/notificar-productor/{tipo}/{descripcion}/{id}', 'NotificacionController@notificar_p')->name('notificar_p');
+Route::get('notificacion/notificar-productor/{tipo}/{descripcion}/{id}', 'NotificacionController@notificar_p')
+->name('notificar_p');
 
-Route::get('notifiacion/marcar-leida/{id}', 'NotificacionController@marcar_leida')->name('notificacion.leida');
+Route::get('notifiacion/marcar-leida/{id}', 'NotificacionController@marcar_leida')
+->name('notificacion.leida');
+
 Route::resource('notificacion', 'NotificacionController');
 // ./RUTAS PARA LAS NOTIFICACIONES ./
 
@@ -226,6 +232,29 @@ Route::resource('suscripcion', 'SuscripcionController');
 // RUTAS PARA LAS OPINIONES
 Route::resource('opinion','OpinionController');
 // ./RUTAS PARA LAS OPINIONES ./
+
+//RUTAS PARA LOS BANNERS
+Route::prefix('banner-publicitario')->group(function () {
+    Route::post('cambiar-imagen', 'BannerController@updateImagen')->name('banner-publicitario.updateImagen');
+    Route::get('detalles/{id}', 'BannerController@detalles')->name('banner-publicitario.detalles');
+
+    Route::get('solicitar-publicacion/{id}', 'BannerController@solicitar_publicacion')
+    ->name('banner-publicitario.solicitar-publicacion');
+    Route::post('guardar-solicitud', 'BannerController@guardar_solicitud')
+    ->name('banner-publicitario.guardar-solicitud');
+
+    Route::get('mis-solicitudes', 'BannerController@solicitudes_publicacion')
+    ->name('banner-publicitario.solicitudes');
+    Route::get('detalle-solicitud/{id}', 'BannerController@detalle_solicitud')
+    ->name('banner-publicitario.detalle-solicitud');
+    Route::get('corregir-solicitud/{id}', 'BannerController@corregir_solicitud')
+    ->name('banner-publicitario.corregir-solicitud');
+
+    Route::get('cargar-correcciones/{id}', 'BannerController@cargar_correcciones')
+    ->name('banner-publicitario.cargar-correcciones');
+});
+Route::resource('banner-publicitario', 'BannerController');
+// ./RUTAS PARA LOS BANNERS ./
 
 // RUTAS PARA LOS PAISES
 Route::get('pais/paises-destino', 'PaisController@paises_destino');
@@ -276,11 +305,18 @@ Route::prefix('admin')->group(function () {
 	Route::get('crear-distribuidor', 'DistribuidorController@create')->name('admin.crear-distribuidor');
 	Route::get('crear-horeca', 'HorecaController@create')->name('admin.crear-horeca');
 
+    Route::get('banners-sin-aprobar', 'AdminController@banners_sin_aprobar')->name('admin.banners-sin-aprobar');
+    Route::get('aprobar-banner/{id}', 'AdminController@aprobar_banner')->name('admin.aprobar-banner');
+    Route::get('sugerir-correcciones-banner/{id}', 'AdminController@sugerir_correcciones_banner')
+    ->name('admin.sugerir-correcciones-banner');
+    Route::post('guardar-sugerencias', 'AdminController@guardar_sugerencias_banner')->name('admin.guardar-sugerencias-banner');
+    Route::get('banners-sin-publicar', 'AdminController@banners_sin_publicar')->name('admin.banners-sin-publicar');
+    Route::get('asignar-fechas/{id}', 'AdminController@asignar_fecha')->name('admin.asignar-fechas');
+     Route::post('guardar-fechas', 'AdminController@guardar_fechas')->name('admin.guardar-fechas');
+
 	Route::get('listado-de-suscripciones', 'SuscripcionController@index')->name('admin.suscripciones');
-	Route::get('crear-suscripcion', 'SuscripcionController@create')->name('admin.crear-suscripcion');
 
 	Route::get('listado-de-planes-de-credito', 'CreditoController@index')->name('admin.creditos');
-	Route::get('crear-plan-de-credito', 'CreditoController@create')->name('admin.crear-credito');
 	Route::get('modificar-plan-de-credito/{id}', 'CreditoController@edit')->name('admin.modificar-credito');
 
 	Route::get('correo-de-invitacion', 'AdminController@correo_invitacion')->name('admin.correo-invitacion');

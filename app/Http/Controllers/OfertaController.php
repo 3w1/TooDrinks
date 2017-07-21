@@ -421,6 +421,14 @@ class OfertaController extends Controller
         return redirect($url)->with('msj', 'Los datos de su oferta han sido actualizados exitosamente');
     }
 
+    //Cambia el status de una oferta
+    public function cambiar_status(Request $request, $id){
+        Oferta::find($id)
+            ->update(['status' => $request->status]);
+
+        return redirect("oferta/".$id)->with('msj', 'El status de su oferta ha sido actualizado exitosamente');
+    }
+
     public function destroy($id)
     {
 
