@@ -240,11 +240,16 @@ Route::prefix('banner-publicitario')->group(function () {
 
     Route::get('solicitar-publicacion/{id}', 'BannerController@solicitar_publicacion')
     ->name('banner-publicitario.solicitar-publicacion');
+    Route::get('consultar-disponibilidad/{pais}/{dias}', 'BannerController@consultar_disponibilidad')
+    ->name('banner-publicitario.consultar-disponibilidad');
     Route::post('guardar-solicitud', 'BannerController@guardar_solicitud')
     ->name('banner-publicitario.guardar-solicitud');
+    Route::get('confirmar-solicitud/{id}', 'BannerController@confirmar_solicitud')
+    ->name('banner-publicitario.confirmar-solicitud');    
+    Route::get('confirmar-pago/{id}', 'BannerController@confirmar_pago')->name('banner-publicitario.confirmar-pago');    
 
-    Route::get('mis-solicitudes', 'BannerController@solicitudes_publicacion')
-    ->name('banner-publicitario.solicitudes');
+    Route::get('mis-publicidades', 'BannerController@mis_publicidades')
+    ->name('banner-publicitario.publicidades');
     Route::get('detalle-solicitud/{id}', 'BannerController@detalle_solicitud')
     ->name('banner-publicitario.detalle-solicitud');
     Route::get('corregir-solicitud/{id}', 'BannerController@corregir_solicitud')

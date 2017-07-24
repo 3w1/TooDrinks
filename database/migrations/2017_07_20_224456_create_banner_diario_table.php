@@ -13,6 +13,7 @@ class CreateBannerDiarioTable extends Migration
             $table->integer('banner_id');
             $table->integer('pais_id');
             $table->date('fecha');
+            $table->timestamps();
 
             $table->foreign('banner_id')
                   ->references('id')->on('banner')

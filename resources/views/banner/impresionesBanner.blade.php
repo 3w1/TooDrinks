@@ -11,7 +11,7 @@
         </div>
     @endif
     
-	<span><strong><h3>Mis Solicitudes de Publicación</h3></strong></span>
+	<span><strong><h3>Mis Publicidades</h3></strong></span>
 @endsection
 
 @section('content-left')
@@ -36,34 +36,28 @@
             <div class="box-body table-responsive no-padding table-bordered">
                <table class="table table-hover">
                   <thead>
-                     <th><center>Fecha de Solicitud</center></th>
                      <th><center>Banner</center></th>
                      <th><center>País Destino</center></th>
-                     <th><center>Publicación</center></th>
+                     <th><center>Fecha de Inicio</center></th>
+                     <th><center>Fecha de Fin</center></th>
                      <th><center>Acción</center></th>
                   </thead>
                   <tbody>
-                     @foreach ($solicitudes as $solicitud) 
+                     @foreach ($publicidades as $publicidad) 
                         <tr>
-                           <td><center>{{ $solicitud->created_at->format('d-m-Y') }}</td>
-                           <td><center>{{ $solicitud->banner->titulo }}</td>
-                           <td><center>{{ $solicitud->pais->pais }}</td>
+                           <td><center>{{ $publicidad->banner->titulo }}</td>
+                           <td><center>{{ $publicidad->pais->pais }}</td>
+                           <td><center>{{ date('d-m-Y', strtotime($publicidad->fecha_inicio)) }}</center></td>
+                           <td><center>{{ date('d-m-Y', strtotime($publicidad->fecha_fin)) }}</center></td>
                            <td><center>
-                              @if ($solicitud->publicado == '1')  
-                                 <span class="label label-success">Publicado</span>
-                              @else
-                                <span class="label label-warning">Por Publicar</span>
-                              @endif
-                           </center></td>
-                           <td><center>
-                              <a href="{{ route('banner-publicitario.detalle-solicitud', $solicitud->id) }}" class="btn btn-primary btn-xs">Ver Más <i class="fa fa-eye"></i></a></td>
+                              <a href="{{ route('banner-publicitario.detalle-solicitud', $publicidad->id) }}" class="btn btn-primary btn-xs">Ver Más <i class="fa fa-eye"></i></a></td>
                         </tr>
                      @endforeach
                   </tbody>
                </table>
             </div>      
          </div>
-         <center>{{ $solicitudes->render() }}</center>
+         <center>{{ $publicidades->render() }}</center>
       </div>
    </div>
 @endsection

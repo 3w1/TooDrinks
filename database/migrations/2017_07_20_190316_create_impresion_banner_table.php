@@ -17,7 +17,8 @@ class CreateImpresionBannerTable extends Migration
             $table->date('fecha_fin')->nullable();
             $table->double('pago', 6)->nullable();
             $table->integer('cantidad_clics');
-            $table->enum('publicado', [0, 1, 2]);
+            $table->boolean('publicado');
+            $table->boolean('pagado');
             $table->timestamps();
 
             $table->foreign('banner_id')

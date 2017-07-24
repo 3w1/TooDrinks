@@ -21,7 +21,9 @@ use PayPal\Api\Transaction;
 use Illuminate\Http\Request;
  
 use App\Order;
-use App\OrderItem;
+use App\OrderItem; 
+
+use App\Models\Impresion_Banner;
  
 class PaypalController extends BaseController
 {
@@ -44,17 +46,34 @@ class PaypalController extends BaseController
 		$currency = 'USD';
  
 		$item = new Item();
-		$item->setName($request->plan)
-		->setCurrency($currency)
-		->setDescription($request->descripcion)
-		->setQuantity(1)
-		->setPrice($request->precio);
-
-		\Session::put('plan_id', $request->id);
- 
-		$items[] = $item;
-		$total = $request->precio;
 		
+		if ($request->tipo == 'Banner'){
+			$datosImpresion = Impresion_Banner::find($request->impresion_id)->first();
+
+			$descripcion = "Publicación de su Banner ".$datosImpresion->banner->titulo." por ".$datosImpresion->tiempo_publicacion." Días";
+			$item->setName('Publicidad')
+				 ->setCurrency($currency)
+				 ->setDescription($descripcion)
+				 ->setQuantity(1)
+				 ->setPrice($request->precio);
+
+			\Session::put('tipo', 'Banner');
+			\Session::put('impresion_id', $request->impresion_id);
+			
+		}elseif ($request->tipo == 'Plan'){
+			$item->setName($request->plan)
+				 ->setCurrency($currency)
+				 ->setDescription($request->descripcion)
+				 ->setQuantity(1)
+				 ->setPrice($request->precio);
+
+			\Session::put('tipo', 'Plan');
+			\Session::put('plan_id', $request->id);
+		}
+ 		
+ 		$items[] = $item;
+		$total = $request->precio;
+
 		$item_list = new ItemList();
 		$item_list->setItems($items);
  
@@ -63,9 +82,15 @@ class PaypalController extends BaseController
 			->setTotal($total);
  
 		$transaction = new Transaction();
-		$transaction->setAmount($amount)
+		if ($request->tipo == 'Banner'){
+			$transaction->setAmount($amount)
+			->setItemList($item_list)
+			->setDescription("Prueba");
+		}elseif ($request->tipo == 'Plan'){
+			$transaction->setAmount($amount)
 			->setItemList($item_list)
 			->setDescription('Pagar Plan de Crédito TooDrink');
+		}
  
 		$redirect_urls = new RedirectUrls();
 		$redirect_urls->setReturnUrl(\URL::route('payment.status'))
@@ -113,11 +138,18 @@ class PaypalController extends BaseController
 	{
 		// Get the payment ID before session clear
 		$payment_id = \Session::get('paypal_payment_id');
-		$plan_id = \Session::get('plan_id');
- 
+		$tipo = \Session::get('tipo');
+		if ($tipo == 'Banner'){
+			$impresion_id = \Session::get('impresion_id');
+			\Session::forget('impresion_id');
+		}elseif ($tipo == 'Plan'){
+			$plan_id = \Session::get('plan_id');
+ 			\Session::forget('plan_id');
+		}
+		
 		// clear the session payment ID
 		\Session::forget('paypal_payment_id');
-		\Session::forget('plan_id');
+		\Session::forget('tipo');
  
 		$payerId = \Input::get('PayerID');
 		$token = \Input::get('token');
@@ -140,12 +172,15 @@ class PaypalController extends BaseController
 			//$this->saveOrder();
  
 			\Session::forget('cart');
-
-			return redirect('credito/compra/'.$plan_id);
-
+			if ($tipo == 'Banner'){
+				return redirect('banner-publicitario/confirmar-pago/'.$impresion_id);
+			}elseif ($tipo == 'Plan'){
+				return redirect('credito/compra/'.$plan_id);
+			}
 		}
-		return \Redirect::route('home')
-			->with('message', 'La compra fue cancelada');
+		/*return \Redirect::route('home')
+			->with('message', 'La compra fue cancelada');*/
+		dd("La compra fue cancelada");
 	}
  
 	protected function saveOrder()

@@ -9,7 +9,7 @@ class Banner extends Model
     protected $table = "banner";
 
     protected $fillable = [
-        'creador_id', 'tipo_creador', 'titulo','descripcion', 'imagen', 'url_banner', 'aprobado', 'correcciones',
+        'creador_id', 'tipo_creador', 'titulo', 'descripcion', 'imagen', 'url_banner', 'aprobado', 'correcciones',
     ];
 
     public function banner(){

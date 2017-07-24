@@ -545,7 +545,7 @@
          </a>
          <ul class="treeview-menu">
             <li><a href="{{ route('banner-publicitario.index') }}"><i class="fa fa-circle-o"></i> Mis Banners</a></li>
-            <li><a href="{{ route('banner-publicitario.solicitudes') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes de Publicación</a></li>
+            <li><a href="{{ route('banner-publicitario.publicidades') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes de Publicación</a></li>
             <li><a href="{{ route('banner-publicitario.create')}}"><i class="fa fa-circle-o"></i> Nuevo Banner</a></li>
          </ul>
       </li>

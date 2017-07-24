@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Banner; use App\Models\Impresion_Banner;
-use Input; use Image; use DB;
+use App\Models\Banner; use App\Models\Impresion_Banner; use App\Models\Banner_Diario;
+use Input; use Image; use DB; use DateInterval;
 
 class BannerController extends Controller
 {
@@ -142,22 +142,99 @@ class BannerController extends Controller
         return view('banner.solicitarPublicacion')->with(compact('banner', 'paises'));
     }
 
+    public function consultar_disponibilidad($pais, $dias){
+        $fecha_actual = new \DateTime();
+        $ultima_fecha = DB::table('banner_diario')
+                        ->select('fecha')
+                        ->where('pais_id', '=', $pais)
+                        ->orderBy('fecha', 'DESC')
+                        ->first();
+
+        if ($ultima_fecha != null){
+            if ( $ultima_fecha->fecha < date_format($fecha_actual, 'Y-m-d') ){
+                $fecha1 = date_format($fecha_actual->add(new DateInterval('P1D')), 'd-m-Y');
+            }elseif ( $ultima_fecha->fecha == date_format($fecha_actual, 'Y-m-d')){
+                $fecha1 = date_format($fecha_actual->add(new DateInterval('P1D')), 'd-m-Y');
+            }elseif ( $ultima_fecha->fecha > date_format($fecha_actual, 'Y-m-d')) {
+                $fecha1 = new \DateTime($ultima_fecha->fecha);
+                $fecha1->add(new DateInterval('P1D'));
+                $fecha1 = date_format($fecha1, 'd-m-Y');
+            }
+        }else{
+            $fecha1 = date_format($fecha_actual->add(new DateInterval('P1D')), 'd-m-Y');
+        }
+
+        $cant = $dias-1;
+        $dias = 'P'.$cant.'D';
+        $fecha2 = new \DateTime($fecha1);
+        $fecha2->add(new DateInterval($dias));
+        $fecha2 = date_format($fecha2, 'd-m-Y');
+
+        $datos[0] = $fecha1;
+        $datos[1] = $fecha2;
+
+        return response()->json(
+            $datos
+        );
+    }
+
     public function guardar_solicitud(Request $request){
         $impresion_banner = new Impresion_Banner($request->all());
         $impresion_banner->save();
 
-        return redirect('banner-publicitario/mis-solicitudes')->with('msj', 'Su solicitud de publicación ha sido guardada exitosamente. Debe esperar la aprobación del Administrador.');
+        $ult_Impresion = DB::table('impresion_banner')
+                            ->select('id')
+                            ->orderBy('created_at', 'DESC')
+                            ->first();
+
+        return redirect('banner-publicitario/confirmar-solicitud/'.$ult_Impresion->id)
+        ->with('msj', 'Verifica los datos y presiona Pagar para finalizar la solicitud de publicidad');
+    }
+
+    public function confirmar_solicitud($id){
+        $infoPublicidad = Impresion_Banner::orderBy('created_at', 'DESC')
+                            ->first();
+
+        return view('banner.confirmarSolicitud')->with(compact('infoPublicidad'));
+    }
+
+    public function confirmar_pago($id){
+        $act = DB::table('impresion_banner')
+                ->where('id', '=', $id)
+                ->update(['pagado' => '1']);
+
+        $impresion = DB::table('impresion_banner')
+                        ->select('fecha_inicio', 'tiempo_publicacion', 'banner_id', 'pais_id')
+                        ->first();
+
+        $banner_diario = new Banner_Diario();
+        $banner_diario->pais_id = $impresion->pais_id;
+        $banner_diario->banner_id = $impresion->banner_id;
+        $banner_diario->fecha = $impresion->fecha_inicio;
+        $banner_diario->save();
+
+        $fecha1 = $fecha2 = new \DateTime($impresion->fecha_inicio);
+        for ($i = 1; $i < $impresion->tiempo_publicacion; $i++){
+            $fecha1->add(new DateInterval('P1D'));
+            $banner_diario = new Banner_Diario();
+            $banner_diario->pais_id = $impresion->pais_id;
+            $banner_diario->banner_id = $impresion->banner_id;
+            $banner_diario->fecha = $fecha1;
+            $banner_diario->save();
+        }
+
+        return redirect('banner-publicitario/mis-solicitudes')->with('msj', 'La petición de publicidad ha sido almacenada exitosamente');
     }
 
     //Ver las solicitudes de publicación de banners de la entidad loggeada
-    public function solicitudes_publicacion(){
-        $solicitudes = Impresion_Banner::select('impresion_banner.*')
+    public function mis_publicidades(){
+        $publicidades = Impresion_Banner::select('impresion_banner.*')
                             ->join('banner', 'impresion_banner.banner_id', '=', 'banner.id')
                             ->where('banner.tipo_creador', '=', session('perfilTipo'))
                             ->where('banner.creador_id', '=', session('perfilId'))
                             ->paginate(10);
 
-        return view('banner.solicitudesPublicacion')->with(compact('solicitudes'));
+        return view('banner.impresionesBanner')->with(compact('publicidades'));
     }
 
     //Ver detalles de una solicitud

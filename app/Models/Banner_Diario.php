@@ -4,13 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Impresion_Banner extends Model
+class Banner_Diario extends Model
 {
-    protected $table = "impresion_banner";
+    protected $table = "banner_diario";
 
     protected $fillable = [
-        'banner_id', 'pais_id', 'tiempo_publicacion', 'fecha_inicio', 'fecha_fin', 'precio',
-        'cantidad_clics', 'publicado', 'pagado',
+        'banner_id', 'pais_id', 'fecha', 
     ];
 
     public function banner(){
