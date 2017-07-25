@@ -147,30 +147,16 @@ class DemandaDistribucionController extends Controller
 
     public function show($id)
     {
-        if (session('perfilSuscripcion') != 'Premium'){
-            $deduccion = DB::table('deduccion_credito_distribuidor')
+        $demandaMarcada = DB::table('distribuidor_demanda_distribuidor')
                             ->where('distribuidor_id', '=', session('perfilId'))
-                            ->where('tipo_deduccion', '=', 'DD')
-                            ->where('accion_id', '=', $id)
+                            ->where('demanda_distribuidor_id', '=', $id)
                             ->first();
-            
-            if ($deduccion == null){
-                $restringido = '1';
-            }else{
-                $restringido = '0';
-            }
+        if ($demandaMarcada == null){
+            $restringido = '1';
         }else{
-            $demandaMarcada = DB::table('distribuidor_demanda_distribuidor')
-                                ->where('distribuidor_id', '=', session('perfilId'))
-                                ->where('demanda_distribuidor_id', '=', $id)
-                                ->first();
-            if ($demandaMarcada == null){
-                $restringido = '1';
-            }else{
-                $restringido = '0';
-            }
+            $restringido = '0';
         }
-
+        
         $demandaDistribuidor = Demanda_Distribuidor::find($id);
 
         $visitas = $demandaDistribuidor->cantidad_visitas + 1;
@@ -202,6 +188,16 @@ class DemandaDistribucionController extends Controller
         // ... //
 
         return redirect('demanda-distribuidor/'.$id)->with('msj', 'Se ha agregado la demanda de distribuidor a su sección de "Demandas De Interés"');
+    }
+
+    public function demandas_interes(){
+        $demandas = Demanda_Distribuidor::select('demanda_distribuidor.*')
+                        ->join('distribuidor_demanda_distribuidor', 'demanda_distribuidor.id', '=', 'distribuidor_demanda_distribuidor.demanda_distribuidor_id')
+                        ->where('distribuidor_demanda_distribuidor.distribuidor_id', '=', session('perfilId'))
+                        ->orderBy('created_at', 'DESC')
+                        ->paginate(10);
+        
+        return view('demandaDistribucion.demandasDeInteres')->with(compact('demandas'));
     }
 
     public function edit($id)

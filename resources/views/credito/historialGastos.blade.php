@@ -55,7 +55,12 @@
                                  <a href="{{ route('solicitar-importacion.show', $gasto->accion_id) }}" class="btn btn-primary btn-xs"> Detalles <i class="fa fa-eye"></i></a></td>
                               @elseif ($gasto->tipo_deduccion == 'SD') 
                                  <a href="{{ route('solicitar-distribucion.show', $gasto->accion_id) }}" class="btn btn-primary btn-xs"> Detalles <i class="fa fa-eye"></i></a></td>
-                              @endif 
+                              @elseif ($gasto->tipo_deduccion == 'DI')
+                                  <a href="{{ route('demanda-importador.show', $gasto->accion_id) }}" class="btn btn-primary btn-xs"> Detalles <i class="fa fa-eye"></i></a></td>
+                              @elseif ($gasto->tipo_deduccion == 'DD')
+                                  <a href="{{ route('demanda-distribuidor.show', $gasto->accion_id) }}" class="btn btn-primary btn-xs"> Detalles <i class="fa fa-eye"></i></a></td>
+                              @endif
+                           </center></td>
                         </tr>
                      @endforeach
                   </tbody>

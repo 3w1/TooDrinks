@@ -134,30 +134,16 @@ class DemandaImportacionController extends Controller
 
     public function show($id)
     {
-        if (session('perfilSuscripcion') != 'Premium'){
-            $deduccion = DB::table('deduccion_credito_importador')
+        $demandaMarcada = DB::table('importador_demanda_importador')
                             ->where('importador_id', '=', session('perfilId'))
-                            ->where('tipo_deduccion', '=', 'DI')
-                            ->where('accion_id', '=', $id)
+                            ->where('demanda_importador_id', '=', $id)
                             ->first();
-            
-            if ($deduccion == null){
-                $restringido = '1';
-            }else{
-                $restringido = '0';
-            }
+        if ($demandaMarcada == null){
+            $restringido = '1';
         }else{
-            $demandaMarcada = DB::table('importador_demanda_importador')
-                                ->where('importador_id', '=', session('perfilId'))
-                                ->where('demanda_importador_id', '=', $id)
-                                ->first();
-            if ($demandaMarcada == null){
-                $restringido = '1';
-            }else{
-                $restringido = '0';
-            }
+            $restringido = '0';
         }
-
+        
         $demandaImportador = Demanda_Importador::find($id);
 
         $visitas = $demandaImportador->cantidad_visitas + 1;
@@ -189,6 +175,16 @@ class DemandaImportacionController extends Controller
         // ... //
 
         return redirect('demanda-importador/'.$id)->with('msj', 'Se ha agregado la demanda de importador a su sección de "Demandas De Interés"');
+    }
+
+    public function demandas_interes(){
+        $demandas = Demanda_Importador::select('demanda_importador.*')
+                        ->join('importador_demanda_importador', 'demanda_importador.id', '=', 'importador_demanda_importador.demanda_importador_id')
+                        ->where('importador_demanda_importador.importador_id', '=', session('perfilId'))
+                        ->orderBy('created_at', 'DESC')
+                        ->paginate(10);    
+
+        return view('demandaImportacion.demandasDeInteres')->with(compact('demandas'));
     }
 
     public function edit($id)

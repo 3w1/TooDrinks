@@ -143,7 +143,10 @@ Route::prefix('demanda-importador')->group(function () {
     Route::get('demandas-disponibles', 'DemandaImportacionController@demandas_disponibles')
     ->name('demanda-importador.demandas-disponibles');
 
-    Route::get('marcar-demanda/{id}', 'DemandaImportacionController@marcar_demanda')->name('demanda-importador.marcar');
+    Route::get('marcar-demanda/{id}', 'DemandaImportacionController@marcar_demanda')
+    ->name('demanda-importador.marcar');
+    Route::get('demandas-de-interes', 'DemandaImportacionController@demandas_interes')
+    ->name('demanda-importador.demandas-interes');
 });
 Route::resource('demanda-importador','DemandaImportacionController');
 // ./RUTAS PARA LAS DEMANDAS DE IMPORTADORES ./
@@ -153,7 +156,9 @@ Route::prefix('demanda-distribuidor')->group(function () {
     Route::get('demandas-disponibles', 'DemandaDistribucionController@demandas_disponibles')
     ->name('demanda-distribuidor.demandas-disponibles');
 
-     Route::get('marcar-demanda/{id}', 'DemandaDistribucionController@marcar_demanda')->name('demanda-distribuidor.marcar');
+    Route::get('marcar-demanda/{id}', 'DemandaDistribucionController@marcar_demanda')->name('demanda-distribuidor.marcar');
+    Route::get('demandas-de-interes', 'DemandaDistribucionController@demandas_interes')
+    ->name('demanda-distribuidor.demandas-interes');
 });
 Route::resource('demanda-distribuidor','DemandaDistribucionController');
 // ./RUTAS PARA LAS DEMANDAS DE DISTRIBUIDORES ./
@@ -162,18 +167,22 @@ Route::resource('demanda-distribuidor','DemandaDistribucionController');
 Route::prefix('demanda-producto')->group(function () {
     Route::get('demandas-productos-disponibles', 'DemandaProductoController@demandas_productos_disponibles')
     ->name('demanda-producto.demandas-productos-disponibles');
-
     Route::get('demandas-bebidas-disponibles', 'DemandaProductoController@demandas_bebidas_disponibles')
     ->name('demanda-producto.demandas-bebidas-disponibles');
 
     Route::get('marcar-demanda/{id}', 'DemandaProductoController@marcar_demanda')->name('demanda-producto.marcar');
+
+    Route::get('demandas-de-interes', 'DemandaProductoController@demandas_interes')->name('demanda-producto.demandas-interes');
 });
 Route::resource('demanda-producto','DemandaProductoController');
 // ./RUTAS PARA LAS DEMANDAS DE PRODUCTOS ./
 
 // RUTAS PARA LAS DEMANDAS DE IMPORTACIÓN
 Route::prefix('solicitar-importacion')->group(function () {
-    Route::get('marcar-solicitud/{id}', 'SolicitudImportacionController@marcar_solicitud')->name('solicitar-importacion.marcar');
+    Route::get('marcar-solicitud/{id}', 'SolicitudImportacionController@marcar_solicitud')
+    ->name('solicitar-importacion.marcar');
+    Route::get('demandas-de-interes', 'SolicitudImportacionController@demandas_interes')
+    ->name('solicitud-importacion.demandas-interes');
 });
 Route::get('demandas-importacion', 'SolicitudImportacionController@demandas_importacion')->name('demandas-importacion');
 Route::resource('solicitar-importacion', 'SolicitudImportacionController');
@@ -182,6 +191,8 @@ Route::resource('solicitar-importacion', 'SolicitudImportacionController');
 // RUTAS PARA LAS DEMANDAS DE DISTRIBUCIÓN
 Route::prefix('solicitar-distribucion')->group(function () {
     Route::get('marcar-solicitud/{id}', 'SolicitudDistribucionController@marcar_solicitud')->name('solicitar-distribucion.marcar');
+    Route::get('demandas-de-interes', 'SolicitudDistribucionController@demandas_interes')
+    ->name('solicitud-distribucion.demandas-interes');
 });
 Route::get('demandas-distribucion', 'SolicitudDistribucionController@demandas_distribucion')->name('demandas-distribucion');
 Route::resource('solicitar-distribucion', 'SolicitudDistribucionController');

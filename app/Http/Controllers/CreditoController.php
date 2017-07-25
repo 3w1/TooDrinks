@@ -203,6 +203,14 @@ class CreditoController extends Controller
             $gastos = Deduccion_Credito_Productor::orderBy('created_at', 'DESC')
                             ->where('productor_id', '=', session('perfilId'))
                             ->paginate(10);
+        }elseif (session('perfilTipo') == 'I'){
+            $gastos = Deduccion_Credito_Importador::orderBy('created_at', 'DESC')
+                            ->where('importador_id', '=', session('perfilId'))
+                            ->paginate(10);
+        }elseif (session('perfilTipo') == 'D'){
+             $gastos = Deduccion_Credito_Distribuidor::orderBy('created_at', 'DESC')
+                            ->where('distribuidor_id', '=', session('perfilId'))
+                            ->paginate(10);
         }
 
         return view('credito.historialGastos')->with(compact('gastos'));
@@ -256,6 +264,9 @@ class CreditoController extends Controller
                     ->where('id', '=', session('perfilId'))
                     ->update(['saldo' => $saldo ]);
 
+          DB::table('importador_demanda_importador')->insertGetId(
+                                        ['importador_id' => session('perfilId'), 'demanda_importador_id' => $id, 'fecha' => $fecha]);    
+
         $deduccion = new Deduccion_Credito_Importador();
         $deduccion->importador_id = session('perfilId');
         $deduccion->descripcion = 'Ver demanda de importador';
@@ -288,6 +299,9 @@ class CreditoController extends Controller
         $act = DB::table('distribuidor')
                     ->where('id', '=', session('perfilId'))
                     ->update(['saldo' => $saldo ]);
+
+          DB::table('distribuidor_demanda_distribuidor')->insertGetId(
+                                        ['distribuidor_id' => session('perfilId'), 'demanda_distribuidor_id' => $id, 'fecha' => $fecha]);    
 
         $deduccion = new Deduccion_Credito_Distribuidor();
         $deduccion->distribuidor_id = session('perfilId');
@@ -322,6 +336,9 @@ class CreditoController extends Controller
                     ->where('id', '=', session('perfilId'))
                     ->update(['saldo' => $saldo ]);
 
+            DB::table('productor_demanda_producto')->insertGetId(
+                                        ['productor_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha]);    
+
             $deduccion = new Deduccion_Credito_Productor();
             $deduccion->productor_id = session('perfilId');
         }elseif (session('perfilTipo') == 'I'){
@@ -329,12 +346,18 @@ class CreditoController extends Controller
                     ->where('id', '=', session('perfilId'))
                     ->update(['saldo' => $saldo ]);
 
+             DB::table('importador_demanda_producto')->insertGetId(
+                                        ['importador_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha]);    
+
             $deduccion = new Deduccion_Credito_Importador();
             $deduccion->importador_id = session('perfilId');
         }else{
             $act = DB::table('distribuidor')
                     ->where('id', '=', session('perfilId'))
                     ->update(['saldo' => $saldo ]);
+
+             DB::table('distribuidor_demanda_producto')->insertGetId(
+                                        ['distribuidor_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha]);    
 
             $deduccion = new Deduccion_Credito_Distribuidor();
             $deduccion->distribuidor_id = session('perfilId');
@@ -371,6 +394,9 @@ class CreditoController extends Controller
                     ->where('id', '=', session('perfilId'))
                     ->update(['saldo' => $saldo ]);
 
+            DB::table('productor_demanda_producto')->insertGetId(
+                                        ['productor_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha]);    
+
             $deduccion = new Deduccion_Credito_Productor();
             $deduccion->productor_id = session('perfilId');
         }elseif (session('perfilTipo') == 'I'){
@@ -378,12 +404,18 @@ class CreditoController extends Controller
                     ->where('id', '=', session('perfilId'))
                     ->update(['saldo' => $saldo ]);
 
+            DB::table('importador_demanda_producto')->insertGetId(
+                                        ['importador_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha]);    
+
             $deduccion = new Deduccion_Credito_Importador();
             $deduccion->importador_id = session('perfilId');
         }else{
             $act = DB::table('distribuidor')
                     ->where('id', '=', session('perfilId'))
                     ->update(['saldo' => $saldo ]);
+
+            DB::table('distribuidor_demanda_producto')->insertGetId(
+                                        ['distribuidor_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha]);    
 
             $deduccion = new Deduccion_Credito_Distribuidor();
             $deduccion->distribuidor_id = session('perfilId');
@@ -419,6 +451,9 @@ class CreditoController extends Controller
                     ->where('id', '=', session('perfilId'))
                     ->update(['saldo' => $saldo ]);
 
+        DB::table('productor_solicitud_importacion')->insertGetId(
+                                        ['productor_id' => session('perfilId'), 'solicitud_importacion_id' => $id, 'fecha' => $fecha]);    
+
         $deduccion = new Deduccion_Credito_Productor();
         $deduccion->productor_id = session('perfilId');
         $deduccion->descripcion = 'Ver demanda de importación';
@@ -452,12 +487,19 @@ class CreditoController extends Controller
                     ->where('id', '=', session('perfilId'))
                     ->update(['saldo' => $saldo ]);
 
+            DB::table('productor_solicitud_distribucion')->insertGetId(
+                                        ['productor_id' => session('perfilId'), 'solicitud_distribucion_id' => $id, 'fecha' => $fecha]);    
+
             $deduccion = new Deduccion_Credito_Productor();
             $deduccion->productor_id = session('perfilId');
         }elseif (session('perfilTipo') == 'I'){
             $act = DB::table('importador')
                     ->where('id', '=', session('perfilId'))
                     ->update(['saldo' => $saldo ]);
+
+            DB::table('importador_solicitud_distribucion')->insertGetId(
+                                        ['importador_id' => session('perfilId'), 'solicitud_distribucion_id' => $id, 'fecha' => $fecha]);    
+
             $deduccion = new Deduccion_Credito_Importador();
             $deduccion->importador_id = session('perfilId');
         }

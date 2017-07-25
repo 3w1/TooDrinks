@@ -65,10 +65,10 @@
 		{!! Html::style('font-awesome/css/font-awesome.css') !!}
 		{!! Html::script('bootstrap/js/jquery-3.2.1.min.js') !!}
 		{!! Html::style('ionicons/css/ionicons.min.css') !!}
-	   {!! Html::style('archivosLTE/dist/css/AdminLTE.min.css') !!}
-	   {!! Html::style('archivosLTE/dist/css/skins/_all-skins.min.css') !!}
-	   {!! Html::style('archivosLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') !!}
-      {!! Html::style('css/main.css') !!}
+	  {!! Html::style('archivosLTE/dist/css/AdminLTE.min.css') !!}
+	  {!! Html::style('archivosLTE/dist/css/skins/_all-skins.min.css') !!}
+	  {!! Html::style('archivosLTE/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') !!}
+    {!! Html::style('css/main.css') !!}
 
 	</head>
   
@@ -152,11 +152,11 @@
                 <!-- /.Left col -->
                 
                 <!-- right col (We are only adding the ID to make the widgets sortable)-->
-                <section class="col-lg-4 connectedSortable">
+               <section class="col-lg-4 connectedSortable">
                   @yield('content-right')
                   @include('plantillas.partes.content-right')
                   
-                </section>
+               </section>
                 <!-- right col -->
               </div>
               <!-- /.row (main row) -->

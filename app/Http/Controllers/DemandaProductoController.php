@@ -577,58 +577,27 @@ class DemandaProductoController extends Controller
 
     public function show($id)
     {
-        if (session('perfilSuscripcion') != 'Premium'){
-            if (session('perfilTipo') == 'P'){
-                $deduccion = DB::table('deduccion_credito_productor')
-                            ->where('productor_id', '=', session('perfilId'))
-                            ->where('tipo_deduccion', '=', 'DP')
-                            ->orwhere('tipo_deduccion', '=', 'DB')
-                            ->where('accion_id', '=', $id)
-                            ->first();
-            }elseif (session('perfilTipo') == 'I'){
-                $deduccion = DB::table('deduccion_credito_importador')
-                            ->where('importador_id', '=', session('perfilId'))
-                            ->where('tipo_deduccion', '=', 'DP')
-                            ->orwhere('tipo_deduccion', '=', 'DB')
-                            ->where('accion_id', '=', $id)
-                            ->first();
-            }elseif (session('perfilTipo') == 'D'){
-                $deduccion = DB::table('deduccion_credito_distribuidor')
-                            ->where('distribuidor_id', '=', session('perfilId'))
-                            ->where('tipo_deduccion', '=', 'DP')
-                            ->orwhere('tipo_deduccion', '=', 'DB')
-                            ->where('accion_id', '=', $id)
-                            ->first();
-            }
-
-            if ($deduccion == null){
-                $restringido = '1';
-            }else{
-                $restringido = '0';
-            }
-        }else{
-           if (session('perfilTipo') == 'P'){
-                $demandaMarcada = DB::table('productor_demanda_producto')
+        if (session('perfilTipo') == 'P'){
+            $demandaMarcada = DB::table('productor_demanda_producto')
                                 ->where('productor_id', '=', session('perfilId'))
                                 ->where('demanda_producto_id', '=', $id)
                                 ->first();
-            }elseif (session('perfilTipo') == 'I'){
-                $demandaMarcada = DB::table('importador_demanda_producto')
+        }elseif (session('perfilTipo') == 'I'){
+            $demandaMarcada = DB::table('importador_demanda_producto')
                                 ->where('importador_id', '=', session('perfilId'))
                                 ->where('demanda_producto_id', '=', $id)
                                 ->first();
-            }elseif (session('perfilTipo') == 'D'){
-               $demandaMarcada = DB::table('distribuidor_demanda_producto')
+        }elseif (session('perfilTipo') == 'D'){
+            $demandaMarcada = DB::table('distribuidor_demanda_producto')
                                 ->where('distribuidor_id', '=', session('perfilId'))
                                 ->where('demanda_producto_id', '=', $id)
                                 ->first();
-            }
+        }
 
-            if ($demandaMarcada == null){
-                $restringido = '1';
-            }else{
-                $restringido = '0';
-            }
+        if ($demandaMarcada == null){
+            $restringido = '1';
+        }else{
+            $restringido = '0';
         }
 
         $demandaProducto = Demanda_Producto::find($id);
@@ -644,7 +613,7 @@ class DemandaProductoController extends Controller
         return view('demandaProducto.show')->with(compact('demandaProducto', 'restringido'));
     }
 
-    //Marca una demanda de producto "de interes" para la entidad loggeada 
+    //Marca una demanda de producto "de interes" para las entidades con Suscripción 
     public function marcar_demanda($id){
         $fecha = new \DateTime();
 
@@ -672,6 +641,30 @@ class DemandaProductoController extends Controller
         // ... //
 
         return redirect('demanda-producto/'.$id)->with('msj', 'Se ha agregado la demanda de producto a su sección de "Demandas De Interés"');
+    }
+
+    public function demandas_interes(){
+        if (session('perfilTipo') == 'P'){
+            $demandas = Demanda_Producto::select('demanda_producto.*')
+                        ->join('productor_demanda_producto', 'demanda_producto.id', '=', 'productor_demanda_producto.demanda_producto_id')
+                        ->where('productor_demanda_producto.productor_id', '=', session('perfilId'))
+                        ->orderBy('created_at', 'DESC')
+                        ->paginate(10);    
+        }elseif (session('perfilTipo') == 'I'){
+            $demandas = Demanda_Producto::select('demanda_producto.*')
+                        ->join('importador_demanda_producto', 'demanda_producto.id', '=', 'importador_demanda_producto.demanda_producto_id')
+                        ->where('importador_demanda_producto.importador_id', '=', session('perfilId'))
+                        ->orderBy('created_at', 'DESC')
+                        ->paginate(10); 
+        }elseif (session('perfilTipo') == 'D'){
+            $demandas = Demanda_Producto::select('demanda_producto.*')
+                        ->join('distribuidor_demanda_producto', 'demanda_producto.id', '=', 'distribuidor_demanda_producto.demanda_producto_id')
+                        ->where('distribuidor_demanda_producto.distribuidor_id', '=', session('perfilId'))
+                        ->orderBy('created_at', 'DESC')
+                        ->paginate(10); 
+        }
+
+        return view('demandaProducto.demandasDeInteres')->with(compact('demandas'));
     }
 
     public function edit($id)

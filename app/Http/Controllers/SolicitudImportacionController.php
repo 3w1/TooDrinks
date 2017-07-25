@@ -61,30 +61,16 @@ class SolicitudImportacionController extends Controller
 
     public function show($id)
     {
-        if (session('perfilSuscripcion') != 'Premium'){
-            $deduccion = DB::table('deduccion_credito_productor')
+        $demandaMarcada = DB::table('productor_solicitud_importacion')
                             ->where('productor_id', '=', session('perfilId'))
-                            ->where('tipo_deduccion', '=', 'SI')
-                            ->where('accion_id', '=', $id)
+                            ->where('solicitud_importacion_id', '=', $id)
                             ->first();
-
-            if ($deduccion == null){
-                $restringido = '1';
-            }else{
-                $restringido = '0';
-            }
+        if ($demandaMarcada == null){
+            $restringido = '1';
         }else{
-            $demandaMarcada = DB::table('productor_solicitud_importacion')
-                                ->where('productor_id', '=', session('perfilId'))
-                                ->where('solicitud_importacion_id', '=', $id)
-                                ->first();
-            if ($demandaMarcada == null){
-                $restringido = '1';
-            }else{
-                $restringido = '0';
-            }
+            $restringido = '0';
         }
-
+        
         $demandaImportacion = Solicitud_Importacion::find($id);
 
         $visitas = $demandaImportacion->cantidad_visitas + 1;
@@ -98,7 +84,7 @@ class SolicitudImportacionController extends Controller
         return view('solicitudImportacion.show')->with(compact('demandaImportacion', 'restringido'));
     }
 
-    //Marca una solicitud de importación "de interes" para el productor loggeado
+    //Marca una solicitud de importación "de interes" para entidades con Suscripción
     public function marcar_solicitud($id){
         $fecha = new \DateTime();
 
@@ -116,6 +102,16 @@ class SolicitudImportacionController extends Controller
         // ... //
 
         return redirect('solicitar-importacion/'.$id)->with('msj', 'Se ha agregado la Demanda de Importación a su sección de "Demandas De Interés"');
+    }
+
+    public function demandas_interes(){
+        $demandas = Solicitud_Importacion::select('solicitud_importacion.*')
+                        ->join('productor_solicitud_importacion', 'solicitud_importacion.id', '=', 'productor_solicitud_importacion.solicitud_importacion_id')
+                        ->where('productor_solicitud_importacion.productor_id', '=', session('perfilId'))
+                        ->orderBy('created_at', 'DESC')
+                        ->paginate(10);    
+
+        return view('solicitudImportacion.demandasDeInteres')->with(compact('demandas'));
     }
 
     public function edit($id)

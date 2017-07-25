@@ -112,46 +112,24 @@ class SolicitudDistribucionController extends Controller
 
     public function show($id)
     {
-        if (session('perfilSuscripcion') != 'Premium'){
-            if (session('perfilTipo') == 'P'){
-                $deduccion = DB::table('deduccion_credito_productor')
+        if (session('perfilTipo') == 'P'){
+            $demandaMarcada = DB::table('productor_solicitud_distribucion')
                             ->where('productor_id', '=', session('perfilId'))
-                            ->where('tipo_deduccion', '=', 'SD')
-                            ->where('accion_id', '=', $id)
+                            ->where('solicitud_distribucion_id', '=', $id)
                             ->first();
-            }elseif (session('perfilTipo') == 'I'){
-                $deduccion = DB::table('deduccion_credito_importador')
-                            ->where('importador_id', '=', session('perfilId'))
-                            ->where('tipo_deduccion', '=', 'SD')
-                            ->where('accion_id', '=', $id)
-                            ->first();
-            }
-            
-            if ($deduccion == null){
-                $restringido = '1';
-            }else{
-                $restringido = '0';
-            }
         }else{
-            if (session('perfilTipo') == 'P'){
-                $demandaMarcada = DB::table('productor_solicitud_distribucion')
-                                ->where('productor_id', '=', session('perfilId'))
-                                ->where('solicitud_distribucion_id', '=', $id)
-                                ->first();
-            }else{
-                $demandaMarcada = DB::table('importador_solicitud_distribucion')
-                                ->where('importador_id', '=', session('perfilId'))
-                                ->where('solicitud_distribucion_id', '=', $id)
-                                ->first();
-            }
-            
-            if ($demandaMarcada == null){
-                $restringido = '1';
-            }else{
-                $restringido = '0';
-            }
+            $demandaMarcada = DB::table('importador_solicitud_distribucion')
+                            ->where('importador_id', '=', session('perfilId'))
+                            ->where('solicitud_distribucion_id', '=', $id)
+                            ->first();
         }
-
+            
+        if ($demandaMarcada == null){
+            $restringido = '1';
+        }else{
+            $restringido = '0';
+        }
+        
         $demandaDistribucion = Solicitud_Distribucion::find($id);
 
         $visitas = $demandaDistribucion->cantidad_visitas + 1;
@@ -189,6 +167,24 @@ class SolicitudDistribucionController extends Controller
 
         return redirect('solicitar-distribucion/'.$id)->with('msj', 'Se ha agregado la Demanda de Distribución a su sección de "Demandas De Interés"');
     }
+
+    public function demandas_interes(){
+        if (session('perfilTipo') == 'P'){
+            $demandas = Solicitud_Distribucion::select('solicitud_distribucion.*')
+                        ->join('productor_solicitud_distribucion', 'solicitud_distribucion.id', '=', 'productor_solicitud_distribucion.solicitud_distribucion_id')
+                        ->where('productor_solicitud_distribucion.productor_id', '=', session('perfilId'))
+                        ->orderBy('created_at', 'DESC')
+                        ->paginate(10); 
+        }elseif (session('perfilTipo') == 'I'){
+            $demandas = Solicitud_Distribucion::select('solicitud_distribucion.*')
+                        ->join('importador_solicitud_distribucion', 'solicitud_distribucion.id', '=', 'importador_solicitud_distribucion.solicitud_distribucion_id')
+                        ->where('importador_solicitud_distribucion.importador_id', '=', session('perfilId'))
+                        ->orderBy('created_at', 'DESC')
+                        ->paginate(10);  
+        }
+        return view('solicitudDistribucion.demandasDeInteres')->with(compact('demandas'));
+    }
+
 
     public function edit($id)
     {
