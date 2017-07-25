@@ -1,5 +1,9 @@
-<center> FACTURA DE COMPRA DE PLAN DE CRÉDITO</center>
+<center><strong>FACTURA DE COMPRA DE PLAN DE CRÉDITO</strong></center><br>
 
-Felicitaciones usted ha comprado el plan de credito {{ $credito->plan }}
-por un monto de {{ $credito->precio }} 
+<b>Fecha de la Compra: </b>{{ date('d-m-Y', strtotime($compra->fecha_compra)) }}<br>
+<b>Plan Comprado: </b>{{$compra->plan}}<br>
+<b>Cantidad de Créditos: </b>{{$compra->cantidad_creditos}}<br>
+<b>Descripción: </b>{{$compra->descripcion}}<br>
+<b>Total Pagado: </b>{{$compra->total}} $<br>
+
 

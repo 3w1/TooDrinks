@@ -10,7 +10,7 @@ class Impresion_Banner extends Model
 
     protected $fillable = [
         'banner_id', 'pais_id', 'tiempo_publicacion', 'fecha_inicio', 'fecha_fin', 'precio',
-        'cantidad_clics', 'publicado', 'pagado',
+        'cantidad_clics', 'pagado',
     ];
 
     public function banner(){

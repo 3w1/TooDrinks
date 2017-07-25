@@ -89,7 +89,7 @@ class PaypalController extends BaseController
 		}elseif ($request->tipo == 'Plan'){
 			$transaction->setAmount($amount)
 			->setItemList($item_list)
-			->setDescription('Pagar Plan de Crédito TooDrink');
+			->setDescription('Plan de Crédito TooDrink');
 		}
  
 		$redirect_urls = new RedirectUrls();
@@ -169,8 +169,6 @@ class PaypalController extends BaseController
  
 		if ($result->getState() == 'approved') {
  
-			//$this->saveOrder();
- 
 			\Session::forget('cart');
 			if ($tipo == 'Banner'){
 				return redirect('banner-publicitario/confirmar-pago/'.$impresion_id);
@@ -178,9 +176,6 @@ class PaypalController extends BaseController
 				return redirect('credito/compra/'.$plan_id);
 			}
 		}
-		/*return \Redirect::route('home')
-			->with('message', 'La compra fue cancelada');*/
-		dd("La compra fue cancelada");
 	}
  
 	protected function saveOrder()

@@ -28,6 +28,7 @@
                   	<p>
                         {!! Form::open(['route' => 'payment', 'method' => 'GET' ]) !!}
                            {!! Form::hidden('id', $credito->id) !!}
+                           {!! Form::hidden('tipo', 'Plan') !!}
                            {!! Form::hidden('plan', $credito->plan) !!}
                            {!! Form::hidden('descripcion', $credito->descripcion) !!}
                            {!! Form::hidden('precio', $credito->precio) !!}

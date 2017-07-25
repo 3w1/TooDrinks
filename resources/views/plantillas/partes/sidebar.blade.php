@@ -545,7 +545,7 @@
          </a>
          <ul class="treeview-menu">
             <li><a href="{{ route('banner-publicitario.index') }}"><i class="fa fa-circle-o"></i> Mis Banners</a></li>
-            <li><a href="{{ route('banner-publicitario.publicidades') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes de Publicación</a></li>
+            <li><a href="{{ route('banner-publicitario.publicidades') }}"><i class="fa fa-circle-o"></i> Mis Publicidades</a></li>
             <li><a href="{{ route('banner-publicitario.create')}}"><i class="fa fa-circle-o"></i> Nuevo Banner</a></li>
          </ul>
       </li>
@@ -557,8 +557,8 @@
             </span>
          </a>
          <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> Historial de Compras</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Mis Gastos de Crédito</a></li>
+            <li><a href="{{ route('credito.historial-planes') }}"><i class="fa fa-circle-o"></i> Mi Historial de Planes</a></li>
+            <li><a href="{{ route('credito.historial-gastos') }}"><i class="fa fa-circle-o"></i> Mi Historial de Gastos</a></li>
             <li><a href="{{ route('credito.index') }}"><i class="fa fa-circle-o"></i> Comprar Plan</a></li>
          </ul>
       </li>

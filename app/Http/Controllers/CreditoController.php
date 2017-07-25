@@ -153,11 +153,59 @@ class CreditoController extends Controller
             // ... //
         }
 
-     //   return redirect('usuario/inicio')->with('msj', 'Su plan de crédito ha sido agregado exitosamente');
+        return redirect('credito/historial-de-planes')->with('msj', 'Sus créditos han sido actualizados exitosamente');
+    
         $factura=PDF::loadview('credito.FacturaCredito',['credito'=>$credito]);
         //return $factura->stream('factura_credito.pdf');
         return $factura->download('factura_compra_creditos.pdf');
         //return redirect('usuario/inicio')->with('msj', 'Su plan de crédito ha sido agregado exitosamente');
+    }
+
+    public function historial_planes(){
+        if (session('perfilTipo') == 'P'){
+            $planes = DB::table('productor_credito')
+                        ->select('productor_credito.*', 'credito.plan', 'credito.cantidad_creditos')
+                        ->join('credito', 'productor_credito.credito_id', '=', 'credito.id')
+                        ->where('productor_credito.productor_id', '=', session('perfilId'))
+                        ->paginate(10);
+        }
+
+        return view('credito.historialPlanes')->with(compact('planes'));   
+    }
+
+    public function generar_factura($id){
+        if (session('perfilTipo') == 'P'){
+            $compra = DB::table('productor_credito')
+                    ->select('productor_credito.total', 'productor_credito.fecha_compra', 'credito.plan', 'credito.cantidad_creditos', 'credito.descripcion')
+                    ->join('credito', 'productor_credito.credito_id', '=', 'credito.id')
+                    ->where('productor_credito.id', '=', $id)
+                    ->first();
+        }elseif (session('perfilTipo') == 'I') {
+            $compra = DB::table('importador_credito')
+                    ->select('importador_credito.total', 'importador_credito.fecha_compra', 'credito.plan', 'credito.cantidad_creditos', 'credito.descripcion')
+                    ->join('credito', 'importador_credito.credito_id', '=', 'credito.id')
+                    ->where('importador_credito.id', '=', $id)
+                    ->first();       
+        }elseif(session('perfilTipo') == 'D'){
+            $compra = DB::table('distribuidor_credito')
+                    ->select('distribuidor_credito.total', 'distribuidor_credito.fecha_compra', 'credito.plan', 'credito.cantidad_creditos', 'credito.descripcion')
+                    ->join('credito', 'distribuidor_credito.credito_id', '=', 'credito.id')
+                    ->where('distribuidor_credito.id', '=', $id)
+                    ->first();   
+        }
+
+        $factura=PDF::loadview('credito.FacturaCredito',['compra'=>$compra]);
+        return $factura->download('factura_compra_creditos.pdf');
+    }
+
+    public function historial_gastos(){
+        if (session('perfilTipo') == 'P'){
+            $gastos = Deduccion_Credito_Productor::orderBy('created_at', 'DESC')
+                            ->where('productor_id', '=', session('perfilId'))
+                            ->paginate(10);
+        }
+
+        return view('credito.historialGastos')->with(compact('gastos'));
     }
 
     public function gastar_creditos_CO($cant, $id){

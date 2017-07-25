@@ -1,5 +1,5 @@
 @extends('plantillas.main')
-@section('title', 'Banners Publicitarios')
+@section('title', 'Planes de Crédito')
 
 {!! Html::script('js/banners/correcciones.js') !!}
 
@@ -11,12 +11,10 @@
         </div>
     @endif
     
-	<span><strong><h3>Mis Publicidades</h3></strong></span>
+	<span><strong><h3>Mi Historial de Compras</h3></strong></span>
 @endsection
 
 @section('content-left')
-
-   @include('banner.modales.correcciones')
 
    <div class="row">
       <div class="col-md-12">
@@ -36,28 +34,28 @@
             <div class="box-body table-responsive no-padding table-bordered">
                <table class="table table-hover">
                   <thead>
-                     <th><center>Banner</center></th>
-                     <th><center>País Destino</center></th>
-                     <th><center>Fecha de Inicio</center></th>
-                     <th><center>Fecha de Fin</center></th>
+                     <th><center>Fecha</center></th>
+                     <th><center>Plan</center></th>
+                     <th><center>Créditos</center></th>
+                     <th><center>Precio</center></th>
                      <th><center>Acción</center></th>
                   </thead>
                   <tbody>
-                     @foreach ($publicidades as $publicidad) 
+                     @foreach ($planes as $plan) 
                         <tr>
-                           <td><center>{{ $publicidad->banner->titulo }}</td>
-                           <td><center>{{ $publicidad->pais->pais }}</td>
-                           <td><center>{{ date('d-m-Y', strtotime($publicidad->fecha_inicio)) }}</center></td>
-                           <td><center>{{ date('d-m-Y', strtotime($publicidad->fecha_fin)) }}</center></td>
+                           <td><center>{{ date('d-m-Y', strtotime($plan->fecha_compra)) }}</td>
+                           <td><center>{{ $plan->plan }}</td>
+                           <td><center>{{ $plan->cantidad_creditos}} <i class="fa fa-certificate"></i></center></td>
+                           <td><center>{{ $plan->total}} <i class="fa fa-usd"></i></center></td>
                            <td><center>
-                              <a href="{{ route('banner-publicitario.detalle-publicacion', $publicidad->id) }}" class="btn btn-primary btn-xs">Ver Más <i class="fa fa-eye"></i></a></td>
+                              <a href="{{ route('credito.generar-factura', $plan->id) }}" class="btn btn-primary btn-xs">Generar Factura <i class="fa fa-file-pdf-o"></i></a></td>
                         </tr>
                      @endforeach
                   </tbody>
                </table>
             </div>      
          </div>
-         <center>{{ $publicidades->render() }}</center>
+         <center>{{ $planes->render() }}</center>
       </div>
    </div>
 @endsection

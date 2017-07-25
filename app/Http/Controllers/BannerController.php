@@ -226,7 +226,7 @@ class BannerController extends Controller
         return redirect('banner-publicitario/mis-solicitudes')->with('msj', 'La petición de publicidad ha sido almacenada exitosamente');
     }
 
-    //Ver las solicitudes de publicación de banners de la entidad loggeada
+    //Ver las publicaciones de banners de la entidad loggeada
     public function mis_publicidades(){
         $publicidades = Impresion_Banner::select('impresion_banner.*')
                             ->join('banner', 'impresion_banner.banner_id', '=', 'banner.id')
@@ -237,11 +237,11 @@ class BannerController extends Controller
         return view('banner.impresionesBanner')->with(compact('publicidades'));
     }
 
-    //Ver detalles de una solicitud
-    public function detalle_solicitud($id){
-        $solicitud = Impresion_Banner::find($id);
+    //Ver detalles de una publicación
+    public function detalle_publicacion($id){
+        $publicacion = Impresion_Banner::find($id);
 
-        return view('banner.detalleSolicitud')->with(compact('solicitud'));
+        return view('banner.detallePublicacion')->with(compact('publicacion'));
     }
 
     //Método para cargar las correcciones de una solicitud

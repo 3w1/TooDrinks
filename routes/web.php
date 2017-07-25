@@ -188,30 +188,22 @@ Route::resource('solicitar-distribucion', 'SolicitudDistribucionController');
 // ./RUTAS PARA LAS DEMANDAS DE DISTRIBUCIÓN ./
 
 // RUTAS PARA LOS CRÉDITOS
-Route::get('credito/compra/{id}','CreditoController@compra')->name('credito.compra');
-Route::get('credito/generar_factura','CreditoController@generar_factura')->name('credito.generar-factura');
+Route::prefix('credito')->group(function () {
+    Route::get('compra/{id}','CreditoController@compra')->name('credito.compra');
+    Route::get('historial-de-planes', 'CreditoController@historial_planes')->name('credito.historial-planes');
+    Route::get('generar_factura/{id}','CreditoController@generar_factura')->name('credito.generar-factura');
 
-Route::get('credito/gastar-creditos-co/{cant}/{id}', 'CreditoController@gastar_creditos_CO')
-->name('credito.gastar-creditos-co');
+    Route::get('historial-de-gastos', 'CreditoController@historial_gastos')->name('credito.historial-gastos');
+    Route::get('detalles-gasto/{tipo}/{id}', 'CreditoController@detalles_gasto');
 
-Route::get('credito/gastar-creditos-di/{cant}/{id}', 'CreditoController@gastar_creditos_DI' )
-->name('credito.gastar-creditos-di');
-
-Route::get('credito/gastar-creditos-dd/{cant}/{id}', 'CreditoController@gastar_creditos_DD' )
-->name('credito.gastar-creditos-dd');
-
-Route::get('credito/gastar-creditos-dp/{cant}/{id}', 'CreditoController@gastar_creditos_DP' )
-->name('credito.gastar-creditos-dp');
-
-Route::get('credito/gastar-creditos-db/{cant}/{id}', 'CreditoController@gastar_creditos_DB' )
-->name('credito.gastar-creditos-db');
-
-Route::get('credito/gastar-creditos-dip/{cant}/{id}', 'CreditoController@gastar_creditos_DIP' )
-->name('credito.gastar-creditos-dip');
-
-Route::get('credito/gastar-creditos-ddp/{cant}/{id}', 'CreditoController@gastar_creditos_DDP' )
-->name('credito.gastar-creditos-ddp');
-
+    Route::get('gastar-creditos-co/{cant}/{id}', 'CreditoController@gastar_creditos_CO')->name('credito.gastar-creditos-co');
+    Route::get('gastar-creditos-di/{cant}/{id}', 'CreditoController@gastar_creditos_DI')->name('credito.gastar-creditos-di');
+    Route::get('gastar-creditos-dd/{cant}/{id}', 'CreditoController@gastar_creditos_DD')->name('credito.gastar-creditos-dd');
+    Route::get('gastar-creditos-dp/{cant}/{id}', 'CreditoController@gastar_creditos_DP')->name('credito.gastar-creditos-dp');
+    Route::get('gastar-creditos-db/{cant}/{id}', 'CreditoController@gastar_creditos_DB')->name('credito.gastar-creditos-db');
+    Route::get('gastar-creditos-dip/{cant}/{id}', 'CreditoController@gastar_creditos_DIP')->name('credito.gastar-creditos-dip');
+    Route::get('gastar-creditos-ddp/{cant}/{id}', 'CreditoController@gastar_creditos_DDP')->name('credito.gastar-creditos-ddp');
+});
 Route::resource('credito','CreditoController');
 // ./RUTAS PARA LOS CRÉDITOS ./
 
@@ -250,8 +242,8 @@ Route::prefix('banner-publicitario')->group(function () {
 
     Route::get('mis-publicidades', 'BannerController@mis_publicidades')
     ->name('banner-publicitario.publicidades');
-    Route::get('detalle-solicitud/{id}', 'BannerController@detalle_solicitud')
-    ->name('banner-publicitario.detalle-solicitud');
+    Route::get('detalle-publicacion/{id}', 'BannerController@detalle_publicacion')
+    ->name('banner-publicitario.detalle-publicacion');
     Route::get('corregir-solicitud/{id}', 'BannerController@corregir_solicitud')
     ->name('banner-publicitario.corregir-solicitud');
 

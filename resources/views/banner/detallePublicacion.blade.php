@@ -19,7 +19,7 @@
    <div class="row">
       <div class="col-md-4"></div>
       <div class="col-sm-6 col-md-4">
-         <div class="thumbnail"><img src="{{ asset('imagenes/banners/thumbnails') }}/{{ $solicitud->banner->imagen }}"></div>
+         <div class="thumbnail"><img src="{{ asset('imagenes/banners/thumbnails') }}/{{ $publicacion->banner->imagen }}"></div>
       </div>
       <div class="col-md-4"></div>
    </div>
@@ -28,7 +28,7 @@
       <div class="col-md-4"></div>
       <div class="col-md-4">
          <center>
-            <b>Clics:</b> <small class="label bg-green">{{$solicitud->cantidad_clics}}</small>
+            <b>Clics:</b> <small class="label bg-green">{{$publicacion->cantidad_clics}}</small>
          </center>
       </div>
       <div class="col-md-4"></div>
@@ -40,20 +40,15 @@
       <div class="col-md-10 col-xs-12"> 
          <div class="panel panel-default panel-success">
             <div class="panel-heading"><h4><b> 
-               {{ $solicitud->banner->titulo }}</b></h4>
+               {{ $publicacion->banner->titulo }}</b></h4>
             </div>
              
             <ul class="list-group">
-               <li class="list-group-item"><b>Fecha de Solicitud:</b> {{ $solicitud->created_at->format('d-m-Y') }}</li>
-               <li class="list-group-item"><b>País Destino:</b> {{ $solicitud->pais->pais }}</li>
-               <li class="list-group-item"><b>Tiempo de Publicación:</b> {{ $solicitud->tiempo_publicacion }} Días</li>
-               <li class="list-group-item"><b>Status de Publicación:</b>
-                  @if ($solicitud->publicado == '0')
-                     Esperando Publicación
-                  @else 
-                     Publicado
-                  @endif
-               </li>
+               <li class="list-group-item"><b>Fecha de Inicio:</b> {{ date('d-m-Y', strtotime($publicacion->fecha_inicio)) }}</li>
+               <li class="list-group-item"><b>Fecha de Finalización:</b> {{ date('d-m-Y', strtotime($publicacion->fecha_fin)) }}</li>
+               <li class="list-group-item"><b>País Destino:</b> {{ $publicacion->pais->pais }}</li>
+               <li class="list-group-item"><b>Tiempo de Publicación:</b> {{ $publicacion->tiempo_publicacion }} Días</li>
+               <li class="list-group-item"><b>Costo por Publicación:</b> {{ $publicacion->precio }} $</li>
             </ul>
          </div>
       </div>
