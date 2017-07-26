@@ -244,6 +244,14 @@ class DemandaDistribucionController extends Controller
         return redirect('demanda-distribuidor')->with('msj', 'Los datos de su demanda de distribución han sido actualizados exitosamente');
     }
 
+    //Cambia el status de una demanda
+    public function cambiar_status(Request $request){
+        Demanda_Distribuidor::find($request->id)
+            ->update(['status' => $request->status]);
+
+        return redirect("demanda-distribuidor")->with('msj', 'El status de su demanda ha sido actualizado exitosamente');
+    }
+
     public function destroy($id)
     {
 

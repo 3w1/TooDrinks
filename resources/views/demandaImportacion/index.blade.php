@@ -1,6 +1,8 @@
 @extends('plantillas.main')
 @section('title', 'Listado de Demandas de Importadores')
 
+{!! Html::script('js/demandaImportadores/cambiarStatus.js') !!}
+
 @section('items')
    @if (Session::has('msj'))
         <div class="alert alert-success alert-dismissable">
@@ -38,7 +40,7 @@
                      <th><center>Marca</center></th>
                      <th><center>País</center></th>
                      <th><center>Status</center></th>
-                     <th ><center>Acción</center></th>
+                     <th ><center>Visitas / Contactos</center></th>
                   </thead>
                   <tbody>
                      @foreach ($demandasImportadores as $demandaImportador)
@@ -48,14 +50,27 @@
                            <td><center>{{ $demandaImportador->created_at->format('d-m-Y') }}</td>
                            <td><center>{{ $demandaImportador->marca->nombre }}</td>
                            <td><center>{{ $demandaImportador->pais->pais }}</td>
-                           @if ($demandaImportador->status == '1')  
-                              <td><center><span class="label label-success">Activa</span></td>
-                           @else
-                              <td><center><span class="label label-warning">Inactiva</span></td>
-                           @endif
-                           <td><center><a href="{{ route('demanda-importador.edit', $demandaImportador->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a></td>
+                           <td><center>
+                              <div class="btn-group btn-toggle"> 
+                                 @if ($demandaImportador->status == '1')
+                                    <button class="btn btn-primary btn-xs active" id="on-{{$demandaImportador->id}}" onclick="cambiar(this.id);">Visible</button>
+                                    <button class="btn btn-default btn-xs" id="off-{{$demandaImportador->id}}" onclick="cambiar(this.id);">No Visible</button>
+                                 @else
+                                    <button class="btn btn-default btn-xs" id="on-{{$demandaImportador->id}}" onclick="cambiar(this.id);">Visible</button>
+                                    <button class="btn btn-primary btn-xs active" id="off-{{$demandaImportador->id}}" onclick="cambiar(this.id);">No Visible</button>
+                                 @endif
+                              </div>
+                           </center></td>
+                           <td><center>
+                              <label class="label label-warning">{{$demandaImportador->cantidad_visitas}}</label> /
+                              <label class="label label-success">{{$demandaImportador->cantidad_contactos}}</label>
+                           </center></td>
                         </tr>
                      @endforeach
+                     {!! Form::open(['route' => 'demanda-importador.status', 'method' => 'POST', 'id' => 'formStatus' ]) !!}
+                        {!! Form::hidden('id', null, ['id' => 'id']) !!}
+                        {!! Form::hidden('status', null, ['id' => 'status'] ) !!}
+                     {!! Form::close() !!}
                   </tbody>
                </table>
             </div>      

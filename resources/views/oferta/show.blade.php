@@ -43,7 +43,6 @@
       </center>
    </div><br>
   
-   
    <div class="row">
       <div class="col-md-1"></div>
       <div class="col-md-10 col-xs-12">

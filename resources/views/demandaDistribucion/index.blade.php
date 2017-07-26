@@ -1,6 +1,8 @@
 @extends('plantillas.main')
 @section('title', 'Listado de Demandas de Distribuidores')
 
+{!! Html::script('js/demandaDistribuidores/cambiarStatus.js') !!}
+
 @section('items')
    @if (Session::has('msj'))
         <div class="alert alert-success alert-dismissable">
@@ -38,7 +40,7 @@
                      <th><center>Marca</center></th>
                      <th><center>Provincia</center></th>
                      <th><center>Status</center></th>
-                     <th ><center>Acción</center></th>
+                     <th ><center>Visitas / Contactos</center></th>
                   </thead>
                   <tbody>
                      @foreach ($demandasDistribuidores as $demandaDistribuidor)
@@ -48,14 +50,27 @@
                            <td><center>{{ $demandaDistribuidor->created_at->format('d-m-Y') }}</td>
                            <td><center>{{ $demandaDistribuidor->marca->nombre }}</td>
                            <td><center>{{ $demandaDistribuidor->provincia_region->provincia }}</td>
-                           @if ($demandaDistribuidor->status == '1')  
-                              <td><center><span class="label label-success">Activa</span></td>
-                           @else
-                              <td><center><span class="label label-warning">Inactiva</span></td>
-                           @endif
-                           <td><center><a href="{{ route('demanda-distribuidor.edit', $demandaDistribuidor->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a></td>
+                           <td><center>
+                              <div class="btn-group btn-toggle"> 
+                                 @if ($demandaDistribuidor->status == '1')
+                                    <button class="btn btn-primary btn-xs active" id="on-{{$demandaDistribuidor->id}}" onclick="cambiar(this.id);">Visible</button>
+                                    <button class="btn btn-default btn-xs" id="off-{{$demandaDistribuidor->id}}" onclick="cambiar(this.id);">No Visible</button>
+                                 @else
+                                    <button class="btn btn-default btn-xs" id="on-{{$demandaDistribuidor->id}}" onclick="cambiar(this.id);">Visible</button>
+                                    <button class="btn btn-primary btn-xs active" id="off-{{$demandaDistribuidor->id}}" onclick="cambiar(this.id);">No Visible</button>
+                                 @endif
+                              </div>
+                           </center></td>
+                           <td><center>
+                              <label class="label label-warning">{{$demandaDistribuidor->cantidad_visitas}}</label> /
+                              <label class="label label-success">{{$demandaDistribuidor->cantidad_contactos}}</label>
+                           </center></td>
                         </tr>
                      @endforeach
+                     {!! Form::open(['route' => 'demanda-distribuidor.status', 'method' => 'POST', 'id' => 'formStatus' ]) !!}
+                        {!! Form::hidden('id', null, ['id' => 'id']) !!}
+                        {!! Form::hidden('status', null, ['id' => 'status'] ) !!}
+                     {!! Form::close() !!}
                   </tbody>
                </table>
             </div>      

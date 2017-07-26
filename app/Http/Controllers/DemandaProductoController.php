@@ -682,11 +682,15 @@ class DemandaProductoController extends Controller
 
         return redirect('demanda-producto')->with('msj', 'Se han actualizado los datos de tu solicitud exitosamente.');
     }
+    
+    //Cambia el status de una demanda
+    public function cambiar_status(Request $request){
+        Demanda_Producto::find($request->id)
+            ->update(['status' => $request->status]);
 
-    public function solicitudes_producto(){
-
-    }
-        
+        return redirect("demanda-producto")->with('msj', 'El status de su demanda ha sido actualizado exitosamente');
+    } 
+    
     public function destroy($id)
     {
 

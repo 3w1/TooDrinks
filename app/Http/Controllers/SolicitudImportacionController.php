@@ -130,6 +130,14 @@ class SolicitudImportacionController extends Controller
         return redirect('solicitar-importacion')->with('msj', 'El status de su solicitud se ha actualizado exitosamente');
     }
 
+     //Cambia el status de una demanda
+    public function cambiar_status(Request $request){
+        Solicitud_Importacion::find($request->id)
+            ->update(['status' => $request->status]);
+
+        return redirect("solicitar-importacion")->with('msj', 'El status de su demanda ha sido actualizado exitosamente');
+    }
+
     public function destroy($id)
     {
         //

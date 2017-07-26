@@ -1,6 +1,8 @@
 @extends('plantillas.main')
 @section('title', 'Mis Solicitudes de Producto')
 
+{!! Html::script('js/demandaProductos/cambiarStatus.js') !!}
+
 @section('items')
     @if (Session::has('msj'))
         <div class="alert alert-success alert-dismissable">
@@ -37,8 +39,8 @@
                      <th><center>Fecha de Solicitud</center></th>
                      <th><center>Producto / Bebida</center></th>
                      <th><center>País</center></th>
-                     <th><center>Provincia</center></th>
                      <th><center>Status</center></th>
+                     <th ><center>Visitas / Contactos</center></th>
                      <th ><center>Acción</center></th>
                   </thead>
                   <tbody>
@@ -49,17 +51,36 @@
                         <tr>
                            <td><center>{{ $cont }}</td>
                            <td><center>{{ $demandaProducto->created_at->format('d-m-Y') }}</td>
-                           <td><center> @if ($demandaProducto->producto_id == '0') {{ $demandaProducto->bebida->nombre." (B)" }}  @else {{ $demandaProducto->producto->nombre." (P)" }} @endif</td>
+                           <td><center> 
+                                 @if ($demandaProducto->producto_id == '0') 
+                                    {{ $demandaProducto->bebida->nombre." (B)" }} 
+                                 @else 
+                                    {{ $demandaProducto->producto->nombre." (P)" }} 
+                                 @endif
+                           </center></td>
                            <td><center>{{ $demandaProducto->pais->pais }}</td>
-                           <td><center>{{ $demandaProducto->provincia_region->provincia }}</td>
-                           @if ($demandaProducto->status == '1')  
-                              <td><center><span class="label label-success">Activa</span></td>
-                           @else
-                              <td><center><span class="label label-warning">Inactiva</span></td>
-                           @endif
+                           <td><center>
+                              <div class="btn-group btn-toggle"> 
+                                 @if ($demandaProducto->status == '1')
+                                    <button class="btn btn-primary btn-xs active" id="on-{{$demandaProducto->id}}" onclick="cambiar(this.id);">Visible</button>
+                                    <button class="btn btn-default btn-xs" id="off-{{$demandaProducto->id}}" onclick="cambiar(this.id);">No Visible</button>
+                                 @else
+                                    <button class="btn btn-default btn-xs" id="on-{{$demandaProducto->id}}" onclick="cambiar(this.id);">Visible</button>
+                                    <button class="btn btn-primary btn-xs active" id="off-{{$demandaProducto->id}}" onclick="cambiar(this.id);">No Visible</button>
+                                 @endif
+                              </div>
+                           </center></td>
+                           <td><center>
+                              <label class="label label-warning">{{$demandaProducto->cantidad_visitas}}</label> /
+                              <label class="label label-success">{{$demandaProducto->cantidad_contactos}}</label>
+                           </center></td>
                            <td><center><a href="{{ route('demanda-producto.edit', $demandaProducto->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a></td>
                         </tr>
                      @endforeach
+                     {!! Form::open(['route' => 'demanda-producto.status', 'method' => 'POST', 'id' => 'formStatus' ]) !!}
+                        {!! Form::hidden('id', null, ['id' => 'id']) !!}
+                        {!! Form::hidden('status', null, ['id' => 'status'] ) !!}
+                     {!! Form::close() !!}
                   </tbody>
                </table>
             </div>      

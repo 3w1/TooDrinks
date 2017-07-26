@@ -218,6 +218,14 @@ class DemandaImportacionController extends Controller
         return redirect('demanda-importador')->with('msj', 'Los datos de su demanda se han actualizado exitosamente');
     }
 
+    //Cambia el status de una demanda
+    public function cambiar_status(Request $request){
+        Demanda_Importador::find($request->id)
+            ->update(['status' => $request->status]);
+
+        return redirect("demanda-importador")->with('msj', 'El status de su demanda ha sido actualizado exitosamente');
+    }
+
     public function destroy($id)
     {
        

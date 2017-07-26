@@ -1,6 +1,8 @@
 @extends('plantillas.main')
 @section('title', 'Listado de Solicitudes de Importación')
 
+{!! Html::script('js/demandaProductos/cambiarStatus.js') !!}
+
 @section('items')
    @if (Session::has('msj'))
         <div class="alert alert-success alert-dismissable">
@@ -37,7 +39,7 @@
                      <th><center>Fecha de Solicitud</center></th>
                      <th><center>Producto</center></th>
                      <th><center>Status</center></th>
-                     <th ><center>Acción</center></th>
+                     <th ><center>Visitas / Contactos</center></th>
                   </thead>
                   <tbody>
                      @foreach ($solicitudesImportacion as $solicitudImportacion)
@@ -46,14 +48,27 @@
                            <td><center>{{ $cont }}</td>
                            <td><center>{{ $solicitudImportacion->created_at->format('d-m-Y') }}</td>
                            <td><center>{{ $solicitudImportacion->producto->nombre }}</td>
-                           @if ($solicitudImportacion->status == '1')  
-                              <td><center><span class="label label-success">Activa</span></td>
-                           @else
-                              <td><center><span class="label label-warning">Inactiva</span></td>
-                           @endif
-                           <td><center><a href="{{ route('solicitar-importacion.edit', $solicitudImportacion->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a></td>
+                          <td><center>
+                              <div class="btn-group btn-toggle"> 
+                                 @if ($solicitudImportacion->status == '1')
+                                    <button class="btn btn-primary btn-xs active" id="on-{{$solicitudImportacion->id}}" onclick="cambiar(this.id);">Visible</button>
+                                    <button class="btn btn-default btn-xs" id="off-{{$solicitudImportacion->id}}" onclick="cambiar(this.id);">No Visible</button>
+                                 @else
+                                    <button class="btn btn-default btn-xs" id="on-{{$solicitudImportacion->id}}" onclick="cambiar(this.id);">Visible</button>
+                                    <button class="btn btn-primary btn-xs active" id="off-{{$solicitudImportacion->id}}" onclick="cambiar(this.id);">No Visible</button>
+                                 @endif
+                              </div>
+                           </center></td>
+                           <td><center>
+                              <label class="label label-warning">{{$solicitudImportacion->cantidad_visitas}}</label> /
+                              <label class="label label-success">{{$solicitudImportacion->cantidad_contactos}}</label>
+                           </center></td>
                         </tr>
                      @endforeach
+                     {!! Form::open(['route' => 'solicitud-importacion.status', 'method' => 'POST', 'id' => 'formStatus' ]) !!}
+                        {!! Form::hidden('id', null, ['id' => 'id']) !!}
+                        {!! Form::hidden('status', null, ['id' => 'status'] ) !!}
+                     {!! Form::close() !!}
                   </tbody>
                </table>
             </div>      
