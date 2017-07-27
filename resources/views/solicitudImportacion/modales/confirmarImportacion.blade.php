@@ -11,9 +11,10 @@
             </div>
          </div>
          <div class="modal-footer">
-            {!! Form::open(['route' => 'solicitar-importacion.store', 'method' => 'POST']) !!}
+            {!! Form::open(['route' => 'solicitud-importacion.store', 'method' => 'POST']) !!}
                {!! Form::hidden('importador_id', session('perfilId') ) !!}
                {!! Form::hidden('producto_id', null, ['id' => 'producto_id']) !!}
+               {!! Form::hidden('marca_id', null, ['id' => 'marca_id']) !!}
                {!! Form::hidden('pais_id', session('perfilPais') ) !!}
                {!! Form::hidden('status', '1') !!}
                {!! Form::hidden('cantidad_visitas', '0') !!}

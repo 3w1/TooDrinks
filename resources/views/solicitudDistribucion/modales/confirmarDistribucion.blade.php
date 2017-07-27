@@ -11,7 +11,7 @@
             </div>
          </div>
          <div class="modal-footer">
-            {!! Form::open(['route' => 'solicitar-distribucion.store', 'method' => 'POST']) !!}
+            {!! Form::open(['route' => 'solicitud-distribucion.store', 'method' => 'POST']) !!}
                {!! Form::hidden('distribuidor_id', session('perfilId') ) !!}
                {!! Form::hidden('producto_id', null, ['id' => 'producto_id']) !!}
                {!! Form::hidden('provincia_region_id', session('perfilProvincia') ) !!}

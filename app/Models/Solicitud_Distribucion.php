@@ -9,9 +9,12 @@ class Solicitud_Distribucion extends Model
     protected $table = "solicitud_distribucion";
 
     protected $fillable = [
-    	'distribuidor_id', 'producto_id', 'provincia_region_id', 'status', 'fecha', 'cantidad_visitas', 'cantidad_contactos',
+    	'distribuidor_id', 'marca_id', 'producto_id', 'provincia_region_id', 'status', 'fecha', 'cantidad_visitas', 'cantidad_contactos',
     ]; 
 
+    public function marca(){
+        return $this->belongsTo('App\Models\Marca');
+    }
 
     public function producto(){
     	return $this->belongsTo('App\Models\Producto');

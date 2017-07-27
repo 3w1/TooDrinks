@@ -120,24 +120,28 @@
       <ul class="products-list product-list-in-box">
          <li class="item">
             <div class="product-img">
-               <img src="" alt="Product Image">
+               <img src="{{ asset('imagenes/dp.jpg') }}" alt="Product Image">
             </div>
             <div class="product-info">
+               <br>
                <a href="{{ route('demanda-producto.demandas-interes') }}" class="product-title">Demandas de Productos / Bebidas
                   <span class="label label-success pull-right">{{$contDP}}</span>
                </a>
+               <br>
             </div>
          </li>   
          
          @if (session('perfilTipo') ==  'P')
             <li class="item">
                <div class="product-img">
-                  <img src="" alt="Product Image">
+                  <img src="{{ asset('imagenes/si.jpg') }}" alt="Product Image">
                </div>
                <div class="product-info">
+                  <br>
                   <a href="{{ route('solicitud-importacion.demandas-interes') }}" class="product-title">Solicitudes de Importación
                      <span class="label label-warning pull-right">{{$contSI}}</span>
                   </a>
+                  <br>
                </div>
             </li>
          @endif
@@ -145,12 +149,14 @@
          @if ( (session('perfilTipo') == 'P') || (session('perfilTipo') == 'I') )
             <li class="item">
                <div class="product-img">
-                  <img src="" alt="Product Image">
+                  <img src="{{ asset('imagenes/sd.jpg') }}" alt="Product Image">
                </div>
                <div class="product-info">
+                  <br>
                   <a href="{{ route('solicitud-distribucion.demandas-interes') }}" class="product-title">Solicitudes de Distribución
                      <span class="label label-info pull-right">{{$contSD}}</span>
                   </a>
+                  <br>
                </div>
             </li>
          @endif
@@ -158,12 +164,14 @@
          @if (session('perfilTipo') == 'I')
             <li class="item">
                <div class="product-img">
-                  <img src="" alt="Product Image">
+                  <img src="{{ asset('imagenes/di.jpg') }}" alt="Product Image">
                </div>
                <div class="product-info">
+                  <br>
                   <a href="{{ route('demanda-importador.demandas-interes') }}" class="product-title">Demandas de Importadores
                      <span class="label label-warning pull-right">{{$contDI}}</span>
                   </a>
+                  <br>
                </div>
             </li>
          @endif
@@ -171,12 +179,14 @@
           @if (session('perfilTipo') == 'D')
             <li class="item">
                <div class="product-img">
-                  <img src="" alt="Product Image">
+                  <img src="{{ asset('imagenes/dd.jpg') }}" alt="Product Image">
                </div>
                <div class="product-info">
+                  <br>
                   <a href="{{ route('demanda-distribuidor.demandas-interes') }}" class="product-title">Demandas de Distribuidores
                      <span class="label label-warning pull-right">{{$contDD}}</span>
                   </a>
+                  <br>
                </div>
             </li>
          @endif

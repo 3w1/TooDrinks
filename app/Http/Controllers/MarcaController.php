@@ -123,6 +123,118 @@ class MarcaController extends Controller
         );
     }
 
+    //Búsqueda de Marcas por Nombre (Marcas Mundiales)
+    public function buscar_por_nombre($nombre){
+        $marcas = DB::table('marca')
+                    ->select('id', 'nombre', 'logo')
+                    ->orderBy('nombre')
+                    ->where('nombre', 'ILIKE', '%'.$nombre.'%')
+                    ->get();
+
+        return response()->json(
+            $marcas->toArray()
+        );
+    }
+
+    //Búsqueda de Marcas por Productor (Marcas Mundiales)
+    public function buscar_por_productor($productor){
+        $marcas = DB::table('marca')
+                    ->select('marca.id', 'marca.nombre', 'marca.logo')
+                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                    ->orderBy('marca.nombre')
+                    ->where('productor.nombre', 'ILIKE', '%'.$productor.'%')
+                    ->get();
+
+        return response()->json(
+            $marcas->toArray()
+        );
+    }
+
+    //Búsqueda de Marcas por País (Marcas Mundiales)
+    public function buscar_por_pais($pais){
+        $marcas = DB::table('marca')
+                    ->select('id', 'nombre', 'logo', 'productor_id')
+                    ->orderBy('nombre')
+                    ->where('pais_id', '=', $pais)
+                    ->get();
+
+        return response()->json(
+            $marcas->toArray()
+        );
+    }
+
+    public function detalles_marca($id){
+        $marca = Marca::where('id', '=', $id)->with('productor', 'pais')
+                    ->first()->toArray();
+
+        if (session('perfilTipo') == 'I'){
+            $relacion = DB::table('importador_marca')
+                        ->select('id')
+                        ->where('importador_id', '=', session('perfilId'))
+                        ->where('marca_id', '=', $id)
+                        ->first();
+        }elseif (session('perfilTipo') == 'D'){
+            $relacion = DB::table('distribuidor_marca')
+                        ->select('id')
+                        ->where('distribuidor_id', '=', session('perfilId'))
+                        ->where('marca_id', '=', $id)
+                        ->first();
+        }
+        
+        //Verifico que el usuario se encuentre relacionado con la marca que seleccionó
+        if ($relacion != null ){
+            $marca['relacion'] = 1;
+        }else{
+            $marca['relacion'] = 0;
+            
+            //Si no se encuentra relacionado verifico que el productor 
+            //haya marcado su país como destino laboral
+            //para permitir la solicitud de importación / distribución
+            $paises_productor = DB::table('productor_pais')
+                                ->select('pais_id')
+                                ->where('productor_id', '=', $marca['productor_id'])
+                                ->get();
+
+            $check = 0;
+            $cont = 0;
+            //Verifico si el país es destino laboral del productor
+            foreach ($paises_productor as $pais){
+                $cont++;
+                if ($pais->pais_id == session('perfilPais')){
+                    $check = 1;
+                }
+            }
+            //Si todavía el productor no ha marcado ningún país
+            if ($cont == 0){
+                $check = 1;
+            }
+            
+            $marca['check'] = $check;
+        }
+
+        return response()->json(
+            $marca
+        );
+    }
+
+    public function marcas_mundiales(){
+        $paises = DB::table('pais')
+                    ->orderBy('pais', 'ASC')
+                    ->pluck('pais', 'id');
+
+        if (session('perfilTipo') == 'I'){
+            $marcas = Marca::select('marca.*')
+                    ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                    ->where('importador_marca.importador_id', '!=', session('perfilId'))
+                    ->orwhere('importador_marca.marca_id', '=', null)
+                    ->paginate(6);
+        }elseif (session('perfilTipo') == 'D'){
+
+        }
+
+         return view('marca.marcasMundiales')->with(compact('marcas', 'paises'));
+    }
+
     public function edit($id)
     {
 

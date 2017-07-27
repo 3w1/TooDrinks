@@ -109,25 +109,13 @@ class ImportadorController extends Controller
        return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada exitosamente.');
     }
 
-    /*public function destroy($id)
+    public function destroy($id)
     {
 
-    }*/
-    
-    public function listado_marcas(){
-        $accion = 'Asociar';
-
-        $marcas = DB::table('marca')
-                    ->select('marca.*')
-                    ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
-                    ->where('importador_marca.importador_id', '!=', session('perfilId'))
-                    ->orwhere('importador_marca.marca_id', '=', null)
-                    ->paginate(6);
-
-        return view('importador.listados.marcasDisponibles')->with(compact('marcas', 'accion'));
     }
-
-    public function asociar_marca($id){
+    
+    public function asociar_marca(Request $request, $id){
+        $id = $request->marca_id2;
         $fecha = new \DateTime();
 
         $marca = Marca::find($id);

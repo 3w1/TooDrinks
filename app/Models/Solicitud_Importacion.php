@@ -9,9 +9,12 @@ class Solicitud_Importacion extends Model
     protected $table = "solicitud_importacion";
 
     protected $fillable = [
-    	'importador_id', 'producto_id', 'pais_id', 'status', 'fecha', 'cantidad_visitas', 'cantidad_contactos',
+    	'importador_id', 'marca_id', 'producto_id', 'pais_id', 'status', 'fecha', 'cantidad_visitas', 'cantidad_contactos',
     ]; 
 
+    public function marca(){
+        return $this->belongsTo('App\Models\Marca');
+    }
 
     public function producto(){
     	return $this->belongsTo('App\Models\Producto');

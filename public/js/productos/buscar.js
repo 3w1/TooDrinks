@@ -11,6 +11,7 @@ function buscarProducto() {
         type:'GET',
         success:function(ans){
             var cant = ans.length;
+            var disponibles = 0;
 
             if (cant > 0){
                 document.getElementById("productos").innerHTML = "<center><h3>Resultados de la Búsqueda</h3></center>";
@@ -18,11 +19,18 @@ function buscarProducto() {
                     if (ans[i].id != '0'){
                         if (ans[i].check == '1'){
                             document.getElementById("productos").innerHTML += "<div class='col-md-4 col-md-6 well'><a href='#' onclick='cargarProducto(this.id);' id='"+ans[i].id+"' class='thumbnail'><img src='http://localhost:8000/imagenes/productos/thumbnails/"+ans[i].imagen+"' class='img-responsive'></a> <div class='caption'><h3><center>"+ans[i].nombre+"</center></h3></div> </div>";
-                            cant = i;
+                            disponibles++;
                         }
                     }
                 }
             }else{
+                document.getElementById("productos").innerHTML = "";
+                document.getElementById("alerta").style.display = 'block';
+                document.getElementById("mensaje").innerHTML = "<strong>Ups!!</strong> No se han encontrado productos disponibles para su importación en la búsqueda. Intente con otro producto o busque un tipo de bebida específico.";
+            }
+
+            if (disponibles == 0){
+                document.getElementById("productos").innerHTML = "";
                 document.getElementById("alerta").style.display = 'block';
                 document.getElementById("mensaje").innerHTML = "<strong>Ups!!</strong> No se han encontrado productos disponibles para su importación en la búsqueda. Intente con otro producto o busque un tipo de bebida específico.";
             }
@@ -124,6 +132,8 @@ function cargarProducto($id){
         type:'GET',
         success:function(ans){
             document.getElementById("alerta").style.display = 'none';
+
+            document.getElementById("marca_id").value = ans.marca_id;
 
             document.getElementById("infoProducto").innerHTML = "<div class='panel-heading'><h4><b>Producto: "+ans.nombre+"</b></h4></div><ul class='list-group'>";
             document.getElementById("infoProducto").innerHTML += "<li class='list-group-item'><b>Nombre SEO: </b>"+ans.nombre_seo+"</li>";

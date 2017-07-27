@@ -45,7 +45,7 @@
                            <td><center>{{ $demanda->producto->nombre}}</center></td>
                            <td><center>{{ $demanda->distribuidor->nombre}} </center></td>
                            <td><center>
-                              <a href="{{ route('solicitar-distribucion.show', $demanda->id) }}" class="btn btn-primary btn-xs"> Detalles <i class="fa fa-eye"></i></a></td>
+                              <a href="{{ route('solicitud-distribucion.show', $demanda->id) }}" class="btn btn-primary btn-xs"> Detalles <i class="fa fa-eye"></i></a></td>
                            </center></td>
                         </tr>
                      @endforeach

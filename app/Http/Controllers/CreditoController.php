@@ -442,7 +442,7 @@ class CreditoController extends Controller
         return redirect('demanda-producto/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
     }
 
-    public function gastar_creditos_DIP($cant, $id){
+    public function gastar_creditos_SI($cant, $id){
         $fecha = new \DateTime();
         $saldo = session('perfilSaldo') - $cant;
         session(['perfilSaldo' => $saldo]);    
@@ -474,10 +474,10 @@ class CreditoController extends Controller
                 ->where('id', '=', $id)
                 ->update(['cantidad_contactos' => $contactos]);
 
-        return redirect('solicitar-importacion/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
+        return redirect('solicitud-importacion/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
     }
 
-    public function gastar_creditos_DDP($cant, $id){
+    public function gastar_creditos_SD($cant, $id){
         $fecha = new \DateTime();
         $saldo = session('perfilSaldo') - $cant;
         session(['perfilSaldo' => $saldo]);    
@@ -522,7 +522,7 @@ class CreditoController extends Controller
                 ->where('id', '=', $id)
                 ->update(['cantidad_contactos' => $contactos]);
 
-        return redirect('solicitar-distribucion/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
+        return redirect('solicitud-distribucion/'.$id)->with('msj', 'Se han descontado '.$cant.' créditos de su saldo.');
     }
 }
 

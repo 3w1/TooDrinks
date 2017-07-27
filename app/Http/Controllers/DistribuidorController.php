@@ -114,18 +114,8 @@ class DistribuidorController extends Controller
          
     }
 
-     public function listado_marcas(){
-        $marcas = DB::table('marca')
-                    ->select('marca.*')
-                    ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
-                    ->where('distribuidor_marca.distribuidor_id', '!=', session('perfilId'))
-                    ->orwhere('distribuidor_marca.marca_id', '=', null)
-                    ->paginate(6);
-
-        return view('distribuidor.listados.marcasDisponibles')->with(compact('marcas'));
-    }
-
-    public function asociar_marca($id){
+    public function asociar_marca(Request $request, $id){
+        $id = $request->marca_id2;
         $marca = Marca::find($id);
 
         $marca->distribuidores()->attach(session('perfilId'), ['status' => '0']);

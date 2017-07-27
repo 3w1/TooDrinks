@@ -71,10 +71,10 @@
                         @if (session('perfilSaldo') < '30')
                            <a class="btn btn-danger" disabled>¡Me Interesa!</a>
                         @else
-                           <a href="{{ route('credito.gastar-creditos-ddp', ['30', $demandaDistribucion->id]) }}" class="btn btn-warning">¡Me Interesa! <b>(30 <i class="fa fa-certificate"></i>)</b></a>
+                           <a href="{{ route('credito.gastar-creditos-sd', ['30', $demandaDistribucion->id]) }}" class="btn btn-warning">¡Me Interesa! <b>(30 <i class="fa fa-certificate"></i>)</b></a>
                         @endif
                      @else
-                        <a href="{{ route('solicitar-distribucion.marcar', $demandaDistribucion->id) }}" class="btn btn-warning">¡Me Interesa! <i class="fa fa-thumbs-o-up"></i></a>
+                        <a href="{{ route('solicitud-distribucion.marcar', $demandaDistribucion->id) }}" class="btn btn-warning">¡Me Interesa! <i class="fa fa-thumbs-o-up"></i></a>
                      @endif
                   </center></li>
                @else

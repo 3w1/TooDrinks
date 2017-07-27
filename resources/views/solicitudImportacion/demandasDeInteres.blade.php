@@ -45,7 +45,7 @@
                            <td><center>{{ $demanda->producto->nombre}}</center></td>
                            <td><center>{{ $demanda->importador->nombre}} </center></td>
                            <td><center>
-                              <a href="{{ route('solicitar-importacion.show', $demanda->id) }}" class="btn btn-primary btn-xs"> Detalles <i class="fa fa-eye"></i></a></td>
+                              <a href="{{ route('solicitud-importacion.show', $demanda->id) }}" class="btn btn-primary btn-xs"> Detalles <i class="fa fa-eye"></i></a></td>
                            </center></td>
                         </tr>
                      @endforeach

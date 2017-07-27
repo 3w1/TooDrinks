@@ -1,23 +1,19 @@
 @extends('plantillas.main')
-@section('title', 'Solicitar Importación de una Marca')
+@section('title', 'Listado de Marcas')
 
-	{!!Html::script('js/productos/buscar.js') !!}
+{!!Html::script('js/marcas/buscar.js') !!}
 
-@section('items')
+@section('title-header')
+	<span><strong><h3>Marcas Mundiales</h3></strong></span>
 @endsection
 
 @section('content-left')
 	<div class="alert alert-danger alert-dismissable" style="display: none;" id="alerta">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
         <div id="mensaje"></div>
     </div>
 	
-	@include('solicitudImportacion.modales.confirmarImportacion')
-	
-	@section('title-header')
-		<h3><b>Solicitar Importación</b></h3>
-	@endsection
-	
+	@include('marca.modales.detallesMarca')
+
 	<div class="box box-success">
    		<div class="box-header with-border">
       		<h3 class="box-title">Búsqueda por Nombre</h3>
@@ -27,13 +23,12 @@
    		</div>
 	   	<div class="box-body">
       		<div class="form-group">
-				{!! Form::label('label', 'Introduzca el nombre del producto que desea importar')!!}
-				{!! Form::text('busqueda', null, ['class' => 'form-control', 'placeholder' => 'Producto', 'id' => 'busqueda']) !!}
-
+				{!! Form::label('label', 'Introduzca el nombre de la marca que desea buscar')!!}
+				{!! Form::text('busqueda', null, ['class' => 'form-control', 'placeholder' => 'Marca', 'id' => 'busqueda']) !!}
 			</div>
 			
 			<div class="form-group">
-				<center><button class="btn btn-primary" onclick="buscarProducto();">Buscar</button></center>
+				<center><button class="btn btn-primary" onclick="buscarMarca();">Buscar</button></center>
 			</div>
    		</div>
    	</div>
@@ -49,21 +44,15 @@
 	   		<div class="col-md-6">
 		   		<div class="box box-warning">
 		   			<div class="box-header with-border">
-			      		<h3 class="box-title">Búsqueda por Bebida</h3>
+			      		<h3 class="box-title">Búsqueda por Productor</h3>
 			   		</div>
 
 			   		<div class="box-body">
 			   			<div class="form-group">
-			   				{!! Form::select('bebida', $bebidas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un tipo de bebida..', 'onchange' => 'cargarCategorias();', 'id' => 'bebida']) !!}
+			   				{!! Form::text('productor', null, ['class' => 'form-control', 'placeholder' => 'Escriba el nombre del productos..', 'id' => 'productor']) !!}
 			   			</div>
 			   			<div class="form-group">
-			   				<select class="form-control" id="clase">
-			   					<option value="">Seleccione una clase de bebida..</option>
-			   					<option value="0">Todas</option>
-			   				</select>
-			   			</div>
-			   			<div class="form-group">
-							<center><button class="btn btn-primary" onclick="buscarPorClase();">Buscar</button></center>
+							<center><button class="btn btn-primary" onclick="buscarPorProductor();">Buscar</button></center>
 						</div>
 			   		</div>
 		   		</div>
@@ -77,9 +66,6 @@
 
 			   		<div class="box-body">
 			   			<div class="form-group">
-			   				{!! Form::select('tipo_bebida', $bebidas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un tipo de bebida..', 'id' => 'tipo_bebida']) !!}
-			   			</div>
-			   			<div class="form-group">
 			   				{!! Form::select('pais', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'id' => 'pais']) !!}
 			   			</div>
 			   			<div class="form-group">
@@ -91,5 +77,6 @@
 		</div>
    	</div>
 
-	<div class="row" id="productos"></div>
+	<div id="marcas"></div>
+
 @endsection

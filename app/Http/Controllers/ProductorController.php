@@ -153,22 +153,6 @@ class ProductorController extends Controller
 
     }
 
-    public function listado_marcas(){
-        $marcas = Marca::orderBy('nombre', 'ASC')
-                        ->where('productor_id', '=', '0')
-                        ->paginate(6);
-
-        return view('productor.listados.marcasDisponibles')->with(compact('marcas'));
-    }
-
-    public function reclamar_marca($id){
-        $actualizacion = DB::table('marca')
-                            ->where('id', '=', $id)
-                            ->update(['productor_id' => session('perfilId'), 'reclamada' => '1' ]);
-
-        return redirect('marca')->with('msj', 'Se ha agregado exitosamente una marca a su propiedad');
-    }
-
     public function listado_importadores(){
         if ( session('perfilSuscripcion') != 'G'){
             $check = 1;
@@ -435,33 +419,5 @@ class ProductorController extends Controller
 
             return redirect('productor/confirmar-productos')->with('msj', 'Producto eliminado exitosamente');
         }
-    }
-
-    public function listado_paises(){
-        $paises = DB::table('pais')
-                    ->select('id', 'pais')
-                    ->orderBy('pais', 'ASC')
-                    ->where('id', '!=', session('perfilPais'))
-                    ->get();
-
-        return view('productor.seleccionarPaises')->with(compact('paises'));
-    }
-
-    public function guardar_paises(Request $request){
-        $paises = DB::table('productor_pais')
-                    ->where('productor_id', '=', session('perfilPais'))
-                    ->first();
-
-        if ($paises == null){
-            Productor::find(session('perfilId'))
-                    ->paises_importaciones()->attach(session('perfilPais'));
-        }
-
-        foreach ($request->paises as $pais){
-            Productor::find(session('perfilId'))
-                    ->paises_importaciones()->attach($pais);
-        }
-
-        return redirect('usuario/inicio')->with('msj', 'Los datos de los países han sido guardados exitosamente');
     }
 }

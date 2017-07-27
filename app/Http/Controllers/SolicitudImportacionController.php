@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Solicitud_Importacion;
+use App\Models\Notificacion_P;
 use DB;
+
 class SolicitudImportacionController extends Controller
 {
     public function index()
@@ -43,19 +45,31 @@ class SolicitudImportacionController extends Controller
                             ->orderBy('created_at', 'DESC')
                             ->first();
 
-        $productor = DB::table('producto')
+        $notificaciones_productor = new Notificacion_P();
+        $notificaciones_productor->creador_id = session('perfilId');
+        $notificaciones_productor->tipo_creador = session('perfilTipo');
+
+        if ($request->producto_id == '0'){
+            $productor = DB::table('marca')
+                    ->select('marca.nombre', 'productor.id')
+                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                    ->where('marca.id', '=', $request->marca_id)
+                    ->first();
+
+            $notificaciones_productor->titulo = 'Estan solicitando la importación de tu marca '. $productor->nombre;
+        }else{
+            $productor = DB::table('producto')
                         ->select('productor.id', 'producto.nombre')
                         ->join('marca', 'producto.marca_id', '=', 'marca.id')
                         ->join('productor', 'marca.productor_id', '=', 'productor.id')
                         ->where('producto.id', '=', $request->producto_id )
                         ->first();
 
+            $notificaciones_productor->titulo = 'Estan solicitando la importación de tu producto '. $productor->nombre;
+        }
+
         //NOTIFICAR AL PRODUCTOR
-        $notificaciones_productor = new Notificacion_P();
-        $notificaciones_productor->creador_id = session('perfilId');
-        $notificaciones_productor->tipo_creador = session('perfilTipo');
-        $notificaciones_productor->titulo = 'Estan solicitando la importación de tu producto '. $productor->nombre;
-        $notificaciones_productor->url='solicitar-importacion/'.$ult_solicitud->id;
+        $notificaciones_productor->url='solicitud-importacion/'.$ult_solicitud->id;
         $notificaciones_productor->descripcion = 'Nueva Solicitud de Importación';
         $notificaciones_productor->color = 'bg-orange';
         $notificaciones_productor->icono = 'fa fa-user-plus';
@@ -65,6 +79,8 @@ class SolicitudImportacionController extends Controller
         $notificaciones_productor->leida = '0';
         $notificaciones_productor->save();
         // *** //
+        
+        return redirect('solicitud-importacion')->with('msj', 'Su solicitud ha sido guardada exitosamente');
     }
 
     public function show($id)
@@ -109,7 +125,7 @@ class SolicitudImportacionController extends Controller
         ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
         // ... //
 
-        return redirect('solicitar-importacion/'.$id)->with('msj', 'Se ha agregado la Demanda de Importación a su sección de "Demandas De Interés"');
+        return redirect('solicitud-importacion/'.$id)->with('msj', 'Se ha agregado la Demanda de Importación a su sección de "Demandas De Interés"');
     }
 
     public function demandas_interes(){
@@ -124,18 +140,12 @@ class SolicitudImportacionController extends Controller
 
     public function edit($id)
     {
-        $solicitudImportacion = Solicitud_Importacion::find($id);
-
-        return view('solicitudImportacion.edit')->with(compact('solicitudImportacion'));
+      
     }
 
     public function update(Request $request, $id)
     {
-        $solicitudImportacion = Solicitud_Importacion::find($id);
-        $solicitudImportacion->fill($request->all());
-        $solicitudImportacion->save();
-
-        return redirect('solicitar-importacion')->with('msj', 'El status de su solicitud se ha actualizado exitosamente');
+        
     }
 
      //Cambia el status de una demanda
@@ -143,7 +153,7 @@ class SolicitudImportacionController extends Controller
         Solicitud_Importacion::find($request->id)
             ->update(['status' => $request->status]);
 
-        return redirect("solicitar-importacion")->with('msj', 'El status de su demanda ha sido actualizado exitosamente');
+        return redirect("solicitud-importacion")->with('msj', 'El status de su demanda ha sido actualizado exitosamente');
     }
 
     public function destroy($id)
@@ -151,7 +161,7 @@ class SolicitudImportacionController extends Controller
         //
     }
 
-    public function demandas_importacion(){
+    public function solicitudes_importacion(){
         $notificaciones_pendientes_SI = DB::table('notificacion_p')
                                         ->where('leida', '=', '0')
                                         ->where('tipo', '=', 'SI')
@@ -163,13 +173,11 @@ class SolicitudImportacionController extends Controller
                     ->update(['leida' => '1']);
         }
 
-        $demandasImportacion = DB::table('solicitud_importacion')
-                                ->select('solicitud_importacion.*', 'producto.nombre')
-                                ->join('producto', 'solicitud_importacion.producto_id', '=', 'producto.id')
-                                ->join('marca', 'producto.marca_id', '=', 'marca.id')
+        $demandasImportacion = Solicitud_Importacion::join('marca', 'solicitud_importacion.marca_id', '=', 'marca.id')
                                 ->join('productor', 'marca.productor_id', '=', 'productor.id')
                                 ->where('productor.id', '=', session('perfilId'))
                                 ->where('solicitud_importacion.status', '=', '1')
+                                ->orderBy('solicitud_importacion.created_at', 'DESC')
                                 ->paginate(8);
 
         return view('solicitudImportacion.solicitudesDisponibles')->with(compact('demandasImportacion'));

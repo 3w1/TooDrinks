@@ -151,23 +151,6 @@
 
 <ul class="sidebar-menu">
    @if (Auth::user()->activado == 1)
-      <!--<li class="header">Opciones de Usuario</li>-->
-      <!--<li class="treeview">
-             <a href="#">
-               <i class="fa fa-share"></i> <span>Productos</span>
-               <span class="pull-right-container">
-                 <i class="fa fa-angle-left pull-right"></i>
-               </span>
-             </a>
-             <ul class="treeview-menu">
-               <li><a href="{{ route('producto.index') }}"><i class="fa fa-circle-o"></i> Status de mis Productos</a></li>
-               <li><a href="{{ route('producto.create') }}"><i class="fa fa-circle-o"></i> Nuevo Producto</a></li>
-            </ul>
-         </li>-->
-      <!--<li><a href=""><i class="fa fa-circle-o"></i> Opiniones</a></li>
-      <li><a href=""><i class="fa fa-circle-o"></i> Banners Publicitarios</a></li>
-      <li><a href="{{ route('credito.index') }}"><i class="fa fa-circle-o"></i> Planes de Crédito</a></li>-->
-
       @if(session('perfilTipo') == 'P')
          <li class="header">Panel de Productor</li>
          <li><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
@@ -181,7 +164,6 @@
              </a>
              <ul class="treeview-menu">
                <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
-               <li><a href="{{ route('productor.marcas-disponibles') }}"><i class="fa fa-circle-o"></i> Marcas Disponibles</a></li>
                <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Nueva Marca</a></li>
             </ul>
          </li>
@@ -277,12 +259,12 @@
                      @if($cont_DB > 0) <small class="label pull-right bg-yellow">{{$cont_DB}}</small>@endif
                   </span>
                </a></li>
-               <li><a href="{{ route('demandas-importacion')}}"><i class="fa fa-circle-o"></i> Importación
+               <li><a href="{{ route('solicitud-importacion.solicitudes')}}"><i class="fa fa-circle-o"></i> Importación
                   <span class="pull-right-container">
                      @if($cont_SI > 0) <small class="label pull-right bg-orange">{{$cont_SI}}</small>@endif
                   </span>
                </a></li>
-               <li><a href="{{ route('demandas-distribucion')}}"><i class="fa fa-circle-o"></i> Distribución
+               <li><a href="{{ route('solicitud-distribucion.solicitudes')}}"><i class="fa fa-circle-o"></i> Distribución
                   <span class="pull-right-container">
                      @if($cont_SD > 0) <small class="label pull-right bg-green">{{$cont_SD}}</small>@endif
                   </span>
@@ -306,8 +288,8 @@
              </a>
             <ul class="treeview-menu">
                <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
-               <li><a href="{{ route('importador.marcas-disponibles') }}"><i class="fa fa-circle-o"></i> Marcas Disponibles</a></li>
                <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Nueva Marca</a></li>
+               <li><a href="{{ route('marca.mundiales') }}"><i class="fa fa-circle-o"></i> Marcas Mundiales</a></li>
             </ul>
          </li>
          <li class="treeview">
@@ -363,8 +345,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-		            <li><a href="{{ route('solicitar-importacion.create') }}"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
-                    <li><a href="{{ route('solicitar-importacion.index') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
+		            <li><a href="{{ route('solicitud-importacion.create') }}"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
+                    <li><a href="{{ route('solicitud-importacion.index') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
                   </ul>
                </li>
             </ul>
@@ -392,7 +374,7 @@
                      @if($cont_DB > 0) <small class="label pull-right bg-yellow">{{$cont_DB}}</small>@endif
                   </span>
                </a></li>
-               <li><a href="{{ route('demandas-distribucion')}}"><i class="fa fa-circle-o"></i> Distribución
+               <li><a href="{{ route('solicitud-distribucion.solicitudes')}}"><i class="fa fa-circle-o"></i> Distribución
                   <span class="pull-right-container">
                      @if($cont_AD > 0) <small class="label pull-right bg-red">{{$cont_AD}}</small>@endif
                   </span>
@@ -416,8 +398,8 @@
              </a>
             <ul class="treeview-menu">
                <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
-               <li><a href="{{ route('distribuidor.marcas-disponibles') }}"><i class="fa fa-circle-o"></i> Marcas Disponibles</a></li>
                <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Nueva Marca</a></li>
+               <li><a href="{{ route('marca.mundiales') }}"><i class="fa fa-circle-o"></i> Marcas Mundiales</a></li>
             </ul>
          </li>
          <li class="treeview">
@@ -462,8 +444,8 @@
                      </span>
                   </a>
                   <ul class="treeview-menu">
-                     <li><a href="{{ route('solicitar-distribucion.create') }}"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
-                     <li><a href="{{ route('solicitar-distribucion.index') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
+                     <li><a href="{{ route('solicitud-distribucion.create') }}"><i class="fa fa-circle-o"></i> Nueva Solicitud</a></li>
+                     <li><a href="{{ route('solicitud-distribucion.index') }}"><i class="fa fa-circle-o"></i> Mis Solicitudes</a></li>
                   </ul>
                </li>
             </ul>
