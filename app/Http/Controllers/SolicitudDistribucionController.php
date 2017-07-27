@@ -22,7 +22,15 @@ class SolicitudDistribucionController extends Controller
 
     public function create()
     {
-        return view('solicitudDistribucion.create');
+        $bebidas = DB::table('bebida')
+                    ->orderBy('nombre', 'ASC')
+                    ->pluck('nombre', 'id'); 
+
+        $paises = DB::table('pais')
+                    ->orderBy('pais', 'ASC')
+                    ->pluck('pais', 'id');
+
+        return view('solicitudDistribucion.create')->with(compact('bebidas', 'paises'));
     }
 
     public function store(Request $request)

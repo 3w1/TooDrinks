@@ -180,10 +180,36 @@ class ProductoController extends Controller
         }elseif ($tipo[1] == '2'){
             //Método para buscar un producto específico
             $productos = DB::table('producto')
-                    ->select('id', 'nombre', 'nombre_seo', 'imagen')
-                    ->orderBy('nombre')
-                    ->where('nombre', 'ILIKE', '%'.$tipo[0].'%')
+                    ->select('producto.id', 'producto.nombre', 'producto.nombre_seo', 'producto.imagen', 'productor.id as productor')
+                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                    ->orderBy('producto.nombre')
+                    ->where('producto.nombre', 'ILIKE', '%'.$tipo[0].'%')
                     ->get();
+
+            foreach ($productos as $producto){
+                //Consulto los paises marcados como destino por el productor
+                $paises_productor = DB::table('productor_pais')
+                                ->select('pais_id')
+                                ->where('productor_id', '=', $producto->productor)
+                                ->get();
+                $check = 0;
+                $cont = 0;
+                //Verifico si el país es destino laboral del productor
+                foreach ($paises_productor as $pais){
+                    $cont++;
+                    if ($pais->pais_id == session('perfilPais')){
+                        $check = 1;
+                    }
+                }
+
+                //Si todavía el productor no ha marcado ningún país
+                if ($cont == 0){
+                    $check = 1;
+                }
+
+                $producto->check = $check;
+            }
         }
        
         return response()->json(
@@ -191,43 +217,100 @@ class ProductoController extends Controller
         );
     }
 
-    //Método para verificar la información de un producto
-    //para que pueda ser solicitado para importación
-    //Si el productor ha marcado como destino el país desde el cual se solicita
-    public function verificar_producto($id){
-        //Consulto el productor propietario del producto solicitado
-        $productor = DB::table('producto')
-                        ->select('productor.id')
-                        ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                        ->join('productor', 'marca.productor_id', '=', 'productor.id')
-                        ->where('producto.id', '=', $id)
-                        ->first();
+    //Buscar productos por tipo de bebida y clase (opcional)
+    public function productos_por_clase($bebida, $clase){
+        if ($clase == '0'){
+            $productos = DB::table('producto')
+                    ->select('producto.id', 'producto.nombre', 'producto.nombre_seo', 'producto.imagen', 'productor.id as productor')
+                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                    ->orderBy('producto.nombre')
+                    ->where('producto.bebida_id', '=', $bebida)
+                    ->get();
+        }else{
+            $productos = DB::table('producto')
+                    ->select('producto.id', 'producto.nombre', 'producto.nombre_seo', 'producto.imagen', 'productor.id as productor')
+                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                    ->orderBy('producto.nombre')
+                    ->where('producto.clase_bebida_id', '=', $clase)
+                    ->get();
+        }
 
-        //Consulto los paises marcados como destino por el productor
-        $paises_productor = DB::table('productor_pais')
+        foreach ($productos as $producto){
+            //Consulto los paises marcados como destino por el productor
+            $paises_productor = DB::table('productor_pais')
                                 ->select('pais_id')
-                                ->where('productor_id', '=', $productor->id)
+                                ->where('productor_id', '=', $producto->productor)
                                 ->get();
+            $check = 0;
+            $cont = 0;
+            //Verifico si el país es destino laboral del productor
+            foreach ($paises_productor as $pais){
+                $cont++;
+                if ($pais->pais_id == session('perfilPais')){
+                    $check = 1;
+                }
+            }
 
-        $check = 0;
-        $cont = 0;
-        foreach ($paises_productor as $pais){
-            $cont++;
-            if ($pais->pais_id == session('perfilPais')){
+            //Si todavía el productor no ha marcado ningún país
+            if ($cont == 0){
                 $check = 1;
             }
+
+            $producto->check = $check;
         }
 
-        //Si el productor aun no ha marcado los paises a los que quiere exportar
-        //Permito la solicitud
-        if ($cont == '0'){
-            $check = 1;
+        return response()->json(
+            $productos->toArray()
+        );
+    }
+
+    //Buscar productos por tipo de bebida y país
+    public function productos_por_pais($bebida, $pais){
+        $productos = DB::table('producto')
+                    ->select('producto.id', 'producto.nombre', 'producto.nombre_seo', 'producto.imagen', 'productor.id as productor')
+                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                    ->orderBy('producto.nombre')
+                    ->where('producto.bebida_id', '=', $bebida)
+                    ->where('producto.pais_id', '=', $pais)
+                    ->get();
+
+        foreach ($productos as $producto){
+            //Consulto los paises marcados como destino por el productor
+            $paises_productor = DB::table('productor_pais')
+                                ->select('pais_id')
+                                ->where('productor_id', '=', $producto->productor)
+                                ->get();
+            $check = 0;
+            $cont = 0;
+            //Verifico si el país es destino laboral del productor
+            foreach ($paises_productor as $pais){
+                $cont++;
+                if ($pais->pais_id == session('perfilPais')){
+                    $check = 1;
+                }
+            }
+
+            //Si todavía el productor no ha marcado ningún país
+            if ($cont == 0){
+                $check = 1;
+            }
+
+            $producto->check = $check;
         }
 
+        return response()->json(
+            $productos->toArray()
+        );
+    }
+
+    //Método para cargar los detalles de un producto
+    //Para solicitarlo en importación o distribución
+    public function verificar_producto($id){
         $producto = Producto::where('id', '=', $id)->with('bebida', 'clase_bebida', 'marca')
                     ->first()->toArray();
-
-        $producto['check'] = $check;
 
         return response()->json(
             $producto

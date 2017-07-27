@@ -109,17 +109,26 @@ Route::resource('marca','MarcaController');
 // ./RUTAS PARA LAS MARCAS ./
 
 // RUTAS PARA LAS BEBIDAS
+Route::prefix('bebida')->group(function () {
+    Route::get('clases/{id}', 'BebidaController@clases')->name('bebida.clases');
+});
 Route::resource('bebida','BebidaController');
 // ./RUTAS PARA LAS BEBIDAS ./
 
 // RUTAS PARA LOS PRODUCTOS
-Route::get('producto/agregar/{id}-{marca}', 'ProductoController@agregar')->name('producto.agregar');
-Route::get('producto/listado-de-productos/{id}-{marca}', 'ProductoController@listado')->name('producto.listado');
-Route::get('producto/detalle-de-producto/{id}', 'ProductoController@detalle')->name('producto.detalle');
+Route::prefix('producto')->group(function (){
+    Route::get('agregar/{id}-{marca}', 'ProductoController@agregar')->name('producto.agregar');
+    Route::get('listado-de-productos/{id}-{marca}', 'ProductoController@listado')->name('producto.listado');
+    Route::get('detalle-de-producto/{id}', 'ProductoController@detalle')->name('producto.detalle');
 
-Route::get('producto/seleccionar-productos/{id}', 'ProductoController@seleccionar_productos')->name('producto.seleccionar');
-Route::post('producto/asociar-productos', 'ProductoController@asociar_productos')->name('producto.asociar-productos');
-Route::get('producto/verificar-producto/{id}', 'ProductoController@verificar_producto');
+    Route::get('seleccionar-productos/{id}', 'ProductoController@seleccionar_productos')->name('producto.seleccionar');
+    Route::post('asociar-productos', 'ProductoController@asociar_productos')->name('producto.asociar-productos');
+    Route::get('verificar-producto/{id}', 'ProductoController@verificar_producto');
+
+    Route::get('productos-por-clase/{bebida}/{clase}', 'ProductoController@productos_por_clase');
+    Route::get('productos-por-pais/{bebida}/{pais}', 'ProductoController@productos_por_pais');
+
+});
 
 Route::post('producto/updateImagen', 'ProductoController@updateImagen')->name('producto.updateImagen');
 Route::resource('producto','ProductoController');

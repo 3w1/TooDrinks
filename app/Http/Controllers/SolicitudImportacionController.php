@@ -20,7 +20,15 @@ class SolicitudImportacionController extends Controller
 
     public function create()
     {
-        return view('solicitudImportacion.create');
+    	$bebidas = DB::table('bebida')
+    				->orderBy('nombre', 'ASC')
+    				->pluck('nombre', 'id'); 
+
+    	$paises = DB::table('pais')
+    				->orderBy('pais', 'ASC')
+    				->pluck('pais', 'id'); 
+
+        return view('solicitudImportacion.create')->with(compact('bebidas', 'paises'));
     }
 
     public function store(Request $request)

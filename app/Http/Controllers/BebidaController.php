@@ -15,39 +15,19 @@ class BebidaController extends Controller
     
     public function index()
     {
-       $bebidas=Bebida::paginate(1);
-        return view ('bebida.index')->with (compact('bebidas'));
+      
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
          return view ('bebida.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        $bebida=new Bebida($request->all());
-        $bebida->save();
-        return redirect()->action('BebidaController@index');
+    
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $clases = DB::table('clase_bebida')
@@ -61,12 +41,18 @@ class BebidaController extends Controller
         );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function clases($id){
+        $clases = DB::table('clase_bebida')
+                    ->orderBy('clase', 'ASC')
+                    ->select('id', 'clase')
+                    ->where('bebida_id', '=', $id)
+                    ->get();
+
+        return response()->json(
+            $clases->toArray()
+        );
+    }
+    
     public function edit($id)
     {
         $bebida = Bebida::find($id);
