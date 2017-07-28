@@ -33,10 +33,14 @@ class MarcaController extends Controller
             $marcas = Importador::find(session('perfilId'))
                                     ->marcas()
                                     ->paginate(6);
-        }else{
+        }elseif (session('perfilTipo') == 'D'){
             $marcas = Distribuidor::find(session('perfilId'))
                                     ->marcas()
                                     ->paginate(6);
+        }elseif (session('perfilTipo') == 'M'){
+            $marcas = Marca::orderBy('nombre', 'ASC')
+                        ->where('productor_id', '=', session('perfilPadre'))
+                        ->paginate(6);
         }
 
         return view('marca.index')->with(compact('marcas'));

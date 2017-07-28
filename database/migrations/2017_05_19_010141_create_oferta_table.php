@@ -11,7 +11,7 @@ class CreateOfertaTable extends Migration
         Schema::create('oferta', function (Blueprint $table){
         	$table->increments('id');
         	$table->integer('producto_id');
-          $table->enum('tipo_creador', ['P','I','D']);
+          $table->enum('tipo_creador', ['P','I','D','M']);
         	$table->integer('creador_id');
         	$table->string('titulo');
         	$table->text('descripcion');

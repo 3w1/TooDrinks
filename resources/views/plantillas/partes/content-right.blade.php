@@ -66,6 +66,15 @@
       foreach ($demandasImportador2 as $di2){
          $contDI++;
       }
+   }elseif (session('perfilTipo') == 'M'){
+      $demandasProducto = DB::table('multinacional_demanda_producto')
+                           ->select('id')
+                           ->where('multinacional_id', '=', session('perfilId'))
+                           ->get();
+      $contDP = 0;
+      foreach ($demandasProducto as $dp){
+         $contDP++;
+      }
    }elseif (session('perfilTipo') == 'D'){
       $demandasProducto1 = DB::table('deduccion_credito_distribuidor')
                            ->select('id')
@@ -118,18 +127,20 @@
    <!-- /.box-header -->
    <div class="box-body">
       <ul class="products-list product-list-in-box">
-         <li class="item">
-            <div class="product-img">
-               <img src="{{ asset('imagenes/dp.jpg') }}" alt="Product Image">
-            </div>
-            <div class="product-info">
-               <br>
-               <a href="{{ route('demanda-producto.demandas-interes') }}" class="product-title">Demandas de Productos / Bebidas
-                  <span class="label label-success pull-right">{{$contDP}}</span>
-               </a>
-               <br>
-            </div>
-         </li>   
+         @if (session('perfilTipo') != 'H')
+            <li class="item">
+               <div class="product-img">
+                  <img src="{{ asset('imagenes/dp.jpg') }}" alt="Product Image">
+               </div>
+               <div class="product-info">
+                  <br>
+                  <a href="{{ route('demanda-producto.demandas-interes') }}" class="product-title">Demandas de Productos / Bebidas
+                     <span class="label label-success pull-right">{{$contDP}}</span>
+                  </a>
+                  <br>
+               </div>
+            </li> 
+         @endif  
          
          @if (session('perfilTipo') ==  'P')
             <li class="item">

@@ -20,7 +20,7 @@
          }
 
       ?>
-  @elseif (session('perfilTipo') == 'AD')
+   @elseif (session('perfilTipo') == 'AD')
       <?php 
          $notificaciones_pendientes = DB::table('notificacion_admin')
                                     ->where('user_id', '=', Auth::user()->id)
@@ -61,7 +61,7 @@
          }
        ?>
    @elseif (session('perfilTipo') == 'I')
-       <?php 
+      <?php 
          $notificaciones_pendientes = DB::table('notificacion_i')
                                     ->where('importador_id', '=', session('perfilId'))
                                     ->where('leida', '=', '0')
@@ -78,7 +78,26 @@
          foreach($notificaciones_pendientes as $notificacion){
             $cont++;
          }
-       ?>
+      ?>
+   @elseif (session('perfilTipo') == 'M')
+      <?php 
+         $notificaciones_pendientes = DB::table('notificacion_m')
+                                    ->where('multinacional_id', '=', session('perfilId'))
+                                    ->where('leida', '=', '0')
+                                    ->select('id')
+                                    ->get();
+
+         $notificaciones = DB::table('notificacion_m')
+                              ->where('multinacional_id', '=', session('perfilId'))
+                              ->select('id', 'titulo', 'url', 'color', 'icono', 'leida')
+                              ->orderBy('created_at', 'DESC')
+                              ->take(10)
+                              ->get();
+         $cont = 0;
+         foreach($notificaciones_pendientes as $notificacion){
+            $cont++;
+         }
+      ?>
    @elseif (session('perfilTipo') == 'D')
        <?php 
          $notificaciones_pendientes = DB::table('notificacion_d')

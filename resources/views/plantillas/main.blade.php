@@ -1,29 +1,31 @@
 @if ( (Auth::user()->rol != 'AD') && (Auth::user()->rol != 'US') )
   @if (Auth::user()->productor == '1')
      <?php 
-        $productores = DB::table('productor')
+         $productores = DB::table('productor')
                           ->select('id', 'nombre')
                           ->where('user_id', '=', Auth::user()->id)
                           ->get();
 
-        foreach ($productores as $productor)
-           $id_entidad[] = $productor->id; 
-           $nombre_entidad[] = $productor->nombre;
-           $tipo_entidad[] = 'P';  
+         foreach ($productores as $productor){
+            $id_entidad[] = $productor->id; 
+            $nombre_entidad[] = $productor->nombre;
+            $tipo_entidad[] = 'P'; 
+         }      
      ?>
   @endif
   @if (Auth::user()->importador == '1')
      <?php 
-        $importadores = DB::table('importador')
+         $importadores = DB::table('importador')
                           ->select('id', 'nombre')
                           ->where('user_id', '=', Auth::user()->id)
                           ->get();
 
-        foreach ($importadores as $importador)
-           $id_entidad[] = $importador->id; 
-           $nombre_entidad[] = $importador->nombre;
-           $tipo_entidad[] = 'I';   
-        ?>
+         foreach ($importadores as $importador){
+            $id_entidad[] = $importador->id; 
+            $nombre_entidad[] = $importador->nombre;
+            $tipo_entidad[] = 'I';
+         }  
+      ?>
   @endif
   @if (Auth::user()->distribuidor == '1')
      <?php 
@@ -32,24 +34,41 @@
                              ->where('user_id', '=', Auth::user()->id)
                              ->get();
 
-        foreach ($distribuidores as $distribuidor)
-              $id_entidad[] = $distribuidor->id; 
-              $nombre_entidad[] = $distribuidor->nombre;
-              $tipo_entidad[] = 'D';  
+        foreach ($distribuidores as $distribuidor){
+            $id_entidad[] = $distribuidor->id; 
+            $nombre_entidad[] = $distribuidor->nombre;
+            $tipo_entidad[] = 'D';
+        }
+                
         ?>
+   @endif
+   @if (Auth::user()->multinacional == '1')
+     <?php 
+         $multinacionales = DB::table('multinacional')
+                             ->select('id', 'nombre')
+                             ->where('user_id', '=', Auth::user()->id)
+                             ->get();
+
+         foreach ($multinacionales as $multinacional){
+            $id_entidad[] = $multinacional->id; 
+            $nombre_entidad[] = $multinacional->nombre;
+            $tipo_entidad[] = 'M';  
+         }      
+      ?>
   @endif
   @if (Auth::user()->horeca == '1')
      <?php 
-        $horecas = DB::table('horeca')
+         $horecas = DB::table('horeca')
                        ->select('id', 'nombre')
                        ->where('user_id', '=', Auth::user()->id)
                        ->get();
 
-        foreach ($horecas as $horeca)
-           $id_entidad[] = $horeca->id; 
-           $nombre_entidad[] = $horeca->nombre;
-           $tipo_entidad[] = 'H';   
-        ?>
+         foreach ($horecas as $horeca){
+            $id_entidad[] = $horeca->id; 
+            $nombre_entidad[] = $horeca->nombre;
+            $tipo_entidad[] = 'H';
+         }  
+      ?>
   @endif
 @endif
 

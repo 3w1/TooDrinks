@@ -159,11 +159,16 @@ class OfertaController extends Controller
                     ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
                     ->where('importador_marca.importador_id', '=', session('perfilId'))
                     ->pluck('marca.nombre', 'marca.id');
-        }else{
+        }elseif (session('perfilTipo') == 'D'){
             $marcas = DB::table('marca')
                     ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
                     ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
                     ->pluck('marca.nombre', 'marca.id');
+        }elseif (session('perfilTipo') == 'M'){
+            $marcas = DB::table('marca')
+                        ->orderBy('nombre', 'ASC')
+                        ->where('productor_id', '=', session('perfilPadre'))
+                        ->pluck('nombre', 'id');
         }
 
         return view('oferta.create')->with(compact('id', 'producto', 'paises', 'marcas', 'tipo'));

@@ -6,14 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
-use App\Models\Productor;
-use App\Models\Importador;
-use App\Models\Distribuidor;
-use App\Models\Horeca;
-use DB;
-use Auth;
-use Input;
-use Image;
+use App\Models\Productor; use App\Models\Importador; use App\Models\Distribuidor;
+use App\Models\Horeca; use App\Models\Multinacional;
+use DB; use Auth; use Input; use Image;
 
 class UsuarioController extends Controller
 {
@@ -63,6 +58,19 @@ class UsuarioController extends Controller
             session(['perfilProvincia' => $importador->provincia_region_id]);
             session(['perfilTipo' => 'I']);
             session(['perfilSuscripcion' => $importador->suscripcion->suscripcion]);
+        }elseif ($entidad[0] == 'M'){
+            $multinacional = Multinacional::where('id', '=', $entidad[1])
+                                    ->first();
+
+            session(['perfilId' => $multinacional->id]);
+            session(['perfilNombre' => $multinacional->nombre]);
+            session(['perfilLogo' => $multinacional->logo]);
+            session(['perfilSaldo' => $multinacional->saldo]);
+            session(['perfilPais' => $multinacional->pais_id]);
+            session(['perfilProvincia' => $multinacional->provincia_region_id]);
+            session(['perfilTipo' => 'M']);
+            session(['perfilSuscripcion' => $multinacional->suscripcion->suscripcion]);
+            session(['perfilPadre' => $multinacional->productor_id]);
         }elseif ($entidad[0] == 'D'){
             $distribuidor = Distribuidor::where('id', '=', $entidad[1])
                                         ->first();
@@ -91,7 +99,7 @@ class UsuarioController extends Controller
             session(['perfilTipo' => 'H']);
         }
 
-        return redirect('usuario/inicio')->with('msj', 'Se ha cambiado de perfil exitosamente');
+        return redirect('notificacion')->with('msj', 'Se ha cambiado de perfil exitosamente');
     }
 
     public function inicio(){
@@ -124,6 +132,8 @@ class UsuarioController extends Controller
             session(['perfilTipo' => 'US']);
             session(['perfilPais' => $user->pais_id]);
             session(['perfilProvincia' => $user->provincia_region_id]);
+
+            return view('usuario.index');
         }else{
 
             if ($user->productor == '1'){
@@ -150,6 +160,19 @@ class UsuarioController extends Controller
                 session(['perfilPais' => $importador->pais_id]);
                 session(['perfilProvincia' => $importador->provincia_region_id]);
                 session(['perfilSuscripcion' => $importador->suscripcion->suscripcion]);
+            }elseif ($user->multinacional == '1'){
+                $multinacional = Multinacional::where('user_id', '=', Auth::user()->id)
+                                        ->first();
+
+                session(['perfilId' => $multinacional->id]);
+                session(['perfilNombre' => $multinacional->nombre]);
+                session(['perfilLogo' => $multinacional->logo]);
+                session(['perfilSaldo' => $multinacional->saldo]);
+                session(['perfilTipo' => 'M']);
+                session(['perfilPais' => $multinacional->pais_id]);
+                session(['perfilProvincia' => $multinacional->provincia_region_id]);
+                session(['perfilSuscripcion' => $multinacional->suscripcion->suscripcion]);
+                session(['perfilPadre' => $multinacional->productor_id]);
             }elseif ($user->distribuidor == '1'){
                 $distribuidor = Distribuidor::where('user_id', '=', Auth::user()->id)
                                         ->first();
@@ -179,7 +202,7 @@ class UsuarioController extends Controller
             }
         }
 
-        return view('usuario.index');
+        return redirect('notificacion');
     }
 
     public function create()

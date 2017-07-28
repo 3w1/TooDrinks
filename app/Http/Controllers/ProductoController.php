@@ -140,6 +140,151 @@ class ProductoController extends Controller
         return view('producto.listado')->with(compact('productos', 'marca'));
     }
 
+    public function mis_productos($filtro){
+        if ($filtro == 'todos'){
+            if (session('perfilTipo') == 'I'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
+                            ->where('importador_producto.importador_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->paginate(9);
+            }elseif (session('perfilTipo') == 'D'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
+                            ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->paginate(9);
+            }elseif (session('perfilTipo') == 'H'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('horeca_producto', 'producto.id', '=', 'horeca_producto.producto_id')
+                            ->where('horeca_producto.horeca_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->paginate(9);
+            }
+        }elseif ($filtro == 'confirmados') {
+            if (session('perfilTipo') == 'I'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
+                            ->where('importador_producto.importador_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->where('producto.confirmado', '=', 1)
+                            ->paginate(9);
+            }elseif (session('perfilTipo') == 'D'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
+                            ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->where('producto.confirmado', '=', 1)
+                            ->paginate(9);
+            }elseif (session('perfilTipo') == 'H'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('horeca_producto', 'producto.id', '=', 'horeca_producto.producto_id')
+                            ->where('horeca_producto.horeca_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->where('producto.confirmado', '=', 1)
+                            ->paginate(9);
+            }
+        }elseif ($filtro == 'no-confirmados'){
+            if (session('perfilTipo') == 'I'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
+                            ->where('importador_producto.importador_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->where('producto.confirmado', '=', 0)
+                            ->paginate(9);
+            }elseif (session('perfilTipo') == 'D'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
+                            ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->where('producto.confirmado', '=', 0)
+                            ->paginate(9);
+            }elseif (session('perfilTipo') == 'H'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('horeca_producto', 'producto.id', '=', 'horeca_producto.producto_id')
+                            ->where('horeca_producto.horeca_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->where('producto.confirmado', '=', 0)
+                            ->paginate(9);
+            }
+        }elseif ($filtro == 'publicados'){
+            if (session('perfilTipo') == 'I'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
+                            ->where('importador_producto.importador_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->where('producto.publicado', '=', 1)
+                            ->paginate(9);
+            }elseif (session('perfilTipo') == 'D'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
+                            ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->where('producto.publicado', '=', 1)
+                            ->paginate(9);
+            }elseif (session('perfilTipo') == 'H'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('horeca_producto', 'producto.id', '=', 'horeca_producto.producto_id')
+                            ->where('horeca_producto.horeca_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->where('producto.publicado', '=', 1)
+                            ->paginate(9);
+            }
+        }elseif ($filtro == 'no-publicados'){
+            if (session('perfilTipo') == 'I'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
+                            ->where('importador_producto.importador_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->where('producto.publicado', '=', 0)
+                            ->paginate(9);
+            }elseif (session('perfilTipo') == 'D'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
+                            ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->where('producto.publicado', '=', 0)
+                            ->paginate(9);
+            }elseif (session('perfilTipo') == 'H'){
+                $productos = Producto::orderBy('nombre', 'ASC')
+                            ->select('producto.*')
+                            ->join('horeca_producto', 'producto.id', '=', 'horeca_producto.producto_id')
+                            ->where('horeca_producto.horeca_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', 0)
+                            ->where('producto.publicado', '=', 0)
+                            ->paginate(9);
+            }
+        }
+
+        return view('producto.misProductos')->with(compact('productos'));
+    }
+
+    function productos_mundiales(){
+        $bebidas = DB::table('bebida')
+                    ->orderBy('nombre', 'ASC')
+                    ->pluck('nombre', 'id'); 
+
+        $paises = DB::table('pais')
+                    ->orderBy('pais', 'ASC')
+                    ->pluck('pais', 'id'); 
+
+        return view('producto.productosMundiales')->with(compact('bebidas', 'paises'));
+    }
+
     public function seleccionar_productos($marca){
         $productos = Producto::where('marca_id', '=', $marca)
                         ->orderBy('nombre', 'ASC')

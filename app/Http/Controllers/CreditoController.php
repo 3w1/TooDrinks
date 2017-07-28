@@ -9,6 +9,7 @@ use App\Http\Requests\CreditoUpdateRequest;
 use App\Models\Credito; use App\Models\User;
 use App\Models\Deduccion_Credito_Productor; use App\Models\Deduccion_Credito_Importador;
 use App\Models\Deduccion_Credito_Distribuidor; use App\Models\Deduccion_Credito_Horeca;
+use App\Models\Deduccion_Credito_Multinacional;
 use DB;
 use PDF;
 
@@ -115,6 +116,24 @@ class CreditoController extends Controller
             $historial_compras = DB::table('importador_credito')->insertGetId(
                                         ['credito_id' => $id, 'importador_id' => session('perfilId'), 'total' => $credito->precio, 'fecha_compra' => $fecha]);    
             // ... //
+        }elseif (session('perfilTipo') == 'M'){
+            $saldo = DB::table('multinacional')
+                            ->select('saldo')
+                            ->where('id', '=', session('perfilId'))
+                            ->first();
+
+            $saldoNuevo = $saldo->saldo + $credito->cantidad_creditos;
+
+            $actualizacion_saldo = DB::table('multinacional')
+                                    ->where('id', '=', session('perfilId'))
+                                    ->update(['saldo' => $saldoNuevo]);
+
+            session(['perfilSaldo' => $saldoNuevo]);
+
+            //Insertar en la tabla relacion
+            $historial_compras = DB::table('multinacional_credito')->insertGetId(
+                                        ['credito_id' => $id, 'multinacional_id' => session('perfilId'), 'total' => $credito->precio, 'fecha_compra' => $fecha]);    
+            // ... //
         }elseif (session('perfilTipo') == 'D'){
             $saldo = DB::table('distribuidor')
                             ->select('saldo')
@@ -168,6 +187,24 @@ class CreditoController extends Controller
                         ->join('credito', 'productor_credito.credito_id', '=', 'credito.id')
                         ->where('productor_credito.productor_id', '=', session('perfilId'))
                         ->paginate(10);
+        }elseif (session('perfilTipo') == 'I'){
+        	$planes = DB::table('importador_credito')
+                        ->select('importador_credito.*', 'credito.plan', 'credito.cantidad_creditos')
+                        ->join('credito', 'importador_credito.credito_id', '=', 'credito.id')
+                        ->where('importador_credito.importador_id', '=', session('perfilId'))
+                        ->paginate(10);
+        }elseif (session('perfilTipo') == 'D'){
+        	$planes = DB::table('distribuidor_credito')
+                        ->select('distribuidor_credito.*', 'credito.plan', 'credito.cantidad_creditos')
+                        ->join('credito', 'distribuidor_credito.credito_id', '=', 'credito.id')
+                        ->where('distribuidor_credito.distribuidor_id', '=', session('perfilId'))
+                        ->paginate(10);
+        }elseif (session('perfilTipo') == 'M' ){
+        	$planes = DB::table('multinacional_credito')
+                        ->select('multinacional_credito.*', 'credito.plan', 'credito.cantidad_creditos')
+                        ->join('credito', 'multinacional_credito.credito_id', '=', 'credito.id')
+                        ->where('multinacional_credito.multinacional_id', '=', session('perfilId'))
+                        ->paginate(10);
         }
 
         return view('credito.historialPlanes')->with(compact('planes'));   
@@ -192,6 +229,12 @@ class CreditoController extends Controller
                     ->join('credito', 'distribuidor_credito.credito_id', '=', 'credito.id')
                     ->where('distribuidor_credito.id', '=', $id)
                     ->first();   
+        }elseif (session('perfilTipo') == 'M'){
+        	$compra = DB::table('multinacional_credito')
+                    ->select('multinacional_credito.total', 'multinacional_credito.fecha_compra', 'credito.plan', 'credito.cantidad_creditos', 'credito.descripcion')
+                    ->join('credito', 'multinacional_credito.credito_id', '=', 'credito.id')
+                    ->where('multinacional_credito.id', '=', $id)
+                    ->first(); 
         }
 
         $factura=PDF::loadview('credito.FacturaCredito',['compra'=>$compra]);
@@ -208,8 +251,12 @@ class CreditoController extends Controller
                             ->where('importador_id', '=', session('perfilId'))
                             ->paginate(10);
         }elseif (session('perfilTipo') == 'D'){
-             $gastos = Deduccion_Credito_Distribuidor::orderBy('created_at', 'DESC')
+            $gastos = Deduccion_Credito_Distribuidor::orderBy('created_at', 'DESC')
                             ->where('distribuidor_id', '=', session('perfilId'))
+                            ->paginate(10);
+        }elseif (session('perfilTipo') == 'M'){
+        	$gastos = Deduccion_Credito_Multinacional::orderBy('created_at', 'DESC')
+                            ->where('multinacional_id', '=', session('perfilId'))
                             ->paginate(10);
         }
 
@@ -239,6 +286,14 @@ class CreditoController extends Controller
             $deduccion = new Deduccion_Credito_Importador();
             $deduccion->importador_id = session('perfilId');
 
+        }elseif (session('perfilTipo') == 'M'){
+        	$act = DB::table('multinacional')
+                    ->where('id', '=', session('perfilId'))
+                    ->update(['saldo' => $saldo ]);
+
+            $deduccion = new Deduccion_Credito_Multinacional();
+            $deduccion->multinacional_id = session('perfilId');
+
         }elseif( session('perfilTipo') == 'D'){
             $act = DB::table('distribuidor')
                     ->where('id', '=', session('perfilId'))
@@ -251,7 +306,10 @@ class CreditoController extends Controller
         $deduccion->cantidad_creditos = $cant;
         $deduccion->descripcion = "Crear Oferta";
         $deduccion->fecha = $fecha;
+        $deduccion->tipo_deduccion = 'CO';
+        $deduccion->accion_id = $id;
         $deduccion->save();
+        
         return redirect('oferta')->with('msj', 'Su oferta ha sido creada exitosamente. Se han descontado '.$cant.' créditos de su saldo.');
     }
 
@@ -351,7 +409,17 @@ class CreditoController extends Controller
 
             $deduccion = new Deduccion_Credito_Importador();
             $deduccion->importador_id = session('perfilId');
-        }else{
+        }elseif (session('perfilTipo') == 'M'){
+        	 $act = DB::table('multinacional')
+                    ->where('id', '=', session('perfilId'))
+                    ->update(['saldo' => $saldo ]);
+
+             DB::table('multinacional_demanda_producto')->insertGetId(
+                                        ['multinacional_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha]);    
+
+            $deduccion = new Deduccion_Credito_Multinacional();
+            $deduccion->multinacional_id = session('perfilId');
+        }elseif (session('perfilTipo') == 'D'){
             $act = DB::table('distribuidor')
                     ->where('id', '=', session('perfilId'))
                     ->update(['saldo' => $saldo ]);
@@ -409,7 +477,17 @@ class CreditoController extends Controller
 
             $deduccion = new Deduccion_Credito_Importador();
             $deduccion->importador_id = session('perfilId');
-        }else{
+        }elseif (session('perfilTipo') == 'M'){
+        	 $act = DB::table('multinacional')
+                    ->where('id', '=', session('perfilId'))
+                    ->update(['saldo' => $saldo ]);
+
+             DB::table('multinacional_demanda_producto')->insertGetId(
+                                        ['multinacional_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha]);    
+
+            $deduccion = new Deduccion_Credito_Multinacional();
+            $deduccion->multinacional_id = session('perfilId');
+        }elseif (session('perfilTipo') == 'D'){
             $act = DB::table('distribuidor')
                     ->where('id', '=', session('perfilId'))
                     ->update(['saldo' => $saldo ]);

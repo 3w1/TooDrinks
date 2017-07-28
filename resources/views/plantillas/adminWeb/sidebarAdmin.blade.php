@@ -56,7 +56,6 @@
          <li><a href="{{ route('admin.crear-importador') }}"><i class="fa fa-circle-o"></i> Crear Importador</a></li>
          <li><a href="{{ route('admin.crear-distribuidor') }}"><i class="fa fa-circle-o"></i> Crear Distribuidor</a></li>
          <li><a href="{{ route('admin.crear-horeca') }}"><i class="fa fa-circle-o"></i> Crear Horeca</a></li>
-         <li><a href="#"><i class="fa fa-circle-o"></i> Crear AdminWeb</a></li>
       </ul>
    </li>
 
@@ -69,8 +68,6 @@
       </a>
       <ul class="treeview-menu">
          <li><a href="{{ route('admin.banners-sin-aprobar') }}"><i class="fa fa-circle-o"></i> Banners Por Revisar</a></li>
-         <li><a href="{{ route('admin.banners-sin-publicar') }}"><i class="fa fa-circle-o"></i> Banners Por Publicar</a></li>
-         <li><a href=""><i class="fa fa-circle-o"></i> Programación por País</a></li>
       </ul>
    </li>
 
@@ -101,8 +98,6 @@
          </li>
       </ul>
    </li>
-
-   <li><a href=""><i class="fa fa-circle-o"></i> Banners Publicitarios</a></li>
 </ul>
 
    

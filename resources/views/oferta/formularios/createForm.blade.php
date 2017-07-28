@@ -5,6 +5,10 @@
 	{!! Form::hidden('creador_id', session('perfilId')) !!}
 	{!! Form::hidden('cantidad_visitas', '0') !!}
 	{!! Form::hidden('cantidad_contactos', '0') !!}
+	
+	@if (session('perfilTipo') == 'M')
+		{!! Form::hidden('pais_id', session('perfilPais')) !!}
+	@endif
 
 	<input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
 
@@ -68,11 +72,13 @@
 		{!! Form::label('costo_envio', 'Costo del Envío') !!}
 		{!! Form::text('costo_envio', null, ['class' => 'form-control', 'placeholder' => 'Costo del Envío'] ) !!}
 	</div>
-
-	<div class="form-group">
-		{!! Form::label('pais', 'Seleccione el país que será destino de la oferta') !!}
-		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'id' => 'pais_id']) !!}
-	</div>
+	
+	@if (session('perfilTipo') != 'M')
+		<div class="form-group">
+			{!! Form::label('pais', 'Seleccione el país que será destino de la oferta') !!}
+			{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'id' => 'pais_id']) !!}
+		</div>
+	@endif
 
 	<div class="form-group">
 		{!! Form::label('pais', 'Seleccione las provincias que serán destino de la oferta') !!}
@@ -85,7 +91,7 @@
 		<br>
 	</div>
 	
-	@if( session('perfilTipo') == 'P')
+	@if( (session('perfilTipo') == 'P') || (session('perfilTipo') == 'M') )
 		<div class="form-group">
             {!! Form::label('visible_importador', 'Disponible para Importadores') !!}
             {!! Form::select('visible_importadores', ['0' => 'No', '1' => 'Si'], null, ['class' => 'form-control']) !!}

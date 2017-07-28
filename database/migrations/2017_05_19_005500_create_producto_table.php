@@ -9,7 +9,7 @@ class CreateProductoTable extends Migration
    public function up(){
       Schema::create('producto', function (Blueprint $table){
         	$table->increments('id');
-        	$table->enum('tipo_creador', ['U', 'P', 'I', 'D', 'AD', 'SA']);
+        	$table->enum('tipo_creador', ['U', 'P', 'I', 'D', 'AD', 'SA', 'M']);
        	$table->integer('creador_id');
         	$table->string('nombre');
         	$table->string('nombre_seo');

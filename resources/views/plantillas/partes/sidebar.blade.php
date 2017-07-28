@@ -71,6 +71,39 @@
          }
       }
    ?>
+@elseif (session('perfilTipo') == 'M')
+   <?php 
+      $notificaciones_pendientes = DB::table('notificacion_m')
+                                    ->where('multinacional_id', '=', session('perfilId'))
+                                    ->where('leida', '=', '0')
+                                    ->select('id', 'tipo')
+                                    ->get();
+
+      $confirmaciones = 0; $demandas = 0;
+      $cont_AD = 0; $cont_NO = 0;
+      $cont_SD = 0; $cont_DP = 0; $cont_DB = 0; $cont_DI = 0;
+
+      foreach($notificaciones_pendientes as $notificacion){
+         if ($notificacion->tipo == 'AD'){
+            $confirmaciones++;
+            $cont_AD++;
+         }elseif ($notificacion->tipo == 'NO'){
+            $cont_NO++;
+         }elseif ($notificacion->tipo == 'SD'){
+            $demandas++;
+            $cont_SD++;
+         }elseif ($notificacion->tipo == 'DP'){
+            $demandas++;
+            $cont_DP++;
+         }elseif ($notificacion->tipo == 'DB'){
+            $demandas++;
+            $cont_DB++;
+         }elseif ($notificacion->tipo == 'DI'){
+            $demandas++;
+            $cont_DI++;
+         }
+      }
+   ?>
 @elseif (session('perfilTipo') == 'D')
    <?php 
       $notificaciones_pendientes = DB::table('notificacion_d')
@@ -99,7 +132,6 @@
       }
    ?>
 @endif
-
 <div class="user-panel">
    @if (session('perfilTipo') == 'P')
       <div class="pull-left image">
@@ -111,13 +143,21 @@
       </div>
 
    @elseif (session('perfilTipo') == 'I')
-
       <div class="pull-left image">
          <img src="{{ asset('imagenes/importadores/thumbnails/')}}/{{ session('perfilLogo') }}" class="img-rounded" >
       </div>
       <div class="pull-left info">
          <p>{{ session('perfilNombre') }} (I)</p>
          <a href="{{ route('importador.edit', session('perfilId')) }}">Editar Perfil <i class="fa fa-edit"></i></a>
+      </div>
+
+   @elseif (session('perfilTipo') == 'M')
+      <div class="pull-left image">
+         <img src="{{ asset('imagenes/multinacionales/thumbnails/')}}/{{ session('perfilLogo') }}" class="img-rounded" >
+      </div>
+      <div class="pull-left info">
+         <p>{{ session('perfilNombre') }} (I)</p>
+         <a href="{{ route('multinacional.edit', session('perfilId')) }}">Editar Perfil <i class="fa fa-edit"></i></a>
       </div>
 
    @elseif (session('perfilTipo') == 'D')
@@ -273,9 +313,8 @@
          </li>
          <li><a href="{{ route('productor.listado-importadores') }}"><i class="fa fa-circle-o"></i> Listado de Importadores</a></li>
          <!-- FIN DE SECCIÓN DE PRODUCTORES -->
-      @endif
-      
-      @if(session('perfilTipo') == 'I')
+     
+      @elseif(session('perfilTipo') == 'I')
          <!-- SECCIÓN DE IMPORTADOR -->
          <li class="header">Panel de Importador</li>
          <li><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
@@ -288,6 +327,7 @@
              </a>
             <ul class="treeview-menu">
                <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
+               <li><a href="{{ route('producto.mis-productos', 'todos') }}"><i class="fa fa-circle-o"></i> Mis Productos</a></li>
                <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Nueva Marca</a></li>
                <li><a href="{{ route('marca.mundiales') }}"><i class="fa fa-circle-o"></i> Marcas Mundiales</a></li>
             </ul>
@@ -383,9 +423,44 @@
          </li>
          <li><a href="{{ route('importador.listado-distribuidores') }}"><i class="fa fa-circle-o"></i> Listado de Distribuidores</a></li>
          <!-- FIN DE SECCIÓN DE IMPORTADOR -->
-      @endif
+      @elseif(session('perfilTipo') == 'M')
+         <!-- SECCIÓN DE MULTINACIONAL -->
+         <li class="header">Panel de Multinacional</li>
+         <li><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
 
-      @if(session('perfilTipo') == 'D')
+         <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Marcas</a></li>
+
+         <li class="treeview">
+            <a href="#"><i class="fa fa-share"></i> Ofertas</a>
+            <ul class="treeview-menu">
+               <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas</a></li>
+               </a></li>
+               <li><a href="{{ route('oferta.crear-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
+            </ul>
+         </li>
+         <li class="treeview">
+            <a href="#"><i class="fa fa-share"></i> Demandas
+               <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                  @if($demandas > 0)<small class="label pull-right bg-blue">{{$demandas}}</small>@endif
+               </span>
+            </a>
+            <ul class="treeview-menu">
+               <li><a href="{{ route('demanda-producto.demandas-productos-disponibles') }}"><i class="fa fa-circle-o"></i> Productos
+                  <span class="pull-right-container">
+                     @if($cont_DP > 0) <small class="label pull-right bg-aqua">{{$cont_DP}}</small>@endif
+                  </span>
+               </a></li>
+               <li><a href="{{ route('demanda-producto.demandas-bebidas-disponibles') }}"><i class="fa fa-circle-o"></i> Bebidas
+                  <span class="pull-right-container">
+                     @if($cont_DB > 0) <small class="label pull-right bg-yellow">{{$cont_DB}}</small>@endif
+                  </span>
+               </a></li>
+            </ul>
+         </li>
+         <!-- FIN DE SECCIÓN DE IMPORTADOR -->
+
+      @elseif(session('perfilTipo') == 'D')
          <!-- SECCIÓN DE IMPORTADORES -->
          <li class="header">Panel de Distribuidor</li>
          <li><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
@@ -398,6 +473,7 @@
              </a>
             <ul class="treeview-menu">
                <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
+               <li><a href="{{ route('producto.mis-productos', 'todos') }}"><i class="fa fa-circle-o"></i> Mis Productos</a></li>
                <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Nueva Marca</a></li>
                <li><a href="{{ route('marca.mundiales') }}"><i class="fa fa-circle-o"></i> Marcas Mundiales</a></li>
             </ul>
@@ -476,12 +552,24 @@
             </ul>
          </li>
          <!-- FIN DE SECCIÓN DE DISTRIBUIDORES -->
-      @endif
-
-      @if(session('perfilTipo') == 'H')
+      
+      @elseif(session('perfilTipo') == 'H')
         <!-- SECCIÓN DE HORECAS -->
-        <li class="header">Panel de Horeca</li>
-        <li><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
+         <li class="header">Panel de Horeca</li>
+         <li><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
+         
+         <li class="treeview">
+             <a href="#">
+               <i class="fa fa-share"></i> <span>Productos</span>
+               <span class="pull-right-container">
+                 <i class="fa fa-angle-left pull-right"></i>
+               </span>
+             </a>
+            <ul class="treeview-menu">
+               <li><a href="{{ route('producto.mis-productos', 'todos') }}"><i class="fa fa-circle-o"></i> Mis Productos</a></li>
+               <li><a href="{{ route('producto.mundiales') }}"><i class="fa fa-circle-o"></i> Productos Mundiales</a></li>
+            </ul>
+         </li>
          <li class="treeview">
             <a href="#">
                <i class="fa fa-share"></i> <span>Ofertas</span>

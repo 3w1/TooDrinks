@@ -1,4 +1,4 @@
-@extends('plantillas.horeca.mainHoreca')
+@extends('plantillas.main')
 @section('title', 'Editar Perfil '.$horeca->nombre)
 @section('content-left')
 

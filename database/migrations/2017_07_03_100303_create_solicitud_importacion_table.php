@@ -13,6 +13,7 @@ class CreateSolicitudImportacionTable extends Migration
             $table->increments('id');
             $table->integer('importador_id');
             $table->integer('producto_id');
+            $table->integer('marca_id');
             $table->integer('pais_id');
             $table->boolean('status');
             $table->date('fecha');
@@ -22,6 +23,11 @@ class CreateSolicitudImportacionTable extends Migration
 
             $table->foreign('producto_id')
                   ->references('id')->on('producto')
+                  ->onDelete('restrict')
+                  ->onUpdate('cascade');
+
+            $table->foreign('marca_id')
+                  ->references('id')->on('marca')
                   ->onDelete('restrict')
                   ->onUpdate('cascade');
 

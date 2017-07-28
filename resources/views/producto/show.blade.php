@@ -66,11 +66,6 @@
    <div class="box box-primary">
       <div class="box-header with-border">
          <h3 class="box-title">Últimos Comentarios</h3>
-         @if ($cont > 6)
-            <div class="box-tools pull-right">
-              <a href="#">Ver Todos</a>
-            </div>
-         @endif
       </div>
       <!-- /.box-header -->
 
@@ -101,7 +96,7 @@
                                     ->first();
                      }
                      
-                   ?>
+                  ?>
                   <div class="box-comment">
                      @if ($comentario->tipo_creador == 'P')
                         <img class="img-circle img-sm" src="{{ asset('imagenes/productores/thumbnails')}}/{{ $perfil->logo }}">
@@ -157,7 +152,7 @@
                @endforeach
             @else
                <div class="comment-text">
-                  No existen opiniones del producto. Se tú el primero en dejar tu comentario.
+                  No existen opiniones del producto. 
                </div>
             @endif
          </div>

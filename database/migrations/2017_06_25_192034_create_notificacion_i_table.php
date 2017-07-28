@@ -34,12 +34,6 @@ class CreateNotificacionITable extends Migration
                   ->onUpdate('cascade');
         });
     }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('notificacion_i');

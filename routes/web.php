@@ -75,6 +75,10 @@ Route::prefix('importador')->group(function (){
 Route::resource('importador','ImportadorController');
 // ./RUTAS PARA LOS IMPORTADORES ./
 
+// RUTAS PARA LOS IMPORTADORES
+Route::resource('multinacional', 'MultinacionalController');
+// ./RUTAS PARA LOS IMPORTADORES ./ //
+
 // RUTAS PARA LOS DISTRIBUIDORES
 Route::prefix('distribuidor')->group(function (){
     Route::get('asociar-marca/{id}', 'DistribuidorController@asociar_marca')->name('distribuidor.asociar-marca');
@@ -120,11 +124,12 @@ Route::prefix('producto')->group(function (){
     Route::get('agregar/{id}-{marca}', 'ProductoController@agregar')->name('producto.agregar');
     Route::get('listado-de-productos/{id}-{marca}', 'ProductoController@listado')->name('producto.listado');
     Route::get('detalle-de-producto/{id}', 'ProductoController@detalle')->name('producto.detalle');
-
     Route::get('seleccionar-productos/{id}', 'ProductoController@seleccionar_productos')->name('producto.seleccionar');
     Route::post('asociar-productos', 'ProductoController@asociar_productos')->name('producto.asociar-productos');
     Route::get('verificar-producto/{id}', 'ProductoController@verificar_producto');
-
+    Route::get('mis-productos/{filtro}', 'ProductoController@mis_productos')->name('producto.mis-productos');
+    Route::get('productos-mundiales', 'ProductoController@productos_mundiales')->name('producto.mundiales');
+    //Peticiones AJAX
     Route::get('productos-por-clase/{bebida}/{clase}', 'ProductoController@productos_por_clase');
     Route::get('productos-por-pais/{bebida}/{pais}', 'ProductoController@productos_por_pais');
 

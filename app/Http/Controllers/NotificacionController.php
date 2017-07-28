@@ -20,6 +20,10 @@ class NotificacionController extends Controller
             $notificaciones = DB::table('notificacion_i')
                                ->orderBy('created_at', 'DESC')
                                ->paginate(10);
+        }elseif (session('perfilTipo') == 'M'){
+            $notificaciones = DB::table('notificacion_m')
+                               ->orderBy('created_at', 'DESC')
+                               ->paginate(10);
         }elseif ( session('perfilTipo') == 'D'){
             $notificaciones = DB::table('notificacion_d')
                                ->orderBy('created_at', 'DESC')
@@ -29,7 +33,6 @@ class NotificacionController extends Controller
                                ->orderBy('created_at', 'DESC')
                                ->paginate(10);
         }
-
 
         return view('notificaciones.index')->with(compact('notificaciones'));
     }
