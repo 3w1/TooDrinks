@@ -38,6 +38,7 @@ class ProductoController extends Controller
         return view('usuario.listados.productos')->with(compact('productos'));
     }
 
+    //Agregar un Producto (Usuarios (MB, AD, SA))
     public function create()
     {
         $usuario = '1';
@@ -64,8 +65,31 @@ class ProductoController extends Controller
         return view('producto.create')->with(compact('marcas', 'paises', 'tipos_bebidas', 'usuario', 'id', 'marca'));
     }
 
+    //Agregar Producto a una Marca ya seleccionada
     public function agregar($id, $marca){
         $usuario = '0';
+
+        if ($id == 0){
+            if (session('perfilTipo') == 'P'){
+                $marcas = DB::table('marca')
+                        ->where('productor_id', '=', session('perfilId'))
+                        ->pluck('nombre', 'id');
+            }elseif (session('perfilTipo') == 'I'){
+                $marcas = DB::table('marca')
+                            ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                            ->where('importador_marca.importador_id', '=', session('perfilId'))
+                            ->pluck('marca.nombre', 'marca.id');
+            }elseif (session('perfilTipo') == 'D'){
+                $marcas = DB::table('marca')
+                            ->join('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
+                            ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
+                            ->pluck('marca.nombre', 'marca.id');
+            }elseif (session('perfilTipo') == 'H'){
+                $marcas = DB::table('marca')
+                            ->orderBy('nombre', 'ASC')
+                            ->pluck('nombre', 'id');
+            }
+        }
 
         $paises = DB::table('pais')
                     ->orderBy('pais')
@@ -79,7 +103,11 @@ class ProductoController extends Controller
             return view('adminWeb.producto.create')->with(compact('marcas', 'paises', 'tipos_bebidas', 'marca'));
         }
 
-        return view('producto.create')->with(compact('id', 'marca', 'paises', 'tipos_bebidas', 'usuario'));
+        if ($id == 0){
+            return view('producto.create')->with(compact('id', 'marca', 'marcas', 'paises', 'tipos_bebidas', 'usuario'));
+        }else{
+            return view('producto.create')->with(compact('id', 'marca', 'paises', 'tipos_bebidas', 'usuario'));
+        }
     }
 
     public function store(Request $request)
@@ -100,6 +128,14 @@ class ProductoController extends Controller
         $producto = new Producto($request->all());
         $producto->imagen = $nombre;
         $producto->save();
+
+        if (session('perfilTipo') == 'I'){
+            $producto->importadores()->attach(session('perfilId'));
+        }elseif (session('perfilTipo') == 'D'){
+            $producto->distribuidores()->attach(session('perfilId'));
+        }elseif (session('perfilTipo') == 'H'){
+            $producto->horecas()->attach(session('perfilId'));
+        }
 
         $ult_producto = DB::table('producto')
                             ->select('id')
@@ -128,6 +164,36 @@ class ProductoController extends Controller
         }           
     }
 
+    //Metodo que permite seleccionar los productos que se importan / distribuyen
+    //cuando la entidad se asocia a una marca
+    public function seleccionar_productos($marca){
+        $productos = Producto::where('marca_id', '=', $marca)
+                        ->orderBy('nombre', 'ASC')
+                        ->paginate();
+
+        $nombre_marca = DB::table('marca')
+                        ->select('nombre')
+                        ->where('id', '=', $marca)
+                        ->first();
+
+        return view('producto.seleccionarProductos')->with(compact('productos','nombre_marca'));
+    }
+
+    //Método que guarda los productos seleccionados en el método anterior
+    public function asociar_productos(Request $request){
+        foreach ($request->productos as $producto){
+            if (session('perfilTipo') == 'I'){
+                Importador::find(session('perfilId'))->productos()->attach($producto);
+            }elseif (session('perfilTipo') == 'D'){
+                Distribuidor::find(session('perfilId'))->productos()->attach($producto);
+            }elseif (session('perfilTipo') == 'H'){
+                Horeca::find(session('perfilId'))->productos()->attach($producto);
+            }
+        }
+        return redirect('marca')->with('msj', 'Los productos han sido asociados a su lista exitosamente.');
+    }
+
+    //Listado de productos de una marca específica
     public function listado($id, $marca){
         $productos = Marca::find($id)
                             ->productos()
@@ -140,6 +206,7 @@ class ProductoController extends Controller
         return view('producto.listado')->with(compact('productos', 'marca'));
     }
 
+    //Listado de productos asociados a una entidad
     public function mis_productos($filtro){
         if ($filtro == 'todos'){
             if (session('perfilTipo') == 'I'){
@@ -273,6 +340,7 @@ class ProductoController extends Controller
         return view('producto.misProductos')->with(compact('productos'));
     }
 
+    //Productos a nivel mundial para su búsqueda y asociación
     function productos_mundiales(){
         $bebidas = DB::table('bebida')
                     ->orderBy('nombre', 'ASC')
@@ -280,35 +348,21 @@ class ProductoController extends Controller
 
         $paises = DB::table('pais')
                     ->orderBy('pais', 'ASC')
-                    ->pluck('pais', 'id'); 
+                    ->pluck('pais', 'id');
 
         return view('producto.productosMundiales')->with(compact('bebidas', 'paises'));
     }
 
-    public function seleccionar_productos($marca){
-        $productos = Producto::where('marca_id', '=', $marca)
-                        ->orderBy('nombre', 'ASC')
-                        ->paginate();
-
-        $nombre_marca = DB::table('marca')
-                        ->select('nombre')
-                        ->where('id', '=', $marca)
-                        ->first();
-
-        return view('producto.seleccionarProductos')->with(compact('productos','nombre_marca'));
-    }
-
-    public function asociar_productos(Request $request){
-        foreach ($request->productos as $producto){
-            if (session('perfilTipo') == 'I'){
-                Importador::find(session('perfilId'))->productos()->attach($producto);
-            }elseif (session('perfilTipo') == 'D'){
-                Distribuidor::find(session('perfilId'))->productos()->attach($producto);
-            }elseif (session('perfilTipo') == 'H'){
-                Horeca::find(session('perfilId'))->productos()->attach($producto);
-            }
+    public function asociar_producto(Request $request){
+        if (session('perfilTipo') == 'I'){
+            Producto::find($request->producto_id)->importadores()->attach(session('perfilId'));
+        }elseif (session('perfilTipo') == 'D'){
+            Producto::find($request->producto_id)->distribuidores()->attach(session('perfilId'));
+        }elseif (session('perfilTipo') == 'H'){
+             Producto::find($request->producto_id)->horecas()->attach(session('perfilId'));
         }
-        return redirect('marca')->with('msj', 'Los productos han sido asociados a su lista exitosamente.');
+
+        return redirect('producto/mis-productos/todos')->with('msj', 'El producto ha sido agregado a su listado exitosamente');   
     }
 
     public function show($id)
@@ -453,9 +507,33 @@ class ProductoController extends Controller
 
     //Método para cargar los detalles de un producto
     //Para solicitarlo en importación o distribución
+    //Para asociarlo a una entidad
     public function verificar_producto($id){
         $producto = Producto::where('id', '=', $id)->with('bebida', 'clase_bebida', 'marca')
                     ->first()->toArray();
+
+        if (session('perfilTipo') == 'I'){
+            $relacion = DB::table('importador_producto')
+                        ->where('importador_id', '=', session('perfilId'))
+                        ->where('producto_id', '=', $id)
+                        ->first();
+        }elseif (session('perfilTipo') == 'D'){
+            $relacion = DB::table('distribuidor_producto')
+                        ->where('distribuidor_id', '=', session('perfilId'))
+                        ->where('producto_id', '=', $id)
+                        ->first();
+        }elseif (session('perfilTipo') == 'H'){
+            $relacion = DB::table('horeca_producto')
+                        ->where('horeca_id', '=', session('perfilId'))
+                        ->where('producto_id', '=', $id)
+                        ->first();
+        }
+       
+        if ($relacion == null){
+            $producto['relacion'] = 0;
+        }else{
+            $producto['relacion'] = 1;
+        }
 
         return response()->json(
             $producto

@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Horeca;
 use App\Models\Pais;
-use App\Models\Provincia_Region;
-use App\Models\Telefono_Horeca;
+use App\Models\Provincia_Region; use App\Models\Distribuidor;
 use DB; use Storage; use Auth; use Input; use Image;
 
 
@@ -106,4 +105,12 @@ class HorecaController extends Controller
     {
 
     }
+
+    public function distribuidores_locales(){
+        $distribuidores = Distribuidor::orderBy('nombre')
+                            ->where('pais_id', '=', session('perfilPais'))
+                            ->paginate(8);
+
+        return view('horeca.listados.distribuidores')->with(compact('distribuidores'));
+    } 
 }

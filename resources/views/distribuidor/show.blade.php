@@ -20,7 +20,7 @@
     <div class="row">
        <div class="col-md-4"></div>
         <div class="col-sm-6 col-md-4">
-            <a href="" class="thumbnail"><img src="{{ asset('imagenes/distribuidores/thumbnails') }}/{{ $distribuidor->logo }}"></a>
+            <a class="thumbnail"><img src="{{ asset('imagenes/distribuidores/thumbnails') }}/{{ $distribuidor->logo }}"></a>
         </div>
         <div class="col-md-4"></div>
     </div>

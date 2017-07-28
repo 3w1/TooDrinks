@@ -154,47 +154,5 @@ class DistribuidorController extends Controller
             // *** //
         }
          return redirect('producto/seleccionar-productos/'.$id)->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
-    }
-
-     //FUNCION QUE LE PERMITE AL DISTRIBUIDOR REGISTRAR UN PRODUCTO ASOCIADO A SU MARCA 
-   /* public function registrar_producto($id, $marca){
-
-        $paises = DB::table('pais')
-                    ->orderBy('pais')
-                    ->pluck('pais', 'id');
-
-        $clases_bebidas = DB::table('clase_bebida')
-                    ->orderBy('clase')
-                    ->pluck('clase', 'id');
-
-        return view('distribuidor.registrarProducto')->with(compact('id', 'marca', 'paises', 'clases_bebidas'));
-    }*/
-
-    //FUNCION QUE LE PERMITE AL IMPORTADOR VER EL LISTADO DE PRODUCTOS ASOCIADOS A UNA MARCA
-    public function ver_productos($id, $marca){
-        
-        $productos = Marca::find($id)
-                            ->productos()
-                            ->paginate(8);
-
-        return view('distribuidor.listados.productos')->with(compact('productos', 'marca'));
-    }
-
-    public function ver_detalle_producto($id, $producto){
-        $perfil = 'D';
-
-        $producto = Producto::find($id);
-        
-        $bebida = Bebida::find($producto->clase_bebida->bebida_id)
-                        ->select('nombre', 'caracteristicas')
-                        ->get()
-                        ->first();
-
-        $productor = Productor::find($producto->marca->productor_id)
-                        ->select('nombre')
-                        ->get()
-                        ->first();
-
-        return view('distribuidor.detalleProducto')->with(compact('producto', 'bebida', 'productor', 'perfil'));
-    }
+    }   
 }

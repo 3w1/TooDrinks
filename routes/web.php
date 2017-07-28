@@ -89,10 +89,11 @@ Route::resource('distribuidor','DistribuidorController');
 // ./RUTAS PARA LOS DISTRIBUIDORES ./
 
 // RUTAS PARA LOS HORECAS
-Route::get('horeca/ver-ofertas-disponibles', 'HorecaController@listado_ofertas')->name('horeca.ofertas-disponibles');
-
-Route::post('horeca/updateAvatar', 'HorecaController@updateAvatar')->name('horeca.updateAvatar');
-
+Route::prefix('horeca')->group(function (){
+    Route::get('distribuidores-locales', 'HorecaController@distribuidores_locales')->name('horeca.distribuidores');
+    
+    Route::post('updateAvatar', 'HorecaController@updateAvatar')->name('horeca.updateAvatar');
+});
 Route::resource('horeca','HorecaController');
 // ./RUTAS PARA LOS HORECAS ./
 
@@ -129,6 +130,7 @@ Route::prefix('producto')->group(function (){
     Route::get('verificar-producto/{id}', 'ProductoController@verificar_producto');
     Route::get('mis-productos/{filtro}', 'ProductoController@mis_productos')->name('producto.mis-productos');
     Route::get('productos-mundiales', 'ProductoController@productos_mundiales')->name('producto.mundiales');
+    Route::post('asociar-producto', 'ProductoController@asociar_producto')->name('producto.asociar-producto');
     //Peticiones AJAX
     Route::get('productos-por-clase/{bebida}/{clase}', 'ProductoController@productos_por_clase');
     Route::get('productos-por-pais/{bebida}/{pais}', 'ProductoController@productos_por_pais');

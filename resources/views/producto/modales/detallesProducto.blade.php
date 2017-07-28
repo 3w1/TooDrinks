@@ -3,7 +3,7 @@
       <div class="modal-content">
          <div class="modal-header">
            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-           <h4 class="modal-title" id="myModalLabel">Confirmar Solicitud de Importación</h4>
+           <h4 class="modal-title" id="myModalLabel">Detalles del Producto</h4>
          </div>
          <div class="modal-body">
             <div class="panel panel-default panel-success" id="infoProducto">
@@ -12,15 +12,10 @@
             <span class="alert alert-warning" id="alert" style="display: none;"></span>
          </div>
          <div class="modal-footer">
-            {!! Form::open(['route' => 'solicitud-importacion.store', 'method' => 'POST']) !!}
-               {!! Form::hidden('importador_id', session('perfilId') ) !!}
-               {!! Form::hidden('producto_id', null, ['id' => 'producto_id']) !!}
+            {!! Form::open(['route' => 'producto.asociar-producto', 'method' => 'POST' ]) !!}
                {!! Form::hidden('marca_id', null, ['id' => 'marca_id']) !!}
-               {!! Form::hidden('pais_id', session('perfilPais') ) !!}
-               {!! Form::hidden('status', '1') !!}
-               {!! Form::hidden('cantidad_visitas', '0') !!}
-               {!! Form::hidden('cantidad_contactos', '0') !!}
-               {!! Form::submit("Solicitar Importación", ['class' => 'btn btn-primary', 'id' => 'boton'])!!}
+               {!! Form::hidden('producto_id', null, ['id' => 'producto_id']) !!}
+               {!! Form::submit('Asociar Producto', ['class' => 'btn btn-success pull-right', 'id' => 'boton']) !!}
             {!! Form::close() !!}
          </div>
       </div>

@@ -143,7 +143,16 @@ function cargarProducto($id){
             document.getElementById("infoProducto").innerHTML += "<li class='list-group-item'><b>Marca: </b>"+ans.marca.nombre+"</li>";
             document.getElementById("infoProducto").innerHTML += "</ul>";
 
-            $("#modalConfirmar").modal({
+            if (ans.relacion == '0'){
+            	document.getElementById("boton").disabled = false;
+            	document.getElementById("alert").style.display = 'none';
+            }else{
+            	document.getElementById("boton").disabled = true;
+            	document.getElementById("alert").innerHTML = "Ya te encuentras asociado con este producto. Para más detalles dirígete a la sección *Mis Productos*.";
+            	document.getElementById("alert").style.display = 'block';
+            }
+
+            $("#modal").modal({
                 show: 'true'
             });
         }

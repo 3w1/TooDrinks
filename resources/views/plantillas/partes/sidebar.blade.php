@@ -327,9 +327,21 @@
              </a>
             <ul class="treeview-menu">
                <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
-               <li><a href="{{ route('producto.mis-productos', 'todos') }}"><i class="fa fa-circle-o"></i> Mis Productos</a></li>
                <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Nueva Marca</a></li>
                <li><a href="{{ route('marca.mundiales') }}"><i class="fa fa-circle-o"></i> Marcas Mundiales</a></li>
+            </ul>
+         </li>
+         <li class="treeview">
+             <a href="#">
+               <i class="fa fa-share"></i> <span>Productos</span>
+               <span class="pull-right-container">
+                 <i class="fa fa-angle-left pull-right"></i>
+               </span>
+             </a>
+            <ul class="treeview-menu">
+               <li><a href="{{ route('producto.mis-productos', 'todos') }}"><i class="fa fa-circle-o"></i> Mis Productos</a></li>
+               <li><a href="{{ route('producto.agregar', ['0', 'Marca']) }}"><i class="fa fa-circle-o"></i> Nuevo Producto</a></li>
+               <li><a href="{{ route('producto.mundiales') }}"><i class="fa fa-circle-o"></i> Productos Mundiales</a></li>
             </ul>
          </li>
          <li class="treeview">
@@ -479,6 +491,19 @@
             </ul>
          </li>
          <li class="treeview">
+             <a href="#">
+               <i class="fa fa-share"></i> <span>Productos</span>
+               <span class="pull-right-container">
+                 <i class="fa fa-angle-left pull-right"></i>
+               </span>
+             </a>
+            <ul class="treeview-menu">
+               <li><a href="{{ route('producto.mis-productos', 'todos') }}"><i class="fa fa-circle-o"></i> Mis Productos</a></li>
+               <li><a href="{{ route('producto.agregar', ['0', 'Marca']) }}"><i class="fa fa-circle-o"></i> Nuevo Producto</a></li>
+               <li><a href="{{ route('producto.mundiales') }}"><i class="fa fa-circle-o"></i> Productos Mundiales</a></li>
+            </ul>
+         </li>
+         <li class="treeview">
             <a href="#"><i class="fa fa-share"></i> Ofertas
                <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
@@ -601,7 +626,7 @@
                </li>
             </ul>
          </li>
-         <li><a href=""><i class="fa fa-circle-o"></i> Listado de Distribuidores</a></li>
+         <li><a href="{{route('horeca.distribuidores')}}"><i class="fa fa-circle-o"></i> Distribuidores Locales</a></li>
          <!-- FIN DE SECCIÓN DE HORECAS -->
       @endif
 

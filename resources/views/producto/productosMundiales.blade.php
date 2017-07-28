@@ -12,6 +12,8 @@
         <div id="mensaje"></div>
     </div>
 	
+	@include('producto.modales.detallesProducto')
+
 	<div class="box box-success">
    		<div class="box-header with-border">
       		<h3 class="box-title">Búsqueda por Nombre</h3>
