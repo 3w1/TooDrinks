@@ -1,4 +1,5 @@
 function cargarDetalles($tipo, $id){
+    //var route = "http://www.toodrinks.com/credito/detalles-gasto/"+$tipo+"/"+$id;
     var route = "http://localhost:8000/credito/detalles-gasto/"+$tipo+"/"+$id;
                     
    $.ajax({

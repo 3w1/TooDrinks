@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    //var route = "http://www.toodrinks.com/pais/paises-destino";
     var route = "http://localhost:8000/pais/paises-destino";
     var checkboxes = document.getElementsByTagName('input');
     $.ajax({
@@ -22,8 +23,9 @@ $(document).ready(function() {
 function cargarProvincias() {
 
     document.getElementById("provincias").innerHTML = "<option value=''>Seleccione una provincia..</option>";
-     
+    
     var pais = document.getElementById('pais_id').value;
+    //var route = "http://www.toodrinks.com/pais/"+pais+"";
     var route = "http://localhost:8000/pais/"+pais+"";
                     
     $.ajax({

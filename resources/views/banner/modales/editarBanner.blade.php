@@ -9,16 +9,16 @@
          {!! Form::open(['route' => ['banner-publicitario.update', $banner->id], 'method' => 'PUT', 'enctype' => 'multipart/form-data']) !!}
 
             <div class="form-group">   
-               {!! Form::label('titulo', 'Título del Banner')!!}
-               {!! Form::text('titulo', $banner->titulo, ['class' => 'form-control']) !!}
+               {!! Form::label('titulo', 'Título del Banner (*)')!!}
+               {!! Form::text('titulo', $banner->titulo, ['class' => 'form-control', 'required']) !!}
             </div>   
             <div class="form-group">   
-               {!! Form::label('descripcion', 'Descripción')!!}
-               {!! Form::textarea('descripcion', $banner->descripcion, ['class' => 'form-control', 'rows' => '5']) !!}
+               {!! Form::label('descripcion', 'Descripción (*)')!!}
+               {!! Form::textarea('descripcion', $banner->descripcion, ['class' => 'form-control', 'rows' => '5', 'required']) !!}
             </div>      
             <div class="form-group">   
-               {!! Form::label('url', 'Enlace del Banner')!!}
-               {!! Form::url('url_banner', $banner->url_banner, ['class' => 'form-control']) !!}
+               {!! Form::label('url', 'Enlace del Banner (*)')!!}
+               {!! Form::url('url_banner', $banner->url_banner, ['class' => 'form-control', 'required']) !!}
             </div>
       </div>
       <div class="modal-footer">

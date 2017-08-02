@@ -1,22 +1,26 @@
 @extends('plantillas.main')
 @section('title', 'Detalle de Oferta')
 
-@section('items')
-   @if (Session::has('msj'))
-    <div class="alert alert-success alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
-    </div>
-  @endif
+@section('title-header')
+   Detalle de Oferta
+@endsection
+
+@section('title-complement')
+   ({{$oferta->titulo}})
 @endsection
 
 @section('content-left')
-
-   @include('oferta.modales.editarOferta')
-
-   @section('title-header')
-      <h3>Detalle de la Oferta <strong> {{ $oferta->titulo }} </strong></h3>
+   
+   @section('alertas')
+      @if (Session::has('msj'))
+         <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+        </div>
+      @endif
    @endsection
+   
+   @include('oferta.modales.editarOferta')
 
    <div class="row">
       <div class="col-md-4"></div>

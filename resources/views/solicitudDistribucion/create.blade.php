@@ -1,22 +1,21 @@
 @extends('plantillas.main')
 @section('title', 'Solicitar Importación de una Marca')
 
-	{!!Html::script('js/productos/buscar.js') !!}
+{!!Html::script('js/productos/buscar.js') !!}
 
-@section('items')
+@section('title-header')
+   Demanda de Distribución
 @endsection
 
 @section('content-left')
-	<div class="alert alert-danger alert-dismissable" style="display: none;" id="alerta">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <div id="mensaje"></div>
-    </div>
+	@section('alertas')
+		<div class="alert alert-danger alert-dismissable" style="display: none;" id="alerta">
+	        <button type="button" class="close" data-dismiss="alert">&times;</button>
+	        <div id="mensaje"></div>
+	    </div>
+	@endsection
 
 	@include('solicitudDistribucion.modales.confirmarDistribucion')
-	
-	@section('title-header')
-		<h3><b>Solicitar Distribución</b></h3>
-	@endsection
 	
 	<div class="box box-success">
    		<div class="box-header with-border">

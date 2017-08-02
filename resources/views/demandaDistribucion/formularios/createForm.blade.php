@@ -7,17 +7,17 @@
 
 	<div class="form-group">
 		{!! Form::label('marca', 'Seleccione la marca que desea distribuir') !!}
-		{!! Form::select('marca_id', $marcas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción..']) !!}
+		{!! Form::select('marca_id', $marcas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción..', 'required']) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('provincia_region_id', 'Seleccione la provincia a la cual desea distribuir') !!}
-		{!! Form::select('provincia_region_id', $provincias, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción..']) !!}
+		{!! Form::select('provincia_region_id', $provincias, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción..', 'required']) !!}
 	</div>
 	
 	{!! Form::hidden('status', '1')  !!}
 
 	<div class="form-group">
-		{!! Form::submit('Crear Solicitud', ['class' => 'btn btn-primary']) !!}
+		{!! Form::submit('Crear Solicitud', ['class' => 'btn btn-primary pull-right']) !!}
 	</div>
 {!! Form::close() !!}

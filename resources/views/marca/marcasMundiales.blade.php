@@ -4,7 +4,11 @@
 {!!Html::script('js/marcas/buscar.js') !!}
 
 @section('title-header')
-	<span><strong><h3>Marcas Mundiales</h3></strong></span>
+   Marcas
+@endsection
+
+@section('title-complement')
+   (Mundiales)
 @endsection
 
 @section('content-left')

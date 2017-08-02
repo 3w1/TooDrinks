@@ -4,6 +4,7 @@ function buscarMarca() {
     document.getElementById("marcas").innerHTML = "";
         
     var nombre = document.getElementById('busqueda').value;
+    //var route = "http://www.toodrinks.com/marca/buscar-por-nombre/"+nombre+"";
     var route = "http://localhost:8000/marca/buscar-por-nombre/"+nombre+"";
                     
     $.ajax({
@@ -33,6 +34,7 @@ function buscarPorProductor() {
     document.getElementById("marcas").innerHTML = "";
         
     var productor = document.getElementById('productor').value;
+    //var route = "http://www.toodrinks.com/marca/buscar-por-productos/"+productor+"";
     var route = "http://localhost:8000/marca/buscar-por-productor/"+productor;
                     
     $.ajax({
@@ -62,6 +64,7 @@ function buscarPorPais() {
     document.getElementById("marcas").innerHTML = "";
         
     var pais = document.getElementById('pais').value;
+    //var route = "http://www.toodrinks.com/marca/buscar-por-pais/"+pais+"";
     var route = "http://localhost:8000/marca/buscar-por-pais/"+pais;
                     
     $.ajax({
@@ -86,7 +89,7 @@ function buscarPorPais() {
 }
 
 function cargarMarca($id){
-
+    //var route = "http://www.toodrinks.com/marca/detalles-marca/"+$id+"";
     var route = "http://localhost:8000/marca/detalles-marca/"+$id;
 
     document.getElementById("marca_id").value = $id;

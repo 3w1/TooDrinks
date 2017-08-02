@@ -3,6 +3,7 @@ function cargarProvincias() {
    document.getElementById("provincias").innerHTML = "<option value=''>Seleccione una provincia..</option>";
         
    var pais = document.getElementById('pais_id').value;
+   //var route = "http://www.toodrinks.com/pais/"+pais+"";
    var route = "http://localhost:8000/pais/"+pais+"";
                     
    $.ajax({
@@ -21,6 +22,7 @@ function cargarClases() {
     document.getElementById("clases_bebidas").innerHTML = "<option value=''>Seleccione una clase..</option>";
         
     var bebida = document.getElementById('bebida_id').value;
+    //var route = "http://www.toodrinks.com/bebida/"+bebida+"";
     var route = "http://localhost:8000/bebida/"+bebida+"";
                     
     $.ajax({

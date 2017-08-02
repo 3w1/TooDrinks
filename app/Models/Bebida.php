@@ -9,13 +9,9 @@ class Bebida extends Model
     protected $table = "bebida";
 
     protected $fillable = [
-    	'pais_id', 'nombre', 'caracteristicas', 'imagen',
+    	'nombre', 'caracteristicas', 'imagen',
     ]; 
 
-    public function pais(){
-        return $this->belongsTo('App\Models\Pais');
-    }
-    
     public function clases_bebidas(){
     	return $this->hasMany('App\Models\Clase_Bebida');
     }

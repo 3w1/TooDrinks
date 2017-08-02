@@ -14,11 +14,13 @@
 //RUTAS DE INICIO Y AUTENTICACIÓN
 Auth::routes();
 
-Route::get('/home', 'UsuarioController@index')->name('dashboard');
+Route::get('/home', 'UsuarioController@welcome')->name('welcome');
 
 Route::get('/', function () {
-    return redirect()->action('UsuarioController@index');
+    return redirect()->action('UsuarioController@welcome');
 });
+
+Route::get('/inicio', 'UsuarioController@index')->name('inicio');
 
 Route::get('registrarse/{tipo}${id}${token}', 'Auth\RegisterController@registrarse')->name('registrarse');
 // ./RUTAS DE INICIO Y AUTENTICACIÓN ./

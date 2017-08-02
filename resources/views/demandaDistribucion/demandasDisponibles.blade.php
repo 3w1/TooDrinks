@@ -1,20 +1,20 @@
 @extends('plantillas.main')
 @section('title', 'Demandas de Distribuidores')
 
-@section('items')
-   @if (Session::has('msj'))
-        <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
-        </div>
-    @endif
-  <span><strong><h3>Demandas de Distribuidores</h3></strong></span>
-   
+@section('title-header')
+   Demandas de Distribuidores
 @endsection
 
 @section('content-left')
-   <div class="row">
-      
+	@section('alertas')
+	    @if (Session::has('msj'))
+	        <div class="alert alert-success alert-dismissable">
+	            <button type="button" class="close" data-dismiss="alert">&times;</button>
+	            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+	        </div>
+	    @endif
+	@endsection
+
       <div class="col-md-12">
          <ul class="timeline">
             
@@ -73,9 +73,8 @@
             @endforeach
          </ul>
       </div>
-   
-      <div>
-        {{ $demandasDistribuidores->render() }}
-      </div>
-   </div>
+@endsection
+
+@section('paginacion')
+   {{$demandasDistribuidores->render()}}
 @endsection

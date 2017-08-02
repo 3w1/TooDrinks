@@ -195,9 +195,8 @@ class ProductoController extends Controller
 
     //Listado de productos de una marca específica
     public function listado($id, $marca){
-        $productos = Marca::find($id)
-                            ->productos()
-                            ->paginate(8);
+        $productos = Producto::where('marca_id', '=', $id)
+                        ->paginate(9);
 
         if (session('perfilTipo') == 'AD'){
             return view('adminWeb.listados.productos')->with(compact('productos', 'marca'));

@@ -3,24 +3,25 @@
 
 {!! Html::script('js/demandaProductos/cambiarStatus.js') !!}
 
-@section('items')
-   @if (Session::has('msj'))
-        <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
-        </div>
-    @endif
-    
-	<span><strong><h3>Mis Solicitudes de Distribución</h3></strong></span>
+@section('title-header')
+   Demandas de Distribución
 @endsection
 
 @section('content-left')
-   <div class="row">
+   
+    @section('alertas')
+       @if (Session::has('msj'))
+            <div class="alert alert-success alert-dismissable">
+               <button type="button" class="close" data-dismiss="alert">&times;</button>
+               <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+            </div>
+       @endif
+    @endsection
+      
       <div class="col-md-12">
          <div class="box">
-
             <div class="box-header">
-               <h3 class="box-title">Solicitudes</h3>
+               <h3 class="box-title">Mis Demandas</h3>
 
                <div class="box-tools">
                   <div class="input-group input-group-sm" style="width: 150px;">
@@ -73,7 +74,9 @@
                </table>
             </div>      
          </div>
-         <center>{{ $solicitudesDistribucion->render() }}</center>
-      </div>
    </div>
+@endsection
+
+@section('paginacion')
+   {{$solicitudesDistribucion->render()}}
 @endsection

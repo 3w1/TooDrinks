@@ -9,8 +9,8 @@ class Marca extends Model
     protected $table = "marca";
 
     protected $fillable = [
-        'productor_id', 'creador_id', 'tipo_creador', 'nombre', 'nombre_seo', 'descripcion', 'pais_id', 
-        'provincia_region_id', 'logo', 'website', 'reclamada', 'publicada',
+        'productor_id', 'creador_id', 'tipo_creador', 'nombre', 'nombre_seo', 'descripcion', 
+        'pais_id', 'logo', 'website', 'reclamada', 'publicada',
     ];
 
     public function productor(){
@@ -19,10 +19,6 @@ class Marca extends Model
 
     public function pais(){
     	return $this->belongsTo('App\Models\Pais');
-    }
-
-    public function provincia_region(){
-    	return $this->belongsTo('App\Models\Provincia_Region');
     }
 
     public function importadores(){

@@ -18,39 +18,34 @@
 	@else
 		{!! Form::hidden('publicada', '0') !!}
 	@endif
+	
+	<div class="form-group">
+	    {!! Form::label ('nombre','Nombre (*)') !!}
+	    {!! Form::text ('nombre',null,['class'=>'form-control','placeholder'=>'Ingrese un nombre para la marca', 'required']) !!}
+    </div>
+
+    <div class="form-group">
+    	{!! Form::label ('nombre_seo','Nombre SEO (*)') !!}
+	    {!! Form::text ('nombre_seo',null,['class'=>'form-control','placeholder'=>'Ingrese un nombre seo para la marca']) !!}
+    </div>
 
 	<div class="form-group">
-		{!! Form::label ('nombre','Nombre') !!}
-		{!! Form::text ('nombre',null,['class'=>'form-control','placeholder'=>'Ej. Polar', 'required']) !!}
+		{!! Form::label ('descripcion','Descripción (*)') !!}
+		{!! Form::textarea('descripcion',null,['class'=>'form-control','placeholder'=>'Ingrese una breve descripción para la marca', 'rows' => '5', 'required']) !!}
 	</div>
 
 	<div class="form-group">
-		{!! Form::label ('nombre_seo','Nombre Seo') !!}
-		{!! Form::text ('nombre_seo',null,['class'=>'form-control','placeholder'=>'Ej. Polar Seo', 'required']) !!}
+		{!! Form::label ('pais_id','País de Origen (*)') !!}
+		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'id' => 'pais_id', 'placeholder' => 'Seleccione un país..', 'required']) !!}
 	</div>
-
+			
 	<div class="form-group">
-		{!! Form::label ('descripcion','Descripcion') !!}
-		{!! Form::text ('descripcion',null,['class'=>'form-control','placeholder'=>'Ej. ', 'required']) !!}
+		{!! Form::label ('logo', 'Logo / Imagen (*)') !!}
+		{!! Form::file ('logo', ['class'=>'form-control', 'required']) !!}
 	</div>
-
-	<div class="form-group">
-		{!! Form::label ('pais_id','País') !!}
-		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'id' => 'pais_id', 'placeholder' => 'Seleccione un país..', 'onchange' => 'cargarProvincias();']) !!}
+	
+	<div class="fom-group">
+		{!! Form::submit ('Registrar Marca',['class'=>'btn btn-primary pull-right']) !!}
 	</div>
-
-	<div class="form-group">
-		{!! Form::label ('provincia_region_id','Provincia / Región') !!}
-		<select name="provincia_region_id" class="form-control" id="provincias">
-			<option value="">Seleccione una provincia..</option>
-		</select>
-	</div>
-
-	<div class="form-group">
-		{!! Form::label ('logo', 'Logo') !!}
-		{!! Form::file ('logo', ['class'=>'form-control','required']) !!}
-	</div>
-
-	{!! Form::submit ('Agregar',['class'=>'btn btn-primary']) !!}
 	
 {!! Form::close() !!}

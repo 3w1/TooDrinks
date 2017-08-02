@@ -10,10 +10,9 @@ class CreateBebidaTable extends Migration
     {
         Schema::create('bebida', function (Blueprint $table){
             $table->increments('id');
-            $table->integer('pais_id');
             $table->string('nombre');
-            $table->longText('caracteristicas');
-            $table->string('imagen');
+            $table->longText('caracteristicas')->nullable();
+            $table->string('imagen')->nullable();
             $table->timestamps();
 
             $table->foreign('pais_id')

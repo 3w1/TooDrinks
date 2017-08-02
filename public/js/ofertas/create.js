@@ -5,6 +5,7 @@ function cargarProvincias() {
 		document.getElementById("estados").innerHTML = "";
 			
 		var id = document.getElementById('pais_id').value;
+		//var urls = "http://www.toodrinks.com/pais/"+id+"";
 		var urls = "http://localhost:8000/pais/"+id+"";
 		var token = document.getElementById('token').value;
 			    
@@ -25,15 +26,16 @@ function cargarProvincias() {
 
 function cargarProductos() {
 
-    document.getElementById("productos").innerHTML = "<option value=''>Seleccione un producto..</option>";
-        
     var marca = document.getElementById('marca').value+".1";
-	var route = "http://localhost:8000/producto/"+marca+"";
+    var route = "http://www.toodrinks.com/producto/"+marca+"";
+	//var route = "http://localhost:8000/producto/"+marca+"";
                     
     $.ajax({
         url:route,
         type:'GET',
         success:function(ans){
+        	document.getElementById("productos").innerHTML = "<option value=''>Seleccione un producto..</option>";
+     		document.getElementById("productos").disabled = false;
         	console.log(ans[0]);
             for (var i = 0; i < ans.length; i++ ){
 
@@ -41,4 +43,14 @@ function cargarProductos() {
             }
         }
     });
+}
+
+function activarCosto(){
+	var opc = document.getElementById("envio").value;
+
+	if (opc == '0'){
+		document.getElementById("costo").disabled = true;
+	}else{
+		document.getElementById("costo").disabled = false;
+	}
 }

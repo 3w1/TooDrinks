@@ -14,8 +14,7 @@ class CreateProductoTable extends Migration
         	$table->string('nombre');
         	$table->string('nombre_seo');
         	$table->text('descripcion');
-		   	$table->integer('pais_id');
-        	$table->integer('provincia_region_id')->nullable();
+		   	  $table->integer('pais_id');
         	$table->integer('bebida_id');
         	$table->integer('clase_bebida_id');
         	$table->integer('marca_id');

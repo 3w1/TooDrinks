@@ -63,6 +63,9 @@
                                             {{ csrf_field() }}
                                         </form>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('inicio') }}">Dashboard</a>
+                                    </li>
                                 </ul>
                             </li>
                         @endif

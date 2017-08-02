@@ -2,12 +2,15 @@
 @section('title', 'Listado de Importadores')
 
 @section('title-header')
-	<span><strong><h3>Distribuidores del País</h3></strong></span>
+	Distribuidores
+@endsection
+
+@section('title-complement')
+	(Nacionales)
 @endsection
 
 @section('content-left')
-	
-	<div class="row">
+
 		@foreach($distribuidores as $distribuidor)
 			<div class="col-md-6 col-xs-12">
 
@@ -31,10 +34,37 @@
 	         	</div>
 	        </div>
 	    @endforeach
-	</div>
+@endsection
 
-	<div>
-		<center>{!! $distribuidores->render() !!}</center>
-	</div>
+@section('pagination')
+	{{$distribuidores->render()}}
+@endsection
+
+@section('content-right')
+    <div class="box box-solid box-success">
+      <div class="box-header with-border">
+         <h3 class="box-title">Filtros</h3>
+
+         <div class="box-tools">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+         </div>
+      </div>
+      
+      <div class="box-body no-padding">
+         <ul class="nav nav-pills nav-stacked">
+            <li class="active"><a href="{{ route('producto.mis-productos', 'todos') }}"><i class="fa fa-inbox"></i> Ver Todos
+               <span class="label label-primary pull-right"></span></a>
+            </li>
+            <li class="active"><a href="{{route('producto.mis-productos', 'confirmados')}}">
+               <i class="fa fa-envelope-o"></i> Registrados
+               <span class="label label-success pull-right"></span>
+            </a></li>
+            <li class="active"><a href="{{route('producto.mis-productos', 'no-confirmados')}}">
+               <i class="fa fa-file-text-o"></i> Sin Registrar
+               <span class="label label-danger pull-right"></span>
+            </a></li>
+         </ul>
+      </div>
+   </div>
 
 @endsection

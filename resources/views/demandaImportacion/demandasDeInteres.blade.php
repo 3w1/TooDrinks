@@ -3,23 +3,25 @@
 
 {!! Html::script('js/credito/detalleGasto.js') !!}
 
-@section('items')
-   @if (Session::has('msj'))
-        <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
-        </div>
-    @endif
-    
-	<span><strong><h3>Mis Demandas de Importador</h3></strong></span>
+@section('title-header')
+   Demandas de Importadores
 @endsection
 
 @section('content-left')
-   <div class="row">
+   
+    @section('alertas')
+       @if (Session::has('msj'))
+            <div class="alert alert-success alert-dismissable">
+               <button type="button" class="close" data-dismiss="alert">&times;</button>
+               <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+            </div>
+       @endif
+    @endsection
+      
       <div class="col-md-12">
          <div class="box">
             <div class="box-header">
-               <br>
+               <h3 class="box-title">Mis Demandas de Interés</h3>
                <div class="box-tools">
                   <div class="input-group input-group-sm" style="width: 150px;">
                      <input type="text" name="table_search" class="form-control pull-right" placeholder="Buscar">
@@ -53,7 +55,9 @@
                </table>
             </div>      
          </div>
-         <center>{{ $demandas->render() }}</center>
-      </div>
    </div>
+@endsection
+
+@section('paginacion')
+   {{$demandas->render()}}
 @endsection

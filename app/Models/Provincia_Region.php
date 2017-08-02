@@ -35,15 +35,7 @@ class Provincia_Region extends Model
     public function horeca(){
     	return $this->hasMany('App\Models\Horeca');
     }
-
-    public function marcas(){
-        return $this->hasMany('App\Models\Marca');
-    }
-
-    public function productos(){
-        return $this->hasMany('App\Models\Producto');
-    }
-
+    
     public function destinos_ofertas(){
         return $this->hasMany('App\Models\Destino_Oferta');
     }

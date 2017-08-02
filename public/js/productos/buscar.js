@@ -4,6 +4,7 @@ function buscarProducto() {
     document.getElementById("productos").innerHTML = "";
         
     var nombre = document.getElementById('busqueda').value+".2";
+    //var route = "http://www.toodrinks.com/producto/"+nombre+"";
     var route = "http://localhost:8000/producto/"+nombre+"";
                     
     $.ajax({
@@ -40,6 +41,7 @@ function buscarProducto() {
 
 function cargarCategorias(){
     var bebida = document.getElementById("bebida").value;
+    //var route = "http://www.toodrinks.com/bebida/clases/"+bebida+"";
     var route = "http://localhost:8000/bebida/clases/"+bebida;
 
     $.ajax({
@@ -61,6 +63,7 @@ function buscarPorClase(){
     var bebida = document.getElementById('bebida').value;
     var clase = document.getElementById('clase').value;
 
+    //var route = "http://www.toodrinks.com/producto/productos-por-clase/"+bebida+"/"+clase+"";
     var route = "http://localhost:8000/producto/productos-por-clase/"+bebida+"/"+clase;
                     
     $.ajax({
@@ -95,6 +98,7 @@ function buscarPorPais(){
     var bebida = document.getElementById('tipo_bebida').value;
     var pais = document.getElementById('pais').value;
 
+    //var route = "http://www.toodrinks.com/producto/productos-por-pais/"+bebida+"/"+pais+"";
     var route = "http://localhost:8000/producto/productos-por-pais/"+bebida+"/"+pais;
                     
     $.ajax({
@@ -123,6 +127,7 @@ function buscarPorPais(){
 
 function cargarProducto($id){
 
+    //var route = "http://www.toodrinks.com/producto/verificar-producto/"+$id+"";
     var route = "http://localhost:8000/producto/verificar-producto/"+$id+"";
 
     document.getElementById("producto_id").value = $id;

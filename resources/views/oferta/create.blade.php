@@ -1,20 +1,29 @@
 @extends('plantillas.main')
 @section('title', 'Crear Oferta de Producto')
 
-@section('items')
-	
+@section('title-header')
+   Oferta
+@endsection
+
+@section('title-complement')
+	@if ($tipo == '1')
+   		(Nueva Oferta de {{$producto}})
+   	@else
+   		(Nueva Oferta)
+   	@endif
 @endsection
 
 @section('content-left')
-	@section('title-header')
-
-		@if ($tipo == '1')
-			<h3><b>Crear Oferta  del Producto {{ $producto }}</b></h3>
-		@else
-			<h3><b>Crear Oferta  de Producto </b></h3>
-		@endif
-	@endsection
-
+	
+	@section('alertas')
+      	@if (Session::has('msj'))
+         	<div class="alert alert-success alert-dismissable">
+            	<button type="button" class="close" data-dismiss="alert">&times;</button>
+            	<strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+        	</div>
+      	@endif
+   	@endsection
+	
 	<div class="form-group">
 		@if ( (session('perfilSuscripcion') == 'Gratis') || (session('perfilSuscripcion') == 'Basic') )
 			@if (session('perfilSaldo') >= '25')

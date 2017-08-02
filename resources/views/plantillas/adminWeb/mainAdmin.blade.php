@@ -62,7 +62,7 @@
                      <div class="row">
                         <div class="col-md-1"></div>
                         <div class="col-md-10">
-                            @yield('alertas')
+                           @yield('alertas')
                         </div>
                         <div class="col-md-1"></div>
                      </div>

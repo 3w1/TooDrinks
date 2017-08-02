@@ -1,19 +1,23 @@
 @extends('plantillas.main')
-@section('title', 'Agregar Producto')
+@section('title', 'Producto')
 
-@section('items')
+@section('title-header')
+   Productos
+@endsection
 
+@section('title-complement')
+	@if ($id == '0')
+   		(Nuevo Producto)
+   	@else
+   		(Nuevo Producto a la Marca {{$marca}})
+   	@endif
 @endsection
 
 @section('content-left')
-
-	@section('title-header')
-		@if ($id == '0')
-			<h3><b>Agregar Producto</b></h3>
-		@else 
-			<h3><b>Agregar Producto a la Marca {{ $marca }}</b></h3>
-		@endif
-	@endsection
+	
+	@section('alertas')
+     	@include('plantillas.alertas.AlertasRequest')
+   	@endsection 
 	
 	@include('producto.formularios.createForm')
 

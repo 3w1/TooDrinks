@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\Request; 
+use App\Http\Requests\MarcaCreateRequest; use App\Http\Requests\MarcaUpdateRequest;
 use App\Models\Marca;
 use App\Models\Pais;
 use App\Models\Provincia_Region; 
@@ -26,17 +27,19 @@ class MarcaController extends Controller
             return view('adminWeb.listados.marcas')->with(compact('marcas'));
         }
         elseif (session('perfilTipo') == 'P'){
-            $marcas = Productor::find(session('perfilId'))
-                                    ->marcas()
-                                    ->paginate(6);
+            $marcas = Marca::where('productor_id', '=', session('perfilId'))
+                        ->orderBy('nombre', 'ASC')
+                        ->paginate(6);
         }elseif (session('perfilTipo') == 'I'){
             $marcas = Importador::find(session('perfilId'))
-                                    ->marcas()
-                                    ->paginate(6);
+                        ->marcas()
+                        ->orderBy('nombre', 'ASC')
+                        ->paginate(6);
         }elseif (session('perfilTipo') == 'D'){
             $marcas = Distribuidor::find(session('perfilId'))
-                                    ->marcas()
-                                    ->paginate(6);
+                        ->marcas()
+                        ->orderBy('nombre', 'ASC')
+                        ->paginate(6);
         }elseif (session('perfilTipo') == 'M'){
             $marcas = Marca::orderBy('nombre', 'ASC')
                         ->where('productor_id', '=', session('perfilPadre'))

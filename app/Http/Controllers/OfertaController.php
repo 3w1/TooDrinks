@@ -20,11 +20,10 @@ class OfertaController extends Controller
     
     public function index()
     {
-        $ofertas = DB::table('oferta')
-                    ->where([
-                        ['tipo_creador', '=', session('perfilTipo')],
-                        ['creador_id', '=', session('perfilId')],
-                    ])
+        $ofertas = Oferta::where([
+                            ['tipo_creador', '=', session('perfilTipo')],
+                            ['creador_id', '=', session('perfilId')],
+                           ])
                     ->paginate(6);
 
         return view('oferta.index')->with(compact('ofertas'));

@@ -1,4 +1,5 @@
 function cargarDetalles($id){
+    //var route = "http://www.toodrinks.com/banner-publicitario/detalles/"+$id"";
     var route = "http://localhost:8000/banner-publicitario/detalles/"+$id+"";
                     
     $.ajax({

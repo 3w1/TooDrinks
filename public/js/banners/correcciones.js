@@ -1,4 +1,5 @@
 function cargarCorrecciones($id) {
+    //var route = "http://www.toodrinks.com/banner-publicitario/cargar-correcciones/"+$id+"";
     var route = "http://localhost:8000/banner-publicitario/cargar-correcciones/"+$id+"";
                     
     $.ajax({

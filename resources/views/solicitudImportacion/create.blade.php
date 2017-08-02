@@ -1,22 +1,25 @@
 @extends('plantillas.main')
 @section('title', 'Solicitar Importación de una Marca')
 
-	{!!Html::script('js/productos/buscar.js') !!}
+{!!Html::script('js/productos/buscar.js') !!}
 
-@section('items')
+@section('title-header')
+   Demanda de Importación
+@endsection
+
+@section('title-complement')
+   (Crear Nueva)
 @endsection
 
 @section('content-left')
-	<div class="alert alert-danger alert-dismissable" style="display: none;" id="alerta">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <div id="mensaje"></div>
-    </div>
+	@section('alertas')
+		<div class="alert alert-danger alert-dismissable" style="display: none;" id="alerta">
+	        <button type="button" class="close" data-dismiss="alert">&times;</button>
+	        <div id="mensaje"></div>
+	    </div>
+	@endsection
 	
 	@include('solicitudImportacion.modales.confirmarImportacion')
-	
-	@section('title-header')
-		<h3><b>Solicitar Importación</b></h3>
-	@endsection
 	
 	<div class="box box-success">
    		<div class="box-header with-border">

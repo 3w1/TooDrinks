@@ -1,20 +1,24 @@
 @extends('plantillas.main')
 @section('title', 'Banner Publicitario')
 
-@section('items')
+@section('title-header')
+   Banner Publicitario
+@endsection
+
+@section('title-complement')
+   (Detalles)
 @endsection
 
 @section('content-left')
-   @section('title-header')
-      <h3><b>Detalles de la Solicitud</b></h3>
+   
+   @section('alertas')
+      @if (Session::has('msj'))
+         <div class="alert alert-success alert-dismissable">
+             <button type="button" class="close" data-dismiss="alert">&times;</button>
+             <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+         </div>
+      @endif
    @endsection
-
-   @if (Session::has('msj'))
-      <div class="alert alert-success alert-dismissable">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
-      </div>
-   @endif
 
    <div class="row">
       <div class="col-md-4"></div>

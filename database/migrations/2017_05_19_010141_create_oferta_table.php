@@ -17,9 +17,9 @@ class CreateOfertaTable extends Migration
         	$table->text('descripcion');
         	$table->double('precio_unitario', 6, 2);
         	$table->double('precio_lote', 6, 2 );
-        	$table->integer('cantidad_producto')->default(0);
-        	$table->integer('cantidad_caja')->defautl(0);
-        	$table->integer('cantidad_minima')->default(0);
+        	$table->integer('cantidad_producto')->nullable();
+        	$table->integer('cantidad_caja')->nullable();
+        	$table->integer('cantidad_minima')->nullable();
         	$table->boolean('envio');
         	$table->double('costo_envio', 6, 2)->nullable();
           $table->boolean('visible_importadores');

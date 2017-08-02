@@ -17,7 +17,6 @@ class CreateMarcaTable extends Migration
             $table->string('nombre_seo');
             $table->text('descripcion');
             $table->integer('pais_id');
-            $table->integer('provincia_region_id');
             $table->string('logo');
             $table->string('website')->nullable();
             $table->boolean('reclamada');

@@ -4,13 +4,19 @@
 {!!Html::script('js/productos/buscar.js') !!}
 
 @section('title-header')
-	<span><strong><h3>Productos Mundiales</h3></strong></span>
+   Productos
+@endsection
+
+@section('title-complement')
+   (Mundiales)
 @endsection
 
 @section('content-left')
-	<div class="alert alert-danger alert-dismissable" style="display: none;" id="alerta">
-        <div id="mensaje"></div>
-    </div>
+	@section('alertas')
+		<div class="alert alert-danger alert-dismissable" style="display: none;" id="alerta">
+        	<div id="mensaje"></div>
+    	</div>
+    @endsection
 	
 	@include('producto.modales.detallesProducto')
 

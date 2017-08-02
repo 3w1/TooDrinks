@@ -9,6 +9,7 @@ function buscarProductor() {
     
     document.getElementById("productores").innerHTML = "";
     var productor = document.getElementById('busqueda').value+"";
+    //var route = "http://www.toodrinks.com/productor/"+productor+"";;
     var route = "http://localhost:8000/productor/"+productor+"";
                     
     $.ajax({

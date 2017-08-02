@@ -1,19 +1,19 @@
 @extends('plantillas.main')
 @section('title', 'Demandas de Importadores')
 
-@section('items')
-   @if (Session::has('msj'))
-        <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
-        </div>
-    @endif
-  <span><strong><h3>Demandas de Importadores</h3></strong></span>
-   
+@section('title-header')
+   Demandas de Importadores
 @endsection
 
 @section('content-left')
-   <div class="row">
+	@section('alertas')
+	    @if (Session::has('msj'))
+	        <div class="alert alert-success alert-dismissable">
+	            <button type="button" class="close" data-dismiss="alert">&times;</button>
+	            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+	        </div>
+	    @endif
+	@endsection
       
       <div class="col-md-12">
          <ul class="timeline">
@@ -48,10 +48,8 @@
             @endforeach
          </ul>
       </div>
-      
-      <div>
-         {{$demandasImportadores->render()}}
-      </div>
-      
-   </div>
+@endsection
+
+@section('pagination')
+	{{$demandasImportadores->render()}}
 @endsection

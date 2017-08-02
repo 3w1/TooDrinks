@@ -125,64 +125,62 @@
 
       <div class="wrapper">
 
-        <header class="main-header">
-          <!-- Logo -->
-          <a href="{{ route('usuario.index') }}" class="logo">
-            <!-- mini logo for sidebar mini 50x50 pixels -->
-              <span class="logo-mini"><b>T</b>D</span>
-              <!-- logo for regular state and mobile devices -->
-              <span class="logo-lg"><b>Too</b>Drinks</span>
-          </a>
-
-          @include('plantillas.partes.navbar')
-
-        </header>
+         <header class="main-header">
+            <a href="{{ route('usuario.index') }}" class="logo">
+               <span class="logo-mini"><b>T</b>D</span>
+               <span class="logo-lg"><b>Too</b>Drinks</span>
+            </a>
+            @include('plantillas.partes.navbar')
+         </header>
       
-      <!-- Left side column. contains the logo and sidebar -->
-       <aside class="main-sidebar">
-          <!-- sidebar: style can be found in sidebar.less -->
-          <section class="sidebar">
-            @include('plantillas.partes.sidebar')
-  
-          </section>
-          <!-- /.sidebar -->
-        </aside>
+         <aside class="main-sidebar">
+            <section class="sidebar">
+               @include('plantillas.partes.sidebar')
+            </section>
+         </aside>
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-          <!-- Content Header (Page header) -->
-          <section class="content-header">
-              @yield('title-header')
-          </section>
+         <div class="content-wrapper">
+            <section class="content-header">
+               <h1>@yield('title-header')
+               <small>@yield('title-complement')</small></h1>
+               <ol class="breadcrumb">
+                  <li><a href="#"><i class="fa fa-dashboard"></i> Breadcrumbs</a></li>
+                  <li class="active">En construcción</li>
+               </ol>
+            </section>
 
-          <!-- Main content -->
-          <section class="content">
-              <!-- Small boxes (Stat box) -->
-              <div class="row">
-                    @yield('items') 
-              </div>
+            <section class="content">
+               <div class="row">
+                  @yield('items') 
+               </div>
     
-              <!-- Main row -->
-              <div class="row">
-                <!-- Left col -->
-                <section class="col-lg-8 connectedSortable">
-                  @yield('content-left')
-                </section>
-                <!-- /.Left col -->
-                
-                <!-- right col (We are only adding the ID to make the widgets sortable)-->
-               <section class="col-lg-4 connectedSortable">
-                  @yield('content-right')
-                  @include('plantillas.partes.content-right')
+               <!-- Main row -->
+               <div class="row">
+                  <section class="col-lg-9 connectedSortable">
+                     <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10">
+                           @yield('alertas')
+                        </div>
+                        <div class="col-md-1"></div>
+                     </div>
+                     @yield('content-left')
+                  </section>
                   
-               </section>
-                <!-- right col -->
-              </div>
-              <!-- /.row (main row) -->
-          </section>
-          <!-- /.content -->
-        </div>
-        <!-- /.content-wrapper -->
+                  <section class="col-lg-3 connectedSortable">
+                     @yield('content-right')
+                     @include('plantillas.partes.content-right')
+                  </section>
+               </div>
+
+               <!-- Paginación -->
+               <div class="row">
+                  <div class="col-md-9">
+                     <center>@yield('paginacion')</center>
+                  </div>
+               </div>
+            </section>
+         </div>
       </div>
      
 	   {!! Html::script('bootstrap/js/jquery-3.2.1.min.js') !!}

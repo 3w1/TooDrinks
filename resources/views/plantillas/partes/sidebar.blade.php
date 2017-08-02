@@ -269,11 +269,11 @@
                      @if($cont_AD > 0) <small class="label pull-right bg-red">{{$cont_AD}}</small>@endif
                   </span>
                </a></li>
-               <li><a href=""><i class="fa fa-circle-o"></i> Marcas
+               <!--<li><a href=""><i class="fa fa-circle-o"></i> Marcas
                   <span class="pull-right-container">
                      @if($cont_NM > 0) <small class="label pull-right bg-purple">{{$cont_NM}}</small>@endif
                   </span>
-               </a></li>
+               </a></li>-->
                <li><a href="{{ route('productor.confirmar-productos') }}"><i class="fa fa-circle-o"></i> Productos
                   <span class="pull-right-container">
                      @if($cont_NP > 0) <small class="label pull-right bg-yellow">{{$cont_NP}}</small>@endif
@@ -485,7 +485,6 @@
              </a>
             <ul class="treeview-menu">
                <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
-               <li><a href="{{ route('producto.mis-productos', 'todos') }}"><i class="fa fa-circle-o"></i> Mis Productos</a></li>
                <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Nueva Marca</a></li>
                <li><a href="{{ route('marca.mundiales') }}"><i class="fa fa-circle-o"></i> Marcas Mundiales</a></li>
             </ul>

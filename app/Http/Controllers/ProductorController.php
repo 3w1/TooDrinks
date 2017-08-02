@@ -184,7 +184,7 @@ class ProductorController extends Controller
                     ->join('marca', 'importador_marca.marca_id', '=', 'marca.id')
                     ->where('marca.productor_id', '=', session('perfilId'))
                     ->where('importador_marca.status', '=', '0')
-                    ->get();
+                    ->paginate(10);
 
         return view('productor.solicitudes.importadores')->with(compact('solicitudes'));
     }
@@ -265,7 +265,7 @@ class ProductorController extends Controller
                     ->join('marca', 'distribuidor_marca.marca_id', '=', 'marca.id')
                     ->where('marca.productor_id', '=', session('perfilId'))
                     ->where('distribuidor_marca.status', '=', '0')
-                    ->get();
+                    ->paginate(10);
 
         return view('productor.solicitudes.distribuidores')->with(compact('solicitudes'));
     }
@@ -328,13 +328,12 @@ class ProductorController extends Controller
     }
 
      public function confirmar_productos(){
-        $productos = DB::table('producto')
-                    ->select('producto.*')
+        $productos = Producto::select('producto.*')
                     ->join('marca', 'producto.marca_id', '=', 'marca.id')
                     ->where('marca.productor_id', '=', session('perfilId'))
                     ->where('producto.confirmado', '=', '0')
                     ->orderBy('created_at', 'DESC')
-                    ->paginate(5);
+                    ->paginate(6);
 
         return view('productor.solicitudes.productos')->with(compact('productos'));
     }

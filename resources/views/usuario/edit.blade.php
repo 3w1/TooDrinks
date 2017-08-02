@@ -1,5 +1,10 @@
 @extends('plantillas.main')
-@section('title', 'Modificar Usuario'.$usuario->nombre)
+@section('title', 'Mi Perfil')
+
+@section('title-header')
+   Editar Perfil
+@endsection
+
 @section('content-left')
 
 	{!! Html::script('js/usuarios/edit.js') !!}

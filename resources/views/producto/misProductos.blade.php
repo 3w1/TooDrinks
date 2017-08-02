@@ -41,55 +41,59 @@
 @extends('plantillas.main')
 @section('title', 'Listado de Productos')
 
-@section('items')
-  @if (Session::has('msj'))
-        <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
-        </div>
-    @endif
-  <span><strong><h3>Mis Productos</strong></h3></strong></span>
+@section('title-header')
+   Productos
+@endsection
+
+@section('title-complement')
+   (Mis Productos)
 @endsection
 
 @section('content-left')   
-
-   <div class="row">
-      @foreach($productos as $producto)
-         <div class="col-md-4 col-xs-6">
-            <div class="thumbnail">
-               <div>
-                  <img src="{{ asset('imagenes/productos/thumbnails/') }}/{{ $producto->imagen }}" class="img-responsive">
-               </div>             
-               <div class="caption">
-                  <p>
-                     @if ($producto->publicado == '0')
-                        <label class="label label-danger">Sin Publicar</label>
-                     @else
-                        <label class="label label-success">Publicado</label>
-                     @endif
-                     @if ($producto->confirmado == '0')
-                        <label class="label label-danger">Sin Confirmar</label>
-                     @else
-                        <label class="label label-success">Confirmado</label>
-                     @endif
-                  </p>
-                  <h3>{{ $producto->nombre }}</h3>
-                  <p><strong>{{ $producto->bebida->nombre }}</strong> ({{ $producto->clase_bebida->clase }})</p>
-                  <p>
-                     <a href="{{ route('producto.detalle', $producto->id) }}" class="btn btn-primary" role="button">Ver Más</a>
-                     @if (session('perfilTipo') != 'H')
-                        <a href="{{ route('oferta.crear-oferta', [$producto->id, $producto->nombre]) }}" class="btn btn-info" role="button">Ofertar</a>
-                     @endif
-                  </p>
-               </div>
+   @section('alertas')
+      @if (Session::has('msj'))
+           <div class="alert alert-success alert-dismissable">
+               <button type="button" class="close" data-dismiss="alert">&times;</button>
+               <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+           </div>
+      @endif
+   @endsection
+   
+   @foreach($productos as $producto)
+      <div class="col-md-4 col-xs-6">
+         <div class="thumbnail">
+            <div>
+               <img src="{{ asset('imagenes/productos/thumbnails/') }}/{{ $producto->imagen }}" class="img-responsive">
+            </div>             
+            <div class="caption">
+               <p>
+                  @if ($producto->publicado == '0')
+                     <label class="label label-danger">Sin Publicar</label>
+                  @else
+                     <label class="label label-success">Publicado</label>
+                  @endif
+                  @if ($producto->confirmado == '0')
+                     <label class="label label-danger">Sin Confirmar</label>
+                  @else
+                     <label class="label label-success">Confirmado</label>
+                  @endif
+               </p>
+               <h3>{{ $producto->nombre }}</h3>
+               <p><strong>{{ $producto->bebida->nombre }}</strong> ({{ $producto->clase_bebida->clase }})</p>
+               <p>
+                  <a href="{{ route('producto.detalle', $producto->id) }}" class="btn btn-primary" role="button">Ver Más</a>
+                  @if (session('perfilTipo') != 'H')
+                     <a href="{{ route('oferta.crear-oferta', [$producto->id, $producto->nombre]) }}" class="btn btn-info" role="button">Ofertar</a>
+                  @endif
+               </p>
             </div>
          </div>
-      @endforeach
-   </div>
+      </div>
+   @endforeach
+@endsection
 
-   <div>
-      {{ $productos->render() }}
-   </div>
+@section('paginacion')
+   {{$productos->render()}}
 @endsection
 
 @section('content-right')
