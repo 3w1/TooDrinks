@@ -55,8 +55,8 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            //'email' => 'required|string|email|max:255|unique:users',
+            //'password' => 'required|string|min:6|confirmed',
         ]);
     }
 
@@ -77,13 +77,13 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
             'nombre' => $data['nombre'],
             'apellido' => $data['apellido'],
-            'direccion' => $data['direccion'], 
-            'telefono' => $data['telefono'], 
-            'telefono_opcional' => $data['telefono_opcional'],
-            'codigo_postal' => $data['codigo_postal'],
+            //'direccion' => $data['direccion'], 
+            //'telefono' => $data['telefono'], 
+            //'telefono_opcional' => $data['telefono_opcional'],
+            //'codigo_postal' => $data['codigo_postal'],
             'pais_id' => $data['pais_id'],
             'provincia_region_id' => $data['provincia_region_id'],
-            'avatar' => 'usuario-icono.jpg',
+            //'avatar' => 'usuario-icono.jpg',
             'estado_datos' => $data['estado_datos'],
             'productor' => '0',
             'importador' => '0',

@@ -17,10 +17,6 @@ class UsuarioController extends Controller
         $this->middleware('auth', ['except' => 'welcome']);
     }
 
-    public function welcome(){
-        return view('auth.home');
-    }
-
     public function confirmar_correo($id, $token){
         $user = User::find($id);
 

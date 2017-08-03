@@ -11,13 +11,21 @@
 |
 */
 
+// ******* RUTAS DEL FRONTEND ******* //
+Route::get('main', 'FrontendController@index')->name('frontend.index');
+Route::get('noticias', 'FrontendController@noticias')->name('frontend.noticias');
+Route::get('quienes-somos', 'FrontendController@quienes_somos')->name('frontend.quienes-somos');
+Route::get('contacto', 'FrontendController@contacto')->name('frontend.contacto');
+// *** FIN DE RUTAS DEL FRONTEND *** //
+
+
 //RUTAS DE INICIO Y AUTENTICACIÓN
 Auth::routes();
 
-Route::get('/home', 'UsuarioController@welcome')->name('welcome');
+Route::get('/home', 'FrontendController@index')->name('welcome');
 
 Route::get('/', function () {
-    return redirect()->action('UsuarioController@welcome');
+    return redirect()->action('FrontendController@index');
 });
 
 Route::get('/inicio', 'UsuarioController@index')->name('inicio');
