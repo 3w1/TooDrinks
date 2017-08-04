@@ -7,7 +7,7 @@
             <a href="{{route('frontend.noticias')}}">Noticias</a>
         </li>
         <li class="menu-item-has-children">
-            <a href="flight-index.html">Marcas</a>
+            <a href="{{route('frontend.marcas')}}">Marcas</a>
         </li>
         <li class="menu-item-has-children">
             <a href="car-index.html">Productos</a>

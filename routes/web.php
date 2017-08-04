@@ -14,8 +14,11 @@
 // ******* RUTAS DEL FRONTEND ******* //
 Route::get('main', 'FrontendController@index')->name('frontend.index');
 Route::get('noticias', 'FrontendController@noticias')->name('frontend.noticias');
+Route::get('marcas', 'FrontendController@marcas')->name('frontend.marcas');
 Route::get('quienes-somos', 'FrontendController@quienes_somos')->name('frontend.quienes-somos');
 Route::get('contacto', 'FrontendController@contacto')->name('frontend.contacto');
+
+Route::get('marca/{id}', 'FrontendController@detalle_marca')->name('frontend.marca');
 // *** FIN DE RUTAS DEL FRONTEND *** //
 
 
