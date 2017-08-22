@@ -8,7 +8,7 @@ use App\Models\Pais;
 use App\Models\Provincia_Region;
 use App\Models\Productor; use App\Models\Importador; use App\Models\Distribuidor;
 use App\Models\Horeca; use App\Models\Multinacional;
-use DB; use Auth; use Input; use Image;
+use DB; use Auth; use Input; use Image; use CheckCuenta;
 
 class UsuarioController extends Controller
 {
@@ -25,7 +25,40 @@ class UsuarioController extends Controller
                             ->where('id', '=', $id)
                             ->update(['activado' => '1', 'codigo_confirmacion' => null ]);
 
-            return redirect('usuario')->with('msj', 'Su cuenta ha sido activada exitosamente.');
+            if ($user->productor == '1'){
+                $productor = DB::table('productor')
+                            ->select('id')
+                            ->where('user_id', '=', $id)
+                            ->first();
+
+                $url = 'productor/'.$productor->id.'/edit';
+                return redirect($url)->with('msj', 'Su cuenta ha sido activada exitosamente. Para finalizar el registro, por favor complete los datos de su Productor.');
+            }elseif ($user->importador == '1'){
+                $importador = DB::table('importador')
+                            ->select('id')
+                            ->where('user_id', '=', $id)
+                            ->first();
+
+                $url = 'importador/'.$importador->id.'/edit';
+                return redirect($url)->with('msj', 'Su cuenta ha sido activada exitosamente. Para finalizar el registro, por favor complete los datos de su Importador.');
+            }elseif ($user->distribuidor == '1'){
+                 $distribuidor = DB::table('distribuidor')
+                            ->select('id')
+                            ->where('user_id', '=', $id)
+                            ->first();
+
+                $url = 'distribuidor/'.$distribuidor->id.'/edit';
+                return redirect($url)->with('msj', 'Su cuenta ha sido activada exitosamente. Para finalizar el registro, por favor complete los datos de su Distribuidor.');
+            }elseif ($user->horeca == '1'){
+                 $horeca = DB::table('horeca')
+                            ->select('id')
+                            ->where('user_id', '=', $id)
+                            ->first();
+
+                $url = 'horeca/'.$horeca->id.'/edit';
+                return redirect($url)->with('msj', 'Su cuenta ha sido activada exitosamente. Para finalizar el registro, por favor complete los datos de su Horeca.');
+            }
+            
         }else{
             return redirect('');
         }

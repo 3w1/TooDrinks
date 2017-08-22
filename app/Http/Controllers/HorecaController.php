@@ -77,6 +77,10 @@ class HorecaController extends Controller
         $horeca->fill($request->all());
         $horeca->save();
 
+        session(['perfilNombre' => $horeca->nombre]);
+        session(['perfilPais' => $horeca->pais_id]);
+        session(['perfilProvincia' => $horeca->provincia_region_id]);
+
         $url = 'horeca/'.$id.'/edit';
        return redirect($url)->with('msj', 'Sus datos han sido actualizados exitosamente.');
     }
@@ -96,6 +100,8 @@ class HorecaController extends Controller
         $actualizacion = DB::table('horeca')
                             ->where('id', '=', $request->id)
                             ->update(['logo' => $nombre ]);
+
+        session(['perfilLogo' => $nombre]);
        
        $url = 'horeca/'.$request->id.'/edit';
        return redirect($url)->with('msj', 'Su imagen de perfil ha sido actualizada exitosamente.');

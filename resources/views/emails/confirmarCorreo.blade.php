@@ -7,6 +7,6 @@
 <body>
 	<h3><strong>¡¡Gracias por registrarte en TooDrinks!!</strong></h3>
 	
-	<span>Para finalizar tu registro y empezar a disfrutar de nuestro sitio web, confirma tu correo aquí <a href="http://localhost:8000/confirmar-correo/{{$data['id_usuario']}}${{$data['codigo_confirmacion']}}">CONFIRMAR CORREO</a></span>
+	<span>Para finalizar tu registro y empezar a disfrutar de nuestro sitio web, confirma tu correo aquí <a href="http://localhost:8000/usuario/confirmar-correo/{{$data['id_usuario']}}${{$data['codigo_confirmacion']}}">CONFIRMAR CORREO</a></span>
 </body>
 </html>

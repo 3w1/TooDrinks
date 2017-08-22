@@ -190,7 +190,6 @@
 </div>
 
 <ul class="sidebar-menu">
-   @if (Auth::user()->activado == 1)
       @if(session('perfilTipo') == 'P')
          <li class="header">Panel de Productor</li>
          <li><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
@@ -656,7 +655,6 @@
             <li><a href="{{ route('credito.index') }}"><i class="fa fa-circle-o"></i> Comprar Plan</a></li>
          </ul>
       </li>
-   @endif
 
    @if (Auth::user()->cantidad_entidades > 1)
       <li class="header">Opciones de Perfil</li>

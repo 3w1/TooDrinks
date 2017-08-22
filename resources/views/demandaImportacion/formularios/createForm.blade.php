@@ -10,12 +10,12 @@
 	</div> 
 
 	<div class="form-group">
-		{!! Form::label('marca', 'Marca que desea importar') !!}
+		{!! Form::label('marca', 'Marca que desea exportar') !!}
 		{!! Form::select('marca_id', $marcas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una marca..', 'required']) !!}
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('pais', 'País al cual desea importar') !!}
+		{!! Form::label('pais', 'País al cual desea exportar') !!}
 		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'required']) !!}
 	</div>
 

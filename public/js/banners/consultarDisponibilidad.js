@@ -3,8 +3,8 @@ function consultarDisponibilidad(){
 	var dias = document.getElementById("dias").value;
 	//var banner = document.getElementById("banner_id").value;
 
-    //var route = "http://www.toodrinks.com/banner-publicitario/consultar-disponibilidad/"+pais+"/"+dias;
-	var route = "http://localhost:8000/banner-publicitario/consultar-disponibilidad/"+pais+"/"+dias;
+    var route = "http://www.toodrinks.com/banner-publicitario/consultar-disponibilidad/"+pais+"/"+dias;
+	//var route = "http://localhost:8000/banner-publicitario/consultar-disponibilidad/"+pais+"/"+dias;
                     
     $.ajax({
         url:route,

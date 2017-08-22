@@ -1,14 +1,13 @@
 @extends('plantillas.main')
 @section('title', 'Mi Perfil')
 
-{!! Html::script('js/productores/edit.js') !!}
-
 @section('title-header')
    Editar Perfil
 @endsection
 
 @section('content-left')
-
+	{!! Html::script('js/productores/edit.js') !!}
+	
 	@section('alertas')
       @if (Session::has('msj'))
            <div class="alert alert-success alert-dismissable">

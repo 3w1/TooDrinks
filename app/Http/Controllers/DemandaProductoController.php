@@ -235,13 +235,12 @@ class DemandaProductoController extends Controller
 
         if ($request->tipo_producto == 'P'){
             $producto = DB::table('producto')
-                    ->select('id', 'pais_id', 'provincia_region_id', 'bebida_id', 'marca_id', 'nombre')
+                    ->select('id', 'pais_id', 'bebida_id', 'marca_id', 'nombre')
                     ->where('id', '=', $request->producto_id)
                     ->get()
                     ->first();
 
             $demanda_producto->pais_id = $producto->pais_id;
-            $demanda_producto->provincia_region_id = $producto->provincia_region_id;
             $demanda_producto->bebida_id = $producto->bebida_id;
         }else{
             $demanda_producto->producto_id = '0';

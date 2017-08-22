@@ -10,7 +10,7 @@
             <a href="{{route('frontend.marcas')}}">Marcas</a>
         </li>
         <li class="menu-item-has-children">
-            <a href="car-index.html">Productos</a>
+            <a href="{{route('frontend.productos')}}">Productos</a>
         </li>
         <li class="menu-item-has-children">
             <a href="{{route('frontend.quienes-somos')}}">¿Quiénes Somos?</a>

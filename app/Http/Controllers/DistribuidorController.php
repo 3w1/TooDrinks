@@ -85,8 +85,12 @@ class DistribuidorController extends Controller
         $distribuidor->fill($request->all());
         $distribuidor->save();
 
+        session(['perfilNombre' => $distribuidor->nombre]);
+        session(['perfilPais' => $distribuidor->pais_id]);
+        session(['perfilProvincia' => $distribuidor->provincia_region_id]);
+
         $url = 'distribuidor/'.$id.'/edit';
-       return redirect($url)->with('msj', 'Sus datos han sido actualizados exitosamente.');
+        return redirect($url)->with('msj', 'Sus datos han sido actualizados exitosamente.');
     }
 
     public function updateAvatar(Request $request){
@@ -105,8 +109,10 @@ class DistribuidorController extends Controller
                             ->where('id', '=', $request->id)
                             ->update(['logo' => $nombre ]);
        
-       $url = 'distribuidor/'.$request->id.'/edit';
-       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada exitosamente.');
+        session(['perfilLogo' => $nombre]);
+
+        $url = 'distribuidor/'.$request->id.'/edit';
+        return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada exitosamente.');
     }
 
     public function destroy($id)

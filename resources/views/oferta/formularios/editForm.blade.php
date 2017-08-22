@@ -55,7 +55,7 @@
 	
 	@if (session('perfilTipo') == 'P')
 		<div class="form-group">
-            {!! Form::label('visible_importador', 'Disponible para Distribuidores (*)') !!}
+            {!! Form::label('visible_importador', 'Disponible para Importadores (*)') !!}
             {!! Form::select('visible_importadores', ['0' => 'No', '1' => 'Si'], $oferta->visible_importadores, ['class' => 'form-control']) !!}
         </div>
     @endif

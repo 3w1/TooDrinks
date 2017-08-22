@@ -9,7 +9,7 @@ class Demanda_Producto extends Model
     protected $table = "demanda_producto";
 
     protected $fillable = [
-    	'producto_id', 'bebida_id', 'tipo_creador', 'creador_id', 'pais_id', 'provincia_region_id', 'titulo', 'descripcion', 'cantidad_minima', 'cantidad_maxima',
+    	'producto_id', 'bebida_id', 'tipo_creador', 'creador_id', 'pais_id', 'titulo', 'descripcion', 'cantidad_minima', 'cantidad_maxima',
         'fecha_creacion', 'status', 'cantidad_visitas', 'cantidad_contactos',
     ]; 
 

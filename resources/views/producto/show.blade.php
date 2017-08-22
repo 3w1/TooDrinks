@@ -49,7 +49,7 @@
                <li class="list-group-item"><b>Características del Tipo de Bebida:</b> {{ $producto->bebida->caracteristicas }}</li>
                <li class="list-group-item"><b>Clase de Bebida:</b> {{ $producto->clase_bebida->clase }}</li>
                <li class="list-group-item"><b>Características de la Clase de Bebida:</b> {{ $producto->clase_bebida->caracteristicas }}</li>
-               <li class="list-group-item"><b>País Originario:</b> {{ $producto->pais->pais }}. ({{ $producto->provincia_region->provincia }})</li>
+               <li class="list-group-item"><b>País Originario:</b> {{ $producto->pais->pais }}</li>
                <li class="list-group-item"><b>Año de Producción:</b> {{ $producto->ano_produccion }}</li>
                <li class="list-group-item"><b>Marca:</b> {{ $producto->marca->nombre }}</li>
                <li class="list-group-item"><b>Productor:</b> {{ $productor->nombre }}</li>

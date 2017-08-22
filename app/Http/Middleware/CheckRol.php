@@ -8,7 +8,7 @@ class CheckRol
 {
     public function handle($request, Closure $next)
     {
-        if ( Auth::user()->rol == "MB"){
+        if ( Auth::user()->activado == "0"){
             return redirect('usuario');
         }
         return $next($request);

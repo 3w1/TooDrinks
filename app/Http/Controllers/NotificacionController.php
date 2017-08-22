@@ -14,22 +14,27 @@ class NotificacionController extends Controller
     public function index(){
         if (session('perfilTipo') == 'P'){
             $notificaciones = DB::table('notificacion_p')
+                               ->where('productor_id', '=', session('perfilId'))
                                ->orderBy('created_at', 'DESC')
                                ->paginate(10);
         }elseif (session('perfilTipo') == 'I'){
             $notificaciones = DB::table('notificacion_i')
+                               ->where('importador_id', '=', session('perfilId'))
                                ->orderBy('created_at', 'DESC')
                                ->paginate(10);
         }elseif (session('perfilTipo') == 'M'){
             $notificaciones = DB::table('notificacion_m')
+                               ->where('multinacional_id', '=', session('perfilId'))
                                ->orderBy('created_at', 'DESC')
                                ->paginate(10);
         }elseif ( session('perfilTipo') == 'D'){
             $notificaciones = DB::table('notificacion_d')
+                               ->where('distribuidor_id', '=', session('perfilId'))
                                ->orderBy('created_at', 'DESC')
                                ->paginate(10);
         }elseif (session('perfilTipo') == 'H'){
             $notificaciones = DB::table('notificacion_h')
+                               ->where('horeca_id', '=', session('perfilId'))
                                ->orderBy('created_at', 'DESC')
                                ->paginate(10);
         }

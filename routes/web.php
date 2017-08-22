@@ -15,10 +15,12 @@
 Route::get('main', 'FrontendController@index')->name('frontend.index');
 Route::get('noticias', 'FrontendController@noticias')->name('frontend.noticias');
 Route::get('marcas', 'FrontendController@marcas')->name('frontend.marcas');
+Route::get('productos', 'FrontendController@productos')->name('frontend.productos');
 Route::get('quienes-somos', 'FrontendController@quienes_somos')->name('frontend.quienes-somos');
 Route::get('contacto', 'FrontendController@contacto')->name('frontend.contacto');
 
-Route::get('marca/{id}', 'FrontendController@detalle_marca')->name('frontend.marca');
+Route::get('marcas/{id}', 'FrontendController@detalle_marca')->name('frontend.marca');
+Route::get('productos/{id}', 'FrontendController@detalle_producto')->name('frontend.producto');
 // *** FIN DE RUTAS DEL FRONTEND *** //
 
 
@@ -37,25 +39,15 @@ Route::get('registrarse/{tipo}${id}${token}', 'Auth\RegisterController@registrar
 // ./RUTAS DE INICIO Y AUTENTICACIÓN ./
 
 //  RUTAS PARA LOS USUARIOS
-Route::get('confirmar-correo/{id}${token}', 'UsuarioController@confirmar_correo');
+Route::prefix('usuario')->group(function (){
+    Route::get('confirmar-correo/{id}${token}', 'UsuarioController@confirmar_correo');
+    Route::get('confirmar-cuenta', 'UsuarioController@confirmar_cuenta')->name('usuario.confirmar-cuenta');
 
-Route::post('usuario/cambiar-perfil', 'UsuarioController@cambiar_perfil')->name('usuario.cambiar-perfil');
-Route::get('usuario/inicio', 'UsuarioController@inicio')->name('usuario.inicio');
+    Route::post('cambiar-perfil', 'UsuarioController@cambiar_perfil')->name('usuario.cambiar-perfil');
+    Route::get('inicio', 'UsuarioController@inicio')->name('usuario.inicio');
 
-Route::get('usuario/productores-sin-propietario', 'UsuarioController@listado_productores')->name('usuario.productores-disponibles');
-Route::get('usuario/reclamar-productor/{id}', 'UsuarioController@reclamar_productor')->name('usuario.reclamar-productor');
-
-Route::get('usuario/importadores-sin-propietario', 'UsuarioController@listado_importadores')->name('usuario.importadores-disponibles');
-Route::get('usuario/reclamar-importador/{id}', 'UsuarioController@reclamar_importador')->name('usuario.reclamar-importador');
-
-Route::get('usuario/distribuidores-sin-propietario', 'UsuarioController@listado_distribuidores')->name('usuario.distribuidores-disponibles');
-Route::get('usuario/reclamar-distribuidor/{id}', 'UsuarioController@reclamar_distribuidor')->name('usuario.reclamar-distribuidor');
-
-Route::get('usuario/horecas-sin-propietario', 'UsuarioController@listado_horecas')->name('usuario.horecas-disponibles');
-Route::get('usuario/reclamar-horeca/{id}', 'UsuarioController@reclamar_horeca')->name('usuario.reclamar-horeca');
-
-Route::post('usuario/updateAvatar', 'UsuarioController@updateAvatar')->name('usuario.updateAvatar');
-
+    Route::post('updateAvatar', 'UsuarioController@updateAvatar')->name('usuario.updateAvatar');
+});
 Route::resource('usuario','UsuarioController');
 // ./RUTAS PARA LOS USUARIOS./
 
@@ -142,7 +134,7 @@ Route::prefix('producto')->group(function (){
     Route::post('asociar-productos', 'ProductoController@asociar_productos')->name('producto.asociar-productos');
     Route::get('verificar-producto/{id}', 'ProductoController@verificar_producto');
     Route::get('mis-productos/{filtro}', 'ProductoController@mis_productos')->name('producto.mis-productos');
-    Route::get('productos-mundiales', 'ProductoController@productos_mundiales')->name('producto.mundiales');
+    Route::get('productos-m', 'ProductoController@productos_mundiales')->name('producto.mundiales');
     Route::post('asociar-producto', 'ProductoController@asociar_producto')->name('producto.asociar-producto');
     //Peticiones AJAX
     Route::get('productos-por-clase/{bebida}/{clase}', 'ProductoController@productos_por_clase');

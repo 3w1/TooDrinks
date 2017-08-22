@@ -12,31 +12,10 @@ use DB;
 
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
-
     use RegistersUsers;
 
-    /**
-     * Where to redirect users after registration.
-     *
-     * @var string
-     */
     protected $redirectTo = '/home';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('guest');
@@ -45,12 +24,7 @@ class RegisterController extends Controller
     public function registrarse($tipo, $id, $token){
         return view('auth.register')->with(compact('id', 'tipo'));
     }
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
+
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -64,12 +38,50 @@ class RegisterController extends Controller
     {
         $data['codigo_confirmacion'] = str_random(25);
 
-        if ($data['tipo_entidad'] == 'U'){
+        if ($data['tipo'] == 'U'){
             $data['rol'] = 'US';
+            $data['cantidad_entidades'] = '0';
+            $data['productor'] = '0';
+            $data['multinacional'] = '0';
+            $data['importador'] = '0';
+            $data['distribuidor'] = '0';
+            $data['horeca'] = '0';
         }else{
             $data['rol'] = 'MB';
+            $data['cantidad_entidades'] = '1';
+            if ($data['tipo'] == 'P'){
+                $data['productor'] = '1';
+                $data['multinacional'] = '0';
+                $data['importador'] = '0';
+                $data['distribuidor'] = '0';
+                $data['horeca'] = '0';
+            }elseif ($data['tipo'] == 'M'){
+                $data['productor'] = '0';
+                $data['multinacional'] = '1';
+                $data['importador'] = '0';
+                $data['distribuidor'] = '0';
+                $data['horeca'] = '0';
+            }elseif ($data['tipo'] == 'I'){
+                $data['productor'] = '0';
+                $data['multinacional'] = '0';
+                $data['importador'] = '1';
+                $data['distribuidor'] = '0';
+                $data['horeca'] = '0';
+            }elseif ($data['tipo'] == 'D'){
+                $data['productor'] = '0';
+                $data['multinacional'] = '0';
+                $data['importador'] = '0';
+                $data['distribuidor'] = '1';
+                $data['horeca'] = '0';
+            }elseif ($data['tipo'] == 'H'){
+                $data['productor'] = '0';
+                $data['multinacional'] = '0';
+                $data['importador'] = '0';
+                $data['distribuidor'] = '0';
+                $data['horeca'] = '1';
+            }
         }
-        
+  
         $user = User::create([
             'rol' => $data['rol'],
             'name' => $data['name'],
@@ -83,15 +95,15 @@ class RegisterController extends Controller
             //'codigo_postal' => $data['codigo_postal'],
             'pais_id' => $data['pais_id'],
             'provincia_region_id' => $data['provincia_region_id'],
-            //'avatar' => 'usuario-icono.jpg',
+            'avatar' => 'usuario-icono.jpg',
             'estado_datos' => $data['estado_datos'],
-            'productor' => '0',
-            'importador' => '0',
-            'distribuidor' => '0',
-            'horeca' => '0',
-            'multinacional' => '0',
+            'productor' => $data['productor'],
+            'multinacional' => $data['multinacional'],
+            'importador' => $data['importador'],
+            'distribuidor' => $data['distribuidor'],
+            'horeca' => $data['horeca'],
             'activado' => '0',
-            'cantidad_entidades' => '0',
+            'cantidad_entidades' => $data['cantidad_entidades'],
             'codigo_confirmacion' => $data['codigo_confirmacion'],
             'remember_token' => $data['_token']
         ]);
@@ -104,7 +116,37 @@ class RegisterController extends Controller
 
         $data['id_usuario'] = $ult_user->id;
 
-        if ($data['id_entidad'] != '0'){
+        if ($data['rol']== 'MB'){
+            if ($data['productor'] == '1'){
+                DB::table('productor')->insertGetId(['user_id' => $data['id_usuario'], 'nombre' => $data['nombre'],
+                    'pais_id' => $data['pais_id'], 'provincia_region_id' => $data['provincia_region_id'],
+                    'logo' => 'usuario-icono.jpg', 'reclamada' => '1', 'estado_datos' => '0', 'saldo' => '0', 'suscripcion_id' => '5' ]);
+            }elseif ($data['multinacional'] == '1'){
+                DB::table('multinacional')->insertGetId(['user_id' => $data['id_usuario'], 'nombre' => $data['nombre'],
+                    'pais_id' => $data['pais_id'], 'provincia_region_id' => $data['provincia_region_id'],
+                    'logo' => 'usuario-icono.jpg', 'reclamada' => '1', 'estado_datos' => '0', 'saldo' => '0', 'suscripcion_id' => '5' ]);
+            }elseif ($data['importador'] == '1'){
+                DB::table('importador')->insertGetId(['user_id' => $data['id_usuario'], 'nombre' => $data['nombre'],
+                    'pais_id' => $data['pais_id'], 'provincia_region_id' => $data['provincia_region_id'],
+                    'logo' => 'usuario-icono.jpg', 'reclamada' => '1', 'estado_datos' => '0', 'saldo' => '0', 'suscripcion_id' => '5' ]);
+            }elseif ($data['distribuidor'] == '1'){
+                DB::table('distribuidor')->insertGetId(['user_id' => $data['id_usuario'], 'nombre' => $data['nombre'],
+                    'pais_id' => $data['pais_id'], 'provincia_region_id' => $data['provincia_region_id'],
+                    'logo' => 'usuario-icono.jpg', 'reclamada' => '1', 'estado_datos' => '0', 'saldo' => '0', 'suscripcion_id' => '5' ]);
+            }elseif ($data['horeca'] == '1'){
+                 DB::table('horeca')->insertGetId(['user_id' => $data['id_usuario'], 'nombre' => $data['nombre'],
+                    'pais_id' => $data['pais_id'], 'provincia_region_id' => $data['provincia_region_id'],
+                    'logo' => 'usuario-icono.jpg', 'tipo_horeca' => $data['tipo_horeca'], 'reclamada' => '1', 
+                    'estado_datos' => '0', 'saldo' => '0' ]);
+            }
+            
+            Mail::send('emails.confirmarCorreo', ['data' => $data] , function($msj) use ($data){
+                $msj->subject('Confirmación de cuenta TooDrinks');
+                $msj->to($data['email']);
+            });
+        }
+
+        /*if ($data['id_entidad'] != '0'){
             if ($data['tipo_entidad'] == 'P'){
                 $act_p = DB::table('productor')
                             ->where('id', '=', $data['id_entidad'])
@@ -136,12 +178,7 @@ class RegisterController extends Controller
                                       'cantidad_entidades' => '1'
                                     ]);
             }
-        }
-
-        /*Mail::send('emails.confirmarCorreo', ['data' => $data] , function($msj) use ($data){
-            $msj->subject('Confirmación de cuenta TooDrinks');
-            $msj->to($data['email']);
-        });*/
+        }*/
 
         return $user;
     }

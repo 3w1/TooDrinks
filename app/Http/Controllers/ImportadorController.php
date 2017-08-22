@@ -85,8 +85,12 @@ class ImportadorController extends Controller
         $importador->fill($request->all());
         $importador->save();
 
+        session(['perfilNombre' => $importador->nombre]);
+        session(['perfilPais' => $importador->pais_id]);
+        session(['perfilProvincia' => $importador->provincia_region_id]);
+
         $url = 'importador/'.$id.'/edit';
-       return redirect($url)->with('msj', 'Sus datos han sido actualizados exitosamente.');
+        return redirect($url)->with('msj', 'Sus datos han sido actualizados exitosamente.');
     }
 
     public function updateAvatar(Request $request){
@@ -104,6 +108,8 @@ class ImportadorController extends Controller
         $actualizacion = DB::table('importador')
                             ->where('id', '=', $request->id)
                             ->update(['logo' => $nombre ]);
+
+        session(['perfilLogo' => $nombre]);
        
        $url = 'importador/'.$request->id.'/edit';
        return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada exitosamente.');

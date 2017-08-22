@@ -55,4 +55,34 @@ class FrontendController extends Controller
 
     	return view('frontend.detallesMarca')->with(compact('marca', 'productos', 'cont'));
     }
+
+    public function productos(){
+    	$paises = DB::table('pais')
+    			->orderBy('pais', 'ASC')
+    			->pluck('pais', 'id');
+
+    	$bebidas = DB::table('bebida')
+    			->orderBy('nombre', 'ASC')
+    			->pluck('nombre', 'id');
+
+   		$productos = Producto::orderBy('nombre', 'ASC')
+    				->where('id', '<>', 0)
+    				->paginate(12);
+
+    	return view('frontend.productos')->with(compact('paises', 'bebidas', 'productos'));
+    }
+
+    public function detalle_producto($id){
+    	$producto = Producto::where('id', '=', $id)->first();
+
+    	$productos = Producto::orderBy('nombre', 'ASC')
+    				->where('bebida_id', '=', $producto->bebida_id)
+    				->where('clase_bebida_id', '=', $producto->clase_bebida_id)
+    				->where('id', '<>', 0)
+    				->where('id', '<>', $id)
+    				->take(3)
+    				->get();
+
+    	return view('frontend.detallesProducto')->with(compact('producto', 'productos'));
+    }
 }

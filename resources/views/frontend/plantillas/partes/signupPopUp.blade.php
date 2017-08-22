@@ -55,6 +55,12 @@
                 </select>
             </div>
             <div class="form-group">
+                {!! Form::select('tipo', ['U' => 'Usuario', 'P' => 'Productor', 'I' => 'Importador', 'D' => 'Distribuidor', 'H' => 'Horeca' ], null, ['class' => 'input-select full-width', 'placeholder' => 'Seleccione una opción..', 'id' => 'entidad', 'onchange' => 'tipoHoreca();']) !!}
+            </div>
+            <div class="form-group" id="tipo_horeca" style="display: none;">
+                {!! Form::select('tipo_horeca', ['H' => 'Hotel', 'R' => 'Restaurante', 'C' => 'Cafetería'], null, ['class' => 'input-select full-width', 'placeholder' => 'Seleccione una opción..']) !!}
+            </div>
+            <div class="form-group">
                 <div class="checkbox">
                     <label>
                         <input type="checkbox"> Recibir noticias TooDrinks

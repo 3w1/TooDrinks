@@ -229,6 +229,7 @@ class SolicitudDistribucionController extends Controller
     public function solicitudes_distribucion(){
         if (session('perfilTipo') == 'P'){
             $notificaciones_pendientes_SD = DB::table('notificacion_p')
+                                        ->where('productor_id', '=', session('perfilId'))
                                         ->where('leida', '=', '0')
                                         ->where('tipo', '=', 'SD')
                                         ->get();
@@ -245,8 +246,10 @@ class SolicitudDistribucionController extends Controller
                                 ->where('solicitud_distribucion.status', '=', '1')
                                 ->orderBy('solicitud_distribucion.created_at', 'DESC')
                                 ->paginate(8);
+
         }elseif (session('perfilTipo') == 'I'){
             $notificaciones_pendientes_SD = DB::table('notificacion_i')
+                                        ->where('importador_id', '=', session('perfilId'))
                                         ->where('leida', '=', '0')
                                         ->where('tipo', '=', 'SD')
                                         ->get();
@@ -257,12 +260,14 @@ class SolicitudDistribucionController extends Controller
                         ->update(['leida' => '1']);
             }
 
-            $demandasDistribucion = Solicitud_Distribucion::join('marca', 'solicitud_distribucion.marca_id', '=', 'marca.id')
+            $demandasDistribucion = Solicitud_Distribucion::select('solicitud_distribucion.*')
+                                    ->join('marca', 'solicitud_distribucion.marca_id', '=', 'marca.id')
                                     ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
                                     ->where('importador_marca.importador_id', '=', session('perfilId'))
                                     ->where('solicitud_distribucion.status', '=', '1')
                                     ->orderBy('solicitud_distribucion.created_at', 'DESC')
-                                    ->paginate(8);
+                                    ->paginate(7);
+
         }
         
         return view('solicitudDistribucion.solicitudesDisponibles')->with(compact('demandasDistribucion'));

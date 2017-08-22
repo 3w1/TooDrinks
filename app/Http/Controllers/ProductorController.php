@@ -119,10 +119,16 @@ class ProductorController extends Controller
 
         }
 
-        foreach ($request->paises as $pais){
-            Productor::find(session('perfilId'))
+        if ($request->paises != null){
+            foreach ($request->paises as $pais){
+                Productor::find(session('perfilId'))
                     ->paises_importaciones()->attach($pais);
+            }
         }
+
+        session(['perfilNombre' => $productor->nombre]);
+        session(['perfilPais' => $productor->pais_id]);
+        session(['perfilProvincia' => $productor->provincia_region_id]);
 
         $url = 'productor/'.$id.'/edit';
         return redirect($url)->with('msj', 'Sus datos han sido actualizados exitosamente');
@@ -143,9 +149,11 @@ class ProductorController extends Controller
         $actualizacion = DB::table('productor')
                             ->where('id', '=', $request->id)
                             ->update(['logo' => $nombre ]);
+
+        session(['perfilLogo' => $nombre]);
        
-       $url = 'productor/'.$request->id.'/edit';
-       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada exitosamente');
+        $url = 'productor/'.$request->id.'/edit';
+        return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada exitosamente');
     }
 
     public function destroy($id)

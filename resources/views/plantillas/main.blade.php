@@ -160,11 +160,19 @@
                      <div class="row">
                         <div class="col-md-1"></div>
                         <div class="col-md-10">
-                           @yield('alertas')
+                           @if (Auth::user()->activado == 1)
+                              @yield('alertas')
+                           @else 
+                              <div class="alert alert-warning ">
+                                 <strong>¡Ya Casi!</strong> Tu cuenta TooDrinks se ha creado exitosamente pero aún no la has confirmado. Hemos enviado un email a tu dirección de correo. Por favor, dirígete a tu correo electrónico para confirmar tu cuenta y empezar a disfrutar de todas las opciones de TooDrinks.
+                              </div>
+                           @endif
                         </div>
                         <div class="col-md-1"></div>
                      </div>
-                     @yield('content-left')
+                     @if (Auth::user()->activado == 1)
+                        @yield('content-left')
+                     @endif
                   </section>
                   
                   <section class="col-lg-3 connectedSortable">
@@ -176,7 +184,9 @@
                <!-- Paginación -->
                <div class="row">
                   <div class="col-md-9">
-                     <center>@yield('paginacion')</center>
+                     @if (Auth::user()->activado == 1)
+                        <center>@yield('paginacion')</center>
+                     @endif
                   </div>
                </div>
             </section>

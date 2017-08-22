@@ -27,8 +27,8 @@ function cargarProvincias() {
 function cargarProductos() {
 
     var marca = document.getElementById('marca').value+".1";
-    var route = "http://www.toodrinks.com/producto/"+marca+"";
-	//var route = "http://localhost:8000/producto/"+marca+"";
+    //var route = "http://www.toodrinks.com/producto/"+marca+"";
+	var route = "http://localhost:8000/producto/"+marca+"";
                     
     $.ajax({
         url:route,

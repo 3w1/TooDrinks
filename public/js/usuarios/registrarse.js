@@ -15,3 +15,13 @@ function cargarProvincias(){
         }
     });
 }
+
+function tipoHoreca(){
+    var tipo = document.getElementById("entidad").value;
+
+    if (tipo == 'H'){
+        document.getElementById("tipo_horeca").style.display = 'block';
+    }else{
+        document.getElementById("tipo_horeca").style.display = 'none';
+    }
+}

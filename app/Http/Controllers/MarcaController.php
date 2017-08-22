@@ -60,7 +60,6 @@ class MarcaController extends Controller
         }else{ 
             return view('marca.create')->with(compact('paises'));
         }
-       
     }
 
     public function store(Request $request)

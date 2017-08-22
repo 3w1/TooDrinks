@@ -2,7 +2,7 @@
 @section('title', 'Solicitudes de Importadores')
 
 @section('title-header')
-   Asociación de Importadores
+   Verificación de Importadores
 @endsection
 
 @section('title-complement')
