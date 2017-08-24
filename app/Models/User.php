@@ -15,6 +15,7 @@ class User extends Authenticatable
         'rol', 'name', 'email', 'password', 'nombre', 'apellido', 'direccion', 'telefono', 'telefono_opcional', 
         'codigo_postal', 'pais_id', 'provincia_region_id', 'avatar', 'estado_datos', 'productor', 'importador',
         'distribuidor', 'horeca', 'multinacional', 'activado', 'codigo_confirmacion', 'remember_token', 'cantidad_entidades',
+        'entidad_predefinida', 'id_entidad_predefinida',
     ];
 
     protected $hidden = [

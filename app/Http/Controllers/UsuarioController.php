@@ -32,7 +32,7 @@ class UsuarioController extends Controller
                             ->first();
 
                 $url = 'productor/'.$productor->id.'/edit';
-                return redirect($url)->with('msj', 'Su cuenta ha sido activada exitosamente. Para finalizar el registro, por favor complete los datos de su Productor.');
+                return redirect($url)->with('msj', 'Su cuenta ha sido activada con éxito.. Para finalizar el registro, por favor complete los datos de su Productor.');
             }elseif ($user->importador == '1'){
                 $importador = DB::table('importador')
                             ->select('id')
@@ -40,7 +40,7 @@ class UsuarioController extends Controller
                             ->first();
 
                 $url = 'importador/'.$importador->id.'/edit';
-                return redirect($url)->with('msj', 'Su cuenta ha sido activada exitosamente. Para finalizar el registro, por favor complete los datos de su Importador.');
+                return redirect($url)->with('msj', 'Su cuenta ha sido activada con éxito.. Para finalizar el registro, por favor complete los datos de su Importador.');
             }elseif ($user->distribuidor == '1'){
                  $distribuidor = DB::table('distribuidor')
                             ->select('id')
@@ -48,7 +48,7 @@ class UsuarioController extends Controller
                             ->first();
 
                 $url = 'distribuidor/'.$distribuidor->id.'/edit';
-                return redirect($url)->with('msj', 'Su cuenta ha sido activada exitosamente. Para finalizar el registro, por favor complete los datos de su Distribuidor.');
+                return redirect($url)->with('msj', 'Su cuenta ha sido activada con éxito.. Para finalizar el registro, por favor complete los datos de su Distribuidor.');
             }elseif ($user->horeca == '1'){
                  $horeca = DB::table('horeca')
                             ->select('id')
@@ -56,7 +56,7 @@ class UsuarioController extends Controller
                             ->first();
 
                 $url = 'horeca/'.$horeca->id.'/edit';
-                return redirect($url)->with('msj', 'Su cuenta ha sido activada exitosamente. Para finalizar el registro, por favor complete los datos de su Horeca.');
+                return redirect($url)->with('msj', 'Su cuenta ha sido activada con éxito.. Para finalizar el registro, por favor complete los datos de su Horeca.');
             }
             
         }else{
@@ -132,7 +132,7 @@ class UsuarioController extends Controller
             session(['perfilTipo' => 'H']);
         }
 
-        return redirect('notificacion')->with('msj', 'Se ha cambiado de perfil exitosamente');
+        return redirect('notificacion')->with('msj', 'Se ha cambiado de perfil con éxito.');
     }
 
     public function inicio(){
@@ -169,69 +169,48 @@ class UsuarioController extends Controller
             return view('usuario.index');
         }else{
 
-            if ($user->productor == '1'){
-                $productor = Productor::where('user_id', '=', Auth::user()->id)
-                                        ->first();
-                                        
-                session(['perfilId' => $productor->id]);
-                session(['perfilNombre' => $productor->nombre]);
-                session(['perfilLogo' => $productor->logo]);
-                session(['perfilSaldo' => $productor->saldo]);
+            if (Auth::user()->entidad_predefinida == 'P'){
+                $entidad = Productor::select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
+                            ->where('id', '=', Auth::user()->id_entidad_predefinida)
+                            ->first();
+
                 session(['perfilTipo' => 'P']);
-                session(['perfilPais' => $productor->pais_id]);
-                session(['perfilProvincia' => $productor->provincia_region_id]);
-                session(['perfilSuscripcion' => $productor->suscripcion->suscripcion]);
-            }elseif ($user->importador == '1'){
-                $importador = Importador::where('user_id', '=', Auth::user()->id)
-                                        ->first();
+            }elseif (Auth::user()->entidad_predefinida == 'I'){
+                $entidad = Importador::select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
+                            ->where('id', '=', Auth::user()->id_entidad_predefinida)
+                            ->first();
 
-                session(['perfilId' => $importador->id]);
-                session(['perfilNombre' => $importador->nombre]);
-                session(['perfilLogo' => $importador->logo]);
-                session(['perfilSaldo' => $importador->saldo]);
                 session(['perfilTipo' => 'I']);
-                session(['perfilPais' => $importador->pais_id]);
-                session(['perfilProvincia' => $importador->provincia_region_id]);
-                session(['perfilSuscripcion' => $importador->suscripcion->suscripcion]);
-            }elseif ($user->multinacional == '1'){
-                $multinacional = Multinacional::where('user_id', '=', Auth::user()->id)
-                                        ->first();
+            }elseif (Auth::user()->entidad_predefinida == 'M'){
+                $entidad = Multinacional::select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
+                            ->where('id', '=', Auth::user()->id_entidad_predefinida)
+                            ->first();
 
-                session(['perfilId' => $multinacional->id]);
-                session(['perfilNombre' => $multinacional->nombre]);
-                session(['perfilLogo' => $multinacional->logo]);
-                session(['perfilSaldo' => $multinacional->saldo]);
                 session(['perfilTipo' => 'M']);
-                session(['perfilPais' => $multinacional->pais_id]);
-                session(['perfilProvincia' => $multinacional->provincia_region_id]);
-                session(['perfilSuscripcion' => $multinacional->suscripcion->suscripcion]);
-                session(['perfilPadre' => $multinacional->productor_id]);
-            }elseif ($user->distribuidor == '1'){
-                $distribuidor = Distribuidor::where('user_id', '=', Auth::user()->id)
-                                        ->first();
+            }elseif (Auth::user()->entidad_predefinida == 'D'){
+                $entidad = Distribuidor::select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
+                            ->where('id', '=', Auth::user()->id_entidad_predefinida)
+                            ->first();
 
-                session(['perfilId' => $distribuidor->id]);
-                session(['perfilNombre' => $distribuidor->nombre]);
-                session(['perfilLogo' => $distribuidor->logo]);
-                session(['perfilSaldo' => $distribuidor->saldo]);
                 session(['perfilTipo' => 'D']);
-                session(['perfilPais' => $distribuidor->pais_id]);
-                session(['perfilProvincia' => $distribuidor->provincia_region_id]);
-                session(['perfilSuscripcion' => $distribuidor->suscripcion->suscripcion]);
-            }elseif ($user->horeca == '1'){
-                $horeca = DB::table('horeca')
-                                ->where('user_id', '=', Auth::user()->id)
-                                ->select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id')
-                                ->get()
-                                ->first();
+            }elseif (Auth::user()->entidad_predefinida == 'H'){
+                $entidad = DB::table('horeca')
+                            ->select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id')
+                            ->where('id', '=', Auth::user()->id_entidad_predefinida)
+                            ->first();
 
-                session(['perfilId' => $horeca->id]);
-                session(['perfilNombre' => $horeca->nombre]);
-                session(['perfilLogo' => $horeca->logo]);
-                session(['perfilSaldo' => $horeca->saldo]);
                 session(['perfilTipo' => 'H']);
-                session(['perfilPais' => $horeca->pais_id]);
-                session(['perfilProvincia' => $horeca->provincia_region_id]);
+            }
+                                        
+            session(['perfilId' => $entidad->id]);
+            session(['perfilNombre' => $entidad->nombre]);
+            session(['perfilLogo' => $entidad->logo]);
+            session(['perfilSaldo' => $entidad->saldo]);
+            session(['perfilPais' => $entidad->pais_id]);
+            session(['perfilProvincia' => $entidad->provincia_region_id]);
+
+            if (session('perfilTipo') != 'H'){
+                session(['perfilSuscripcion' => $entidad->suscripcion->suscripcion]);
             }
         }
 
@@ -289,7 +268,7 @@ class UsuarioController extends Controller
         $usuario->save();
 
         $url = 'usuario/'.Auth::user()->id.'/edit';
-        return redirect($url)->with('status', 'Sus datos han sido actualizados exitosamente');
+        return redirect($url)->with('status', 'Sus datos han sido actualizados con éxito.');
     }
 
     public function updateAvatar(Request $request){
@@ -315,7 +294,7 @@ class UsuarioController extends Controller
                             ->update(['avatar' => $nombre ]);
        
        $url = 'usuario/'.Auth::user()->id.'/edit';
-       return redirect($url)->with('status', 'Su imagen de perfil ha sido cambiada exitosamente');
+       return redirect($url)->with('status', 'Su imagen de perfil ha sido cambiada con éxito.');
     }
 
     public function destroy($id)

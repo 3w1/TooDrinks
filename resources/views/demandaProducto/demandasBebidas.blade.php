@@ -6,6 +6,7 @@
 @endsection
 
 @section('content-left')
+   
    @section('alertas')
       @if (Session::has('msj'))
            <div class="alert alert-success alert-dismissable">
@@ -22,43 +23,65 @@
                Demandas de Tipos de Bebidas
             </span>
          </li>
+         
          @foreach($demandasBebidas as $demandaBebida)
             <?php 
-               $bebida = DB::table('bebida')
-                           ->select('nombre')
-                           ->where('id', '=', $demandaBebida->bebida_id)
+               if (session('perfilTipo') == 'P'){
+                  $relacion = DB::table('productor_demanda_producto')
+                           ->select('demanda_producto_id')
+                           ->where('demanda_producto_id', '=', $demandaBebida->id)
+                           ->where('productor_id', '=', session('perfilId'))
                            ->first();
-            ?>
-            <li>
-               <i class="fa fa-hand-pointer-o bg-blue"></i>
-               <div class="timeline-item">
-                  <span class="time"><i class="fa fa-clock-o"></i> {{ date('d-m-Y', strtotime($demandaBebida->created_at)) }}</span>
-                  <h3 class="timeline-header">
-                     @if ($demandaBebida->tipo_creador == 'I') 
-                        Un importador 
-                     @elseif ($demandaBebida->tipo_creador == 'D') 
-                        Un Distribuidor 
-                     @else 
-                        Un Horeca 
-                     @endif está demandando un tipo de bebida que tu posees.
-                  </h3>
+               }elseif (session('perfilTipo') == 'I'){
+                  $relacion = DB::table('importador_demanda_producto')
+                           ->select('demanda_producto_id')
+                           ->where('demanda_producto_id', '=', $demandaBebida->id)
+                           ->where('importador_id', '=', session('perfilId'))
+                           ->first();
+               }elseif (session('perfilTipo') == 'D'){
+                  $relacion = DB::table('distribuidor_demanda_producto')
+                           ->select('demanda_producto_id')
+                           ->where('demanda_producto_id', '=', $demandaBebida->id)
+                           ->where('distribuidor_id', '=', session('perfilId'))
+                           ->first();
+               }
 
-                  <div class="timeline-body">
-                     @if ($demandaBebida->tipo_creador == 'I') 
-                        Un importador 
-                     @elseif ($demandaBebida->tipo_creador == 'D') 
-                        Un Distribuidor  
-                     @else 
-                        Un Horeca 
-                     @endif está en la búsqueda de <strong>{{ $bebida->nombre }}</strong>. 
-                     <br><strong>Descripción de la Demanda:</strong> {{ $demandaBebida->titulo }}. ({{ $demandaBebida->descripcion }}).
-                  </div>
+               $demanda = App\Models\Demanda_Producto::find($demandaBebida->id);
+            ?>
             
-                  <div class="timeline-footer">
-                     <a class="btn btn-primary btn-xs" href="{{ route('demanda-producto.show', $demandaBebida->id) }}">¡Más Detalles!</a>
+            @if ($relacion == null)
+               <li>
+                  <i class="fa fa-hand-pointer-o bg-blue"></i>
+                  <div class="timeline-item">
+                     <span class="time"><i class="fa fa-clock-o"></i> {{ date('d-m-Y', strtotime($demanda->created_at)) }}</span>
+                     <h3 class="timeline-header">
+                        @if ($demanda->tipo_creador == 'I') 
+                           Un importador 
+                        @elseif ($demanda->tipo_creador == 'D') 
+                           Un Distribuidor 
+                        @else 
+                           Un Horeca 
+                        @endif está demandando un tipo de bebida que tu posees.
+                     </h3>
+
+                     <div class="timeline-body">
+                        @if ($demanda->tipo_creador == 'I') 
+                           Un importador 
+                        @elseif ($demanda->tipo_creador == 'D') 
+                           Un Distribuidor  
+                        @else 
+                           Un Horeca 
+                        @endif está en la búsqueda de <strong>{{ $demanda->bebida->nombre }}</strong>. 
+                        <br><strong>Descripción de la Demanda:</strong> {{ $demanda->titulo }}. ({{ $demanda->descripcion }}).
+                     </div>
+               
+                     <div class="timeline-footer">
+                        <a class="btn btn-primary btn-xs" href="{{ route('demanda-producto.show', $demanda->id) }}">¡Más Detalles!</a>
+                        <a class="btn btn-danger btn-xs" href="{{ route('demanda-producto.marcar', [$demandaBebida->id, '0']) }}">¡No Me Interesa!</a>
+                     </div>
                   </div>
-               </div>
-            </li>
+               </li>
+            @endif
          @endforeach
       </ul>
    </div>

@@ -40,7 +40,7 @@ class BannerController extends Controller
         $banner->imagen = $nombre;
         $banner->save();
 
-        return redirect('banner-publicitario')->with('msj', 'Su banner ha sido creado exitosamente.');
+        return redirect('banner-publicitario')->with('msj', 'Su banner ha sido creado con éxito.');
     }
 
     public function show($id)
@@ -109,7 +109,7 @@ class BannerController extends Controller
         $banner->aprobado = '0';
         $banner->save();
 
-        return redirect('banner-publicitario/'.$id)->with('msj', 'Los datos de su banner han sido actualizados correctamente. Debe esperar la revisión del Administrador.');
+        return redirect('banner-publicitario/'.$id)->with('msj', 'Los datos de su banner han sido actualizados con éxito. Debe esperar la revisión del Administrador.');
     }
 
     public function updateImagen(Request $request){
@@ -129,7 +129,7 @@ class BannerController extends Controller
                             ->update(['imagen' => $nombre,
                                       'aprobado' => '0']);
 
-        return redirect('banner-publicitario/'.$request->id)->with('msj', 'La imagen del banner se ha actualizado exitosamente. Debe esperar la revisión del Administrador.');     
+        return redirect('banner-publicitario/'.$request->id)->with('msj', 'La imagen del banner se ha actualizado con éxito. Debe esperar la revisión del Administrador.');     
     }
 
     public function solicitar_publicacion($id){
@@ -223,7 +223,7 @@ class BannerController extends Controller
             $banner_diario->save();
         }
 
-        return redirect('banner-publicitario/mis-solicitudes')->with('msj', 'La petición de publicidad ha sido almacenada exitosamente');
+        return redirect('banner-publicitario/mis-solicitudes')->with('msj', 'La petición de publicidad ha sido almacenada con éxito.');
     }
 
     //Ver las publicaciones de banners de la entidad loggeada

@@ -99,7 +99,7 @@ class MailsController extends Controller
             });
         }
 
-        return redirect('admin')->with('msj-success', 'Las notificaciones diarias de los productores han sido enviadas exitosamente');
+        return redirect('admin')->with('msj-success', 'Las notificaciones diarias de los productores han sido enviadas con éxito.');
     }
 
     public function notificaciones_Importador(){
@@ -131,7 +131,7 @@ class MailsController extends Controller
             });
         }
 
-        return redirect('admin')->with('msj-success', 'Las notificaciones diarias de los importadores han sido enviadas exitosamente');
+        return redirect('admin')->with('msj-success', 'Las notificaciones diarias de los importadores han sido enviadas con éxito.');
     }
 
     public function notificaciones_distribuidor(){
@@ -162,6 +162,6 @@ class MailsController extends Controller
             });
         }
 
-        return redirect('admin')->with('msj-success', 'Las notificaciones diarias de los distribuidores han sido enviadas exitosamente');
+        return redirect('admin')->with('msj-success', 'Las notificaciones diarias de los distribuidores han sido enviadas con éxito.');
     }
 }

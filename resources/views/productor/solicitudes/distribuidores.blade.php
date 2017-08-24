@@ -2,7 +2,7 @@
 @section('title', 'Solicitudes de Distribuidores')
 
 @section('title-header')
-   Asociación de Distribuidores
+   Verificación de Distribuidores
 @endsection
 
 @section('title-complement')
@@ -46,7 +46,7 @@
                <i class="fa fa-hand-pointer-o bg-blue"></i>
                <div class="timeline-item">
                   <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-                  <h3 class="timeline-header"><a href="#">{{ $distribuidor->nombre }}</a> ha indicado que distribuye tu marca.</h3>
+                  <h3 class="timeline-header"><a href="{{ route('distribuidor.show', $distribuidor->id) }}">{{ $distribuidor->nombre }}</a> ha indicado que distribuye tu marca.</h3>
 
                   <div class="timeline-body">
                      El distribuidor <strong>{{ $distribuidor->nombre }}</strong> ha indicado que distribuye tu marca <strong>{{ $marca->nombre }}</strong> en la provincia de <strong>{{ $provincia->provincia }}, {{ $pais->pais }}</strong>...

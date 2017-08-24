@@ -42,7 +42,7 @@
                <i class="fa fa-hand-pointer-o bg-blue"></i>
                <div class="timeline-item">
                   <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-                  <h3 class="timeline-header"><a href="#">{{ $importador->nombre }}</a> ha indicado que importa tu marca.</h3>
+                  <h3 class="timeline-header"><a href="{{ route('importador.show', $importador->id) }}">{{ $importador->nombre }}</a> ha indicado que importa tu marca.</h3>
 
                   <div class="timeline-body">
                      El importador <strong>{{ $importador->nombre }}</strong> ha indicado que importa tu marca <strong>{{ $marca->nombre }}</strong> en <strong>{{ $pais->pais }}</strong>...

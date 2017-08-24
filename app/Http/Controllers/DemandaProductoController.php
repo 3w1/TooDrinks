@@ -52,6 +52,7 @@ class DemandaProductoController extends Controller
                                     ->where('marca.productor_id', '=', session('perfilId'))
                                     ->where('demanda_producto.status', '=', '1')
                                     ->paginate(10);
+
         }elseif (session('perfilTipo') == 'I'){
             $notificaciones_pendientes_DP = DB::table('notificacion_i')
                                         ->where('leida', '=', '0')
@@ -130,7 +131,7 @@ class DemandaProductoController extends Controller
             }
 
             $demandasBebidas = DB::table('demanda_producto')
-                                    ->select('demanda_producto.*')
+                                    ->select('demanda_producto.id')
                                     ->join('producto', 'demanda_producto.bebida_id', '=', 'producto.bebida_id')
                                     ->join('marca', 'producto.marca_id', '=', 'marca.id')
                                     ->join('productor', 'marca.productor_id', '=', 'productor.id')
@@ -139,6 +140,7 @@ class DemandaProductoController extends Controller
                                     ->where('demanda_producto.status', '=', '1')
                                     ->groupBy('demanda_producto.id', 'producto.bebida_id')
                                     ->paginate(10);
+
         }elseif (session('perfilTipo') == 'I'){
             $notificaciones_pendientes_DB = DB::table('notificacion_i')
                                         ->where('leida', '=', '0')
@@ -152,7 +154,7 @@ class DemandaProductoController extends Controller
             }
 
             $demandasBebidas = DB::table('demanda_producto')
-                                    ->select('demanda_producto.*')
+                                    ->select('demanda_producto.id')
                                     ->join('producto', 'demanda_producto.bebida_id', '=', 'producto.bebida_id')
                                     ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
                                     ->where('importador_producto.importador_id', '=', session('perfilId'))
@@ -161,6 +163,7 @@ class DemandaProductoController extends Controller
                                     ->where('demanda_producto.tipo_creador', '<>', 'I')
                                     ->groupBy('demanda_producto.id', 'producto.bebida_id')
                                     ->paginate(10);
+
         }elseif (session('perfilTipo') == 'D'){
             $notificaciones_pendientes_DB = DB::table('notificacion_d')
                                         ->where('leida', '=', '0')
@@ -174,7 +177,7 @@ class DemandaProductoController extends Controller
             }
 
             $demandasBebidas = DB::table('demanda_producto')
-                                    ->select('demanda_producto.*')
+                                    ->select('demanda_producto.id')
                                     ->join('producto', 'demanda_producto.bebida_id', '=', 'producto.bebida_id')
                                     ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
                                     ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
@@ -183,6 +186,7 @@ class DemandaProductoController extends Controller
                                     ->where('demanda_producto.tipo_creador', '=', 'H')
                                     ->groupBy('demanda_producto.id', 'producto.bebida_id')
                                     ->paginate(10);
+                                    
         }elseif (session('perfilTipo') == 'M'){
             $notificaciones_pendientes_DB = DB::table('notificacion_m')
                                         ->where('leida', '=', '0')
@@ -196,7 +200,7 @@ class DemandaProductoController extends Controller
             }
                
              $demandasBebidas = DB::table('demanda_producto')
-                                    ->select('demanda_producto.*')
+                                    ->select('demanda_producto.id')
                                     ->join('producto', 'demanda_producto.bebida_id', '=', 'producto.bebida_id')
                                     ->join('marca', 'producto.marca_id', '=', 'marca.id')
                                     ->where('marca.productor_id', '=', session('perfilPadre'))
@@ -225,7 +229,6 @@ class DemandaProductoController extends Controller
 
         return view('demandaProducto.create')->with(compact('productos', 'bebidas', 'paises'));
     }
-
 
     public function store(Request $request)
     {
@@ -611,7 +614,7 @@ class DemandaProductoController extends Controller
             }
         }
         
-        return redirect('demanda-producto')->with('msj', 'Se ha creado su solicitud exitosamente.');
+        return redirect('demanda-producto')->with('msj', 'Se ha creado su demanda de producto con éxito.');
     }
 
     public function show($id)
@@ -652,34 +655,36 @@ class DemandaProductoController extends Controller
         return view('demandaProducto.show')->with(compact('demandaProducto', 'restringido'));
     }
 
-    //Marca una demanda de producto "de interes" para las entidades con Suscripción 
-    public function marcar_demanda($id){
+    //Marca una demanda de producto "de interes" o "no me interesa" para las entidades con Suscripción 
+    public function marcar_demanda($id, $check){
         $fecha = new \DateTime();
 
         $demanda = Demanda_Producto::find($id);
-
-        $productor = Productor::find(session('perfilId'));
-
-        //Asociar entidad a la demanda
+        
+        //Asociar entidad a la demanda 
         if (session('perfilTipo') == 'P'){
             DB::table('productor_demanda_producto')->insertGetId(
-                                        ['productor_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha]);    
+                                        ['productor_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
         }elseif (session('perfilTipo') == 'I'){
             DB::table('importador_demanda_producto')->insertGetId(
-                                        ['importador_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha]);    
+                                        ['importador_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
         }elseif (session('perfilTipo') == 'D'){
             DB::table('distribuidor_demanda_producto')->insertGetId(
-                                        ['distribuidor_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha]);    
+                                        ['distribuidor_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
         }
         // ... //
         
-        //Aumentar el contador de contactos de la demanda
-        DB::table('demanda_producto')
-        ->where('id', '=', $id)
-        ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
-        // ... //
+        if ($check == '1'){
+            //Aumentar el contador de contactos de la demanda
+            DB::table('demanda_producto')
+            ->where('id', '=', $id)
+            ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
+            // ... //
+            
+            return redirect('demanda-producto/'.$id)->with('msj', 'Se ha agregado la demanda de producto a su sección de "Demandas De Interés"');
+        }
 
-        return redirect('demanda-producto/'.$id)->with('msj', 'Se ha agregado la demanda de producto a su sección de "Demandas De Interés"');
+        return redirect('demanda-producto/demandas-productos-disponibles')->with('msj', 'Se ha eliminado la demanda de producto de los listados.'); 
     }
 
     public function demandas_interes(){
@@ -687,18 +692,21 @@ class DemandaProductoController extends Controller
             $demandas = Demanda_Producto::select('demanda_producto.*')
                         ->join('productor_demanda_producto', 'demanda_producto.id', '=', 'productor_demanda_producto.demanda_producto_id')
                         ->where('productor_demanda_producto.productor_id', '=', session('perfilId'))
+                        ->where('productor_demanda_producto.marcada', '=', '1')
                         ->orderBy('created_at', 'DESC')
                         ->paginate(10);    
         }elseif (session('perfilTipo') == 'I'){
             $demandas = Demanda_Producto::select('demanda_producto.*')
                         ->join('importador_demanda_producto', 'demanda_producto.id', '=', 'importador_demanda_producto.demanda_producto_id')
                         ->where('importador_demanda_producto.importador_id', '=', session('perfilId'))
+                        ->where('importador_demanda_producto.marcada', '=', '1')
                         ->orderBy('created_at', 'DESC')
                         ->paginate(10); 
         }elseif (session('perfilTipo') == 'D'){
             $demandas = Demanda_Producto::select('demanda_producto.*')
                         ->join('distribuidor_demanda_producto', 'demanda_producto.id', '=', 'distribuidor_demanda_producto.demanda_producto_id')
                         ->where('distribuidor_demanda_producto.distribuidor_id', '=', session('perfilId'))
+                        ->where('distribuidor_demanda_producto.marcada', '=', '1')
                         ->orderBy('created_at', 'DESC')
                         ->paginate(10); 
         }
@@ -719,7 +727,7 @@ class DemandaProductoController extends Controller
         $demanda_producto ->fill($request->all());
         $demanda_producto ->save();
 
-        return redirect('demanda-producto')->with('msj', 'Se han actualizado los datos de tu solicitud exitosamente.');
+        return redirect('demanda-producto')->with('msj', 'Se han actualizado los datos de tu solicitud con éxito.');
     }
     
     //Cambia el status de una demanda
@@ -727,7 +735,7 @@ class DemandaProductoController extends Controller
         Demanda_Producto::find($request->id)
             ->update(['status' => $request->status]);
 
-        return redirect("demanda-producto")->with('msj', 'El status de su demanda ha sido actualizado exitosamente');
+        return redirect("demanda-producto")->with('msj', 'El status de su demanda ha sido actualizado con éxito.');
     } 
     
     public function destroy($id)

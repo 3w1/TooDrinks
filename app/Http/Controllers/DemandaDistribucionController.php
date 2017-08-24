@@ -48,8 +48,7 @@ class DemandaDistribucionController extends Controller
                         ->get()
                         ->first();
 
-        $demandasDistribuidores = DB::table('demanda_distribuidor')
-                                    ->orderBy('created_at', 'DESC')
+        $demandasDistribuidores = Demanda_Distribuidor::orderBy('created_at', 'DESC')
                                     ->where('provincia_region_id', '=', $provincia_origen->provincia_region_id)
                                     ->where('status', '=', '1')
                                     ->paginate(10);
@@ -94,6 +93,12 @@ class DemandaDistribucionController extends Controller
     public function store(Request $request)
     {
         $fecha = new \DateTime();
+
+         if ( (session('perfilSuscripcion') == 'Gratis') || (session('perfilSuscripcion') == 'Bronce') ){
+            $creditos = 1;
+        }else{
+            $creditos = 0;
+        }
         
         $demanda_distribuidor  = new Demanda_Distribuidor($request->all());
         $demanda_distribuidor->fecha = $fecha;
@@ -142,7 +147,12 @@ class DemandaDistribucionController extends Controller
             }
         }
 
-        return redirect('demanda-distribuidor')->with('msj', 'Su demanda de distribuidor ha sido creada exitosamente');
+        if ($creditos == '1'){
+            $url = ('credito/gastar-creditos-pdd/'.$ult_demanda->id);
+            return redirect($url); 
+        }else{
+            return redirect('demanda-distribuidor')->with('msj', 'Su demanda de distribuidor ha sido creada con éxito.');    
+        } 
     }
 
     public function show($id)
@@ -171,29 +181,34 @@ class DemandaDistribucionController extends Controller
     }
 
     //Marca una demanda de distribuidor "de interes" para la entidad loggeada 
-    public function marcar_demanda($id){
+    public function marcar_demanda($id, $check){
         $fecha = new \DateTime();
 
         $demanda = Demanda_Distribuidor::find($id);
       
         //Asociar distribuidor a la demanda
         DB::table('distribuidor_demanda_distribuidor')->insertGetId(
-                                        ['distribuidor_id' => session('perfilId'), 'demanda_distribuidor_id' => $id, 'fecha' => $fecha]);    
+                                        ['distribuidor_id' => session('perfilId'), 'demanda_distribuidor_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
         // ... //
         
-        //Aumentar el contador de contactos de la demanda
-        DB::table('demanda_distribuidor')
-        ->where('id', '=', $id)
-        ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
-        // ... //
-
-        return redirect('demanda-distribuidor/'.$id)->with('msj', 'Se ha agregado la demanda de distribuidor a su sección de "Demandas De Interés"');
+        if ($check == '1'){
+            //Aumentar el contador de contactos de la demanda
+            DB::table('demanda_distribuidor')
+            ->where('id', '=', $id)
+            ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
+            // ... //
+            
+            return redirect('demanda-distribuidor/'.$id)->with('msj', 'Se ha agregado la demanda de distribuidor a su sección de "Demandas De Interés"');
+        }
+       
+        return redirect('demanda-distribuidor/demandas-disponibles')->with('msj', 'Se ha eliminado la demanda de distribuidor de los listados.');
     }
 
     public function demandas_interes(){
         $demandas = Demanda_Distribuidor::select('demanda_distribuidor.*')
                         ->join('distribuidor_demanda_distribuidor', 'demanda_distribuidor.id', '=', 'distribuidor_demanda_distribuidor.demanda_distribuidor_id')
                         ->where('distribuidor_demanda_distribuidor.distribuidor_id', '=', session('perfilId'))
+                        ->where('distribuidor_demanda_distribuidor.marcada', '=', '1')
                         ->orderBy('created_at', 'DESC')
                         ->paginate(10);
         
@@ -241,7 +256,7 @@ class DemandaDistribucionController extends Controller
        	$demanda_distribuidor->fill($request->all());
         $demanda_distribuidor->save();
 
-        return redirect('demanda-distribuidor')->with('msj', 'Los datos de su demanda de distribución han sido actualizados exitosamente');
+        return redirect('demanda-distribuidor')->with('msj', 'Los datos de su demanda de distribución han sido actualizados con éxito.');
     }
 
     //Cambia el status de una demanda
@@ -249,7 +264,7 @@ class DemandaDistribucionController extends Controller
         Demanda_Distribuidor::find($request->id)
             ->update(['status' => $request->status]);
 
-        return redirect("demanda-distribuidor")->with('msj', 'El status de su demanda ha sido actualizado exitosamente');
+        return redirect("demanda-distribuidor")->with('msj', 'El status de su demanda ha sido actualizado con éxito.');
     }
 
     public function destroy($id)

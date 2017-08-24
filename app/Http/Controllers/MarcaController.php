@@ -88,7 +88,7 @@ class MarcaController extends Controller
         }       
 
         if (session('perfilTipo') == 'AD'){
-            return redirect('admin')->with('msj-success', 'La marca ha sido creada exitosamente');
+            return redirect('admin')->with('msj-success', 'La marca ha sido creada con éxito.');
         }
 
         $notificaciones_admin = new Notificacion_Admin();
@@ -105,10 +105,10 @@ class MarcaController extends Controller
         $notificaciones_admin->leida = '0';
         $notificaciones_admin->save();
 
-        return redirect('marca')->with('msj', 'Su marca ha sido creada exitosamente');
+        return redirect('marca')->with('msj', 'Su marca ha sido creada con éxito.');
     }
     
-    public function show(Request $request, $id)
+    public function show(Request $request, $id, $nombre_seo)
     {
         $marca = Marca::find($id);
 
@@ -256,7 +256,7 @@ class MarcaController extends Controller
             return redirect('admin/detalle-de-marca/'.$id)->with('msj-success', 'Los datos de la marca han sido actualizados exitosamente');
         }
 
-        return redirect('marca/'.$id)->with('msj', 'Los datos de su marca se han actualizado exitosamente');       
+        return redirect('marca/'.$id)->with('msj', 'Los datos de su marca se han actualizado con éxito.');       
     }
 
     public function updateLogo(Request $request){
@@ -276,10 +276,10 @@ class MarcaController extends Controller
                             ->update(['logo' => $nombre ]);
         
         if (session('perfilTipo') == 'AD'){
-            return redirect('admin/detalle-de-marca/'.$request->id)->with('msj-success', 'El logo de la marc han sido actualizados exitosamente');
+            return redirect('admin/detalle-de-marca/'.$request->id)->with('msj-success', 'El logo de la marca se ha actualizado con éxito.');
         }
 
-        return redirect('marca/'.$request->id)->with('msj', 'La imagen de la marca se ha actualizado exitosamente');     
+        return redirect('marca/'.$request->id)->with('msj', 'El logo de la marca se ha actualizado con éxito.');     
     }
 
     public function destroy($id)

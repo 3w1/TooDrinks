@@ -61,7 +61,7 @@ class OpinionController extends Controller
         $notificaciones_admin->leida = '0';
         $notificaciones_admin->save();
 
-        return redirect('producto/detalle-de-producto/'.$request->producto_id)->with('msj', 'Su comentario ha sido almacenado exitosamente');
+        return redirect('producto/detalle-de-producto/'.$request->producto_id)->with('msj', 'Su comentario ha sido almacenado con éxito.');
     }
 
     /**
@@ -93,7 +93,7 @@ class OpinionController extends Controller
         $opinion->fill($request->all());
         $opinion->save();
 
-        return redirect('producto/detalle-de-producto/'.$request->producto_id)->with('msj', 'Su comentario ha sido modificado exitosamente');
+        return redirect('producto/detalle-de-producto/'.$request->producto_id)->with('msj', 'Su comentario ha sido modificado con éxito.');
         
     }
 

@@ -65,6 +65,7 @@ class Importador extends Model
     public function creditos(){
     	return $this->belongsToMany('App\Models\Credito', 'importador_credito')->withPivot('total', 'fecha_compra')->withTimestamps();
     }
+    
     public function suscripcion(){
         return $this->belongsTo('App\Models\Suscripcion');
     }

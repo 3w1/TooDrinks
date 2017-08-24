@@ -16,7 +16,7 @@
         <div class="text-center signup-email-section">
             <a href="#" class="signup-email"><i class="soap-icon-letter"></i>Registrarse con Email</a>
         </div>
-        <p class="description">Al registrarme, acepto las Condiciones de servicio de TooDrinks y sus Políticas de privacidad.</p>
+        <p class="description">Al registrarme, acepto las <a href="#">Condiciones de servicio y Políticas de privacidad</a> de TooDrinks.com</p>
     </div>
     <div class="email-signup">
         <form action="{{ route('register') }}" method="POST">
@@ -68,7 +68,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <p class="description">Al inscribirme, acepto las Condiciones de servicio de TooDrinks y sus Políticas de privacidad.</p>
+                <p class="description">Al registrarme, acepto las <a href="#">Condiciones de servicio y Políticas de privacidad</a> de TooDrinks.com</p>
             </div>
             <button type="submit" class="full-width btn-medium">Registrarme</button>
         </form>

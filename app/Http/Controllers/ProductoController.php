@@ -158,9 +158,9 @@ class ProductoController extends Controller
         $notificaciones_admin->save();            
     
         if ($request->usuario == '1'){
-            return redirect('producto')->with('msj', 'Su producto ha sido agregado exitosamente');
+            return redirect('producto')->with('msj', 'Su producto ha sido agregado con éxito.');
         }else{
-            return redirect('producto/listado-de-productos/'.$request->marca_id.'-'.$request->marca_nombre)->with('msj', 'Su producto ha sido agregado exitosamente');
+            return redirect('producto/listado-de-productos/'.$request->marca_id.'-'.$request->marca_nombre)->with('msj', 'Su producto ha sido agregado con éxito.');
         }           
     }
 
@@ -190,7 +190,7 @@ class ProductoController extends Controller
                 Horeca::find(session('perfilId'))->productos()->attach($producto);
             }
         }
-        return redirect('marca')->with('msj', 'Los productos han sido asociados a su lista exitosamente.');
+        return redirect('marca')->with('msj', 'Los productos han sido asociados a su lista con éxito.');
     }
 
     //Listado de productos de una marca específica
@@ -361,7 +361,7 @@ class ProductoController extends Controller
              Producto::find($request->producto_id)->horecas()->attach(session('perfilId'));
         }
 
-        return redirect('producto/mis-productos/todos')->with('msj', 'El producto ha sido agregado a su listado exitosamente');   
+        return redirect('producto/mis-productos/todos')->with('msj', 'El producto ha sido agregado a su listado con éxito.');   
     }
 
     public function show($id)
@@ -539,7 +539,7 @@ class ProductoController extends Controller
         );
     }
 
-    public function detalle(Request $request, $id){
+    public function detalle(Request $request, $id, $nombre_seo){
         $producto = Producto::find($id);
 
         $productor = Productor::find($producto->marca->productor_id)
@@ -595,10 +595,10 @@ class ProductoController extends Controller
         $producto->save();
 
         if (session('perfilTipo') == 'AD'){
-            return redirect('admin/detalle-producto/'.$request->id)->with('msj-success', 'Los datos del producto han sido actualizados exitosamente');
+            return redirect('admin/detalle-producto/'.$request->id)->with('msj-success', 'Los datos del producto han sido actualizados con éxito.');
         }
 
-       return redirect('producto/detalle-de-producto/'.$request->id)->with('msj', 'Los datos de su producto han sido actualizados exitosamente');
+       return redirect('producto/detalle-de-producto/'.$request->id)->with('msj', 'Los datos de su producto han sido actualizados con éxito.');
     }
 
      public function updateImagen(Request $request){
@@ -618,10 +618,10 @@ class ProductoController extends Controller
                             ->update(['imagen' => $nombre ]);
 
         if (session('perfilTipo') == 'AD'){
-            return redirect('admin/detalle-producto/'.$request->id)->with('msj-success', 'La imagen del producto ha sido actualizada exitosamente');
+            return redirect('admin/detalle-producto/'.$request->id)->with('msj-success', 'La imagen del producto ha sido actualizada con éxito.');
         }
 
-        return redirect('producto/detalle-de-producto/'.$request->id)->with('msj', 'La imagen del producto ha sido actualizada exitosamente');
+        return redirect('producto/detalle-de-producto/'.$request->id)->with('msj', 'La imagen del producto ha sido actualizada con éxito.');
     }
 
     public function destroy($id)

@@ -6,6 +6,7 @@
 @endsection
 
 @section('content-left')
+   
    @section('alertas')
       @if (Session::has('msj'))
            <div class="alert alert-success alert-dismissable">
@@ -24,24 +25,49 @@
          </li>
             
          @foreach($demandasProductos as $demandaProducto)
-            <li>
-               <i class="fa fa-hand-pointer-o bg-blue"></i>
-               <div class="timeline-item">
-                  <span class="time"><i class="fa fa-clock-o"></i> {{ date('d-m-Y', strtotime($demandaProducto->created_at)) }}</span>
-                  <h3 class="timeline-header">@if ($demandaProducto->tipo_creador == 'I') 
-                     Un importador @elseif ($demandaProducto->tipo_creador == 'D') Un Distribuidor @else Un Horeca @endif está demandando tu producto.</h3>
+            <?php 
+               if (session('perfilTipo') == 'P'){
+                  $relacion = DB::table('productor_demanda_producto')
+                           ->select('demanda_producto_id')
+                           ->where('demanda_producto_id', '=', $demandaProducto->id)
+                           ->where('productor_id', '=', session('perfilId'))
+                           ->first();
+               }elseif (session('perfilTipo') == 'I'){
+                  $relacion = DB::table('importador_demanda_producto')
+                           ->select('demanda_producto_id')
+                           ->where('demanda_producto_id', '=', $demandaProducto->id)
+                           ->where('importador_id', '=', session('perfilId'))
+                           ->first();
+               }elseif (session('perfilTipo') == 'D'){
+                  $relacion = DB::table('distribuidor_demanda_producto')
+                           ->select('demanda_producto_id')
+                           ->where('demanda_producto_id', '=', $demandaProducto->id)
+                           ->where('distribuidor_id', '=', session('perfilId'))
+                           ->first();
+               }
+            ?>
 
-                  <div class="timeline-body">
-                     @if ($demandaProducto->tipo_creador == 'I') 
-                     Un importador @elseif ($demandaProducto->tipo_creador == 'D') Un Distribuidor  @else Un Horeca @endif ha demandado tu producto <strong>{{ $demandaProducto->nombre }}</strong>. <br>
-                     <strong>Descripción de la Demanda:</strong> {{ $demandaProducto->titulo }}. ({{ $demandaProducto->descripcion }}).
+            @if ($relacion == null)
+               <li>
+                  <i class="fa fa-hand-pointer-o bg-blue"></i>
+                  <div class="timeline-item">
+                     <span class="time"><i class="fa fa-clock-o"></i> {{ date('d-m-Y', strtotime($demandaProducto->created_at)) }}</span>
+                     <h3 class="timeline-header">@if ($demandaProducto->tipo_creador == 'I') 
+                        Un importador @elseif ($demandaProducto->tipo_creador == 'D') Un Distribuidor @else Un Horeca @endif está demandando tu producto.</h3>
+
+                     <div class="timeline-body">
+                        @if ($demandaProducto->tipo_creador == 'I') 
+                        Un importador @elseif ($demandaProducto->tipo_creador == 'D') Un Distribuidor  @else Un Horeca @endif ha demandado tu producto <strong>{{ $demandaProducto->nombre }}</strong>. <br>
+                        <strong>Descripción de la Demanda:</strong> {{ $demandaProducto->titulo }}. ({{ $demandaProducto->descripcion }}).
+                     </div>
+               
+                     <div class="timeline-footer">
+                        <a class="btn btn-primary btn-xs" href="{{ route('demanda-producto.show', $demandaProducto->id) }}">¡Más Detalles!</a>
+                        <a class="btn btn-danger btn-xs" href="{{ route('demanda-producto.marcar', [$demandaProducto->id, '0']) }}">¡No Me Interesa!</a>
+                     </div>
                   </div>
-            
-                  <div class="timeline-footer">
-                     <a class="btn btn-primary btn-xs" href="{{ route('demanda-producto.show', $demandaProducto->id) }}">¡Más Detalles!</a>
-                  </div>
-               </div>
-            </li>
+               </li>
+            @endif
          @endforeach
       </ul>
    </div>

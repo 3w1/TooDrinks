@@ -80,7 +80,7 @@ class SolicitudImportacionController extends Controller
         $notificaciones_productor->save();
         // *** //
         
-        return redirect('solicitud-importacion')->with('msj', 'Su solicitud ha sido guardada exitosamente');
+        return redirect('solicitud-importacion')->with('msj', 'Su solicitud ha sido almacenada con éxito.');
     }
 
     public function show($id)
@@ -108,30 +108,35 @@ class SolicitudImportacionController extends Controller
         return view('solicitudImportacion.show')->with(compact('demandaImportacion', 'restringido'));
     }
 
-    //Marca una solicitud de importación "de interes" para entidades con Suscripción
-    public function marcar_solicitud($id){
+    //Marca una solicitud de importación "de interes" o "no me interesa" para entidades con Suscripción
+    public function marcar_solicitud($id, $check){
         $fecha = new \DateTime();
 
         $demanda = Solicitud_Importacion::find($id);
       
         //Asociar productor a la solicitud
         DB::table('productor_solicitud_importacion')->insertGetId(
-                                        ['productor_id' => session('perfilId'), 'solicitud_importacion_id' => $id, 'fecha' => $fecha]);    
+                                        ['productor_id' => session('perfilId'), 'solicitud_importacion_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
         // ... //
         
-        //Aumentar el contador de contactos de la demanda
-        DB::table('solicitud_importacion')
-        ->where('id', '=', $id)
-        ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
-        // ... //
+        if ($check == '1'){
+            //Aumentar el contador de contactos de la demanda
+            DB::table('solicitud_importacion')
+            ->where('id', '=', $id)
+            ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
+            // ... //
+            
+            return redirect('solicitud-importacion/'.$id)->with('msj', 'Se ha agregado la Demanda de Importación a su sección de "Demandas De Interés"');
+        }
 
-        return redirect('solicitud-importacion/'.$id)->with('msj', 'Se ha agregado la Demanda de Importación a su sección de "Demandas De Interés"');
+        return redirect('solicitud-importacion/solicitudes-importacion')->with('msj', 'Se ha eliminado la demanda de importación de los listados.');
     }
 
     public function demandas_interes(){
         $demandas = Solicitud_Importacion::select('solicitud_importacion.*')
                         ->join('productor_solicitud_importacion', 'solicitud_importacion.id', '=', 'productor_solicitud_importacion.solicitud_importacion_id')
                         ->where('productor_solicitud_importacion.productor_id', '=', session('perfilId'))
+                        ->where('productor_solicitud_importacion.marcada', '=', '1')
                         ->orderBy('created_at', 'DESC')
                         ->paginate(10);    
 
@@ -153,7 +158,7 @@ class SolicitudImportacionController extends Controller
         Solicitud_Importacion::find($request->id)
             ->update(['status' => $request->status]);
 
-        return redirect("solicitud-importacion")->with('msj', 'El status de su demanda ha sido actualizado exitosamente');
+        return redirect("solicitud-importacion")->with('msj', 'El status de su demanda ha sido actualizado con éxito.');
     }
 
     public function destroy($id)
@@ -173,7 +178,8 @@ class SolicitudImportacionController extends Controller
                     ->update(['leida' => '1']);
         }
 
-        $demandasImportacion = Solicitud_Importacion::join('marca', 'solicitud_importacion.marca_id', '=', 'marca.id')
+        $demandasImportacion = Solicitud_Importacion::select('solicitud_importacion.*')
+                                ->join('marca', 'solicitud_importacion.marca_id', '=', 'marca.id')
                                 ->join('productor', 'marca.productor_id', '=', 'productor.id')
                                 ->where('productor.id', '=', session('perfilId'))
                                 ->where('solicitud_importacion.status', '=', '1')

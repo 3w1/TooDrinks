@@ -18,6 +18,14 @@
 	{!! Form::hidden('status', '1')  !!}
 
 	<div class="form-group">
-		{!! Form::submit('Crear Solicitud', ['class' => 'btn btn-primary pull-right']) !!}
+		@if ( (session('perfilSuscripcion') == 'Gratis') || (session('perfilSuscripcion') == 'Bronce') )
+	    	@if (session('perfilSaldo') >= $coste->cantidad_creditos)
+				{!! Form::submit('Crear Solicitud', ['class' => 'btn btn-primary pull-right']) !!}
+			@else
+				{!! Form::submit('Crear Solicitud', ['class' => 'btn btn-primary pull-right', 'disabled']) !!}
+			@endif
+		@else
+			{!! Form::submit('Crear Solicitud', ['class' => 'btn btn-primary pull-right']) !!}
+		@endif
 	</div>
 {!! Form::close() !!}

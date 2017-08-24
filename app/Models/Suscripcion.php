@@ -8,7 +8,7 @@ class Suscripcion extends Model
 {
     protected $table = "suscripcion";
 
-    protected $fillable = ['suscripcion', 'descripcion', 'precio', 'creditos_disponibles']; 
+    protected $fillable = ['suscripcion', 'descripcion', 'precio']; 
 
     public function productores(){
     	return $this->hasMany('App\Models\Productor');

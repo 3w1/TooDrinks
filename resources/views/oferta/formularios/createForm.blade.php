@@ -116,8 +116,8 @@
     @endif
 
     <div class="form-group">
-    	@if ( (session('perfilSuscripcion') == 'Gratis') || (session('perfilSuscripcion') == 'Basic') )
-	    	@if (session('perfilSaldo') >= '25')
+    	@if ( session('perfilSuscripcion') != 'Oro' )
+	    	@if (session('perfilSaldo') >= $coste->cantidad_creditos)
 				{!! Form::submit('Crear Oferta', ['class' => 'btn btn-primary pull-right']) !!}
 			@else
 				{!! Form::submit('Crear Oferta', ['class' => 'btn btn-primary pull-right', 'disabled']) !!}

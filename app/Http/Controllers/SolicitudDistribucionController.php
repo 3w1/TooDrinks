@@ -124,7 +124,7 @@ class SolicitudDistribucionController extends Controller
                 }
             }
         }
-        return redirect('solicitud-distribucion')->with('msj', 'Su solicitud ha sido creada exitosamente. Debe esperar la aprobación del Productor / Importador');
+        return redirect('solicitud-distribucion')->with('msj', 'Su solicitud ha sido creada con éxito. Debe esperar la aprobación del Productor / Importador');
     }
 
     public function show($id)
@@ -160,8 +160,8 @@ class SolicitudDistribucionController extends Controller
         return view('solicitudDistribucion.show')->with(compact('demandaDistribucion', 'restringido'));
     }
 
-    //Marca una solicitud de distribución "de interes" para el productor o importador loggeado
-    public function marcar_solicitud($id){
+    //Marca una solicitud de distribución "de interes" o "no me interesa" para el productor o importador loggeado
+    public function marcar_solicitud($id, $check){
         $fecha = new \DateTime();
 
         $demanda = Solicitud_Distribucion::find($id);
@@ -169,20 +169,25 @@ class SolicitudDistribucionController extends Controller
         //Asociar productor a la solicitud
         if (session('perfilTipo') == 'P'){
              DB::table('productor_solicitud_distribucion')->insertGetId(
-                                        ['productor_id' => session('perfilId'), 'solicitud_distribucion_id' => $id, 'fecha' => $fecha]);    
+                                        ['productor_id' => session('perfilId'), 'solicitud_distribucion_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
         }else{
              DB::table('importador_solicitud_distribucion')->insertGetId(
-                                        ['importador_id' => session('perfilId'), 'solicitud_distribucion_id' => $id, 'fecha' => $fecha]);    
+                                        ['importador_id' => session('perfilId'), 'solicitud_distribucion_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
         }
         // ... //
         
-        //Aumentar el contador de contactos de la demanda
-        DB::table('solicitud_distribucion')
-        ->where('id', '=', $id)
-        ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
-        // ... //
-
-        return redirect('solicitud-distribucion/'.$id)->with('msj', 'Se ha agregado la Demanda de Distribución a su sección de "Demandas De Interés"');
+        if ($check == '1'){
+            //Aumentar el contador de contactos de la demanda
+            DB::table('solicitud_distribucion')
+            ->where('id', '=', $id)
+            ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
+            // ... //
+            
+            return redirect('solicitud-distribucion/'.$id)->with('msj', 'Se ha agregado la Demanda de Distribución a su sección de "Demandas De Interés"');
+        }
+        
+        return redirect('solicitud-distribucion/solicitudes-distribucion')->with('msj', 'Se ha eliminado la demanda de distribución de los listados.');
+        
     }
 
     public function demandas_interes(){
@@ -190,12 +195,14 @@ class SolicitudDistribucionController extends Controller
             $demandas = Solicitud_Distribucion::select('solicitud_distribucion.*')
                         ->join('productor_solicitud_distribucion', 'solicitud_distribucion.id', '=', 'productor_solicitud_distribucion.solicitud_distribucion_id')
                         ->where('productor_solicitud_distribucion.productor_id', '=', session('perfilId'))
+                        ->where('productor_solicitud_distribucion.marcada', '=', '1')
                         ->orderBy('created_at', 'DESC')
                         ->paginate(10); 
         }elseif (session('perfilTipo') == 'I'){
             $demandas = Solicitud_Distribucion::select('solicitud_distribucion.*')
                         ->join('importador_solicitud_distribucion', 'solicitud_distribucion.id', '=', 'importador_solicitud_distribucion.solicitud_distribucion_id')
                         ->where('importador_solicitud_distribucion.importador_id', '=', session('perfilId'))
+                        ->where('importador_solicitud_distribucion.marcada', '=', '1')
                         ->orderBy('created_at', 'DESC')
                         ->paginate(10);  
         }
@@ -218,7 +225,7 @@ class SolicitudDistribucionController extends Controller
         Solicitud_Distribucion::find($request->id)
             ->update(['status' => $request->status]);
 
-        return redirect("solicitud-distribucion")->with('msj', 'El status de su demanda ha sido actualizado exitosamente');
+        return redirect("solicitud-distribucion")->with('msj', 'El status de su demanda ha sido actualizado con éxito.');
     }
 
     public function destroy($id)
@@ -240,7 +247,8 @@ class SolicitudDistribucionController extends Controller
                         ->update(['leida' => '1']);
             }
 
-            $demandasDistribucion = Solicitud_Distribucion::join('marca', 'solicitud_distribucion.marca_id', '=', 'marca.id')
+            $demandasDistribucion = Solicitud_Distribucion::select('solicitud_distribucion.*')
+                                ->join('marca', 'solicitud_distribucion.marca_id', '=', 'marca.id')
                                 ->join('productor', 'marca.productor_id', '=', 'productor.id')
                                 ->where('productor.id', '=', session('perfilId'))
                                 ->where('solicitud_distribucion.status', '=', '1')

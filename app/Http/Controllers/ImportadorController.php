@@ -54,7 +54,7 @@ class ImportadorController extends Controller
         $importador->logo = $nombre;
         $importador->save();
 
-        return redirect('admin')->with('msj', 'Se ha creado el Importador exitosamente');
+        return redirect('admin')->with('msj', 'Se ha creado el Importador con éxito.');
     }
 
     public function show($id)
@@ -90,7 +90,7 @@ class ImportadorController extends Controller
         session(['perfilProvincia' => $importador->provincia_region_id]);
 
         $url = 'importador/'.$id.'/edit';
-        return redirect($url)->with('msj', 'Sus datos han sido actualizados exitosamente.');
+        return redirect($url)->with('msj', 'Sus datos han sido actualizados con éxito.');
     }
 
     public function updateAvatar(Request $request){
@@ -112,7 +112,7 @@ class ImportadorController extends Controller
         session(['perfilLogo' => $nombre]);
        
        $url = 'importador/'.$request->id.'/edit';
-       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada exitosamente.');
+       return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito.');
     }
 
     public function destroy($id)
@@ -164,7 +164,7 @@ class ImportadorController extends Controller
             // *** //
         }
 
-        return redirect('producto/seleccionar-productos/'.$id)->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
+        return redirect('producto/seleccionar-productos/'.$id)->with('msj', 'Se ha agregado la marca a su lista con éxito. Debe esperar la confirmación del productor.');
     }
 
     public function solicitar_importacion(){

@@ -1,41 +1,47 @@
 @extends('plantillas.main')
 @section('title', 'Demanda de Importador')
 
-@section('items')
+@section('title-header')
+   Demanda de Importador
+@endsection
+
+@section('title-complement')
+   (Detalles)
 @endsection
 
 @section('content-left')
+	<?php 
+      $coste = DB::table('coste_credito')
+            ->select('cantidad_creditos')
+            ->where('accion', '=', 'VD')
+            ->where('entidad', '=', session('perfilTipo'))
+            ->first();
+   ?>
 
-   @section('title-header')
-      <h3><b>Solicitud de Importador</b></h3>
-   @endsection
+    @section('alertas')
+      @if (Session::has('msj'))
+         <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+         </div>
+      @endif
 
-   @if (Session::has('msj'))
-      <div class="alert alert-success alert-dismissable">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
-      </div>
-   @endif
-
-   <div class="row">
       @if ($restringido == '1')
-         @if (session('perfilSuscripcion') != 'Premium')
-            @if (session('perfilSaldo') < '30')
+        @if (session('perfilSuscripcion') == 'Gratis')
+            @if (session('perfilSaldo') < $coste->cantidad_creditos)
                <div class="alert alert-danger">
-                  No tiene créditos suficientes para ver la información de las demandas de importadores. Por favor compre créditos. <a href="{{ route('credito.index') }}">Ver Planes de Crédito</a> O consiga una Suscripción Premium. <a href="">Ver Suscripciones</a> 
+                  No tiene créditos suficientes para ver la información de las demandas de importadores. Por favor compre créditos. <a href="{{ route('credito.index') }}">Ver Planes de Crédito</a> O consiga una Suscripción Bronce, Plata u Oro. <a href="">Ver Suscripciones</a> 
                </div>
             @else
                <div class="alert alert-danger">
-                  Se le descontarán 30 créditos de su saldo. Para ver datos de contacto sin pagar créditos debe obtener una Suscripción Premium. 
+                  Se le descontarán <strong> {{$coste->cantidad_creditos}} créditos</strong> de su saldo. Para ver datos de contacto sin pagar créditos debe obtener una Suscripción Bronce, Plata u Oro. 
                </div>
             @endif
-         @else
-            <div class="alert alert-info">
-               <b>Presione el botón de "Me Interesa" para agregar la Demanda de Importador a su sección de ¡¡Demandas de Interés!!</b> 
-            </div>
          @endif
       @endif
-      
+   @endsection
+
+   <div class="row">
       <div class="col-md-4"></div>
       <div class="col-sm-6 col-md-4">
          <a href="" class="thumbnail"><img src="{{ asset('imagenes/marcas/thumbnails') }}/{{ $demandaImportador->marca->logo }}"></a>
@@ -68,15 +74,16 @@
                <li class="list-group-item"><b>Fecha:</b> {{ $demandaImportador->created_at->format('d-m-Y') }}</li>
                @if ( $restringido == '1' )
                   <li class="list-group-item"><center>
-                     @if (session('perfilSuscripcion') != 'Premium')
-                        @if (session('perfilSaldo') < '30')
+                     @if (session('perfilSuscripcion') == 'Gratis')
+                        @if (session('perfilSaldo') < $coste->cantidad_creditos)
                            <a class="btn btn-danger" disabled>¡Me Interesa!</a>
                         @else
-                           <a href="{{ route('credito.gastar-creditos-di', ['30', $demandaImportador->id]) }}" class="btn btn-warning">¡Me Interesa! <b>(30 <i class="fa fa-certificate"></i>)</b></a>
+                           <a href="{{ route('credito.gastar-creditos-di', $demandaImportador->id) }}" class="btn btn-success">¡Me Interesa! <b>({{$coste->cantidad_creditos}} <i class="fa fa-certificate"></i>)</b></a>
                         @endif
                      @else
-                        <a href="{{ route('demanda-importador.marcar', $demandaImportador->id) }}" class="btn btn-warning">¡Me Interesa! <i class="fa fa-thumbs-o-up"></i></a>
+                        <a href="{{ route('demanda-importador.marcar', [$demandaImportador->id, '1'] ) }}" class="btn btn-success">¡Me Interesa! <i class="fa fa-thumbs-o-up"></i></a>
                      @endif
+                     <a href="{{ route('demanda-importador.marcar', [$demandaImportador->id, '0']) }}" class="btn btn-danger">¡No Me Interesa! <i class="fa fa-thumbs-o-down"></i></a>
                   </center></li>
                @else
                   <li class="list-group-item"><b>Productor:</b> {{ $demandaImportador->productor->nombre }}</li>

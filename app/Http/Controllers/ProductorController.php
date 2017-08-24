@@ -51,7 +51,7 @@ class ProductorController extends Controller
         $productor->logo = $nombre; 
         $productor->save();
 
-        return redirect('admin')->with('msj', 'Se ha creado el Productor exitosamente');
+        return redirect('admin')->with('msj', 'Se ha creado el Productor con éxito.');
     }
 
     public function show(Request $request, $id)
@@ -131,7 +131,7 @@ class ProductorController extends Controller
         session(['perfilProvincia' => $productor->provincia_region_id]);
 
         $url = 'productor/'.$id.'/edit';
-        return redirect($url)->with('msj', 'Sus datos han sido actualizados exitosamente');
+        return redirect($url)->with('msj', 'Sus datos han sido actualizados con éxito.');
     }
 
     public function updateAvatar(Request $request){
@@ -153,7 +153,7 @@ class ProductorController extends Controller
         session(['perfilLogo' => $nombre]);
        
         $url = 'productor/'.$request->id.'/edit';
-        return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada exitosamente');
+        return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito.');
     }
 
     public function destroy($id)
@@ -233,7 +233,7 @@ class ProductorController extends Controller
             $notificaciones_importador->leida = '0';
             $notificaciones_importador->save();
 
-            return redirect('productor/confirmar-importadores')->with('msj', 'Solicitud aprobada exitosamente');
+            return redirect('productor/confirmar-importadores')->with('msj', 'Solicitud aprobada con éxito.');
         }else{
 
             DB::table('importador_marca')->where('id', '=', $id)->delete();
@@ -252,7 +252,7 @@ class ProductorController extends Controller
             $notificaciones_importador->leida = '0';
             $notificaciones_importador->save();
 
-            return redirect('productor/confirmar-importadores')->with('msj', 'Solicitud denegada exitosamente');
+            return redirect('productor/confirmar-importadores')->with('msj', 'Solicitud denegada con éxito.');
         }
     }
 
@@ -313,7 +313,7 @@ class ProductorController extends Controller
             $notificaciones_distribuidor->leida = '0';
             $notificaciones_distribuidor->save();
 
-            return redirect('productor/confirmar-distribuidores')->with('msj', 'Solicitud aprobada exitosamente');
+            return redirect('productor/confirmar-distribuidores')->with('msj', 'Solicitud aprobada con éxito.');
         }else{
             DB::table('distribuidor_marca')->where('id', '=', $id)->delete();
 
@@ -331,7 +331,7 @@ class ProductorController extends Controller
             $notificaciones_distribuidor->leida = '0';
             $notificaciones_distribuidor->save();
 
-            return redirect('productor/confirmar-distribuidores')->with('msj', 'Solicitud denegada exitosamente');
+            return redirect('productor/confirmar-distribuidores')->with('msj', 'Solicitud denegada con éxito.');
         }
     }
 
@@ -388,7 +388,7 @@ class ProductorController extends Controller
                 $notificaciones_distribuidor->leida = '0';
                 $notificaciones_distribuidor->save(); 
             }
-            return redirect('productor/confirmar-productos')->with('msj', 'Producto aprobado exitosamente');
+            return redirect('productor/confirmar-productos')->with('msj', 'Producto aprobado con éxito.');
         }else{
             DB::table('producto')
                 ->where('id', '=', $id)
@@ -424,7 +424,7 @@ class ProductorController extends Controller
                 $notificaciones_distribuidor->save();
             }
 
-            return redirect('productor/confirmar-productos')->with('msj', 'Producto eliminado exitosamente');
+            return redirect('productor/confirmar-productos')->with('msj', 'Producto eliminado con éxito.');
         }
     }
 }

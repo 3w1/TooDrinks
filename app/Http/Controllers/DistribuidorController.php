@@ -54,7 +54,7 @@ class DistribuidorController extends Controller
         $distribuidor->logo = $nombre;
         $distribuidor->save();
 
-        return redirect('admin')->with('msj', 'Se ha creado el Distribuidor exitosamente');
+        return redirect('admin')->with('msj', 'Se ha creado el Distribuidor con éxito.');
     }
 
     public function show($id)
@@ -90,7 +90,7 @@ class DistribuidorController extends Controller
         session(['perfilProvincia' => $distribuidor->provincia_region_id]);
 
         $url = 'distribuidor/'.$id.'/edit';
-        return redirect($url)->with('msj', 'Sus datos han sido actualizados exitosamente.');
+        return redirect($url)->with('msj', 'Sus datos han sido actualizados con éxito.');
     }
 
     public function updateAvatar(Request $request){
@@ -112,7 +112,7 @@ class DistribuidorController extends Controller
         session(['perfilLogo' => $nombre]);
 
         $url = 'distribuidor/'.$request->id.'/edit';
-        return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada exitosamente.');
+        return redirect($url)->with('msj', 'Su imagen de perfil ha sido cambiada con éxito.');
     }
 
     public function destroy($id)
@@ -159,6 +159,6 @@ class DistribuidorController extends Controller
             $notificaciones_productor->save();
             // *** //
         }
-         return redirect('producto/seleccionar-productos/'.$id)->with('msj', 'Se ha agregado la marca a su lista. Debe esperar la confirmación del productor.');
+         return redirect('producto/seleccionar-productos/'.$id)->with('msj', 'Se ha agregado la marca a su lista con éxito. Debe esperar la confirmación del productor.');
     }   
 }

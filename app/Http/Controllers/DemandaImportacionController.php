@@ -87,7 +87,13 @@ class DemandaImportacionController extends Controller
     public function store(Request $request)
     {
         $fecha = new \DateTime();
-        
+
+        if ( (session('perfilSuscripcion') == 'Gratis') || (session('perfilSuscripcion') == 'Bronce') ){
+            $creditos = 1;
+        }else{
+            $creditos = 0;
+        }
+
         $demanda_importador = new Demanda_Importador($request->all());
         $demanda_importador->fecha = $fecha;
         $demanda_importador->save();
@@ -129,7 +135,12 @@ class DemandaImportacionController extends Controller
             }
         }
         
-        return redirect('demanda-importador')->with('msj', 'Su demanda de importador ha sido creada exitosamente');    
+        if ($creditos == '1'){
+            $url = ('credito/gastar-creditos-pdi/'.$ult_demanda->id);
+            return redirect($url); 
+        }else{
+            return redirect('demanda-importador')->with('msj', 'Su demanda de importador ha sido creada con éxito.');    
+        } 
     }
 
     public function show($id)
@@ -157,30 +168,34 @@ class DemandaImportacionController extends Controller
         return view('demandaImportacion.show')->with(compact('demandaImportador', 'restringido'));
     }
 
-     //Marca una demanda de importador "de interes" para la entidad loggeada 
-    public function marcar_demanda($id){
+     //Marca una demanda de importador "de interes" o "no me interesa" para la entidad loggeada 
+    public function marcar_demanda($id, $check){
         $fecha = new \DateTime();
 
         $demanda = Demanda_Importador::find($id);
       
         //Asociar importador a la demanda
         DB::table('importador_demanda_importador')->insertGetId(
-                                        ['importador_id' => session('perfilId'), 'demanda_importador_id' => $id, 'fecha' => $fecha]);    
+                                        ['importador_id' => session('perfilId'), 'demanda_importador_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
         // ... //
         
-        //Aumentar el contador de contactos de la demanda
-        DB::table('demanda_importador')
-        ->where('id', '=', $id)
-        ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
-        // ... //
-
-        return redirect('demanda-importador/'.$id)->with('msj', 'Se ha agregado la demanda de importador a su sección de "Demandas De Interés"');
+        if ($check == '1'){
+            //Aumentar el contador de contactos de la demanda
+            DB::table('demanda_importador')
+            ->where('id', '=', $id)
+            ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
+            // ... //
+            return redirect('demanda-importador/'.$id)->with('msj', 'Se ha agregado la demanda de importador a su sección de "Demandas De Interés"');
+        }
+        
+        return redirect('demanda-importador/demandas-disponibles')->with('msj', 'Se ha eliminado la demanda de importador de los listados.');
     }
 
     public function demandas_interes(){
         $demandas = Demanda_Importador::select('demanda_importador.*')
                         ->join('importador_demanda_importador', 'demanda_importador.id', '=', 'importador_demanda_importador.demanda_importador_id')
                         ->where('importador_demanda_importador.importador_id', '=', session('perfilId'))
+                        ->where('importador_demanda_importador.marcada', '=', '1')
                         ->orderBy('created_at', 'DESC')
                         ->paginate(10);    
 
@@ -215,7 +230,7 @@ class DemandaImportacionController extends Controller
         $demanda_importador->fill($request->all());
         $demanda_importador->save();
 
-        return redirect('demanda-importador')->with('msj', 'Los datos de su demanda se han actualizado exitosamente');
+        return redirect('demanda-importador')->with('msj', 'Los datos de su demanda se han actualizado con éxito.');
     }
 
     //Cambia el status de una demanda
@@ -223,7 +238,7 @@ class DemandaImportacionController extends Controller
         Demanda_Importador::find($request->id)
             ->update(['status' => $request->status]);
 
-        return redirect("demanda-importador")->with('msj', 'El status de su demanda ha sido actualizado exitosamente');
+        return redirect("demanda-importador")->with('msj', 'El status de su demanda ha sido actualizado con éxito.');
     }
 
     public function destroy($id)

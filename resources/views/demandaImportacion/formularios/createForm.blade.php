@@ -3,11 +3,6 @@
 	{!! Form::hidden('productor_id', session('perfilId')) !!}
 	{!! Form::hidden('cantidad_visitas', '0') !!}
 	{!! Form::hidden('cantidad_contactos', '0') !!}
-	
-	<div class="alert alert-info alert-dismissable">
-		<button type="button" class="close" data-dismiss="alert">&times;</button>
-		<strong>Recuerde que solo se muestran los países que eligió como posibles destinos laborales. Para agregar o quitar países diríjase a la sección de su Perfil</strong>
-	</div> 
 
 	<div class="form-group">
 		{!! Form::label('marca', 'Marca que desea exportar') !!}
@@ -22,7 +17,16 @@
 	{!! Form::hidden('status', '1') !!}
 		
 	<div class="form-group">
-		{!! Form::submit('Crear Solicitud', ['class' => 'btn btn-primary pull-right']) !!}
+		@if ( (session('perfilSuscripcion') == 'Gratis') || (session('perfilSuscripcion') == 'Bronce') )
+	    	@if (session('perfilSaldo') >= $coste->cantidad_creditos)
+				{!! Form::submit('Crear Solicitud', ['class' => 'btn btn-primary pull-right']) !!}
+			@else
+				{!! Form::submit('Crear Solicitud', ['class' => 'btn btn-primary pull-right', 'disabled']) !!}
+			@endif
+		@else
+			{!! Form::submit('Crear Solicitud', ['class' => 'btn btn-primary pull-right']) !!}
+		@endif
+		<!--{!! Form::submit('Crear Solicitud', ['class' => 'btn btn-primary pull-right']) !!}-->
 	</div>
 
 {!! Form::close() !!}

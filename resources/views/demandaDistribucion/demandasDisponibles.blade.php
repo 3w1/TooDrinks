@@ -6,6 +6,7 @@
 @endsection
 
 @section('content-left')
+
 	@section('alertas')
 	    @if (Session::has('msj'))
 	        <div class="alert alert-success alert-dismissable">
@@ -21,19 +22,23 @@
             @foreach($demandasDistribuidores as $demandaDistribuidor)
                <?php 
                   $existe = DB::table('distribuidor_marca')
+                           ->where('distribuidor_id', '=', session('perfilId'))
+                           ->where('marca_id', '=', $demandaDistribuidor->marca_id)
+                           ->first();
+
+                  if ($existe == null){
+                     $relacion = DB::table('distribuidor_demanda_distribuidor')
+                              ->select('demanda_distribuidor_id')
+                              ->where('demanda_distribuidor_id', '=', $demandaDistribuidor->id)
                               ->where('distribuidor_id', '=', session('perfilId'))
-                              ->where('marca_id', '=', $demandaDistribuidor->marca_id)
-                              ->count();
+                              ->first();
+                  }else{
+                     $relacion = '1';
+                  }            
                ?>
 
-               @if ($existe == '0')
+               @if ($relacion == null)
                   <?php 
-                     $marca = DB::table('marca')
-                                    ->select('nombre')
-                                    ->where('id', '=', $demandaDistribuidor->marca_id)
-                                    ->get()
-                                    ->first(); 
-
                      if ($demandaDistribuidor->tipo_creador == 'P'){
                         $creador= DB::table('productor')
                                     ->select('nombre')
@@ -47,7 +52,6 @@
                                     ->get()
                                     ->first(); 
                      }
-                    
                   ?>
 
                   <li>
@@ -61,11 +65,12 @@
                         @else Un importador está buscando distribuidores para su marca.</h3>@endif
 
                         <div class="timeline-body">
-                            @if($demandaDistribuidor->tipo_creador == 'P') El productor @else El importador @endif <strong>{{ $creador->nombre }}</strong> ha indicado que está en la búsqueda de nuevos distribuidores para su marca <strong>{{ $marca->nombre }}</strong> en tu provincia...
+                            @if($demandaDistribuidor->tipo_creador == 'P') El productor @else El importador @endif <strong>{{ $creador->nombre }}</strong> ha indicado que está en la búsqueda de nuevos distribuidores para su marca <strong>{{ $demandaDistribuidor->marca->nombre }}</strong> en tu provincia...
                         </div>
                
                         <div class="timeline-footer">
                            <a class="btn btn-primary btn-xs" href="{{ route('demanda-distribuidor.show', $demandaDistribuidor->id) }}">¡Más Detalles!</a>
+                           <a class="btn btn-danger btn-xs" href="{{ route('demanda-distribuidor.marcar', [$demandaDistribuidor->id, '0']) }}">¡No Me Interesa!</a>
                         </div>
                      </div>
                   </li>

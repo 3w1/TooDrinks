@@ -69,9 +69,9 @@
                         <td><center>{{ date('d-m-Y', strtotime($demanda->fecha_creacion)) }}</td>
                         <td><center>
                            @if ($demanda->producto_id == '0')
-                              {{ $demanda->bebida->nombre }}
+                              {{ $demanda->bebida->nombre }} (B)
                            @else
-                              {{ $demanda->producto->nombre}}
+                              {{ $demanda->producto->nombre}} (P)
                            @endif
                         </center></td>
                         <td><center>{{ $creador->nombre}} </center></td>

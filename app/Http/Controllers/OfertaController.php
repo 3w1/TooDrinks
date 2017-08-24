@@ -177,7 +177,7 @@ class OfertaController extends Controller
     {
         $fecha = new \DateTime();
 
-        if ( (session('perfilSuscripcion') == 'Gratis') || (session('perfilSuscripcion') == 'Basic') ){
+        if ( session('perfilSuscripcion') != 'Oro' ){
             $creditos = 1;
         }else{
             $creditos = 0;
@@ -309,10 +309,10 @@ class OfertaController extends Controller
         }
 
         if ($creditos == '1'){
-            $url = ('credito/gastar-creditos-co/25/'.$ult_oferta->id);
+            $url = ('credito/gastar-creditos-co/'.$ult_oferta->id);
             return redirect($url); 
         }else{
-             return redirect('oferta')->with('msj', 'Su oferta ha sido creada exitosamente');
+             return redirect('oferta')->with('msj', 'Su oferta ha sido creada con éxito.');
         }    
     }
 
@@ -422,7 +422,7 @@ class OfertaController extends Controller
         $oferta->save();
 
         $url = 'oferta/'.$id;
-        return redirect($url)->with('msj', 'Los datos de su oferta han sido actualizados exitosamente');
+        return redirect($url)->with('msj', 'Los datos de su oferta han sido actualizados con éxito.');
     }
 
     //Cambia el status de una oferta
@@ -430,7 +430,7 @@ class OfertaController extends Controller
         Oferta::find($id)
             ->update(['status' => $request->status]);
 
-        return redirect("oferta/".$id)->with('msj', 'El status de su oferta ha sido actualizado exitosamente');
+        return redirect("oferta/".$id)->with('msj', 'El status de su oferta ha sido actualizado con éxito.');
     }
 
     public function destroy($id)

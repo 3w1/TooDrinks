@@ -34,10 +34,7 @@ class SuscripcionController extends Controller
 
     public function store(Request $request)
     {
-        $suscripcion = new Suscripcion($request->all());
-        $suscripcion->save();
-
-        return redirect('suscripcion')->with('msj', 'La nueva suscripción ha sido creada exitosamente');
+    
     }
 
     public function show($id)
@@ -57,7 +54,7 @@ class SuscripcionController extends Controller
         $suscripcion->fill($request->all());
         $suscripcion->save();
 
-        return redirect('suscripcion')->with('msj', 'La suscripción ha sido modificada exitosamente');
+        return redirect('suscripcion')->with('msj', 'Los datos de la suscripción han sido actualizados con éxito.');
     }
 
     public function destroy($id)

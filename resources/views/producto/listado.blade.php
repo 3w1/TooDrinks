@@ -41,7 +41,7 @@
                <h3>{{ $producto->nombre }}</h3>
                <p><strong>{{ $producto->bebida->nombre }}</strong> ({{ $producto->clase_bebida->clase }})</p>
                <p>
-                  <a href="{{ route('producto.detalle', $producto->id) }}" class="btn btn-primary" role="button">Ver Más</a>
+                  <a href="{{ route('producto.detalle', [$producto->id, $producto->nombre_seo]) }}" class="btn btn-primary" role="button">Ver Más</a>
                   <a href="{{ route('oferta.crear-oferta', [$producto->id, $producto->nombre]) }}" class="btn btn-info" role="button">Ofertar</a>
                </p>
             </div>

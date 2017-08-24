@@ -3,6 +3,7 @@
       $demandasProducto = DB::table('productor_demanda_producto')
                            ->select('id')
                            ->where('productor_id', '=', session('perfilId'))
+                           ->where('marcada', '=', '1')
                            ->get();
       $contDP = 0;
       foreach ($demandasProducto as $dp){
@@ -12,6 +13,7 @@
       $demandasImportacion = DB::table('productor_solicitud_importacion')
                            ->select('id')
                            ->where('productor_id', '=', session('perfilId'))
+                           ->where('marcada', '=', '1')
                            ->get();
 
       $contSI = 0;
@@ -22,6 +24,7 @@
       $demandasDistribucion = DB::table('productor_solicitud_distribucion')
                            ->select('id')
                            ->where('productor_id', '=', session('perfilId'))
+                           ->where('marcada', '=', '1')
                            ->get();
 
       $contSD = 0;
@@ -32,6 +35,7 @@
       $demandasProducto = DB::table('importador_demanda_producto')
                            ->select('id')
                            ->where('importador_id', '=', session('perfilId'))
+                           ->where('marcada', '=', '1')
                            ->get();
       $contDP = 0;
       foreach ($demandasProducto as $dp){
@@ -41,6 +45,7 @@
       $demandasDistribucion = DB::table('importador_solicitud_distribucion')
                            ->select('id')
                            ->where('importador_id', '=', session('perfilId'))
+                           ->where('marcada', '=', '1')
                            ->get();
 
       $contSD = 0;
@@ -48,69 +53,45 @@
          $contSD++;
       }
 
-      $demandasImportador1 = DB::table('deduccion_credito_importador')
-                           ->select('id')
-                           ->where('tipo_deduccion', '=', 'DI')
-                           ->where('importador_id', '=', session('perfilId'))
-                           ->get();
-
-      $demandasImportador2 = DB::table('importador_demanda_importador')
+      $demandasImportador = DB::table('importador_demanda_importador')
                            ->select('id')
                            ->where('importador_id', '=', session('perfilId'))
+                           ->where('marcada', '=', '1')
                            ->get();
 
       $contDI = 0;
-      foreach ($demandasImportador1 as $di1){
-         $contDI++;
-      }
-      foreach ($demandasImportador2 as $di2){
+      foreach ($demandasImportador as $di){
          $contDI++;
       }
    }elseif (session('perfilTipo') == 'M'){
       $demandasProducto = DB::table('multinacional_demanda_producto')
                            ->select('id')
                            ->where('multinacional_id', '=', session('perfilId'))
+                           ->where('marcada', '=', '1')
                            ->get();
       $contDP = 0;
       foreach ($demandasProducto as $dp){
          $contDP++;
       }
    }elseif (session('perfilTipo') == 'D'){
-      $demandasProducto1 = DB::table('deduccion_credito_distribuidor')
-                           ->select('id')
-                           ->where('tipo_deduccion', '=', 'DP')
-                           ->orwhere('tipo_deduccion', '=', 'DB')
-                           ->where('distribuidor_id', '=', session('perfilId'))
-                           ->get();
-
-      $demandasProducto2 = DB::table('distribuidor_demanda_producto')
+      $demandasProducto = DB::table('distribuidor_demanda_producto')
                            ->select('id')
                            ->where('distribuidor_id', '=', session('perfilId'))
+                           ->where('marcada', '=', '1')
                            ->get();
       $contDP = 0;
-      foreach ($demandasProducto1 as $dp1){
-         $contDP++;
-      }
-      foreach ($demandasProducto2 as $dp2){
+      foreach ($demandasProducto as $dp){
          $contDP++;
       }
 
-      $demandasDistribuidor1 = DB::table('deduccion_credito_distribuidor')
-                           ->select('id')
-                           ->where('tipo_deduccion', '=', 'DI')
-                           ->where('distribuidor_id', '=', session('perfilId'))
-                           ->get();
-
-      $demandasDistribuidor2 = DB::table('distribuidor_demanda_distribuidor')
+      $demandasDistribuidor = DB::table('distribuidor_demanda_distribuidor')
                            ->select('id')
                            ->where('distribuidor_id', '=', session('perfilId'))
+                           ->where('marcada', '=', '1')
                            ->get();
 
       $contDD = 0;
-      foreach ($demandasDistribuidor1 as $dd1){
-         $contDD++;
-      }
-      foreach ($demandasDistribuidor2 as $dd2){
+      foreach ($demandasDistribuidor as $dd){
          $contDD++;
       }
    }

@@ -107,6 +107,8 @@ Route::prefix('marca')->group(function (){
     Route::get('descripcion/{id}', 'MarcaController@descripcion');
     Route::post('cambiar-logo', 'MarcaController@updateLogo')->name('marca.updateLogo');
 
+    Route::get('{id}/{nombre_seo}', 'MarcaController@show')->name('marca.detalles');
+
     Route::get('marcas-mundiales', 'MarcaController@marcas_mundiales')->name('marca.mundiales');
     
     //Peticiones AJAX
@@ -129,7 +131,7 @@ Route::resource('bebida','BebidaController');
 Route::prefix('producto')->group(function (){
     Route::get('agregar/{id}-{marca}', 'ProductoController@agregar')->name('producto.agregar');
     Route::get('listado-de-productos/{id}-{marca}', 'ProductoController@listado')->name('producto.listado');
-    Route::get('detalle-de-producto/{id}', 'ProductoController@detalle')->name('producto.detalle');
+    Route::get('detalle-de-producto/{id}/{nombre_seo}', 'ProductoController@detalle')->name('producto.detalle');
     Route::get('seleccionar-productos/{id}', 'ProductoController@seleccionar_productos')->name('producto.seleccionar');
     Route::post('asociar-productos', 'ProductoController@asociar_productos')->name('producto.asociar-productos');
     Route::get('verificar-producto/{id}', 'ProductoController@verificar_producto');
@@ -163,7 +165,7 @@ Route::prefix('demanda-importador')->group(function () {
     Route::get('demandas-disponibles', 'DemandaImportacionController@demandas_disponibles')
     ->name('demanda-importador.demandas-disponibles');
 
-    Route::get('marcar-demanda/{id}', 'DemandaImportacionController@marcar_demanda')
+    Route::get('marcar-demanda/{id}/{check}', 'DemandaImportacionController@marcar_demanda')
     ->name('demanda-importador.marcar');
     Route::get('demandas-de-interes', 'DemandaImportacionController@demandas_interes')
     ->name('demanda-importador.demandas-interes');
@@ -179,7 +181,7 @@ Route::prefix('demanda-distribuidor')->group(function () {
     Route::get('demandas-disponibles', 'DemandaDistribucionController@demandas_disponibles')
     ->name('demanda-distribuidor.demandas-disponibles');
 
-    Route::get('marcar-demanda/{id}', 'DemandaDistribucionController@marcar_demanda')->name('demanda-distribuidor.marcar');
+    Route::get('marcar-demanda/{id}/{check}', 'DemandaDistribucionController@marcar_demanda')->name('demanda-distribuidor.marcar');
     Route::get('demandas-de-interes', 'DemandaDistribucionController@demandas_interes')
     ->name('demanda-distribuidor.demandas-interes');
 
@@ -199,7 +201,7 @@ Route::prefix('demanda-producto')->group(function () {
     Route::post('cambiar-status', 'DemandaProductoController@cambiar_status')
     ->name('demanda-producto.status');
 
-    Route::get('marcar-demanda/{id}', 'DemandaProductoController@marcar_demanda')->name('demanda-producto.marcar');
+    Route::get('marcar-demanda/{id}/{check}', 'DemandaProductoController@marcar_demanda')->name('demanda-producto.marcar');
     Route::get('demandas-de-interes', 'DemandaProductoController@demandas_interes')->name('demanda-producto.demandas-interes');
 });
 Route::resource('demanda-producto','DemandaProductoController');
@@ -207,7 +209,7 @@ Route::resource('demanda-producto','DemandaProductoController');
 
 // RUTAS PARA LAS DEMANDAS DE IMPORTACIÓN
 Route::prefix('solicitud-importacion')->group(function () {
-    Route::get('marcar-solicitud/{id}', 'SolicitudImportacionController@marcar_solicitud')
+    Route::get('marcar-solicitud/{id}/{check}', 'SolicitudImportacionController@marcar_solicitud')
     ->name('solicitud-importacion.marcar');
     Route::get('demandas-de-interes', 'SolicitudImportacionController@demandas_interes')
     ->name('solicitud-importacion.demandas-interes');
@@ -223,7 +225,7 @@ Route::resource('solicitud-importacion', 'SolicitudImportacionController');
 
 // RUTAS PARA LAS DEMANDAS DE DISTRIBUCIÓN
 Route::prefix('solicitud-distribucion')->group(function () {
-    Route::get('marcar-solicitud/{id}', 'SolicitudDistribucionController@marcar_solicitud')
+    Route::get('marcar-solicitud/{id}/{check}', 'SolicitudDistribucionController@marcar_solicitud')
     ->name('solicitud-distribucion.marcar');
     Route::get('demandas-de-interes', 'SolicitudDistribucionController@demandas_interes')
     ->name('solicitud-distribucion.demandas-interes');
@@ -246,13 +248,15 @@ Route::prefix('credito')->group(function () {
     Route::get('historial-de-gastos', 'CreditoController@historial_gastos')->name('credito.historial-gastos');
     Route::get('detalles-gasto/{tipo}/{id}', 'CreditoController@detalles_gasto');
 
-    Route::get('gastar-creditos-co/{cant}/{id}', 'CreditoController@gastar_creditos_CO')->name('credito.gastar-creditos-co');
-    Route::get('gastar-creditos-di/{cant}/{id}', 'CreditoController@gastar_creditos_DI')->name('credito.gastar-creditos-di');
-    Route::get('gastar-creditos-dd/{cant}/{id}', 'CreditoController@gastar_creditos_DD')->name('credito.gastar-creditos-dd');
-    Route::get('gastar-creditos-dp/{cant}/{id}', 'CreditoController@gastar_creditos_DP')->name('credito.gastar-creditos-dp');
-    Route::get('gastar-creditos-db/{cant}/{id}', 'CreditoController@gastar_creditos_DB')->name('credito.gastar-creditos-db');
-    Route::get('gastar-creditos-si/{cant}/{id}', 'CreditoController@gastar_creditos_SI')->name('credito.gastar-creditos-si');
-    Route::get('gastar-creditos-sd/{cant}/{id}', 'CreditoController@gastar_creditos_SD')->name('credito.gastar-creditos-sd');
+    Route::get('gastar-creditos-co/{id}', 'CreditoController@gastar_creditos_CO')->name('credito.gastar-creditos-co');
+    Route::get('gastar-creditos-di/{id}', 'CreditoController@gastar_creditos_DI')->name('credito.gastar-creditos-di');
+    Route::get('gastar-creditos-dd/{id}', 'CreditoController@gastar_creditos_DD')->name('credito.gastar-creditos-dd');
+    Route::get('gastar-creditos-dp/{id}', 'CreditoController@gastar_creditos_DP')->name('credito.gastar-creditos-dp');
+    Route::get('gastar-creditos-db/{id}', 'CreditoController@gastar_creditos_DB')->name('credito.gastar-creditos-db');
+    Route::get('gastar-creditos-si/{id}', 'CreditoController@gastar_creditos_SI')->name('credito.gastar-creditos-si');
+    Route::get('gastar-creditos-sd/{id}', 'CreditoController@gastar_creditos_SD')->name('credito.gastar-creditos-sd');
+    Route::get('gastar-creditos-pdi/{id}', 'CreditoController@gastar_creditos_PDI')->name('credito.gastar-creditos-pdi');
+    Route::get('gastar-creditos-pdd/{id}', 'CreditoController@gastar_creditos_PDD')->name('credito.gastar-creditos-pdd');
 });
 Route::resource('credito','CreditoController');
 // ./RUTAS PARA LOS CRÉDITOS ./
