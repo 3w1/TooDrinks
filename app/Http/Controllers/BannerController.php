@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Banner; use App\Models\Impresion_Banner; use App\Models\Banner_Diario;
-use Input; use Image; use DB; use DateInterval;
+use Input; use Image; use DB; use DateInterval; use Carbon\Carbon;
 
 class BannerController extends Controller
 {
@@ -132,18 +132,25 @@ class BannerController extends Controller
         return redirect('banner-publicitario/'.$request->id)->with('msj', 'La imagen del banner se ha actualizado con éxito. Debe esperar la revisión del Administrador.');     
     }
 
-    public function solicitar_publicacion($id){
-        $banner = Banner::find($id);
+    public function nueva_publicacion(){
+        $banners = DB::table('banner')
+                    ->where('tipo_creador', '=', session('perfilTipo'))
+                    ->where('creador_id', '=', session('perfilId'))
+                    ->orderBy('titulo')
+                    ->pluck('titulo', 'id');
 
         $paises = DB::table('pais')
                     ->orderBy('pais', 'ASC')
                     ->pluck('pais', 'id');
 
-        return view('banner.solicitarPublicacion')->with(compact('banner', 'paises'));
+
+        return view('banner.nuevaPublicacion')->with(compact('banners', 'paises'));
     }
 
-    public function consultar_disponibilidad($pais, $dias){
-        $fecha_actual = new \DateTime();
+    public function consultar_disponibilidad($pais, $semanas){
+        $fecha_actual = Carbon::now();
+        $fecha_actual = $fecha_actual->format('Y-m-d');
+
         $ultima_fecha = DB::table('banner_diario')
                         ->select('fecha')
                         ->where('pais_id', '=', $pais)
@@ -151,51 +158,25 @@ class BannerController extends Controller
                         ->first();
 
         if ($ultima_fecha != null){
-            if ( $ultima_fecha->fecha < date_format($fecha_actual, 'Y-m-d') ){
-                $fecha1 = date_format($fecha_actual->add(new DateInterval('P1D')), 'd-m-Y');
-            }elseif ( $ultima_fecha->fecha == date_format($fecha_actual, 'Y-m-d')){
-                $fecha1 = date_format($fecha_actual->add(new DateInterval('P1D')), 'd-m-Y');
-            }elseif ( $ultima_fecha->fecha > date_format($fecha_actual, 'Y-m-d')) {
-                $fecha1 = new \DateTime($ultima_fecha->fecha);
-                $fecha1->add(new DateInterval('P1D'));
-                $fecha1 = date_format($fecha1, 'd-m-Y');
+            if ( $ultima_fecha->fecha > $fecha_actual ) {
+                $fa = Carbon::createFromFormat('Y-m-d', $ultima_fecha->fecha);
+            }else{
+                $fa = Carbon::createFromFormat('Y-m-d', $fecha_actual);
             }
         }else{
-            $fecha1 = date_format($fecha_actual->add(new DateInterval('P1D')), 'd-m-Y');
+            $fa = Carbon::createFromFormat('Y-m-d', $fecha_actual);
         }
 
-        $cant = $dias-1;
-        $dias = 'P'.$cant.'D';
-        $fecha2 = new \DateTime($fecha1);
-        $fecha2->add(new DateInterval($dias));
-        $fecha2 = date_format($fecha2, 'd-m-Y');
-
-        $datos[0] = $fecha1;
-        $datos[1] = $fecha2;
+        $fecha1 = $fa->next(Carbon::MONDAY);
+        $datos[0] = $fecha1->format('d-m-Y');
+            
+        $fecha2 = $fa->addWeek($semanas);
+        $fecha2 = $fecha2->subDay(1);
+        $datos[1] = $fecha2->format('d-m-Y');
 
         return response()->json(
             $datos
         );
-    }
-
-    public function guardar_solicitud(Request $request){
-        $impresion_banner = new Impresion_Banner($request->all());
-        $impresion_banner->save();
-
-        $ult_Impresion = DB::table('impresion_banner')
-                            ->select('id')
-                            ->orderBy('created_at', 'DESC')
-                            ->first();
-
-        return redirect('banner-publicitario/confirmar-solicitud/'.$ult_Impresion->id)
-        ->with('msj', 'Verifica los datos y presiona Pagar para finalizar la solicitud de publicidad');
-    }
-
-    public function confirmar_solicitud($id){
-        $infoPublicidad = Impresion_Banner::orderBy('created_at', 'DESC')
-                            ->first();
-
-        return view('banner.confirmarSolicitud')->with(compact('infoPublicidad'));
     }
 
     public function confirmar_pago($id){
@@ -205,6 +186,7 @@ class BannerController extends Controller
 
         $impresion = DB::table('impresion_banner')
                         ->select('fecha_inicio', 'tiempo_publicacion', 'banner_id', 'pais_id')
+                        ->where('id', '=', $id)
                         ->first();
 
         $banner_diario = new Banner_Diario();
@@ -213,8 +195,10 @@ class BannerController extends Controller
         $banner_diario->fecha = $impresion->fecha_inicio;
         $banner_diario->save();
 
-        $fecha1 = $fecha2 = new \DateTime($impresion->fecha_inicio);
-        for ($i = 1; $i < $impresion->tiempo_publicacion; $i++){
+        $fecha1 = new \DateTime($impresion->fecha_inicio);
+        $tiempo = ($impresion->tiempo_publicacion * 7);
+
+        for ($i = 1; $i < $tiempo; $i++){
             $fecha1->add(new DateInterval('P1D'));
             $banner_diario = new Banner_Diario();
             $banner_diario->pais_id = $impresion->pais_id;
@@ -223,7 +207,7 @@ class BannerController extends Controller
             $banner_diario->save();
         }
 
-        return redirect('banner-publicitario/mis-solicitudes')->with('msj', 'La petición de publicidad ha sido almacenada con éxito.');
+        return redirect('banner-publicitario/mis-publicidades')->with('msj', 'Su publicidad ha sido registrada con éxito.');
     }
 
     //Ver las publicaciones de banners de la entidad loggeada

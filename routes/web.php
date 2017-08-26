@@ -34,8 +34,8 @@ Route::get('/', function () {
 });
 
 Route::get('/inicio', 'UsuarioController@index')->name('inicio');
-
-Route::get('registrarse/{tipo}${id}${token}', 'Auth\RegisterController@registrarse')->name('registrarse');
+Route::get('registrarse', 'Auth\RegisterController@registrarse')->name('registrarse');
+//Route::get('registrarse/{tipo}${id}${token}', 'Auth\RegisterController@registrarse')->name('registrarse');
 // ./RUTAS DE INICIO Y AUTENTICACIÓN ./
 
 //  RUTAS PARA LOS USUARIOS
@@ -75,6 +75,9 @@ Route::prefix('importador')->group(function (){
 
     Route::get('ver-listado-distribuidores', 'ImportadorController@listado_distribuidores')->name('importador.listado-distribuidores');
 
+    //Consulta AJAX
+    Route::get('datos/{id}', 'ImportadorController@datos');
+    
     Route::post('updateAvatar', 'ImportadorController@updateAvatar')->name('importador.updateAvatar');
 });
 Route::resource('importador','ImportadorController');
@@ -87,6 +90,9 @@ Route::resource('multinacional', 'MultinacionalController');
 // RUTAS PARA LOS DISTRIBUIDORES
 Route::prefix('distribuidor')->group(function (){
     Route::get('asociar-marca/{id}', 'DistribuidorController@asociar_marca')->name('distribuidor.asociar-marca');
+
+    //Consulta AJAX
+    Route::get('datos/{id}', 'DistribuidorController@datos');
 
     Route::post('updateAvatar', 'DistribuidorController@updateAvatar')->name('distribuidor.updateAvatar');
 });
@@ -284,14 +290,11 @@ Route::prefix('banner-publicitario')->group(function () {
     Route::post('cambiar-imagen', 'BannerController@updateImagen')->name('banner-publicitario.updateImagen');
     Route::get('detalles/{id}', 'BannerController@detalles')->name('banner-publicitario.detalles');
 
-    Route::get('solicitar-publicacion/{id}', 'BannerController@solicitar_publicacion')
-    ->name('banner-publicitario.solicitar-publicacion');
+    Route::get('nueva-publicacion', 'BannerController@nueva_publicacion')->name('banner-publicitario.nueva-publicacion');
+    //Consulta AJAX
     Route::get('consultar-disponibilidad/{pais}/{dias}', 'BannerController@consultar_disponibilidad')
     ->name('banner-publicitario.consultar-disponibilidad');
-    Route::post('guardar-solicitud', 'BannerController@guardar_solicitud')
-    ->name('banner-publicitario.guardar-solicitud');
-    Route::get('confirmar-solicitud/{id}', 'BannerController@confirmar_solicitud')
-    ->name('banner-publicitario.confirmar-solicitud');    
+      
     Route::get('confirmar-pago/{id}', 'BannerController@confirmar_pago')->name('banner-publicitario.confirmar-pago');    
 
     Route::get('mis-publicidades', 'BannerController@mis_publicidades')

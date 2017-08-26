@@ -10,7 +10,7 @@
         <ul class="quick-menu pull-right">
         	@if (Auth::guest())
 	         <li><a href="#travelo-login" class="soap-popupbox">Iniciar Sesión</a></li>
-	         <li><a href="#travelo-signup" class="soap-popupbox">Registrarse</a></li>
+	         <li><a href="{{route('registrarse')}}">Registrarse</a></li>
 	      @else
 	        	<li class="ribbon">
                <a href="#">{{Auth::user()->name}}</a>

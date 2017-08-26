@@ -63,6 +63,17 @@ class ImportadorController extends Controller
         return view('importador.show')->with(compact('importador'));
     }
 
+    public function datos($id){
+        $importador = DB::table('importador')
+                        ->select('nombre', 'nombre_seo', 'descripcion', 'direccion', 'persona_contacto')
+                        ->where('id', '=', $id)
+                        ->first();
+
+        return response()->json(
+            $importador
+        );
+    }
+
    public function edit($id)
     {
         $importador = Importador::find($id);

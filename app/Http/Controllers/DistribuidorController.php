@@ -63,6 +63,17 @@ class DistribuidorController extends Controller
         return view('distribuidor.show')->with(compact('distribuidor'));
     }
 
+    public function datos($id){
+        $distribuidor = DB::table('distribuidor')
+                        ->select('nombre', 'nombre_seo', 'descripcion', 'direccion', 'persona_contacto')
+                        ->where('id', '=', $id)
+                        ->first();
+
+        return response()->json(
+            $distribuidor
+        );
+    }
+
     public function edit($id)
     {
         $distribuidor = Distribuidor::find($id);

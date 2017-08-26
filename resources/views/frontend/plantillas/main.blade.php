@@ -59,9 +59,7 @@
                 
                 @include('frontend.plantillas.partes.menuMovil')
             </div>
-
-            @include('frontend.plantillas.partes.signupPopUp')
-            
+                        
             @include('frontend.plantillas.partes.loginPopUp')
         </header>
 

@@ -22,7 +22,7 @@
 	{!! Form::open(['route' => ['productor.update', $productor->id], 'method' => 'PUT']) !!}
 		<div class="panel with-nav-tabs panel-info">
         	<div class="panel-heading">
-        		<ul class="nav nav-tabs">
+        		<ul class="nav nav-pills">
                 	<li class="active"><a href="#tab1default" data-toggle="tab">Datos Personales</a></li>
                 	<li><a href="#tab2default" data-toggle="tab">Datos de Ubicación</a></li>
                 	<li><a href="#tab3default" data-toggle="tab">Datos de Contacto</a></li>

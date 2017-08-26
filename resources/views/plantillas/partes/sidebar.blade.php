@@ -638,7 +638,8 @@
          </a>
          <ul class="treeview-menu">
             <li><a href="{{ route('banner-publicitario.index') }}"><i class="fa fa-circle-o"></i> Mis Banners</a></li>
-            <li><a href="{{ route('banner-publicitario.publicidades') }}"><i class="fa fa-circle-o"></i> Mis Publicidades</a></li>
+            <li><a href="{{ route('banner-publicitario.nueva-publicacion') }}"><i class="fa fa-circle-o"></i> Nueva Publicación</a></li>
+            <li><a href="{{ route('banner-publicitario.publicidades') }}"><i class="fa fa-circle-o"></i> Mis Publicaciones</a></li>
             <li><a href="{{ route('banner-publicitario.create')}}"><i class="fa fa-circle-o"></i> Nuevo Banner</a></li>
          </ul>
       </li>

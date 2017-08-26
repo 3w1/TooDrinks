@@ -69,6 +69,8 @@ class RedirectIfAuthenticated
             session(['perfilPais' => $entidad->pais_id]);
             session(['perfilProvincia' => $entidad->provincia_region_id]);
             session(['perfilSuscripcion' => $entidad->suscripcion_id]);
+        }else{
+            return $response;
         }
         
         return $response; 

@@ -20,9 +20,9 @@ use PayPal\Api\PaymentExecution;
 use PayPal\Api\Transaction;
 use Illuminate\Http\Request;
  
-use App\Order;
-use App\OrderItem; 
+use App\Order; use App\OrderItem; 
 
+use DB;
 use App\Models\Impresion_Banner;
  
 class PaypalController extends BaseController
@@ -48,9 +48,15 @@ class PaypalController extends BaseController
 		$item = new Item();
 		
 		if ($request->tipo == 'Banner'){
-			$datosImpresion = Impresion_Banner::find($request->impresion_id)->first();
+			$impresion_banner = new Impresion_Banner($request->all());
+        	$impresion_banner->save();
 
-			$descripcion = "Publicación de su Banner ".$datosImpresion->banner->titulo." por ".$datosImpresion->tiempo_publicacion." Días";
+        	$ult_impresion = DB::table('impresion_banner')
+                            ->select('id')
+                            ->orderBy('created_at', 'DESC')
+                            ->first();
+	
+			$descripcion = "Publicación de su Banner por ".$request->tiempo_publicacion." Semana(s)";
 			$item->setName('Publicidad')
 				 ->setCurrency($currency)
 				 ->setDescription($descripcion)
@@ -58,7 +64,7 @@ class PaypalController extends BaseController
 				 ->setPrice($request->precio);
 
 			\Session::put('tipo', 'Banner');
-			\Session::put('impresion_id', $request->impresion_id);
+			\Session::put('impresion_id', $ult_impresion->id);
 			
 		}elseif ($request->tipo == 'Plan'){
 			$item->setName($request->plan)

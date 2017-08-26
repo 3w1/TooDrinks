@@ -21,8 +21,12 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    public function registrarse($tipo, $id, $token){
+    /*public function registrarse($tipo, $id, $token){
         return view('auth.register')->with(compact('id', 'tipo'));
+    }*/
+
+    public function registrarse(){
+        return view('auth.register');
     }
 
     protected function validator(array $data)

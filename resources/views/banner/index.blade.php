@@ -37,11 +37,6 @@
                </center></p>
                <p><center>
                  <a href="{{ route('banner-publicitario.show', $banner->id) }}" class="btn btn-primary" role="button">Detalles</a>
-                 @if ($banner->aprobado == '1')
-                     <a href="{{ route('banner-publicitario.solicitar-publicacion', $banner->id)}}" class="btn btn-success" role="button">Solicitar Publicación</a>
-                  @else 
-                    <a href="{{ route('banner-publicitario.solicitar-publicacion', $banner->id)}}" class="btn btn-success" role="button" disabled>Solicitar Publicación</a>
-                  @endif
                </center></p>
             </div>
          </div>
