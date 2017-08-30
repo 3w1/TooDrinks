@@ -1,163 +1,189 @@
-@extends('layouts.app')
+<?php 
+    $paises = DB::table('pais')
+            ->orderBy('pais', 'ASC')
+            ->pluck('pais', 'id');
+?>
 
-@section('content')
+<!DOCTYPE html>
+<html> 
+<head>
+    <!-- Page Title -->
+    <title>TooDrinks | Iniciar Sesión</title>
+    
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta name="keywords" content="HTML5 Template" />
+    <meta name="description" content="Travelo - Travel, Tour Booking HTML5 Template">
+    <meta name="author" content="SoapTheme">
 
-    {!! Html::script('js/usuarios/registrarse.js') !!}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    
+    <!-- Theme Styles -->
+    <link rel="stylesheet" href="{{ asset('templateFrontend/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('templateFrontend/css/font-awesome.min.css')}}">
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{ asset('templateFrontend/css/animate.min.css')}}">
+    
+    <!-- Main Style -->
+    <link id="main-style" rel="stylesheet" href="{{ asset('templateFrontend/css/style.css')}}">
+    
+    <!-- Updated Styles -->
+    <link rel="stylesheet" href="{{ asset('templateFrontend/css/updates.css')}}">
 
-    <?php 
-        $paises = DB::table('pais')
-                    ->orderBy('pais')
-                    ->pluck('pais', 'id');
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{{ asset('templateFrontend/css/custom.css')}}">
+    
+    <!-- Responsive Styles -->
+    <link rel="stylesheet" href="{{ asset('templateFrontend/css/responsive.css')}}">
 
-     ?>
+    <script type="text/javascript" src="{{ asset('js/usuarios/registrarse.js') }}"></script>
+</head>
+<body>
+    <div id="page-wrapper">
+        <header id="header" class="navbar-static-top">
+            @include('frontend.plantillas.partes.navbar')
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Registrarse</div>
-                    <div class="panel-body">
-                        <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
+            <div class="main-header">
+                <a href="#mobile-menu-01" data-toggle="collapse" class="mobile-menu-toggle"> Menú Móvil</a>
+
+                <div class="container">
+                    <h1 class="logo navbar-brand">
+                        <a href="#" title="TooDrinks - Home">
+                            <img src="{{ asset('templateFrontend/images/logo.png')}}" alt="TooDrinks" />
+                        </a>
+                    </h1>
+                    
+                    @include('frontend.plantillas.partes.mainMenu')
+                </div>
+                
+                @include('frontend.plantillas.partes.menuMovil')
+
+                @if (Session::has('msj'))
+                    <div class="alert alert-success alert-dismissable">
+                       <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+                    </div>
+                @endif
+                
+                @if (Auth::check())
+                    @if (Auth::user()->activado == '0')
+                        <div class="alert alert-success">
+                            <strong>¡Enhorabuena!</strong> Te has registrado con éxito en TooDrinks. Hemos enviado un email a tu dirección de correo para verificar tu cuenta. Para finalizar tu registro, por favor revisa tu correo.
+                        </div>
+                    @endif
+                @endif
+                            
+                @include('frontend.plantillas.partes.loginPopUp')
+            </div>
+        </header>
+
+        <div class="page-title-container">
+            <div class="container">
+                <div class="page-title pull-left">
+                    <h2 class="entry-title">REGISTRO</h2>
+                </div>
+                <ul class="breadcrumbs pull-right">
+                    <li><a href="#">INICIO</a></li>
+                    <li class="active">REGISTRO</li>
+                </ul>
+            </div>
+        </div>
+        
+        <br />
+
+        <section>
+            <div class="container">
+                <div id="main">
+                    <div class="col-md-9 no-float no-padding center-block">
+                        <div class="intro text-center block">
+                            <h2>Crear Cuenta TooDrinks</h2>
+                        </div>
+                        <form action="{{ route('register') }}" method="POST">
+                            <div class="alert alert-danger" style="display: none;" id="error"></div>
+
                             {{ csrf_field() }}
-
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-                            {!! Form::hidden('estado_datos', '1') !!}
-                            {!! Form::hidden('id_entidad', $id) !!}
-                                
-                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                <label for="name" class="col-md-4 control-label">Nombre de Usuario</label>
-
-                                <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
-
-                                    @if ($errors->has('name'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('name') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                                <label for="email" class="col-md-4 control-label">Correo Electrónico</label>
-
-                                <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
-
-                                    @if ($errors->has('email'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('email') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                                <label for="password" class="col-md-4 control-label">Contraseña</label>
-
-                                <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control" name="password" required>
-
-                                    @if ($errors->has('password'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('password') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="password-confirm" class="col-md-4 control-label">Confirmar Contraseña</label>
-
-                                <div class="col-md-6">
-                                    <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                {!! Form::label('nombre', 'Nombre', ['class' => 'col-md-4 control-label']) !!}
-                                <div class="col-md-6">
-                                    {!! Form::text('nombre', null, ['class' => 'form-control', 'placeholder' => 'Nombre'] ) !!}
-                                </div>
-                                
-                            </div>
-
-                            <div class="form-group">
-                                {!! Form::label('apellido', 'Apellido', ['class' => 'col-md-4 control-label']) !!}
-                                <div class="col-md-6">
-                                     {!! Form::text('apellido', null, ['class' => 'form-control', 'placeholder' => 'Apellido'] ) !!}
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                {!! Form::label('direccion', 'Dirección', ['class' => 'col-md-4 control-label']) !!}
-                                <div class="col-md-6">
-                                   {!! Form::textarea('direccion', null, ['class' => 'form-control', 'placeholder' => 'Dirección', 'rows' => '5'] ) !!}
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                {!! Form::label('codigo_postal', 'Código Postal', ['class' => 'col-md-4 control-label']) !!}
-                                <div class="col-md-6">
-                                    {!! Form::text('codigo_postal', null, ['class' => 'form-control', 'placeholder' => 'Código Postal'] ) !!}
-                                </div>
-                            </div>
+                            {!! Form::hidden('entidad_id', $id) !!}
+                            {!! Form::hidden('entidad_tipo', $tipo) !!}
                             
-                            <div class="form-group">
-                                {!! Form::label('país', 'País', ['class' => 'col-md-4 control-label']) !!}
-                                <div class="col-md-6">
-                                    {!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();']) !!}
+                            <div class="row form-group">
+                                <div class="col-xs-6">
+                                    <label><strong>Nombre</strong></label>
+                                    <input type="text" class="input-text full-width" name="nombre" required>
+                                </div>
+                                <div class="col-xs-6">
+                                    <label><strong>Apellido</strong></label>
+                                    <input type="text" class="input-text full-width" name="apellido" required>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                {!! Form::label('provincia', 'Provincia', ['class' => 'col-md-4 control-label']) !!}
-                                <div class="col-md-6">
-                                    <select name="provincia_region_id" class="form-control" id="provincias">
+                            <div class="row form-group">
+                                <div class="col-xs-6">
+                                    <label><strong>Correo Electrónico</strong></label>
+                                    <input type="text" class="input-text full-width" name="email" required>
+                                </div>
+                                <div class="col-xs-6">
+                                    <label><strong>Nombre de Usuario</strong></label>
+                                    <input type="text" class="input-text full-width" name="name" required>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-xs-6">
+                                    <label><strong>Contraseña</strong></label>
+                                    <input type="password" class="input-text full-width" id="clave1" name="password" required onblur="validarClave();">
+                                </div>
+                                <div class="col-xs-6">
+                                    <label><strong>Confirme su Contraseña</strong></label>
+                                    <input type="password" class="input-text full-width" id="clave2" required onblur="verificarClaves();">
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-xs-6">
+                                    <label><strong>País</strong></label>
+                                    {!! Form::select('pais_id', $paises, null, ['class' => 'input-select full-width', 'placeholder' => 'Seleccione un país..', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();', 'required']) !!}
+                                </div>
+                                <div class="col-xs-6">
+                                    <label><strong>Provincia / Estado</strong></label>
+                                    <select name="provincia_region_id" class="input-select full-width" id="provincias" required>
                                         <option value="">Seleccione una provincia..</option>
                                     </select>
                                 </div>
                             </div>
-
                             <div class="form-group">
-                                {!! Form::label('telefono', 'Teléfono', ['class' => 'col-md-4 control-label']) !!}
-                                <div class="col-md-6">
-                                    {!! Form::text('telefono', null, ['class' => 'form-control', 'placeholder' => 'Teléfono'] ) !!}
-                                </div>
+                                <center><p>Al registrarme, acepto las <a href="#terminos" class="soap-popupbox">Condiciones de servicio y Políticas de privacidad</a> de TooDrinks.com</p></center>
                             </div>
-
-                            <div class="form-group">
-                                {!! Form::label('telefono_opcional', 'Teléfono Opcional', ['class' => 'col-md-4 control-label']) !!}
-                                <div class="col-md-6">
-                                     {!! Form::text('telefono_opcional', null, ['class' => 'form-control', 'placeholder' => 'Teléfono Opcional'] ) !!}
-                                </div>
-                            </div>
-                            
-                            @if ($id == '0')
-                                <div class="form-group">
-                                    {!! Form::label('tipo', 'Tipo de Usuario', ['class' => 'col-md-4 control-label']) !!}
-                                    <div class="col-md-6">
-                                        {!! Form::select('tipo_entidad', ['U' => 'Usuario', 'P' => 'Productor', 'I' => 'Importador', 'D' => 'Distribuidor', 'H' => 'Horeca', 'M' => 'Multinacional'], null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción']) !!}
-                                    </div>
-                                </div>
-                            @else
-                                {!! Form::hidden('tipo_entidad', $tipo) !!}
-                            @endif
-
-                            {!! Form::hidden('avatar', 'icono-usuario.jpg') !!}
-
-                            <div class="form-group">
-                                <div class="col-md-6 col-md-offset-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        Registrar
-                                    </button>
-                                </div>
-                            </div>
+                            <button type="submit" class="btn-large full-width" id="boton">REGISTRARME</button> 
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- FOOTER -->
+        @include('frontend.plantillas.partes.footer')
+        <!-- FIN DE FOOTER -->  
     </div>
-@endsection
+
+    <!-- Javascript -->
+    <script type="text/javascript" src="{{ asset('templateFrontend/js/jquery-1.11.1.min.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('templateFrontend/js/jquery.noconflict.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('templateFrontend/js/modernizr.2.7.1.min.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('templateFrontend/js/jquery-migrate-1.2.1.min.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('templateFrontend/js/jquery.placeholder.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('templateFrontend/js/jquery-ui.1.10.4.min.js')}}"></script>
+    
+    <!-- Twitter Bootstrap -->
+    <script type="text/javascript" src="{{ asset('templateFrontend/js/bootstrap.js')}}"></script>
+    
+    <!-- parallax -->
+    <script type="text/javascript" src="{{ asset('templateFrontend/js/jquery.stellar.min.js')}}"></script>
+    
+    <!-- waypoint -->
+    <script type="text/javascript" src="{{ asset('templateFrontend/js/waypoints.min.js')}}"></script>
+
+    <!-- load page Javascript -->
+    <script type="text/javascript" src="{{ asset('templateFrontend/js/theme-scripts.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('templateFrontend/js/contact.js')}}"></script>
+</body>
+</html>
+

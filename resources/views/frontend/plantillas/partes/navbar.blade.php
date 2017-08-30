@@ -12,11 +12,11 @@
 	         <li><a href="#travelo-login" class="soap-popupbox">Iniciar Sesión</a></li>
 	         <li><a href="{{route('registrarse')}}">Registrarse</a></li>
 	      @else
-	        	<li class="ribbon">
+	           <li class="ribbon">
                <a href="#">{{Auth::user()->name}}</a>
                <ul class="menu mini">
                   @if (Auth::check())
-                     @if (Auth::user()->rol == 'MB')
+                    @if (Auth::user()->rol == 'MB')
                         <li><a href="{{route('inicio')}}">Mi Panel TooDrinks</a></li>
                      @endif
                   @endif

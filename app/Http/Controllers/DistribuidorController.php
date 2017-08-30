@@ -16,12 +16,15 @@ class DistribuidorController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['index', 'create', 'store']]);
     }
     
     public function index()
     {
-        
+        $distribuidores = Distribuidor::select('id', 'nombre', 'pais_id', 'telefono', 'persona_contacto', 'email', 'reclamada')                        ->orderBy('nombre', 'ASC')
+                        ->paginate(10);
+
+        return view('adminWeb.distribuidor.listado')->with(compact('distribuidores'));
     }
 
     public function create()
@@ -30,31 +33,16 @@ class DistribuidorController extends Controller
                     ->orderBy('pais')
                     ->pluck('pais', 'id');
 
-        $suscripciones = DB::table('suscripcion')
-                        ->orderBy('precio')
-                        ->pluck('suscripcion', 'id');
-
-        return view('adminWeb.perfiles.crearDistribuidor')->with(compact('paises', 'suscripciones'));
+        return view('adminWeb.distribuidor.create')->with(compact('paises'));
     }
 
     public function store(Request $request)
     {
-        $file = Input::file('logo');   
-        $image = Image::make(Input::file('logo'));
-
-        $path = public_path().'/imagenes/distribuidores/';
-        $path2 = public_path().'/imagenes/distribuidores/thumbnails/';
-        $nombre = 'distribuidor_'.time().'.'.$file->getClientOriginalExtension();
-
-        $image->save($path.$nombre);
-        $image->resize(240,200);
-        $image->save($path2.$nombre);
-
         $distribuidor = new Distribuidor($request->all());
-        $distribuidor->logo = $nombre;
+        $distribuidor->logo = 'usuario-icono.jpg'; 
         $distribuidor->save();
 
-        return redirect('admin')->with('msj', 'Se ha creado el Distribuidor con éxito.');
+        return redirect('admin/listado-distribuidores')->with('msj-success', 'Se ha creado el distribuidor con éxito.');
     }
 
     public function show($id)

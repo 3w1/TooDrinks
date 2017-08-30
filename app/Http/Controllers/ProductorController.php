@@ -13,12 +13,17 @@ class ProductorController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['index', 'create', 'store']]);
     }
     
     public function index()
     {
-       
+        $productores = Productor::select('id', 'nombre', 'pais_id', 'telefono', 'persona_contacto', 'email', 'reclamada')
+                        ->where('id', '<>', 0)
+                        ->orderBy('nombre', 'ASC')
+                        ->paginate(10);
+
+        return view('adminWeb.productor.listado')->with(compact('productores'));
     }
 
     public function create()
@@ -27,48 +32,20 @@ class ProductorController extends Controller
                         ->orderBy('pais')
                         ->pluck('pais', 'id');
 
-        $suscripciones = DB::table('suscripcion')
-                        ->orderBy('precio')
-                        ->pluck('suscripcion', 'id');
-
-        return view('adminWeb.perfiles.crearProductor')->with(compact('paises', 'suscripciones'));    
+        return view('adminWeb.productor.create')->with(compact('paises'));
     }
 
     public function store(Request $request)
     {   
-        $file = Input::file('logo');   
-        $image = Image::make(Input::file('logo'));
-
-        $path = public_path().'/imagenes/productores/';
-        $path2 = public_path().'/imagenes/productores/thumbnails/';
-        $nombre = 'productor_'.time().'.'.$file->getClientOriginalExtension();
-
-        $image->save($path.$nombre);
-        $image->resize(240,200);
-        $image->save($path2.$nombre);
-
         $productor = new Productor($request->all());
-        $productor->logo = $nombre; 
+        $productor->logo = 'usuario-icono.jpg'; 
         $productor->save();
 
-        return redirect('admin')->with('msj', 'Se ha creado el Productor con éxito.');
+        return redirect('admin/listado-productores')->with('msj-success', 'Se ha creado el productor con éxito.');
     }
 
     public function show(Request $request, $id)
     {
-        if ($request->ajax()){
-           //Método para buscar un productor específico
-            $productor = DB::table('productor')
-                    ->select('id', 'nombre')
-                    ->orderBy('nombre')
-                    ->where('nombre', 'ILIKE', '%'.$id.'%')
-                    ->get();
-
-            return response()->json(
-                $productor->toArray()
-            );
-        }
-
         $productor = Productor::find($id);
         return view('productor.show')->with(compact('productor'));
     }
@@ -159,6 +136,17 @@ class ProductorController extends Controller
     public function destroy($id)
     {
 
+    }
+
+    public function asociar_marca($id, $nombre){
+        $fecha = new \DateTime();
+
+        DB::table('marca')
+            ->where('id', '=', $id)
+            ->update(['reclamada' => '1',
+                      'productor_id' => session('perfilId')]);
+
+        return redirect('marca')->with('msj', 'La marca '.$nombre.' ha sido reclamada de su propiedad con éxito.');
     }
 
     public function listado_importadores(){

@@ -190,22 +190,11 @@
 </div>
 
 <ul class="sidebar-menu">
-      @if(session('perfilTipo') == 'P')
-         <li class="header">Panel de Productor</li>
-         <li><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
+   @if(session('perfilTipo') == 'P')
+      <li class="header">Panel de Productor</li>
+      <li class="li"><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
+      <li class="li"><a href="{{route('marca.index')}}"><i class="fa fa-diamond"></i> Marcas</a></li>
          <!-- SECCIÓN DE PRODUCTORES -->
-         <li class="treeview">
-             <a href="#">
-               <i class="fa fa-share"></i> <span>Marcas</span>
-               <span class="pull-right-container">
-                 <i class="fa fa-angle-left pull-right"></i>
-               </span>
-             </a>
-             <ul class="treeview-menu">
-               <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
-               <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Nueva Marca</a></li>
-            </ul>
-         </li>
          <li class="treeview">
              <a href="#">
                <i class="fa fa-share"></i> <span>Ofertas</span>
@@ -317,19 +306,8 @@
          <!-- SECCIÓN DE IMPORTADOR -->
          <li class="header">Panel de Importador</li>
          <li><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
-         <li class="treeview">
-             <a href="#">
-               <i class="fa fa-share"></i> <span>Marcas</span>
-               <span class="pull-right-container">
-                 <i class="fa fa-angle-left pull-right"></i>
-               </span>
-             </a>
-            <ul class="treeview-menu">
-               <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
-               <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Nueva Marca</a></li>
-               <li><a href="{{ route('marca.mundiales') }}"><i class="fa fa-circle-o"></i> Marcas Mundiales</a></li>
-            </ul>
-         </li>
+         <li class="li"><a href="{{route('marca.index')}}"><i class="fa fa-diamond"></i> Marcas</a></li>
+        
          <li class="treeview">
              <a href="#">
                <i class="fa fa-share"></i> <span>Productos</span>
@@ -475,19 +453,8 @@
          <!-- SECCIÓN DE IMPORTADORES -->
          <li class="header">Panel de Distribuidor</li>
          <li><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
-         <li class="treeview">
-             <a href="#">
-               <i class="fa fa-share"></i> <span>Marcas</span>
-               <span class="pull-right-container">
-                 <i class="fa fa-angle-left pull-right"></i>
-               </span>
-             </a>
-            <ul class="treeview-menu">
-               <li><a href="{{ route('marca.index') }}"><i class="fa fa-circle-o"></i> Mis Marcas</a></li>
-               <li><a href="{{ route('marca.create') }}"><i class="fa fa-circle-o"></i> Nueva Marca</a></li>
-               <li><a href="{{ route('marca.mundiales') }}"><i class="fa fa-circle-o"></i> Marcas Mundiales</a></li>
-            </ul>
-         </li>
+         <li class="li"><a href="{{route('marca.index')}}"><i class="fa fa-diamond"></i> Marcas</a></li>
+      
          <li class="treeview">
              <a href="#">
                <i class="fa fa-share"></i> <span>Productos</span>

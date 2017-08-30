@@ -13,12 +13,16 @@ class HorecaController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['index', 'create', 'store']]);
     }
     
     public function index()
     {
+        $horecas = Horeca::select('id', 'nombre', 'pais_id', 'telefono', 'persona_contacto', 'email', 'reclamada')
+                        ->orderBy('nombre', 'ASC')
+                        ->paginate(10);
 
+        return view('adminWeb.horeca.listado')->with(compact('horecas'));
     }
 
     public function create()
@@ -27,27 +31,16 @@ class HorecaController extends Controller
                     ->orderBy('pais')
                     ->pluck('pais', 'id');
 
-        return view('adminWeb.perfiles.crearDistribuidor')->with(compact('paises'));
+        return view('adminWeb.horeca.create')->with(compact('paises'));
     }
 
     public function store(Request $request)
     {
-        $file = Input::file('logo');   
-        $image = Image::make(Input::file('logo'));
-
-        $path = public_path().'/imagenes/horecas/';
-        $path2 = public_path().'/imagenes/horecas/thumbnails/';
-        $nombre = 'horeca_'.time().'.'.$file->getClientOriginalExtension();
-
-        $image->save($path.$nombre);
-        $image->resize(240,200);
-        $image->save($path2.$nombre);
-
         $horeca = new Horeca($request->all());
-        $horeca->logo = $nombre;
+        $horeca->logo = 'usuario-icono.jpg'; 
         $horeca->save();
 
-        return redirect('admin')->with('msj', 'Se ha creado el Horeca con éxito.');
+        return redirect('admin/listado-horecas')->with('msj-success', 'Se ha creado el Horeca con éxito.');
     }
 
     public function show($id)

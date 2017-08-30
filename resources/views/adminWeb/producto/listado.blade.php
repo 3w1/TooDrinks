@@ -1,16 +1,8 @@
-@extends('plantillas.adminWeb.mainAdmin')
-@section('title', 'Listado de Productos')
+@extends('adminWeb.plantillas.main')
+@section('title', 'Productos')
 
 @section('title-header')
-   Productos
-@endsection
-
-@section('title-complement')
-   @if ($marca == '0')
-      (General)
-   @else
-      ({{ $marca }})
-   @endif
+   Listado de Productos
 @endsection
 
 @section('content-left')   
@@ -24,35 +16,32 @@
    @endsection
    
    @foreach($productos as $producto)
-      @if($producto->id != '0')
-         <div class="col-md-4 col-xs-6">
-            <div class="thumbnail">
-               <div>
-                  <img src="{{ asset('imagenes/productos/thumbnails/') }}/{{ $producto->imagen }}" class="img-responsive">
-               </div>             
-               <div class="caption">
-                  <p>
-                     @if ($producto->aprobado == '0')
-                        <label class="label label-danger">Sin Publicar</label>
-                     @else
-                        <label class="label label-success">Publicado</label>
-                     @endif
-                     @if ($producto->confirmado == '0')
-                        <label class="label label-danger">Sin Confirmar</label>
-                     @else
-                        <label class="label label-success">Confirmado</label>
-                     @endif
-                  </p>
-                  <h3>{{ $producto->nombre }}</h3>
-                  <p><strong>{{ $producto->bebida->nombre }}</strong> ({{ $producto->clase_bebida->clase }})</p>
-                  <p><center>
-                     <a href="{{ route('admin.detalle-producto', $producto->id) }}" class="btn btn-primary" role="button">Ver Más</a>
-                     <a href="" class="btn btn-danger" role="button">Eliminar</a>
-                  </center></p>
-               </div>
+      <div class="col-md-4 col-xs-6">
+         <div class="thumbnail">
+            <div>
+               <img src="{{ asset('imagenes/productos/thumbnails/') }}/{{ $producto->imagen }}" class="img-responsive">
+            </div>             
+            <div class="caption">
+               <p>
+                  @if ($producto->aprobado == '0')
+                     <label class="label label-danger">Sin Publicar</label>
+                  @else
+                     <label class="label label-success">Publicado</label>
+                  @endif
+                  @if ($producto->confirmado == '0')
+                     <label class="label label-danger">Sin Confirmar</label>
+                  @else
+                     <label class="label label-success">Confirmado</label>
+                  @endif
+               </p>
+               <h3>{{ $producto->nombre }}</h3>
+               <p><strong>{{ $producto->bebida->nombre }}</strong> ({{ $producto->clase_bebida->clase }})</p>
+               <p><center>
+                  <a href="{{ route('admin.producto-detallado', [$producto->id, $producto->nombre_seo])}}" class="btn btn-primary" role="button">Ver Más</a>
+               </center></p>
             </div>
          </div>
-      @endif
+      </div>
    @endforeach
 @endsection
 

@@ -20,15 +20,6 @@ class ProductoController extends Controller
     
     public function index()
     {
-        if (session('perfilTipo') == 'AD'){
-            $productos = Producto::orderBy('nombre')
-                            ->paginate(7);
-
-            $marca = '0';
-
-            return view('adminWeb.listados.productos')->with(compact('productos', 'marca'));
-        }
-
         $productos = DB::table('producto')
                         ->where('tipo_creador', '=', 'U')
                         ->where('creador_id', '=', Auth::user()->id)
@@ -57,10 +48,6 @@ class ProductoController extends Controller
         $tipos_bebidas = DB::table('bebida')
                     ->orderBy('nombre')
                     ->pluck('nombre', 'id');
-
-        if (session('perfilTipo') == 'AD'){
-            return view('adminWeb.producto.create')->with(compact('marcas', 'paises', 'tipos_bebidas', 'marca'));
-        }
         
         return view('producto.create')->with(compact('marcas', 'paises', 'tipos_bebidas', 'usuario', 'id', 'marca'));
     }
@@ -567,20 +554,7 @@ class ProductoController extends Controller
         if ( $comentarioPerfil != null)
             $existe = '1';
 
-        //Mostrar los datos de un producto específico para aprobarlo por el AdminWeb
-        if ($request->ajax()){
-            $producto = Producto::where('id', '=', $id)->with('pais', 'provincia_region', 'marca', 'bebida', 'clase_bebida')
-                        ->first();
-            return response()->json(
-                $producto->toArray()
-            );
-        }
-
-        if (session('perfilTipo') == 'AD'){
-            return view('adminWeb.producto.detalleProducto')->with(compact('producto', 'productor', 'comentarios', 'cont'));
-        }else{
-            return view('producto.show')->with(compact('producto', 'productor', 'comentarios', 'cont', 'comentarioPerfil', 'existe'));
-        }
+        return view('producto.show')->with(compact('producto', 'productor', 'comentarios', 'cont', 'comentarioPerfil', 'existe'));
     }
 
     public function edit($id)
@@ -616,10 +590,6 @@ class ProductoController extends Controller
         $actualizacion = DB::table('producto')
                             ->where('id', '=', $request->id)
                             ->update(['imagen' => $nombre ]);
-
-        if (session('perfilTipo') == 'AD'){
-            return redirect('admin/detalle-producto/'.$request->id)->with('msj-success', 'La imagen del producto ha sido actualizada con éxito.');
-        }
 
         return redirect('producto/detalle-de-producto/'.$request->id)->with('msj', 'La imagen del producto ha sido actualizada con éxito.');
     }

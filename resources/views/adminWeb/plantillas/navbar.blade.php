@@ -9,11 +9,11 @@
       <ul class="nav navbar-nav">
          
          <!-- DROPDOWN DE NOTIFICACIONES -->
-         @include('plantillas.partes.subpartes/dropdownNotificaciones')
+         @include('adminWeb.plantillas.dropdownNotificaciones')
          <!-- DROPDOWN DE NOTIFICACIONES -->
          
          <!-- INICIO DEL MENU PARA LA CUENTA DE USUARIO -->
-         @include('plantillas.partes/subpartes/dropdownUsuario')
+         @include('adminWeb.plantillas.dropdownUsuario')
          <!-- FIN DEL MENU PARA LA CUENTA DE USUARIO -->
       </ul>
    </div>

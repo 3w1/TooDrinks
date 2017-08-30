@@ -5,7 +5,7 @@ function buscarMarca() {
         
     var nombre = document.getElementById('busqueda').value;
     //var route = "http://www.toodrinks.com/marca/buscar-por-nombre/"+nombre+"";
-    var route = "http://localhost:8000/marca/buscar-por-nombre/"+nombre+"";
+    var route = "http://localhost:8000/buscar-marca-por-nombre/"+nombre+"";
                     
     $.ajax({
         url:route,
@@ -22,7 +22,7 @@ function buscarMarca() {
                 }
             }else{
                 document.getElementById("alerta").style.display = 'block';
-                document.getElementById("mensaje").innerHTML = "<strong>Ups!!</strong> No se han encontrado resultados en la búsqueda. Intente con otro nombre o utilice los filtros para la búsqueda específica.";
+                document.getElementById("mensaje").innerHTML = "<strong>Ups!!</strong> No se han encontrado resultados en la búsqueda con el filtro especificado.";
             }
         }
     });
@@ -35,7 +35,7 @@ function buscarPorProductor() {
         
     var productor = document.getElementById('productor').value;
     //var route = "http://www.toodrinks.com/marca/buscar-por-productos/"+productor+"";
-    var route = "http://localhost:8000/marca/buscar-por-productor/"+productor;
+    var route = "http://localhost:8000/buscar-marca-por-productor/"+productor;
                     
     $.ajax({
         url:route,
@@ -65,7 +65,7 @@ function buscarPorPais() {
         
     var pais = document.getElementById('pais').value;
     //var route = "http://www.toodrinks.com/marca/buscar-por-pais/"+pais+"";
-    var route = "http://localhost:8000/marca/buscar-por-pais/"+pais;
+    var route = "http://localhost:8000/buscar-marca-por-pais/"+pais;
                     
     $.ajax({
         url:route,
@@ -90,10 +90,9 @@ function buscarPorPais() {
 
 function cargarMarca($id){
     //var route = "http://www.toodrinks.com/marca/detalles-marca/"+$id+"";
-    var route = "http://localhost:8000/marca/detalles-marca/"+$id;
+    var route = "http://localhost:8000/detalles-marca/"+$id;
 
     document.getElementById("marca_id").value = $id;
-    document.getElementById("marca_id2").value = $id;
 
     $.ajax({
         url:route,
@@ -109,7 +108,7 @@ function cargarMarca($id){
             document.getElementById("infoMarca").innerHTML += "<li class='list-group-item'><b>País: </b>"+ans.pais.pais+"</li>";
             document.getElementById("infoMarca").innerHTML += "</ul>";
 
-            if (ans.relacion == 1){
+            /*if (ans.relacion == 1){
                 document.getElementById("asociar").style.display = 'none';
                 document.getElementById("solicitar").style.display = 'none';
                 document.getElementById("alert").innerHTML = "Ya te encuentras asociado con esta marca. Dirígete a la sección *Mis Marcas* para más detalles.";
@@ -124,7 +123,7 @@ function cargarMarca($id){
                     document.getElementById("alert").innerHTML = "El productor de la marca no ha marcado tu país como posible destino laboral, por lo tanto, no existen opciones disponibles para esta marca.";
                     document.getElementById("alert").style.display = 'block';
                 }
-            }
+            }*/
 
             $("#modalDetalles").modal({
                 show: 'true'

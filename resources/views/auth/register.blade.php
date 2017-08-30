@@ -34,13 +34,13 @@
                         <h2>Crear Cuenta TooDrinks</h2>
                     </div>
                     <form action="{{ route('register') }}" method="POST">
-                    	<div class="alert small-box" style="display: none;"></div>
+                    	<div class="alert alert-danger" style="display: none;" id="error"></div>
 
                     	{{ csrf_field() }}
             			<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-                        {!! Form::hidden('estado_datos', '0') !!}
-			            {!! Form::hidden('id_entidad', '0') !!}
+                        {!! Form::hidden('entidad_id', 0) !!}
+                        {!! Form::hidden('entidad_tipo', 'U') !!}
 
                         <div class="row form-group">
                             <div class="col-xs-6">
@@ -65,11 +65,11 @@
                         <div class="row form-group">
                             <div class="col-xs-6">
                                 <label><strong>Contraseña</strong></label>
-                                <input type="text" class="input-text full-width" id="clave1" name="password" required>
+                                <input type="password" class="input-text full-width" id="clave1" name="password" required onblur="validarClave();">
                             </div>
                             <div class="col-xs-6">
                                 <label><strong>Confirme su Contraseña</strong></label>
-                                <input type="text" class="input-text full-width" id="clave2" required>
+                                <input type="password" class="input-text full-width" id="clave2" required onblur="verificarClaves();">
                             </div>
                         </div>
                         <div class="row form-group">
@@ -84,20 +84,10 @@
 				                </select>
                             </div>
                         </div>
-						<div class="row form-group">
-							<div class="col-xs-6">
-								<label><strong>Perfil</strong></label>
-								{!! Form::select('tipo', ['U' => 'Usuario', 'P' => 'Productor', 'I' => 'Importador', 'D' => 'Distribuidor', 'H' => 'Horeca' ], null, ['class' => 'input-select full-width', 'placeholder' => 'Seleccione una opción..', 'id' => 'entidad', 'onchange' => 'tipoHoreca();', 'required']) !!}
-							</div>
-							<div class="col-xs-6" id="tipo_horeca" style="display: none;">
-								<label><strong>Tipo de Horeca</strong></label>
-								{!! Form::select('tipo_horeca', ['H' => 'Hotel', 'R' => 'Restaurante', 'C' => 'Cafetería'], null, ['class' => 'input-select full-width', 'placeholder' => 'Seleccione una opción..']) !!}
-							</div>
-            			</div>
                         <div class="form-group">
                           	<center><p>Al registrarme, acepto las <a href="#terminos" class="soap-popupbox">Condiciones de servicio y Políticas de privacidad</a> de TooDrinks.com</p></center>
                         </div>
-                        <button type="submit" class="btn-large full-width">REGISTRARME</button> 
+                        <button type="submit" class="btn-large full-width" id="boton">REGISTRARME</button> 
                     </form>
                 </div>
             </div>

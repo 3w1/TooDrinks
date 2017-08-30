@@ -1,5 +1,5 @@
-@extends('plantillas.adminWeb.mainAdmin')
-@section('title', 'Crear Marca')
+@extends('adminWeb.plantillas.main')
+@section('title', 'Marca')
 
 @section('title-header')
   {{ $marca->nombre }}
@@ -19,9 +19,9 @@
       @endif
    @endsection
   
-   @include('marca.modales.editLogo')
+   @include('adminWeb.marca.modales.editLogo')
   
-   @include('marca.modales.editMarca')
+   @include('adminWeb.marca.modales.edit')
   
    <div class="row">
       <div class="col-md-4"></div>
@@ -42,7 +42,7 @@
             <ul class="list-group">
                <li class="list-group-item"><b>Productor:</b> @if ($marca->productor->nombre == 'master') Sin Propietario @else {{ $marca->productor->nombre }} @endif</li>
                <li class="list-group-item"><b>Descripción:</b> {{ $marca->descripcion }}</li>
-               <li class="list-group-item"><b>País Originario:</b> {{ $marca->pais->pais }}. ({{ $marca->provincia_region->provincia }})</li>
+               <li class="list-group-item"><b>País Originario:</b> {{ $marca->pais->pais }}</li>
                <li class="list-group-item"><b>Website:</b> {{ $marca->website }}</li>
             </ul>
          </div>

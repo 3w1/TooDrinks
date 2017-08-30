@@ -35,7 +35,7 @@ Route::get('/', function () {
 
 Route::get('/inicio', 'UsuarioController@index')->name('inicio');
 Route::get('registrarse', 'Auth\RegisterController@registrarse')->name('registrarse');
-//Route::get('registrarse/{tipo}${id}${token}', 'Auth\RegisterController@registrarse')->name('registrarse');
+Route::get('registrarse-con-invitacion/{tipo}${id}${token}', 'Auth\RegisterController@registrarse_invitacion')->name('registrarse-invitacion');
 // ./RUTAS DE INICIO Y AUTENTICACIÓN ./
 
 //  RUTAS PARA LOS USUARIOS
@@ -61,6 +61,8 @@ Route::prefix('productor')->group(function (){
 
     Route::get('confirmar-productos', 'ProductorController@confirmar_productos')->name('productor.confirmar-productos');
     Route::get('confirmar-producto/{id}-{tipo}', 'ProductorController@confirmar_producto')->name('productor.confirmar-producto');
+
+    Route::get('asociar-marca/{id}/{nombre}', 'ProductorController@asociar_marca')->name('productor.asociar-marca');
 
     Route::get('ver-listado-importadores', 'ProductorController@listado_importadores')->name('productor.listado-importadores');
 
@@ -109,21 +111,29 @@ Route::resource('horeca','HorecaController');
 // ./RUTAS PARA LOS HORECAS ./
 
 // RUTAS PARA LAS MARCAS 
-Route::prefix('marca')->group(function (){
+Route::prefix('marca')->group(function (){ 
     Route::get('descripcion/{id}', 'MarcaController@descripcion');
     Route::post('cambiar-logo', 'MarcaController@updateLogo')->name('marca.updateLogo');
 
     Route::get('{id}/{nombre_seo}', 'MarcaController@show')->name('marca.detalles');
 
+    //Agregar una marca al listado de una entidad (Marcas Mundiales)
+    Route::get('agregar-marca', 'MarcaController@agregar_marca')->name('marca.agregar-marca');
+
     Route::get('marcas-mundiales', 'MarcaController@marcas_mundiales')->name('marca.mundiales');
     
     //Peticiones AJAX
-    Route::get('buscar-por-nombre/{nombre}', 'MarcaController@buscar_por_nombre');
+    Route::get('prueba/{nombre}', 'MarcaController@buscar_por_nombre');
     Route::get('buscar-por-productor/{productor}', 'MarcaController@buscar_por_productor');
     Route::get('buscar-por-pais/{pais}', 'MarcaController@buscar_por_pais');
     Route::get('detalles-marca/{id}', 'MarcaController@detalles_marca');
 });
 Route::resource('marca','MarcaController');
+
+Route::get('buscar-marca-por-nombre/{nombre}', 'MarcaController@buscar_por_nombre');
+Route::get('buscar-marca-por-productor/{productor}', 'MarcaController@buscar_por_productor');
+Route::get('buscar-marca-por-pais/{pais}', 'MarcaController@buscar_por_pais');
+Route::get('detalles-marca/{id}', 'MarcaController@detalles_marca');
 // ./RUTAS PARA LAS MARCAS ./
 
 // RUTAS PARA LAS BEBIDAS
@@ -325,39 +335,63 @@ Route::post('correo-invitacion', 'MailsController@correo_invitacion')->name('mai
 Route::resource('mails', 'MailsController');
 // ./RUTAS PARA LOS MAILS ./
 
-// RUTAS PARA EL ADMIN WEB
+// RUTAS PARA EL ADMIN
 Route::prefix('admin')->group(function () {
-    Route::get('marcas-sin-aprobar', 'AdminController@marcas_sin_aprobar')->name('admin.marcas-sin-aprobar');
-    Route::get('aprobar-marca/{id}', 'AdminController@aprobar_marca')->name('admin.aprobar-marca');
-    Route::get('rechazar-marca/{id}', 'AdminController@rechazar_marca')->name('admin.rechazar-marca');
+    Route::get('login', 'AdminController@login')->name('admin.login');
+    Route::post('loggear', 'AdminController@loggear')->name('admin.loggear');
+    Route::get('logout', 'AdminController@logout')->name('admin.logout');
 
-    Route::get('productos-sin-aprobar', 'AdminController@productos_sin_aprobar')->name('admin.productos-sin-aprobar');
-    Route::get('aprobar-producto/{id}', 'AdminController@aprobar_producto')->name('admin.aprobar-producto');
-    Route::get('rechazar-producto/{id}', 'AdminController@rechazar_producto')->name('admin.rechazar-producto');
+    //OPCIONES DE PRODUCTOR
+    Route::get('crear-productor', 'ProductorController@create')->name('admin.crear-productor');
+    Route::get('listado-productores', 'ProductorController@index')->name('admin.listado-productores');
 
+    //OPCIONES DE IMPORTADOR
+    Route::get('crear-importador', 'ImportadorController@create')->name('admin.crear-importador');
+    Route::get('listado-importadores', 'ImportadorController@index')->name('admin.listado-importadores');
+
+    //OPCIONES DE DISTRIBUIDOR
+    Route::get('crear-distribuidor', 'DistribuidorController@create')->name('admin.crear-distribuidor');
+    Route::get('listado-distribuidores', 'DistribuidorController@index')->name('admin.listado-distribuidores');
+
+    //OPCIONES DE HORECA
+    Route::get('crear-horeca', 'HorecaController@create')->name('admin.crear-horeca');
+    Route::get('listado-horecas', 'HorecaController@index')->name('admin.listado-horecas');
+
+    //OPCIONES DE MARCA
+    Route::get('nueva-marca', 'AdminController@crear_marca')->name('admin.crear-marca');
+    Route::post('guardar-marca', 'AdminController@marca_store')->name('admin.marca-store');
+    Route::get('listado-marcas', 'AdminController@listado_marcas')->name('admin.listado-marcas');
+    Route::get('marca-detallada/{id}/{nombre_seo}', 'AdminController@marca_detallada')->name('admin.marca-detallada');
+    Route::post('actualizar-logo-marca', 'AdminController@update_logo_marca')->name('admin.marca-updateLogo');
+    Route::put('actualizar-marca/{id}', 'AdminController@update_marca')->name('admin.marca-update');
     Route::get('marcas-sin-propietario', 'AdminController@marcas_sin_propietario')->name('admin.marcas-sin-propietario');
     Route::post('asociar-marca-productor', 'AdminController@asociar_marca_productor')->name('admin.asociar-marca-productor');
+
+    //OPCIONES DE PRODUCTO
+    Route::get('nuevo-producto', 'AdminController@crear_producto')->name('admin.crear-producto');
+    Route::post('guardar-producto', 'AdminController@producto_store')->name('admin.producto-store');
+    Route::get('listado-productos', 'AdminController@listado_productos')->name('admin.listado-productos');
+    Route::get('producto-detallado/{id}/{nombre_seo}', 'AdminController@producto_detallado')->name('admin.producto-detallado');
+    Route::post('actualizar-logo-producto', 'AdminController@update_logo_producto')->name('admin.producto-updateLogo');
+    Route::put('actualizar-producto/{id}', 'AdminController@update_producto')->name('admin.producto-update');
+    
+    //OPCIONES DE CONFIRMACIONES
+    Route::get('marcas-sin-aprobar', 'AdminController@marcas_sin_aprobar')->name('admin.marcas-sin-aprobar');
+    Route::get('aprobar-marca/{id}', 'AdminController@aprobar_marca')->name('admin.aprobar-marca');
+    Route::get('productos-sin-aprobar', 'AdminController@productos_sin_aprobar')->name('admin.productos-sin-aprobar');
+    Route::get('aprobar-producto/{id}', 'AdminController@aprobar_producto')->name('admin.aprobar-producto');
+    
+    //ENVÍO DE CORREOS
+    Route::get('enviar-invitacion/{tipo}/{id}', 'MailsController@correo_invitacion')->name('admin.enviar-invitacion');
+
+   
+    Route::get('rechazar-producto/{id}', 'AdminController@rechazar_producto')->name('admin.rechazar-producto');
 
     Route::get('confirmar-importadores-marcas', 'AdminController@confirmar_importadores')->name('admin.confirmar-importadores');
     Route::get('confirmar-importador-marca/{id}/{tipo}', 'AdminController@confirmar_importador')->name('admin.confirmar-importador');
 
    	Route::get('confirmar-distribuidores-marcas', 'AdminController@confirmar_distribuidores')->name('admin.confirmar-distribuidores');
     Route::get('confirmar-distribuidor-marca/{id}/{tipo}', 'AdminController@confirmar_distribuidor')->name('admin.confirmar-distribuidor');
-
-    Route::get('marcas', 'MarcaController@index')->name('admin.marcas');
-    Route::get('crear-marca', 'MarcaController@create')->name('admin.crear-marca');
-    Route::get('detalle-de-marca/{id}', 'MarcaController@show')->name('admin.detalle-marca');
-
-    Route::get('productos', 'ProductoController@index')->name('admin.productos');
-    Route::get('crear-producto', 'ProductoController@create')->name('admin.crear-producto');
-    Route::get('crear-producto/{id}/{marca}', 'ProductoController@agregar')->name('admin.crear-producto-marca');
-	Route::get('detalle-de-producto/{id}', 'ProductoController@detalle')->name('admin.detalle-producto');
-	Route::get('catalogo-de-productos/{id}/{marca}', 'ProductoController@listado')->name('admin.productos-marca');
-
-	Route::get('crear-productor', 'ProductorController@create')->name('admin.crear-productor');
-	Route::get('crear-importador', 'ImportadorController@create')->name('admin.crear-importador');
-	Route::get('crear-distribuidor', 'DistribuidorController@create')->name('admin.crear-distribuidor');
-	Route::get('crear-horeca', 'HorecaController@create')->name('admin.crear-horeca');
 
     Route::get('banners-sin-aprobar', 'AdminController@banners_sin_aprobar')->name('admin.banners-sin-aprobar');
     Route::get('aprobar-banner/{id}', 'AdminController@aprobar_banner')->name('admin.aprobar-banner');
@@ -388,3 +422,10 @@ Route::get('payment/status', array(
     'uses' => 'PaypalController@getPaymentStatus',
 ));
 
+//CONSULTAS AJAX
+Route::prefix('consulta')->group(function () {
+    Route::get('buscar-productor/{nombre}', 'ConsultasAjax@buscar_productor');
+    Route::get('cargar-clases-bebida/{bebida}', 'ConsultasAjax@cargar_clases_bebidas');
+    Route::get('cargar-descripcion-marca/{marca}', 'ConsultasAjax@cargar_descripcion_marca');
+    Route::get('cargar-detalles-producto/{producto}', 'ConsultasAjax@cargar_detalles_producto');
+});

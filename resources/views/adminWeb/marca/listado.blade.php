@@ -1,4 +1,4 @@
-@extends('plantillas.adminWeb.mainAdmin')
+@extends('adminWeb.plantillas.main')
 @section('title', 'Listado de Marcas')
 
 @section('title-header')
@@ -20,50 +20,48 @@
    @endsection
 
    @foreach($marcas as $marca)
-      @if ($marca->id != '0')
-   		<?php
-            $productos = DB::table('producto')
-                           ->select('id')
-                           ->where('marca_id', $marca->id)
-                           ->get();
+   	<?php
+         $productos = DB::table('producto')
+                        ->select('id')
+                        ->where('marca_id', $marca->id)
+                        ->get();
 
-            $cont = 0;
-            foreach ($productos as $producto)
-               $cont++;
-   		?>
-		   <div class="col-md-6 col-xs-12">
-          	<div class="box box-widget widget-user-2">
-           	   <div class="widget-user-header bg-green">
-               	<div class="widget-user-image">
-                	   <img class="img-rounded" src="{{ asset('imagenes/marcas/thumbnails/')}}/{{ $marca->logo }}">
-             		</div>
-               	<h3 class="widget-user-username">{{ $marca->nombre }}</h3>
-                 	<h5 class="widget-user-desc"> {{ $marca->pais->pais }} </i></h5>
-           		</div>
+         $cont = 0;
+         foreach ($productos as $producto)
+            $cont++;
+   	?>
+	   <div class="col-md-6 col-xs-12">
+          <div class="box box-widget widget-user-2">
+          	<div class="widget-user-header bg-green">
+            	<div class="widget-user-image">
+             	   <img class="img-rounded" src="{{ asset('imagenes/marcas/thumbnails/')}}/{{ $marca->logo }}">
+          		</div>
+               <h3 class="widget-user-username">{{ $marca->nombre }}</h3>
+              	<h5 class="widget-user-desc"> {{ $marca->pais->pais }} </i></h5>
+           	</div>
             		
-            	<div class="box-footer no-padding">
-              		<ul class="nav nav-stacked">
-                 		<li class="active"><a><strong>Website: </strong> {{ $marca->website }} </a></li>
-                     <li class="active"><a href="{{ route('admin.productos-marca', [$marca->id, $marca->nombre]) }}"><strong><u>Catálogo de Productos: </strong> {{ $cont }} Producto(s) </u></a></li>
-                     <li class="active"><a href="{{ route('admin.crear-producto-marca', [$marca->id, $marca->nombre] )}}"><strong><u>Agregar Producto</u></strong></a></li>
-                     <li class="active"><a href="{{ route('admin.detalle-marca', $marca->id) }}"><strong><u>Ver más detalles</u></strong></a></li>
-                     <li class="active"><a>
-                        @if ($marca->publicada == '0')
-                           <label class="label label-danger">Sin Publicar (Admin)</label>
-                        @else
-                           <label class="label label-success">Publicada (Admin)</label>
-                        @endif
-                        @if ($marca->aprobada == '0')
-                           <label class="label label-danger">Sin Confirmar (Productor)</label>
-                        @else
-                           <label class="label label-success">Confirmada (Productor)</label>
-                        @endif
-                     </a></li> 
-                  </ul>
-               </div>
-         	</div>
-       	</div>
-      @endif
+            <div class="box-footer no-padding">
+           		<ul class="nav nav-stacked">
+              		<li class="active"><a><strong>Website: </strong> {{ $marca->website }} </a></li>
+                  <li class="active"><a><strong>Productos: </strong> {{ $cont }} </a></li>
+                  <li class="active"><a><strong>Productor: </strong> @if ($marca->productor_id == '0') Sin Asociar @else {{$marca->productor->nombre}} @endif </a></li>
+                  <li class="active"><a href="{{ route('admin.marca-detallada', [$marca->id, $marca->nombre_seo]) }}"><strong><u>Ver más detalles</u></strong></a></li>
+                  <li class="active"><a>
+                     @if ($marca->publicada == '0')
+                        <label class="label label-danger">Sin Publicar (Admin)</label>
+                     @else
+                        <label class="label label-success">Publicada (Admin)</label>
+                     @endif
+                     @if ($marca->aprobada == '0')
+                        <label class="label label-danger">Sin Confirmar (Productor)</label>
+                     @else
+                        <label class="label label-success">Confirmada (Productor)</label>
+                     @endif
+                  </a></li> 
+               </ul>
+            </div>
+      	</div>
+    	</div>
 	@endforeach
 @endsection
 

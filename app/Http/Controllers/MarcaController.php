@@ -15,19 +15,15 @@ class MarcaController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => 'store']);
     }
 
-    public function index()
-    {
-        if (session('perfilTipo') == 'AD'){
-            $marcas = Marca::orderBy('nombre')
-                                ->paginate(7);
-
-            return view('adminWeb.listados.marcas')->with(compact('marcas'));
-        }
-        elseif (session('perfilTipo') == 'P'){
-            $marcas = Marca::where('productor_id', '=', session('perfilId'))
+    //Pestaña Mis Marcas
+    public function index(Request $request){
+        if (session('perfilTipo') == 'P'){
+            $marcas = Marca::nombre($request->get('busqueda'))
+            			->status($request->get('status'))
+            			->where('productor_id', '=', session('perfilId'))
                         ->orderBy('nombre', 'ASC')
                         ->paginate(6);
         }elseif (session('perfilTipo') == 'I'){
@@ -46,7 +42,41 @@ class MarcaController extends Controller
                         ->paginate(6);
         }
 
-        return view('marca.index')->with(compact('marcas'));
+        return view('marca.tabs.misMarcas')->with(compact('marcas'));
+    }
+
+    //Pestaña Agregar Marca para asociar
+    public function agregar_marca(Request $request){
+    	if (session('perfilTipo') == 'P'){
+            $marcas = Marca::nombre($request->get('busqueda'))
+            			->pais($request->get('pais'))
+            			->where('productor_id', '=', '0')
+            			->where('id', '<>', '0')
+                        ->orderBy('nombre', 'ASC')
+                        ->paginate(6);
+        }elseif (session('perfilTipo') == 'I'){
+            $marcas = Marca::select('marca.*')
+                    ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                    ->where('importador_marca.importador_id', '!=', session('perfilId'))
+                    ->orwhere('importador_marca.marca_id', '=', null)
+                    ->where('marca.id', '<>', '0')
+                    ->nombre($request->get('busqueda'))
+            		->pais($request->get('pais'))
+                    ->orderBy('nombre', 'ASC')
+                    ->paginate(6);
+        }elseif (session('perfilTipo') == 'D'){
+            $marcas = Marca::select('marca.*')
+                    ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
+                    ->where('distribuidor_marca.distribuidor_id', '!=', session('perfilId'))
+                    ->orwhere('distribuidor_marca.marca_id', '=', null)
+                    ->where('marca.id', '<>', '0')
+                    ->nombre($request->get('busqueda'))
+            		->pais($request->get('pais'))
+                    ->orderBy('nombre', 'ASC')
+                    ->paginate(6);
+        }
+
+        return view('marca.tabs.agregarMarca')->with(compact('marcas'));
     }
 
     public function create()
@@ -55,11 +85,7 @@ class MarcaController extends Controller
                         ->orderBy('pais')
                         ->pluck('pais', 'id');
 
-        if (session('perfilTipo') == 'AD'){
-             return view('adminWeb.marca.create')->with(compact('paises'));
-        }else{ 
-            return view('marca.create')->with(compact('paises'));
-        }
+        return view('marca.create')->with(compact('paises'));
     }
 
     public function store(Request $request)
@@ -87,10 +113,6 @@ class MarcaController extends Controller
             $marca->distribuidores()->attach(session('perfilId'), ['status' => '0']);
         }       
 
-        if (session('perfilTipo') == 'AD'){
-            return redirect('admin')->with('msj-success', 'La marca ha sido creada con éxito.');
-        }
-
         $notificaciones_admin = new Notificacion_Admin();
         $notificaciones_admin->creador_id = session('perfilId');
         $notificaciones_admin->tipo_creador = session('perfilTipo');
@@ -112,9 +134,6 @@ class MarcaController extends Controller
     {
         $marca = Marca::find($id);
 
-        if (session('perfilTipo') == 'AD'){
-            return view('adminWeb.marca.detalleMarca')->with(compact('marca'));
-        }
         return view('marca.show')->with(compact('marca'));
     }
 
@@ -129,13 +148,34 @@ class MarcaController extends Controller
         );
     }
 
-    //Búsqueda de Marcas por Nombre (Marcas Mundiales)
+    //Búsqueda de Marcas por Nombre (Asociar Marca (Establecer Relación Entidad-Marca))
     public function buscar_por_nombre($nombre){
-        $marcas = DB::table('marca')
-                    ->select('id', 'nombre', 'logo')
-                    ->orderBy('nombre')
-                    ->where('nombre', 'ILIKE', '%'.$nombre.'%')
-                    ->get();
+        if (session('perfilTipo') == 'P'){
+            $marcas = DB::table('marca')
+                        ->select('id', 'nombre', 'logo')
+                        ->orderBy('nombre')
+                        ->where('nombre', 'ILIKE', '%'.$nombre.'%')
+                        ->where('productor_id', '<>', session('perfilId'))
+                        ->get();
+        }elseif (session('perfilTipo') == 'I'){
+            $marcas = DB::table('marca')
+                        ->select('marca.id', 'marca.nombre', 'marca.logo')
+                        ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                        ->where('importador_marca.importador_id', '!=', session('perfilId'))
+                        ->orwhere('importador_marca.marca_id', '=', null)
+                        ->where('marca.nombre', 'ILIKE', '%'.$nombre.'%')
+                        ->orderBy('nombre')
+                        ->get();
+        }elseif (session('perfilTipo') == 'D'){
+            $marcas = DB::table('marca')
+                        ->select('marca.id', 'marca.nombre', 'marca.logo')
+                        ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
+                        ->where('distribuidor_marca.distribuidor_id', '!=', session('perfilId'))
+                        ->orwhere('distribuidor_marca.marca_id', '=', null)
+                        ->where('marca.nombre', 'ILIKE', '%'.$nombre.'%')
+                        ->orderBy('nombre')
+                        ->get();
+        }
 
         return response()->json(
             $marcas->toArray()
@@ -173,7 +213,7 @@ class MarcaController extends Controller
         $marca = Marca::where('id', '=', $id)->with('productor', 'pais')
                     ->first()->toArray();
 
-        if (session('perfilTipo') == 'I'){
+        /*if (session('perfilTipo') == 'I'){
             $relacion = DB::table('importador_marca')
                         ->select('id')
                         ->where('importador_id', '=', session('perfilId'))
@@ -185,10 +225,10 @@ class MarcaController extends Controller
                         ->where('distribuidor_id', '=', session('perfilId'))
                         ->where('marca_id', '=', $id)
                         ->first();
-        }
+        }*/
         
         //Verifico que el usuario se encuentre relacionado con la marca que seleccionó
-        if ($relacion != null ){
+        /*if ($relacion != null ){
             $marca['relacion'] = 1;
         }else{
             $marca['relacion'] = 0;
@@ -216,7 +256,7 @@ class MarcaController extends Controller
             }
             
             $marca['check'] = $check;
-        }
+        }*/
 
         return response()->json(
             $marca
@@ -235,10 +275,14 @@ class MarcaController extends Controller
                     ->orwhere('importador_marca.marca_id', '=', null)
                     ->paginate(6);
         }elseif (session('perfilTipo') == 'D'){
-
+        	$marcas = Marca::select('marca.*')
+                    ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
+                    ->where('distribuidor_marca.distribuidor_id', '!=', session('perfilId'))
+                    ->orwhere('distribuidor_marca.marca_id', '=', null)
+                    ->paginate(6);
         }
 
-         return view('marca.marcasMundiales')->with(compact('marcas', 'paises'));
+        return view('marca.marcasMundiales')->with(compact('marcas', 'paises'));
     }
 
     public function edit($id)
@@ -251,11 +295,7 @@ class MarcaController extends Controller
         $marca = Marca::find($id);
         $marca->fill($request->all());
         $marca->save();
-
-        if (session('perfilTipo') == 'AD'){
-            return redirect('admin/detalle-de-marca/'.$id)->with('msj-success', 'Los datos de la marca han sido actualizados exitosamente');
-        }
-
+        
         return redirect('marca/'.$id)->with('msj', 'Los datos de su marca se han actualizado con éxito.');       
     }
 
@@ -274,10 +314,6 @@ class MarcaController extends Controller
         $actualizacion = DB::table('marca')
                             ->where('id', '=', $request->id)
                             ->update(['logo' => $nombre ]);
-        
-        if (session('perfilTipo') == 'AD'){
-            return redirect('admin/detalle-de-marca/'.$request->id)->with('msj-success', 'El logo de la marca se ha actualizado con éxito.');
-        }
 
         return redirect('marca/'.$request->id)->with('msj', 'El logo de la marca se ha actualizado con éxito.');     
     }

@@ -4,36 +4,77 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Productor;
+use App\Models\Productor; use App\Models\Importador;
+use App\Models\Distribuidor; use App\Models\Multinacional;
+use App\Models\Horeca;
 use Mail;
-use DB;
-
+use DB; use DateTime;
+ 
 class MailsController extends Controller
 {
-    public function correo_invitacion(Request $request){
-
-        foreach ($request->productores as $prod){
-            $productor = Productor::find($prod)->toArray();
-            $productor['tipo'] = 'P';
-
-            Mail::send('emails.invitacion', ['productor'=>$productor], function($msj) use ($productor){
-                $msj->subject('Invitación a TooDrinks');
-                $msj->to($productor['email']);
-            });
+    public function correo_invitacion($tipo, $id){
+    	$fecha = new DateTime();
+        
+        if ($tipo == 'P'){
+            $entidad = Productor::find($id)->toArray();
+        }elseif ($tipo == 'I'){
+        	$entidad = Importador::find($id)->toArray();
+        }elseif ($tipo == 'D'){
+        	$entidad = Distribuidor::find($id)->toArray();
+        }elseif ($tipo == 'M'){
+        	$entidad = Multinacional::find($id)->toArray();
+        }elseif ($tipo == 'H'){
+        	$entidad = Horeca::find($id)->toArray();
         }
 
-        return redirect('admin/correo-de-invitacion')->with('msj-success', 'Los correos de invitación han sido enviados exitosamente');
+        $entidad['tipo'] = $tipo;
+
+        Mail::send('emails.invitacion', ['entidad'=>$entidad], function($msj) use ($entidad){
+            $msj->subject('Invitación a TooDrinks');
+            $msj->to($entidad['email']);
+        });
+
+        if ($tipo == 'P'){
+        	 DB::table('productor')
+        	->where('id', '=', $id)
+        	->update(['invitacion' => '1',
+        		      'fecha_invitacion' => $fecha]);
+
+        	return redirect('admin/listado-productores')->with('msj-success', 'El correo de invitación para '.$entidad['nombre'].' ha sido enviado con éxito.');
+        }elseif ($tipo == 'I'){
+        	DB::table('importador')
+        	->where('id', '=', $id)
+        	->update(['invitacion' => '1',
+        		      'fecha_invitacion' => $fecha]);
+
+        	return redirect('admin/listado-importadores')->with('msj-success', 'El correo de invitación para '.$entidad['nombre'].' ha sido enviado con éxito.');
+        }elseif ($tipo == 'M'){
+        	DB::table('multinacional')
+        	->where('id', '=', $id)
+        	->update(['invitacion' => '1',
+        		      'fecha_invitacion' => $fecha]);
+
+        	return redirect('admin/listado-multinacionales')->with('msj-success', 'El correo de invitación para '.$entidad['nombre'].' ha sido enviado con éxito.');
+        }elseif ($tipo == 'D'){
+        	DB::table('distribuidor')
+        	->where('id', '=', $id)
+        	->update(['invitacion' => '1',
+        		      'fecha_invitacion' => $fecha]);
+
+        	return redirect('admin/listado-distribuidores')->with('msj-success', 'El correo de invitación para '.$entidad['nombre'].' ha sido enviado con éxito.');
+        }elseif ($tipo == 'H'){
+        	DB::table('horeca')
+        	->where('id', '=', $id)
+        	->update(['invitacion' => '1',
+        		      'fecha_invitacion' => $fecha]);
+
+        	return redirect('admin/listado-horecas')->with('msj-success', 'El correo de invitación para '.$entidad['nombre'].' ha sido enviado con éxito.');
+        }
     }
 
     public function index()
     {
-        /*$productor = Productor::find(10)->toArray();
-        $productor['tipo'] = 'P';
 
-        Mail::send('emails.confirmacionUsuario',['productor'=>$productor], function($msj) use ($productor){
-            $msj->subject('Confirmación de cuenta TooDrinks');
-            $msj->to($productor['email']);
-        });*/
     }
 
     public function registrarse($id){

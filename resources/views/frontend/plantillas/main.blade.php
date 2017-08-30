@@ -59,6 +59,20 @@
                 
                 @include('frontend.plantillas.partes.menuMovil')
             </div>
+            
+            @if (Session::has('msj'))
+                <div class="alert alert-success alert-dismissable">
+                   <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+                </div>
+            @endif
+            
+            @if (Auth::check())
+                @if (Auth::user()->activado == '0')
+                    <div class="alert alert-success">
+                        <strong>¡Enhorabuena!</strong> Te has registrado con éxito en TooDrinks. Hemos enviado un email a tu dirección de correo para verificar tu cuenta. Para finalizar tu registro, por favor revisa tu correo.
+                    </div>
+                @endif
+            @endif
                         
             @include('frontend.plantillas.partes.loginPopUp')
         </header>

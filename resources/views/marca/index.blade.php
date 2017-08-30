@@ -9,6 +9,26 @@
    (Mis Marcas)
 @endsection
 
+<script>
+   function activarTabs1(){
+      $("#2").removeClass("active");
+      $("#tab2").removeClass("active");
+      $("#tab22").removeClass("active");
+      $("#1").addClass("active");
+      $("#tab1").addClass("active");
+      $("#tab11").addClass("active");
+   }
+
+   function activarTabs2(){
+      $("#1").removeClass("active");
+      $("#tab1").removeClass("active");
+      $("#tab11").removeClass("active");
+      $("#2").addClass("active");
+      $("#tab2").addClass("active");
+      $("#tab22").addClass("active");
+   }
+</script>
+
 @section('content-left')
    @section('alertas')
       @if (Session::has('msj'))
@@ -17,63 +37,55 @@
                <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
             </div>
       @endif
-   @endsection   
-	
-   @foreach($marcas as $marca)
-      @if ($marca->id != '0')
-		   <?php
-            $productos = DB::table('producto')
-                           ->select('id', 'confirmado')
-                           ->where('marca_id', $marca->id)
-                           ->get();
 
-            $cont = 0;
-            foreach ($productos as $producto)
-               $cont++;
-			?>
-			<div class="col-md-6 col-xs-12">
-          	<div class="box box-widget widget-user-2">
-           		<div class="widget-user-header bg-green">
-              		<div class="widget-user-image">
-              			<img class="img-rounded" src="{{ asset('imagenes/marcas/thumbnails/')}}/{{ $marca->logo }}">
-           			</div>
-              		<h3 class="widget-user-username">{{ $marca->nombre }}</h3>
-              		<h5 class="widget-user-desc"> {{ $marca->pais->pais }} </i></h5>
-           		</div>
-            		
-            	<div class="box-footer no-padding">
-              		<ul class="nav nav-stacked">
-         			  <li class="active"><a><strong>Website: </strong> {{ $marca->website }} </a></li>
-                     <li class="active"><a href="{{ route('producto.listado', [$marca->id, $marca->nombre]) }}"><strong><u>Catálogo de Productos: </strong> {{ $cont }} Producto(s) </u></a></li>
-                     <li class="active"><a href="{{ route('producto.agregar', [$marca->id, $marca->nombre]) }}"><strong><u>Agregar Producto</u></strong></a></li>
-                     <li class="active"><a href="{{ route('marca.detalles', [$marca->id, $marca->nombre_seo]) }}"><strong><u>Ver más detalles</u></strong></a></li>
-                     <li class="active"><a>
-                        @if (session('perfilTipo') == 'P')
-                           @if ($marca->publicada == '0')
-                              <label class="label label-danger">Sin Publicar</label></a></li>
-                           @else
-                              <label class="label label-success">Publicada</label></a></li>
-                           @endif
-                        @else 
-                           @if ($marca->publicada == '0')
-                              <label class="label label-danger">Sin Publicar</label>
-                           @else
-                              <label class="label label-success">Publicada</label>
-                           @endif
-                           @if ($marca->reclamada == '0')
-                              <label class="label label-danger">Sin Confirmar</label></a></li>
-                           @else
-                              <label class="label label-success">Confirmada</label></a></li>
-                           @endif
-                        @endif
-                  </ul>
-            	</div>
-         	</div>
-       	</div>
-      @endif
-	@endforeach
+      <div class="alert alert-danger alert-dismissable" style="display: none;" id="alerta">
+         <div id="mensaje"></div>
+      </div>
+   @endsection  
+
+   @include('marca.modales.detallesMarca') 
+   
+   <ul class="nav nav-pills">
+      <li class="active btn btn-default" id="1"><a href="#" onclick="activarTabs1();" ><strong>MIS MARCAS</strong></a></li>
+      <li class="btn btn-default" id="2"><a href="#" onclick="activarTabs2();" ><strong>AGREGAR MARCA</strong></a></li>
+   </ul>
+   <div class="panel with-nav-tabs panel-primary">
+      <div class="panel-heading">
+         
+      </div>
+      <div class="panel-body">
+         <div class="tab-content">
+            <div class="tab-pane fade in active" id="tab1">
+               @include('marca.tabs.misMarcas')
+            </div>
+            <div class="tab-pane fade in" id="tab2">
+               <div id="marcas">
+                  <h4>Elija uno de los filtros para realizar la búsqueda...</h4>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
 @endsection
 
+@section('content-right')
+    <div class="panel with-nav-tabs panel-default">
+      <div class="panel-heading">
+         <h5><b><center>Filtros de Búsqueda</center></b></h5>
+      </div>
+      <div class="panel-body">
+         <div class="tab-content">
+            <div class="tab-pane fade in active" id="tab11">
+               @include('marca.tabs.filtroMisMarcas')
+            </div>
+            <div class="tab-pane fade in" id="tab22">
+               @include('marca.tabs.filtroAgregarMarca')
+            </div>
+         </div>
+      </div>
+   </div>
+@endsection
 @section('paginacion')
-   {{$marcas->render()}}
+   {{$marcas->appends(Request::only(['busqueda', 'status']))->render()}}
 @endsection

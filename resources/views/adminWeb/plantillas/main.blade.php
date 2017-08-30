@@ -28,14 +28,14 @@
                <span class="logo-lg"><b>Too</b>Drinks</span>
             </a>
 
-            @include('plantillas.adminWeb.navbarAdmin')
+            @include('adminWeb.plantillas.navbar')
          </header>
       
          <!-- Left side column. contains the logo and sidebar -->
          <aside class="main-sidebar">
             <!-- sidebar: style can be found in sidebar.less -->
             <section class="sidebar">
-               @include('plantillas.adminWeb.sidebarAdmin')
+               @include('adminWeb.plantillas.sidebar')
             </section>
             <!-- /.sidebar -->
          </aside>

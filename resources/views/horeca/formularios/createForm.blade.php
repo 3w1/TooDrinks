@@ -1,6 +1,5 @@
 {!! Html::script('js/horecas/create.js') !!}
 
-
 {!! Form::open(['route' => 'horeca.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 
 	{!! Form::hidden('user_id', '0') !!}
@@ -9,8 +8,8 @@
 	{!! Form::hidden('saldo', '0') !!}
 
 	<div class="form-group">
-		{!! Form::label('nombre', 'Nombre del Horeca') !!}
-		{!! Form::text('nombre', null, ['class' => 'form-control', 'placeholder' => 'Nombre del Horeca'] ) !!}
+		{!! Form::label('nombre', 'Nombre (*)') !!}
+		{!! Form::text('nombre', null, ['class' => 'form-control', 'placeholder' => 'Nombre del Horeca', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">
@@ -34,11 +33,12 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('pais', 'País') !!}
-		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();']) !!}
+		{!! Form::label('pais', 'País (*)') !!}
+		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();', 'required']) !!}
 	</div>
 
 	<div class="form-group">
+		{!! Form::label('provincia', 'Provincia / Estado (*)') !!}
 		<select name="provincia_region_id" class="form-control" id="provincias">
 			<option value="">Seleccione una provincia..</option>
 		</select>
@@ -56,13 +56,13 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('telefono_opcional', 'Teléfono') !!}
+		{!! Form::label('telefono_opcional', 'Teléfono Opcional') !!}
 		{!! Form::text('telefono_opcional', null, ['class' => 'form-control', 'placeholder' => 'Teléfono Opcional'] ) !!}
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('email', 'Correo Electrónico') !!}
-		{!! Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'Correo Electrónico'] ) !!}
+		{!! Form::label('email', 'Correo Electrónico (*)') !!}
+		{!! Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'Correo Electrónico', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">
@@ -96,14 +96,8 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('tip', 'Tipo de Horeca') !!}
-		{!! Form::select('tipo_horeca', ['H' => 'Hotel', 'R' => 'Restaurant', 'C' => 'Cafetería'], null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción..']) !!}
-	</div>
-
-
-	<div class="form-group">
-		{!! Form::label('logo', 'Logotipo / Avatar') !!}
-		{!! Form::file('logo', ['class' => 'form-control'] ) !!}
+		{!! Form::label('tip', 'Tipo de Horeca (*)') !!}
+		{!! Form::select('tipo_horeca', ['H' => 'Hotel', 'R' => 'Restaurant', 'C' => 'Cafetería'], null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción..', 'required']) !!}
 	</div>
 
 	<div class="form-group">

@@ -25,40 +25,7 @@ class UsuarioController extends Controller
                             ->where('id', '=', $id)
                             ->update(['activado' => '1', 'codigo_confirmacion' => null ]);
 
-            if ($user->productor == '1'){
-                $productor = DB::table('productor')
-                            ->select('id')
-                            ->where('user_id', '=', $id)
-                            ->first();
-
-                $url = 'productor/'.$productor->id.'/edit';
-                return redirect($url)->with('msj', 'Su cuenta ha sido activada con éxito.. Para finalizar el registro, por favor complete los datos de su Productor.');
-            }elseif ($user->importador == '1'){
-                $importador = DB::table('importador')
-                            ->select('id')
-                            ->where('user_id', '=', $id)
-                            ->first();
-
-                $url = 'importador/'.$importador->id.'/edit';
-                return redirect($url)->with('msj', 'Su cuenta ha sido activada con éxito.. Para finalizar el registro, por favor complete los datos de su Importador.');
-            }elseif ($user->distribuidor == '1'){
-                 $distribuidor = DB::table('distribuidor')
-                            ->select('id')
-                            ->where('user_id', '=', $id)
-                            ->first();
-
-                $url = 'distribuidor/'.$distribuidor->id.'/edit';
-                return redirect($url)->with('msj', 'Su cuenta ha sido activada con éxito.. Para finalizar el registro, por favor complete los datos de su Distribuidor.');
-            }elseif ($user->horeca == '1'){
-                 $horeca = DB::table('horeca')
-                            ->select('id')
-                            ->where('user_id', '=', $id)
-                            ->first();
-
-                $url = 'horeca/'.$horeca->id.'/edit';
-                return redirect($url)->with('msj', 'Su cuenta ha sido activada con éxito.. Para finalizar el registro, por favor complete los datos de su Horeca.');
-            }
-            
+            return redirect('home')->with('msj', 'Su cuenta ha sido activada con éxito');
         }else{
             return redirect('');
         }
@@ -147,73 +114,49 @@ class UsuarioController extends Controller
     {
         $user = User::find(Auth::user()->id);
 
-        if ($user->rol == 'AD'){
+        if (Auth::user()->entidad_predefinida == 'P'){
+            $entidad = Productor::select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
+                        ->where('id', '=', Auth::user()->id_entidad_predefinida)
+                        ->first();
 
-            session(['perfilId' => $user->id]);
-            session(['perfilNombre' => $user->nombre." ".$user->apellido]);
-            session(['perfilLogo' => $user->avatar]);
-            session(['perfilTipo' => 'AD']);
-            session(['perfilPais' => $user->pais_id]);
-            session(['perfilProvincia' => $user->provincia_region_id]);
+            session(['perfilTipo' => 'P']);
+        }elseif (Auth::user()->entidad_predefinida == 'I'){
+            $entidad = Importador::select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
+                        ->where('id', '=', Auth::user()->id_entidad_predefinida)
+                        ->first();
 
-            return view('adminWeb.index');
+            session(['perfilTipo' => 'I']);
+        }elseif (Auth::user()->entidad_predefinida == 'M'){
+            $entidad = Multinacional::select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
+                        ->where('id', '=', Auth::user()->id_entidad_predefinida)
+                        ->first();
 
-        }elseif ($user->rol == 'US'){
-            session(['perfilId' => $user->id]);
-            session(['perfilNombre' => $user->nombre." ".$user->apellido]);
-            session(['perfilLogo' => $user->avatar]);
-            session(['perfilTipo' => 'US']);
-            session(['perfilPais' => $user->pais_id]);
-            session(['perfilProvincia' => $user->provincia_region_id]);
+            session(['perfilTipo' => 'M']);
+        }elseif (Auth::user()->entidad_predefinida == 'D'){
+            $entidad = Distribuidor::select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
+                        ->where('id', '=', Auth::user()->id_entidad_predefinida)
+                        ->first();
 
-            return view('usuario.index');
-        }else{
+            session(['perfilTipo' => 'D']);
+        }elseif (Auth::user()->entidad_predefinida == 'H'){
+            $entidad = DB::table('horeca')
+                        ->select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id')
+                        ->where('id', '=', Auth::user()->id_entidad_predefinida)
+                        ->first();
 
-            if (Auth::user()->entidad_predefinida == 'P'){
-                $entidad = Productor::select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
-                            ->where('id', '=', Auth::user()->id_entidad_predefinida)
-                            ->first();
-
-                session(['perfilTipo' => 'P']);
-            }elseif (Auth::user()->entidad_predefinida == 'I'){
-                $entidad = Importador::select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
-                            ->where('id', '=', Auth::user()->id_entidad_predefinida)
-                            ->first();
-
-                session(['perfilTipo' => 'I']);
-            }elseif (Auth::user()->entidad_predefinida == 'M'){
-                $entidad = Multinacional::select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
-                            ->where('id', '=', Auth::user()->id_entidad_predefinida)
-                            ->first();
-
-                session(['perfilTipo' => 'M']);
-            }elseif (Auth::user()->entidad_predefinida == 'D'){
-                $entidad = Distribuidor::select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
-                            ->where('id', '=', Auth::user()->id_entidad_predefinida)
-                            ->first();
-
-                session(['perfilTipo' => 'D']);
-            }elseif (Auth::user()->entidad_predefinida == 'H'){
-                $entidad = DB::table('horeca')
-                            ->select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id')
-                            ->where('id', '=', Auth::user()->id_entidad_predefinida)
-                            ->first();
-
-                session(['perfilTipo' => 'H']);
-            }
-                                        
-            session(['perfilId' => $entidad->id]);
-            session(['perfilNombre' => $entidad->nombre]);
-            session(['perfilLogo' => $entidad->logo]);
-            session(['perfilSaldo' => $entidad->saldo]);
-            session(['perfilPais' => $entidad->pais_id]);
-            session(['perfilProvincia' => $entidad->provincia_region_id]);
-
-            if (session('perfilTipo') != 'H'){
-                session(['perfilSuscripcion' => $entidad->suscripcion->suscripcion]);
-            }
+            session(['perfilTipo' => 'H']);
         }
+                                        
+        session(['perfilId' => $entidad->id]);
+        session(['perfilNombre' => $entidad->nombre]);
+        session(['perfilLogo' => $entidad->logo]);
+        session(['perfilSaldo' => $entidad->saldo]);
+        session(['perfilPais' => $entidad->pais_id]);
+        session(['perfilProvincia' => $entidad->provincia_region_id]);
 
+        if (session('perfilTipo') != 'H'){
+            session(['perfilSuscripcion' => $entidad->suscripcion->suscripcion]);
+        }
         return redirect('notificacion');
     }
 

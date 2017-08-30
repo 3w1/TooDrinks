@@ -1,6 +1,6 @@
 function cargarDescripcion($id){
-    //var route = "http://www.toodrinks.com/marca/descripcion/"+$id+"";
-    var route = "http://localhost:8000/marca/descripcion/"+$id+"";
+    //var route = "http://www.toodrinks.com/consulta/cargar-descripcion-marca/"+$id+"";
+    var route = "http://localhost:8000/consulta/cargar-descripcion-marca/"+$id+"";
                     
     $.ajax({
         url:route,

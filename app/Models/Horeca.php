@@ -11,7 +11,7 @@ class Horeca extends Model
     protected $fillable = [
         'user_id', 'nombre', 'nombre_seo', 'descripcion', 'direccion', 'codigo_postal', 'pais_id', 'provincia_region_id', 'logo', 'persona_contacto',
         'telefono', 'telefono_opcional', 'email', 'website', 'facebook', 'twitter', 'instagram', 'reclamada', 
-        'latitud', 'longitud', 'estado_datos', 'tipo_horeca', 'saldo', 
+        'latitud', 'longitud', 'estado_datos', 'tipo_horeca', 'saldo', 'invitacion', 'fecha_invitacion',
     ];
 
     public function user(){

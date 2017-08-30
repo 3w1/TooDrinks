@@ -1,8 +1,8 @@
 function cargarClases() {
         
     var bebida = document.getElementById('bebida_id').value;
-    //var route = "http://www.toodrinks.com/bebida/"+bebida+"";
-    var route = "http://localhost:8000/bebida/"+bebida+"";
+    //var route = "http://www.toodrinks.com/consulta/cargar-clases-bebida/"+bebida+"";
+    var route = "http://localhost:8000/consulta/cargar-clases-bebida/"+bebida+"";
                     
     $.ajax({
         url:route,

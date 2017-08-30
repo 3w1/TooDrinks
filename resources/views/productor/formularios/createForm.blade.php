@@ -6,11 +6,11 @@
 	{!! Form::hidden('estado_datos', '0') !!}
 	{!! Form::hidden('user_id', '0') !!}
 	{!! Form::hidden('invitacion', '0') !!}
-
+	{!! Form::hidden('suscripcion_id', '0') !!}
 
 	<div class="form-group">
-		{!! Form::label('nombre', 'Nombre') !!}
-		{!! Form::text('nombre', null, ['class' => 'form-control', 'placeholder' => 'Nombre'] ) !!}
+		{!! Form::label('nombre', 'Nombre (*)') !!}
+		{!! Form::text('nombre', null, ['class' => 'form-control', 'placeholder' => 'Nombre', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">
@@ -34,12 +34,12 @@
 	</div>
 	
 	<div class="form-group">
-		{!! Form::label('pais', 'País') !!}
-		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'id' => 'pais_id', 'placeholder' => 'Seleccione un páís..', 'onchange' => 'cargarProvincias();']) !!}
+		{!! Form::label('pais', 'País (*)') !!}
+		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'id' => 'pais_id', 'placeholder' => 'Seleccione un páís..', 'onchange' => 'cargarProvincias();', 'required']) !!}
 	</div>
 	
 	<div class="form-group">
-		{!! Form::label('provincia', 'Provincia') !!}
+		{!! Form::label('provincia', 'Provincia (*)') !!}
 		<select name="provincia_region_id" class="form-control" id="provincias">
 			<option value="">Seleccione una provincia..</option>
 		</select>
@@ -56,12 +56,12 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('telefono_opcional', 'Teléfono') !!}
+		{!! Form::label('telefono_opcional', 'Teléfono Opcional') !!}
 		{!! Form::text('telefono_opcional', null, ['class' => 'form-control', 'placeholder' => 'Teléfono Opcional'] ) !!}
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('email', 'Correo Electrónico') !!}
+		{!! Form::label('email', 'Correo Electrónico (*)') !!}
 		{!! Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'Correo Electrónico'] ) !!}
 	</div>
 
@@ -93,16 +93,6 @@
 	<div class="form-group">
 		{!! Form::label('longitud', 'Longitud') !!}
 		{!! Form::text('longitud', null, ['class' => 'form-control', 'placeholder' => 'Longitud'] ) !!}
-	</div>
-
-	<div class="form-group">
-		{!! Form::label('suscripcion', 'Tipo de Suscripción') !!}
-		{!! Form::select('suscripcion_id', $suscripciones, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una suscripción..'] ) !!}
-	</div>
-
-	<div class="form-group">
-		{!! Form::label('logo', 'Logo / Avatar') !!}
-		{!! Form::file('logo', ['class' => 'form-control', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">

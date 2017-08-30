@@ -3,13 +3,51 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Admin;
 use App\Models\Marca; use App\Models\Producto;
 use App\Models\Productor; use App\Models\Banner; use App\Models\Impresion_Banner;
 use App\Models\Notificacion_P; use App\Models\Notificacion_I; use App\Models\Notificacion_D;
-use DB;
+use DB; use Input; use Image;
 
 class AdminController extends Controller
 {
+	// *** MÉTODOS PARA AUTENTICACIÓN *** //
+    public function login(){
+        return view('adminWeb.login');
+    }
+
+    public function loggear(Request $request){
+        $user = Admin::where('name', '=', $request->username)
+                    ->first();
+
+        if ($user == null){
+            return redirect('admin/login')->with('msj', 'El nombre de usuario es incorrecto.');
+        }else{
+            if ($user->password != $request->password){
+                return redirect('admin/login')->with('msj', 'La contraseña es incorrecta.');   
+            }else{
+                session(['adminId' => $user->id]);
+                session(['adminName' => $user->name]);
+                session(['adminNombre' => $user->nombre." ".$user->apellido]);
+                session(['adminAvatar' => $user->avatar]);
+                session(['adminRol' => $user->rol]);
+            
+                return redirect('admin');
+            }
+        }
+    } 
+
+    public function logout(){
+    	session(['adminId' => null]);
+        session(['adminName' => null]);
+        session(['adminNombre' => null]);
+        session(['adminAvatar' => null]);
+        session(['adminRol' => null]);
+
+        return redirect('admin/login');
+    }
+    // **** FIN DE MÉTODOS DE AUTENTICACIÓN **** //
+
     public function index()
     {
         return view('adminWeb.index');
@@ -45,12 +83,200 @@ class AdminController extends Controller
         //
     }
 
+    public function crear_marca(){
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+
+        return view('adminWeb.marca.create')->with(compact('paises'));
+    }
+
+    public function marca_store(Request $request){        
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
+
+        $path = public_path().'/imagenes/marcas/';
+        $path2 = public_path().'/imagenes/marcas/thumbnails/';
+        $nombre = 'marca_'.time().'.'.$file->getClientOriginalExtension();
+
+        $image->save($path.$nombre);
+        $image->resize(240,200);
+        $image->save($path2.$nombre);
+
+        $marca=new Marca($request->all());
+        $marca->logo = $nombre;
+        $marca->save();
+
+        return redirect('admin/listado-marcas')->with('msj-success', 'La marca ha sido creada con éxito.');
+    }
+
+    public function listado_marcas(){
+        $marcas = Marca::orderBy('nombre')
+                    ->where('id', '<>', 0)
+                    ->paginate(8);
+
+        return view('adminWeb.marca.listado')->with(compact('marcas'));
+    }
+
+    public function marca_detallada($id, $nombre_seo){
+        $marca = Marca::find($id);
+
+        return view('adminWeb.marca.show')->with(compact('marca'));
+    }
+
+    public function update_logo_marca(Request $request){
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
+
+        $path = public_path().'/imagenes/marcas/';
+        $path2 = public_path().'/imagenes/marcas/thumbnails/';      
+        $nombre = 'marca_'.time().'.'.$file->getClientOriginalExtension();
+
+        $image->save($path.$nombre);
+        $image->resize(240,200);
+        $image->save($path2.$nombre);
+
+        $actualizacion = DB::table('marca')
+                            ->where('id', '=', $request->id)
+                            ->update(['logo' => $nombre ]);
+        
+        return redirect('admin/marca-detallada/'.$request->id.'/'.$request->nombre_seo)->with('msj-success', 'El logo de la marca ha sido actualizado con éxito.');
+    }
+
+    public function update_marca(Request $request, $id)
+    {
+        $marca = Marca::find($id);
+        $marca->fill($request->all());
+        $marca->save();
+        
+        return redirect('admin/marca-detallada/'.$id.'/'.$request->nombre_seo)->with('msj-success', 'Los datos de la marca han sido actualizados con éxito.');  
+    }
+
+    public function marcas_sin_propietario(){
+        $marcas = Marca::orderBy('nombre')
+                    ->where('productor_id', '=', '0')
+                    ->where('publicada', '=', '1')
+                    ->paginate(9);
+
+        return view('adminWeb.marca.marcasSinPropietario')->with(compact('marcas'));
+    }
+
+    public function asociar_marca_productor(Request $request){
+        $actualizacion = DB::table('marca')
+                            ->where('id', '=', $request->marca_id)
+                            ->update([ 'productor_id' => $request->productor_id,
+                                       'reclamada' => '1'
+                                    ]);
+
+        $importadores = DB::table('importador_marca')
+                            ->where('marca_id', '=', $request->marca_id)
+                            ->get();
+
+        foreach ($importadores as $importador)
+            Productor::find($request->productor_id)->importadores()->attach($importador->importador_id);
+
+        $distribuidores = DB::table('distribuidor_marca')
+                            ->where('marca_id', '=', $request->marca_id)
+                            ->get();
+
+        foreach ($distribuidores as $distribuidor)
+            Productor::find($request->productor_id)->distribuidores()->attach($distribuidor->distribuidor_id);
+
+        return redirect('admin/marcas-sin-propietario')->with('msj-success', 'Se ha asociado el productor a la marca con éxito.');
+    }
+    // **** FIN DE MÉTODOS MENÚ MARCAS ****
+
+    // *** MÉTODOS DE MENÚ PRODUCTOS ***
+    public function crear_producto(){
+        $marcas = DB::table('marca')
+                    ->where('id', '<>', '0')
+                    ->orderBy('nombre')
+                    ->pluck('nombre', 'id');
+
+        $paises = DB::table('pais')
+                    ->orderBy('pais')
+                    ->pluck('pais', 'id');
+
+        $tipos_bebidas = DB::table('bebida')
+                    ->orderBy('nombre')
+                    ->pluck('nombre', 'id');
+
+        return view('adminWeb.producto.create')->with(compact('paises', 'marcas', 'tipos_bebidas'));
+    }
+
+    public function producto_store(Request $request)
+    {
+        $fecha = new \DateTime();
+
+        $file = Input::file('imagen');   
+        $image = Image::make(Input::file('imagen'));
+
+        $path = public_path().'/imagenes/productos/';
+        $path2 = public_path().'/imagenes/productos/thumbnails/';
+        $nombre = 'producto_'.time().'.'.$file->getClientOriginalExtension();
+
+        $image->save($path.$nombre);
+        $image->resize(240,200);
+        $image->save($path2.$nombre);
+
+        $producto = new Producto($request->all());
+        $producto->imagen = $nombre;
+        $producto->save();    
+    
+        return redirect('admin/listado-productos')->with('msj-success', 'El producto '.$request->nombre.' ha sido creado con éxito.');        
+    }
+
+    public function listado_productos(){
+        $productos = Producto::orderBy('nombre')
+                        ->where('id', '<>', '0')
+                        ->paginate(7);
+
+        return view('adminWeb.producto.listado')->with(compact('productos'));
+    }
+
+    public function producto_detallado($id, $nombre_seo){
+        $producto = Producto::find($id);
+
+        return view('adminWeb.producto.show')->with(compact('producto'));
+    }
+
+    public function update_logo_producto(Request $request){
+        $file = Input::file('imagen');   
+        $image = Image::make(Input::file('imagen'));
+
+        $path = public_path().'/imagenes/productos/';
+        $path2 = public_path().'/imagenes/productos/thumbnails/';
+        $nombre = 'producto_'.time().'.'.$file->getClientOriginalExtension();
+
+        $image->save($path.$nombre);
+        $image->resize(240,200);
+        $image->save($path2.$nombre);
+
+        $actualizacion = DB::table('producto')
+                            ->where('id', '=', $request->id)
+                            ->update(['imagen' => $nombre ]);
+
+        return redirect('admin/producto-detallado/'.$request->id.'/'.$request->nombre_seo)->with('msj-success', 'El logo del producto ha sido actualizado con éxito.');
+    }
+
+    public function update_producto(Request $request, $id)
+    {
+        $marca = Producto::find($id);
+        $marca->fill($request->all());
+        $marca->save();
+        
+        return redirect('admin/producto-detallado/'.$id.'/'.$request->nombre_seo)->with('msj-success', 'Los datos del producto han sido actualizados con éxito.');  
+    }
+    // **** FIN DE MÉTODOS MENÚ PRODUCTOS **** //
+
+    // *** MÉTODOS DE MENÚ CONFIRMACIONES *** //
     public function marcas_sin_aprobar(){
         $marcas = Marca::orderBy('nombre')
+                    ->where('id', '<>', '0')
                     ->where('publicada', '=', '0')
                     ->paginate(7);
 
-        return view('adminWeb.aprobaciones.marcasSinAprobar')->with(compact('marcas'));
+        return view('adminWeb.confirmaciones.marcas')->with(compact('marcas'));
     }
 
     public function aprobar_marca($id, Request $request){
@@ -92,31 +318,31 @@ class AdminController extends Controller
             $notificacion->distribuidor_id = $marca->creador_id;
             // *** //
         }
-        $notificacion->creador_id = '0';
-        $notificacion->tipo_creador = 'U';
-        $notificacion->titulo = 'El administrador Web ha aprobado la publicación de la marca '.$marca->nombre;
-        $notificacion->url='marca/'.$marca->id;
-        $notificacion->descripcion = 'Nueva Marca';
-        $notificacion->color = 'bg-purple';
-        $notificacion->icono = 'fa fa-plus-circle';
-        $notificacion->tipo ='NM';
-        $notificacion->fecha = new \DateTime();
-        $notificacion->leida = '0';
-        $notificacion->save();
 
-        return redirect('admin/marcas-sin-aprobar')->with('msj-success', 'La marca ha sido aprobada y publicada exitosamente');
-    }
-
-    public function rechazar_marca(Request $request, $id){
-       
+        if ( ($marca->tipo_creador != 'AD') && ($marca->tipo_creador != 'SA')){
+            $notificacion->creador_id = '0';
+            $notificacion->tipo_creador = 'U';
+            $notificacion->titulo = 'La publicación de la marca '.$marca->nombre.' ha sido aprobado por el administrador.';
+            $notificacion->url='marca/'.$marca->id;
+            $notificacion->descripcion = 'Nueva Marca';
+            $notificacion->color = 'bg-purple';
+            $notificacion->icono = 'fa fa-plus-circle';
+            $notificacion->tipo ='NM';
+            $notificacion->fecha = new \DateTime();
+            $notificacion->leida = '0';
+            $notificacion->save();
+        }
+        
+        return redirect('admin/marcas-sin-aprobar')->with('msj-success', 'La marca ha sido aprobada y publicada en los listados con éxito.');
     }
 
     public function productos_sin_aprobar(){
         $productos = Producto::orderBy('nombre')
+                    ->where('id', '<>', '0')
                     ->where('publicado', '=', '0')
                     ->paginate(8);
 
-        return view('adminWeb.aprobaciones.productosSinAprobar')->with(compact('productos'));
+        return view('adminWeb.confirmaciones.productos')->with(compact('productos'));
     }
 
     public function aprobar_producto($id, Request $request){
@@ -144,35 +370,38 @@ class AdminController extends Controller
                         ->first();
         }
 
-        //ENVIAR NOTIFICACIÓN DE APROBACIÓN
-        //AL CREADOR DEL PRODUCTO
+        //ENVIAR NOTIFICACIÓN DE APROBACIÓN AL CREADOR DEL PRODUCTO
         if ($producto->tipo_creador == 'P'){
             //CREAR NOTIFICACIÓN AL PRODUCTOR
             $notificacion = new Notificacion_P();
             $notificacion->productor_id = $producto->productor_id;
             // *** //
-        }elseif ($marca->tipo_creador == 'I'){
+        }elseif ($producto->tipo_creador == 'I'){
             //CREAR NOTIFICACIÓN AL IMPORTADOR
             $notificacion = new Notificacion_I();
             $notificacion->importador_id = $producto->creador_id;
             // *** //
-        }elseif ($marca->tipo_creador == 'D'){
+        }elseif ($producto->tipo_creador == 'D'){
             //CREAR NOTIFICACIÓN AL DISTRIBUIDOR
             $notificacion = new Notificacion_D();
             $notificacion->distribuidor_id = $producto->creador_id;
             // *** //
         }
-        $notificacion->creador_id = '0';
-        $notificacion->tipo_creador = 'U';
-        $notificacion->titulo = 'El administrador Web ha aprobado la publicación del producto '.$producto->nombre;
-        $notificacion->url='producto/'.$producto->id;
-        $notificacion->descripcion = 'Nuevo Producto';
-        $notificacion->color = 'bg-yellow';
-        $notificacion->icono = 'fa fa-plus-square-o';
-        $notificacion->tipo ='NP';
-        $notificacion->fecha = new \DateTime();
-        $notificacion->leida = '0';
-        $notificacion->save();
+
+        if ( ($producto->tipo_creador != 'AD') && ($producto->tipo_creador != 'SA')){
+            $notificacion->creador_id = '0';
+            $notificacion->tipo_creador = 'U';
+            $notificacion->titulo = 'La publicación del producto '.$producto->nombre.' ha sido aprobada por el administrador.';
+            $notificacion->url='producto/'.$producto->id;
+            $notificacion->descripcion = 'Nuevo Producto';
+            $notificacion->color = 'bg-yellow';
+            $notificacion->icono = 'fa fa-plus-square-o';
+            $notificacion->tipo ='NP';
+            $notificacion->fecha = new \DateTime();
+            $notificacion->leida = '0';
+            $notificacion->save();
+        }
+        
         // *** //
         
         //ENVIAR NOTIFICACIÓN AL PRODUCTOR 
@@ -183,7 +412,7 @@ class AdminController extends Controller
             $notificacion->productor_id = $producto->productor_id;
             $notificacion->creador_id = $producto->creador_id;
             $notificacion->tipo_creador = $producto->tipo_creador;
-            $notificacion->titulo = $producto->creador_id.' ha agregado el producto '.$producto->nombre.' a tu marca';
+            $notificacion->titulo = 'El producto '.$producto->nombre.' ha sido agregado a tu marca.';
             $notificacion->url='productor/confirmar-productos';
             $notificacion->descripcion = 'Nuevo Producto';
             $notificacion->color = 'bg-yellow';
@@ -194,44 +423,7 @@ class AdminController extends Controller
             $notificacion->save();
         }
 
-        return redirect('admin/productos-sin-aprobar')->with('msj', 'El producto ha sido aprobado y publicado exitosamente');
-    }
-
-    public function rechazar_producto(Request $request, $id){
-       
-    }
-
-    public function marcas_sin_propietario(){
-        $marcas = Marca::orderBy('nombre')
-                    ->where('productor_id', '=', '0')
-                    ->where('publicada', '=', '1')
-                    ->paginate(9);
-
-        return view('adminWeb.marca.marcasSinPropietario')->with(compact('marcas'));
-    }
-
-    public function asociar_marca_productor(Request $request){
-        $actualizacion = DB::table('marca')
-                            ->where('id', '=', $request->marca_id)
-                            ->update([ 'productor_id' => $request->productor_id,
-                                       'reclamada' => '1'
-                                    ]);
-
-        $importadores = DB::table('importador_marca')
-                            ->where('marca_id', '=', $request->marca_id)
-                            ->get();
-
-        foreach ($importadores as $importador)
-            Productor::find($request->productor_id)->importadores()->attach($importador->importador_id);
-
-        $distribuidores = DB::table('distribuidor_marca')
-                            ->where('marca_id', '=', $request->marca_id)
-                            ->get();
-
-        foreach ($distribuidores as $distribuidor)
-            Productor::find($request->productor_id)->distribuidores()->attach($distribuidor->distribuidor_id);
-
-        return redirect('admin/marcas-sin-propietario')->with('msj-success', 'Se ha asociado correctamente el productor a la marca');
+        return redirect('admin/productos-sin-aprobar')->with('msj-success', 'El producto '.$producto->nombre.' ha sido aprobado y publicado en los listados con éxito.');
     }
 
     public function confirmar_importadores(){

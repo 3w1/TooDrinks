@@ -30,15 +30,7 @@ class BebidaController extends Controller
 
     public function show($id)
     {
-        $clases = DB::table('clase_bebida')
-                    ->orderBy('clase', 'ASC')
-                    ->select('id', 'clase')
-                    ->where('bebida_id', '=', $id)
-                    ->get();
-
-        return response()->json(
-            $clases->toArray()
-        );
+        
     }
 
     public function clases($id){

@@ -1,4 +1,4 @@
-@extends('plantillas.adminWeb.mainAdmin')
+@extends('adminWeb.plantillas.main')
 @section('title', 'Crear Productor')
 
 @section('title-header')

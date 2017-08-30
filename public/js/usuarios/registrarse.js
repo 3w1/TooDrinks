@@ -16,12 +16,28 @@ function cargarProvincias(){
     });
 }
 
-function tipoHoreca(){
-    var tipo = document.getElementById("entidad").value;
+function validarClave(){
+    c1 = document.getElementById("clave1").value;
 
-    if (tipo == 'H'){
-        document.getElementById("tipo_horeca").style.display = 'block';
+    if (c1.length < 8){
+        document.getElementById("error").innerHTML = "La contraseña debe tener mínimo 8 caracteres.";
+        document.getElementById("error").style.display = 'block';
+        document.getElementById("boton").disabled = true;
+    }
+}
+
+function verificarClaves(){
+    c1 = document.getElementById("clave1").value;
+    c2 = document.getElementById("clave2").value;
+
+    if (c1 != c2){
+        document.getElementById("clave1").value = "";
+        document.getElementById("clave2").value = "";
+        document.getElementById("error").innerHTML = "Las contraseñas que ingresó no coinciden. Por favor, intente de nuevo.";
+        document.getElementById("error").style.display = 'block';
+        document.getElementById("boton").disabled = true;
     }else{
-        document.getElementById("tipo_horeca").style.display = 'none';
+        document.getElementById("error").style.display = 'none';
+        document.getElementById("boton").disabled = false;
     }
 }

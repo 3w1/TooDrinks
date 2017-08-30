@@ -16,12 +16,16 @@ class ImportadorController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['index', 'create', 'store']]);
     }
     
     public function index()
     {
-        
+        $importadores = Importador::select('id', 'nombre', 'pais_id', 'telefono', 'persona_contacto', 'email', 'reclamada')
+                        ->orderBy('nombre', 'ASC')
+                        ->paginate(10);
+
+        return view('adminWeb.importador.listado')->with(compact('importadores'));
     }
 
     public function create()
@@ -30,31 +34,16 @@ class ImportadorController extends Controller
                     ->orderBy('pais')
                     ->pluck('pais', 'id');
 
-        $suscripciones = DB::table('suscripcion')
-                        ->orderBy('precio')
-                        ->pluck('suscripcion', 'id');
-
-        return view('adminWeb.perfiles.crearImportador')->with(compact('paises', 'suscripciones'));
+        return view('adminWeb.importador.create')->with(compact('paises'));
     }
 
     public function store(Request $request)
     {
-        $file = Input::file('logo');   
-        $image = Image::make(Input::file('logo'));
-
-        $path = public_path().'/imagenes/importadores/';
-        $path2 = public_path().'/imagenes/importadores/thumbnails/';
-        $nombre = 'importador_'.time().'.'.$file->getClientOriginalExtension();
-
-        $image->save($path.$nombre);
-        $image->resize(240,200);
-        $image->save($path2.$nombre);
-
         $importador = new Importador($request->all());
-        $importador->logo = $nombre;
+        $importador->logo = 'usuario-icono.jpg';
         $importador->save();
 
-        return redirect('admin')->with('msj', 'Se ha creado el Importador con éxito.');
+        return redirect('admin/listado-importadores')->with('msj-success', 'Se ha creado el Importador con éxito.');
     }
 
     public function show($id)
