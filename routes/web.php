@@ -374,6 +374,8 @@ Route::prefix('admin')->group(function () {
     Route::get('producto-detallado/{id}/{nombre_seo}', 'AdminController@producto_detallado')->name('admin.producto-detallado');
     Route::post('actualizar-logo-producto', 'AdminController@update_logo_producto')->name('admin.producto-updateLogo');
     Route::put('actualizar-producto/{id}', 'AdminController@update_producto')->name('admin.producto-update');
+    Route::get('productos-sin-marca', 'AdminController@productos_sin_marca')->name('admin.productos-sin-marca');
+    Route::post('asociar-producto-marca', 'AdminController@asociar_producto_marca')->name('admin.asociar-producto-marca');
     
     //OPCIONES DE CONFIRMACIONES
     Route::get('marcas-sin-aprobar', 'AdminController@marcas_sin_aprobar')->name('admin.marcas-sin-aprobar');
@@ -425,6 +427,7 @@ Route::get('payment/status', array(
 //CONSULTAS AJAX
 Route::prefix('consulta')->group(function () {
     Route::get('buscar-productor/{nombre}', 'ConsultasAjax@buscar_productor');
+    Route::get('buscar-marca/{nombre}', 'ConsultasAjax@buscar_marca');
     Route::get('cargar-clases-bebida/{bebida}', 'ConsultasAjax@cargar_clases_bebidas');
     Route::get('cargar-descripcion-marca/{marca}', 'ConsultasAjax@cargar_descripcion_marca');
     Route::get('cargar-detalles-producto/{producto}', 'ConsultasAjax@cargar_detalles_producto');

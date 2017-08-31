@@ -21,6 +21,19 @@ class ConsultasAjax extends Controller
         );
     }
 
+    //Buscar una marca específica (Asociar Producto a Marca ADMIN)
+    public function buscar_marca($nombre){
+        $marca = DB::table('marca')
+                    ->select('id', 'nombre')
+                    ->orderBy('nombre')
+                    ->where('nombre', 'ILIKE', '%'.$nombre.'%')
+                    ->get();
+
+        return response()->json(
+            $marca->toArray()
+        );
+    }
+
     //Cargar categorías de una bebida específica (Crear Productos)
     public function cargar_clases_bebidas($bebida){
         $clases = DB::table('clase_bebida')

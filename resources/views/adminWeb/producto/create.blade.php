@@ -23,10 +23,15 @@
 		{!! Form::hidden('creador_id', session('adminId')) !!}
 		{!! Form::hidden('publicado', '1') !!}
 		{!! Form::hidden('confirmado', '0') !!}
-		
+
 		<div class="form-group">
-			{!! Form::label('marca', 'Marca (*)') !!}
-			{!! Form::select('marca_id', $marcas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una marca..', 'required']) !!}
+			{!! Form::label('marca', 'Marca') !!}
+			<select class="form-control" name="marca_id">
+				<option value="0">Sin marca</option>
+				@foreach ($marcas as $marca)
+					<option value="{{ $marca->id}}">{{ $marca->nombre}}</option>
+				@endforeach
+			</select>
 		</div>	
 		
 		<div class="form-group">

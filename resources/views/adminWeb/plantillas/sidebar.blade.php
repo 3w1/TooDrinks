@@ -92,7 +92,7 @@
       </a>
       <ul class="treeview-menu">
          <li><a href="{{ route('admin.crear-producto')}}"><i class="fa fa-circle-o"></i> Crear Producto</a></li>
-         <!--<li><a href="#"><i class="fa fa-circle-o"></i> Asociar Producto</a></li>-->
+         <li><a href="{{ route('admin.productos-sin-marca') }}"><i class="fa fa-circle-o"></i> Asociar Producto</a></li>
          <li><a href="{{ route('admin.listado-productos')}}"><i class="fa fa-circle-o"></i> Listado de Productos</a></li>
       </ul>
    </li>

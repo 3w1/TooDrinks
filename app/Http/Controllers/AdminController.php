@@ -83,6 +83,7 @@ class AdminController extends Controller
         //
     }
 
+    // *** MÉTODOS PARA MENÚ DE MARCAS *** //
     public function crear_marca(){
         $paises = DB::table('pais')
                         ->orderBy('pais')
@@ -191,7 +192,8 @@ class AdminController extends Controller
         $marcas = DB::table('marca')
                     ->where('id', '<>', '0')
                     ->orderBy('nombre')
-                    ->pluck('nombre', 'id');
+                    ->select('nombre', 'id')
+                    ->get();
 
         $paises = DB::table('pais')
                     ->orderBy('pais')
@@ -226,10 +228,49 @@ class AdminController extends Controller
         return redirect('admin/listado-productos')->with('msj-success', 'El producto '.$request->nombre.' ha sido creado con éxito.');        
     }
 
+    public function productos_sin_marca(){
+        $productos = Producto::orderBy('nombre', 'ASC')
+                        ->where('id', '<>', '0')
+                        ->where('publicado', '=', '1')
+                        ->where('marca_id', '=', '0')
+                        ->paginate(9);
+
+        return view('adminWeb.producto.productosSinMarca')->with(compact('productos'));
+    }
+
+    public function asociar_producto_marca(Request $request){
+        $actualizacion = DB::table('producto')
+                            ->where('id', '=', $request->producto_id)
+                            ->update([ 'marca_id' => $request->marca_id ]);
+
+        $importadores = DB::table('importador_marca')
+                            ->where('marca_id', '=', $request->marca_id)
+                            ->get();
+
+        $producto = Producto::find($request->producto_id);
+
+        foreach ($importadores as $importador)
+            $producto->importadores()->attach($importador->importador_id);
+
+        $distribuidores = DB::table('distribuidor_marca')
+                            ->where('marca_id', '=', $request->marca_id)
+                            ->get();
+
+        foreach ($distribuidores as $distribuidor)
+            $producto->distribuidores()->attach($distribuidor->distribuidor_id);
+
+        $marca = DB::table('marca')
+                    ->select('nombre')
+                    ->where('id', '=', $request->marca_id)
+                    ->first();
+
+        return redirect('admin/productos-sin-marca')->with('msj-success', 'El producto '.$producto->nombre.' ha sido asociado a la marca '.$marca->nombre.' con éxito.');
+    }
+
     public function listado_productos(){
         $productos = Producto::orderBy('nombre')
                         ->where('id', '<>', '0')
-                        ->paginate(7);
+                        ->paginate(9);
 
         return view('adminWeb.producto.listado')->with(compact('productos'));
     }
