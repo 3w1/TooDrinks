@@ -613,6 +613,29 @@ class AdminController extends Controller
     }
     // **** FIN DE MÉTODOS PARA EL MENÚ PUBLICIDAD **** //
     
+    // *** MÉTODOS PARA LAS NOTIFICACIONES *** //
+    public function notificaciones(){
+        $notificaciones = DB::table('notificacion_admin')
+                               ->where('user_id', '=', session('adminId'))
+                               ->orderBy('created_at', 'DESC')
+                               ->paginate(10);
+
+        return view('adminWeb.notificaciones.listado')->with(compact('notificaciones'));
+    }
+    
+    public function marcar_leida($id){
+        $notificacion = DB::table('notificacion_admin')
+                            ->select('url')
+                            ->where('id', '=', $id)
+                            ->first();
+
+        $act = DB::table('notificacion_admin')
+                ->where('id', '=', $id)
+                    ->update(['leida' => '1']);
+
+        return redirect($notificacion->url);
+    }
+    // **** FIN MÉTODOS PARA LAS NOTIFICACIONES **** //
     public function banners_sin_aprobar(){
         $banners = Banner::where('aprobado', '=', '0')
                     ->orderBy('created_at', 'ASC')

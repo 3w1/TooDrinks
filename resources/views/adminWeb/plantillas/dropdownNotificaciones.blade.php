@@ -39,13 +39,13 @@
                   </li>
                @else
                   <li style="background-color: #D8D8D8;">
-                     <a href="{{ route('notificacion.leida', $notificacion->id) }}"> <i class="{{ $notificacion->icono }} {{ $notificacion->color }}"></i> {{$notificacion->titulo}}</a>
+                     <a href="{{ route('admin.marcar-leida', $notificacion->id) }}"> <i class="{{ $notificacion->icono }} {{ $notificacion->color }}"></i> {{$notificacion->titulo}}</a>
                   </li>
                @endif
             @endforeach
          </ul>
          <!-- FIN DE LA LISTA DONDE SE CARGARÁN LAS NOTIFICACIONES -->
       </li>
-      <li class="footer"><a href="{{ route('notificacion.index') }}">Ver Todas</a></li>
+      <li class="footer"><a href="{{ route('admin.notificaciones') }}">Ver Todas</a></li>
    </ul>
 </li>

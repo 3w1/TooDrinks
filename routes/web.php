@@ -396,7 +396,9 @@ Route::prefix('admin')->group(function () {
     Route::get('publicaciones-en-curso', 'AdminController@publicaciones_en_curso')->name('admin.publicaciones-en-curso'); 
     Route::get('historial-de-publicaciones', 'AdminController@historial_de_publicaciones')->name('admin.historial-de-publicaciones');
 
-    
+    //OPCIONES DE NOTIFICACIONES
+    Route::get('notificaciones', 'AdminController@notificaciones')->name('admin.notificaciones');
+    Route::get('marcar-leida/{id}', 'AdminController@marcar_leida')->name('admin.marcar-leida');
 
     Route::get('banners-sin-aprobar', 'AdminController@banners_sin_aprobar')->name('admin.banners-sin-aprobar');
     Route::get('aprobar-banner/{id}', 'AdminController@aprobar_banner')->name('admin.aprobar-banner');

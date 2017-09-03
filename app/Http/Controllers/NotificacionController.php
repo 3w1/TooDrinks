@@ -94,31 +94,5 @@ class NotificacionController extends Controller
 
             return redirect($notificacion->url);
         }
-
-        if (session('perfilTipo') == 'US'){
-            $notificacion = DB::table('notificacion_u')
-                            ->select('url')
-                            ->where('id', '=', $id)
-                            ->first();
-
-            $act = DB::table('notificacion_u')
-                    ->where('id', '=', $id)
-                    ->update(['leida' => '1']);
-
-            return redirect($notificacion->url);
-        }
-
-        if (session('perfilTipo') == 'AD'){
-            $notificacion = DB::table('notificacion_admin')
-                            ->select('url')
-                            ->where('id', '=', $id)
-                            ->first();
-
-            $act = DB::table('notificacion_admin')
-                    ->where('id', '=', $id)
-                    ->update(['leida' => '1']);
-
-            return redirect($notificacion->url);
-        }
     }
 }
