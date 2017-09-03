@@ -386,24 +386,24 @@ Route::prefix('admin')->group(function () {
     //ENVÍO DE CORREOS
     Route::get('enviar-invitacion/{tipo}/{id}', 'MailsController@correo_invitacion')->name('admin.enviar-invitacion');
 
-   
-    Route::get('rechazar-producto/{id}', 'AdminController@rechazar_producto')->name('admin.rechazar-producto');
+   //OPCIONES DE PUBLICIDAD
+    Route::get('nuevo-banner', 'AdminController@crear_banner')->name('admin.nuevo-banner');
+    Route::post('guardar-banner', 'AdminController@banner_store')->name('admin.banner-store');
+    Route::get('editar-banner', 'AdminController@editar_banner')->name('admin.editar-banner'); 
+    Route::post('actualizar-banner', 'AdminController@update_banner')->name('admin.banner-update');
+    Route::get('publicar-banner', 'AdminController@publicar_banner')->name('admin.publicar-banner');
+    Route::post('guardar-publicacion', 'AdminController@guardar_publicacion')->name('admin.guardar-publicacion');
+    Route::get('publicaciones-en-curso', 'AdminController@publicaciones_en_curso')->name('admin.publicaciones-en-curso'); 
+    Route::get('historial-de-publicaciones', 'AdminController@historial_de_publicaciones')->name('admin.historial-de-publicaciones');
 
-    Route::get('confirmar-importadores-marcas', 'AdminController@confirmar_importadores')->name('admin.confirmar-importadores');
-    Route::get('confirmar-importador-marca/{id}/{tipo}', 'AdminController@confirmar_importador')->name('admin.confirmar-importador');
-
-   	Route::get('confirmar-distribuidores-marcas', 'AdminController@confirmar_distribuidores')->name('admin.confirmar-distribuidores');
-    Route::get('confirmar-distribuidor-marca/{id}/{tipo}', 'AdminController@confirmar_distribuidor')->name('admin.confirmar-distribuidor');
+    
 
     Route::get('banners-sin-aprobar', 'AdminController@banners_sin_aprobar')->name('admin.banners-sin-aprobar');
     Route::get('aprobar-banner/{id}', 'AdminController@aprobar_banner')->name('admin.aprobar-banner');
     Route::get('sugerir-correcciones-banner/{id}', 'AdminController@sugerir_correcciones_banner')
     ->name('admin.sugerir-correcciones-banner');
     Route::post('guardar-sugerencias', 'AdminController@guardar_sugerencias_banner')->name('admin.guardar-sugerencias-banner');
-    Route::get('banners-sin-publicar', 'AdminController@banners_sin_publicar')->name('admin.banners-sin-publicar');
-    Route::get('asignar-fechas/{id}', 'AdminController@asignar_fecha')->name('admin.asignar-fechas');
-     Route::post('guardar-fechas', 'AdminController@guardar_fechas')->name('admin.guardar-fechas');
-
+   
 	Route::get('listado-de-suscripciones', 'SuscripcionController@index')->name('admin.suscripciones');
 
 	Route::get('listado-de-planes-de-credito', 'CreditoController@index')->name('admin.creditos');
@@ -431,4 +431,8 @@ Route::prefix('consulta')->group(function () {
     Route::get('cargar-clases-bebida/{bebida}', 'ConsultasAjax@cargar_clases_bebidas');
     Route::get('cargar-descripcion-marca/{marca}', 'ConsultasAjax@cargar_descripcion_marca');
     Route::get('cargar-detalles-producto/{producto}', 'ConsultasAjax@cargar_detalles_producto');
+    Route::get('cargar-entidades/{tipo}', 'ConsultasAjax@cargar_entidades');
+    Route::get('cargar-detalles-banner/{id}', 'ConsultasAjax@cargar_detalles_banner');
+    Route::get('cargar-datos-banner/{id}', 'ConsultasAjax@cargar_datos_banner');
+    Route::get('consultar-fechas-banner/{pais}/{semanas}', 'ConsultasAjax@consultar_fechas_banner');
 });

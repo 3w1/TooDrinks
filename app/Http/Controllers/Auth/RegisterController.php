@@ -45,6 +45,13 @@ class RegisterController extends Controller
         if ($data['entidad_tipo'] == 'U' ){
             $rol = 'US';
             $cant = 0;
+            $productor = '0';
+            $importador = '0';
+            $multinacional = '0';
+            $distribuidor = '0';
+            $horeca = '0';
+            $entidad_predefinida = '';
+            $id_entidad_predefinida = 0;
         }else{
             $rol = 'MB';
             $cant = 1;
@@ -79,6 +86,8 @@ class RegisterController extends Controller
                 $distribuidor = '0';
                 $horeca = '1';
             }
+            $entidad_predefinida = $data['entidad_tipo'];
+            $id_entidad_predefinida = $data['entidad_id'];
         }
 
         $user = User::create([
@@ -101,8 +110,8 @@ class RegisterController extends Controller
             'cantidad_entidades' => $cant,
             'codigo_confirmacion' => $data['codigo_confirmacion'],
             'remember_token' => $data['_token'],
-            'entidad_predefinida' => $data['entidad_tipo'],
-            'id_entidad_predefinida' => $data['entidad_id']
+            'entidad_predefinida' => $entidad_predefinida,
+            'id_entidad_predefinida' => $id_entidad_predefinida
         ]);
         
         $ult_user = DB::table('users')

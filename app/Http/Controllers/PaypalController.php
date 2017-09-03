@@ -49,6 +49,7 @@ class PaypalController extends BaseController
 		
 		if ($request->tipo == 'Banner'){
 			$impresion_banner = new Impresion_Banner($request->all());
+			$impresion_banner->admin = 0;
         	$impresion_banner->save();
 
         	$ult_impresion = DB::table('impresion_banner')

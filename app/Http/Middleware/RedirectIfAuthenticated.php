@@ -56,7 +56,7 @@ class RedirectIfAuthenticated
                     session(['perfilTipo' => 'D']);
                 }elseif (Auth::user()->entidad_predefinida == 'H'){
                     $entidad = DB::table('horeca')
-                                ->select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
+                                ->select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id')
                                 ->where('id', '=', Auth::user()->id_entidad_predefinida)
                                 ->first();
 
@@ -69,7 +69,11 @@ class RedirectIfAuthenticated
                 session(['perfilSaldo' => $entidad->saldo]);
                 session(['perfilPais' => $entidad->pais_id]);
                 session(['perfilProvincia' => $entidad->provincia_region_id]);
-                session(['perfilSuscripcion' => $entidad->suscripcion_id]);
+
+                if (session('perfilTipo') != 'H'){
+                     session(['perfilSuscripcion' => $entidad->suscripcion_id]);
+                }
+               
             }
         }else{
             return $response;

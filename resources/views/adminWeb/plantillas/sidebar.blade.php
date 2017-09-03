@@ -114,7 +114,7 @@
       </ul>
    </li>
 
-  <!-- <li class="header">Publicidad</li>
+   <li class="header">Publicidad</li>
 
    <li class="treeview">
       <a href="#">
@@ -124,18 +124,18 @@
          </span>
       </a>
       <ul class="treeview-menu">
-         <li><a href="#"><i class="fa fa-circle-o"></i> Crear Banner</a></li>
-         <li><a href="#"><i class="fa fa-circle-o"></i> Editar Banner </a></li>
-         <li><a href="#"><i class="fa fa-circle-o"></i> Publicar Banner</a></li>
-         @if (session('adminRol') == 'SA')
+         <li><a href="{{ route('admin.nuevo-banner') }}"><i class="fa fa-circle-o"></i> Crear Banner</a></li>
+         <li><a href="{{ route('admin.editar-banner') }}"><i class="fa fa-circle-o"></i> Editar Banner </a></li>
+         <li><a href="{{ route('admin.publicar-banner') }}"><i class="fa fa-circle-o"></i> Publicar Banner</a></li>
+         <!--@if (session('adminRol') == 'SA')
             <li><a href="#"><i class="fa fa-circle-o"></i> Editar Publicación</a></li>
-         @endif
-         <li><a href="#"><i class="fa fa-circle-o"></i> Publicaciones en Curso</a></li>
-         <li><a href="#"><i class="fa fa-circle-o"></i> Historial de Publicaciones</a></li>
+         @endif-->
+         <li><a href="{{ route('admin.publicaciones-en-curso') }}"><i class="fa fa-circle-o"></i> Publicaciones en Curso</a></li>
+         <li><a href="{{ route('admin.historial-de-publicaciones') }}"><i class="fa fa-circle-o"></i> Historial de Publicaciones</a></li>
       </ul>
    </li>
    
-   @if (session('adminRol') == 'SA')
+   <!--@if (session('adminRol') == 'SA')
       <li class="header">Finanzas</li>
       
       <li class="treeview">
@@ -186,8 +186,8 @@
          <ul class="treeview-menu">
             <li><a href="#"><i class="fa fa-circle-o"></i> Listado de Movimientos</a></li>
          </ul>
-      </li>-->
-   @endif
+      </li>
+   @endif-->
 </ul>
 
    

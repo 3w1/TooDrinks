@@ -38,6 +38,7 @@ class BannerController extends Controller
 
         $banner = new Banner($request->all());
         $banner->imagen = $nombre;
+        $banner->admin = 0;
         $banner->save();
 
         return redirect('banner-publicitario')->with('msj', 'Su banner ha sido creado con éxito.');

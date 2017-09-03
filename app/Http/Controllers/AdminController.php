@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Admin;
-use App\Models\Marca; use App\Models\Producto;
-use App\Models\Productor; use App\Models\Banner; use App\Models\Impresion_Banner;
+use App\Models\Marca; use App\Models\Producto; use App\Models\Productor; 
+use App\Models\Banner; use App\Models\Impresion_Banner; use App\Models\Banner_Diario;
 use App\Models\Notificacion_P; use App\Models\Notificacion_I; use App\Models\Notificacion_D;
-use DB; use Input; use Image;
+use DB; use Input; use Image; use DateInterval;
 
 class AdminController extends Controller
 {
@@ -165,9 +165,7 @@ class AdminController extends Controller
     public function asociar_marca_productor(Request $request){
         $actualizacion = DB::table('marca')
                             ->where('id', '=', $request->marca_id)
-                            ->update([ 'productor_id' => $request->productor_id,
-                                       'reclamada' => '1'
-                                    ]);
+                            ->update([ 'productor_id' => $request->productor_id ]);
 
         $importadores = DB::table('importador_marca')
                             ->where('marca_id', '=', $request->marca_id)
@@ -445,10 +443,9 @@ class AdminController extends Controller
         
         // *** //
         
-        //ENVIAR NOTIFICACIÓN AL PRODUCTOR 
-        //PARA QUE CONFIRME EL NUEVO PRODUCTO
-        //EN CASO DE QUE NO HAYA SIDO CREADO POR UN PRODUCTOR
-        if ($producto->tipo_creador != 'P'){
+        //ENVIAR NOTIFICACIÓN AL PRODUCTOR PARA QUE CONFIRME EL NUEVO PRODUCTO
+        //EN CASO DE QUE EL PRODUCTO SE ENCUENTRE ASIGNADO A UNA MARCA
+        if ($producto->marca_id != '0'){
             $notificacion = new Notificacion_P();
             $notificacion->productor_id = $producto->productor_id;
             $notificacion->creador_id = $producto->creador_id;
@@ -466,140 +463,156 @@ class AdminController extends Controller
 
         return redirect('admin/productos-sin-aprobar')->with('msj-success', 'El producto '.$producto->nombre.' ha sido aprobado y publicado en los listados con éxito.');
     }
+    // *** FIN DE MÉTODOS PARA EL MENÚ CONFIRMACIONES *** //
+    
+    // *** MÉTODOS PARA EL MENÚ PUBLICIDAD *** //
+    public function crear_banner(){
+        return view('adminWeb.banner.create');
+    } 
 
-    public function confirmar_importadores(){
-        $solicitudes = DB::table('importador_marca')
-                    ->select('importador_marca.*')
-                    ->orderBy('created_at', 'DESC')
-                    ->join('marca', 'importador_marca.marca_id', '=', 'marca.id')
-                    ->where('marca.productor_id', '=', '0')
-                    ->where('importador_marca.status', '=', '0')
-                    ->paginate(8);
+    public function banner_store(Request $request){
+        $file = Input::file('imagen');   
+        $image = Image::make(Input::file('imagen'));
 
-        return view('adminWeb.confirmaciones.confirmarImportadores')->with(compact('solicitudes'));
+        $path = public_path().'/imagenes/banners/';
+        $path2 = public_path().'/imagenes/banners/thumbnails/';
+        $nombre = 'banner_'.time().'.'.$file->getClientOriginalExtension();
+
+        $image->save($path.$nombre);
+        $image->resize(240,200);
+        $image->save($path2.$nombre);
+
+        $banner = new Banner($request->all());
+        $banner->imagen = $nombre;
+        $banner->save();
+
+        return redirect('admin/banners-por-entidad')->with('msj', 'El banner '.$request->titulo.' ha sido agregado exitosamente');
+    } 
+
+    public function editar_banner(Request $request){
+        $banners = Banner::entidad($request->get('tipo_entidad'), $request->get('entidad_id'))
+                        ->nombre($request->get('busqueda'))
+                        ->orderBy('titulo', 'ASC')
+                        ->paginate(12);
+
+        return view('adminWeb.banner.edit')->with(compact('banners'));
     }
 
-    public function confirmar_importador($id, $tipo){
-        $marca= DB::table('importador_marca')
-                ->select('marca.nombre', 'importador_marca.importador_id')
-                ->join('marca', 'importador_marca.marca_id', '=', 'marca.id')
-                ->where('importador_marca.id','=', $id)
-                ->first();
+    public function update_banner(Request $request){
+        $banner = Banner::find($request->id);
+        $banner->fill($request->all());
+        $banner->save();
+    
+        return redirect('admin/editar-banner')->with('msj-success', 'Los datos del banner han sido actualizados con éxito.');  
+    }
 
-        if ($tipo == 'S'){
-            $actualizacion = DB::table('importador_marca')
-                                ->where('id', '=', $id)
-                                ->update(['status' => '1']);
+    public function publicar_banner(Request $request){
+        $banners = Banner::entidad($request->get('tipo_entidad'), $request->get('entidad_id'))
+                        ->nombre($request->get('busqueda'))
+                        ->where('aprobado', '=', '1')
+                        ->orderBy('titulo', 'ASC')
+                        ->paginate(12);
 
-            $productor = Productor::find(0);
-            $productor->importadores()->attach($marca->importador_id);
+        return view('adminWeb.banner.publicar')->with(compact('banners'));
+    }
 
-            //NOTIFICAR AL IMPORTADOR
-            $notificaciones_importador = new Notificacion_I();
-            $notificaciones_importador->creador_id = '0';
-            $notificaciones_importador->tipo_creador = 'U';
-            $notificaciones_importador->titulo = 'El administrador Web lo ha confirmado como importador de la marca: '. $marca->nombre;
-            $notificaciones_importador->url='marca/'.$id;
-            $notificaciones_importador->importador_id = $marca->importador_id;
-            $notificaciones_importador->descripcion = "Confirmación de Importador";
-            $notificaciones_importador->color = 'bg-blue';
-            $notificaciones_importador->icono = 'fa fa-thumbs-o-up';
-            $notificaciones_importador->fecha = new \DateTime();
-            $notificaciones_importador->tipo = 'CI';
-            $notificaciones_importador->leida = '0';
-            $notificaciones_importador->save();
-            // *** //
+    public function guardar_publicacion(Request $request){
+        $publicacion = new Impresion_Banner($request->all());
+        $publicacion->cantidad_clics = 0;
+        $publicacion->pagado = 1;
+        $publicacion->admin = 1;
+        $publicacion->save();
 
-            return redirect('admin/confirmar-importadores-marcas')->with('msj-success', 'La relación Importador / Marca ha sido confirmada exitosamente');
-        }else{
-            DB::table('importador_marca')->where('id', '=', $id)->delete();
+        $banner_diario = new Banner_Diario();
+        $banner_diario->pais_id = $publicacion->pais_id;
+        $banner_diario->banner_id = $publicacion->banner_id;
+        $banner_diario->fecha = $publicacion->fecha_inicio;
+        $banner_diario->save();
 
-             //NOTIFICAR AL IMPORTADOR
-            $notificaciones_importador = new Notificacion_I();
-            $notificaciones_importador->creador_id = '0';
-            $notificaciones_importador->tipo_creador = 'U';
-            $notificaciones_importador->titulo = 'El administrador Web lo ha denegado como importador de la marca: '. $marca->nombre;
-            $notificaciones_importador->url='marca';
-            $notificaciones_importador->importador_id = $marca->importador_id;
-            $notificaciones_importador->descripcion = "Denegación de Importador";
-            $notificaciones_importador->color = 'bg-red';
-            $notificaciones_importador->icono = 'fa fa-thumbs-o-down';
-            $notificaciones_importador->fecha = new \DateTime();
-            $notificaciones_importador->tipo = 'CI';
-            $notificaciones_importador->leida = '0';
-            $notificaciones_importador->save();
-            // *** //
+        $fecha1 = new \DateTime($publicacion->fecha_inicio);
+        $tiempo = ($publicacion->tiempo_publicacion * 7);
 
-            return redirect('admin/confirmar-importadores-marcas')->with('msj-success', 'La relación Importador / Marca ha sido eliminada exitosamente');
+        for ($i = 1; $i < $tiempo; $i++){
+            $fecha1->add(new DateInterval('P1D'));
+            $banner_diario = new Banner_Diario();
+            $banner_diario->pais_id = $publicacion->pais_id;
+            $banner_diario->banner_id = $publicacion->banner_id;
+            $banner_diario->fecha = $fecha1;
+            $banner_diario->save();
         }
-    }
 
-     public function confirmar_distribuidores(){
-        $solicitudes = DB::table('distribuidor_marca')
-                    ->select('distribuidor_marca.*')
-                    ->orderBy('created_at', 'DESC')
-                    ->join('marca', 'distribuidor_marca.marca_id', '=', 'marca.id')
-                    ->where('marca.productor_id', '=', '0')
-                    ->where('distribuidor_marca.status', '=', '0')
-                    ->paginate(9);
+        if ($request->precio != 0){
+            if ($request->tipo_creador == 'P'){
+                $saldo = DB::table('productor')
+                            ->where('id', '=', $request->creador_id)
+                            ->select('saldo')
+                            ->first();
 
-        return view('adminWeb.confirmaciones.confirmarDistribuidores')->with(compact('solicitudes'));
-    }
+                DB::table('productor')
+                    ->where('id', '=', $request->creador_id)
+                    ->update([ 'saldo' => ($saldo->saldo - $request->precio) ]);
+            }elseif ($request->tipo_creador == 'I'){
+                $saldo = DB::table('importador')
+                            ->where('id', '=', $request->creador_id)
+                            ->select('saldo')
+                            ->first();
 
-    public function confirmar_distribuidor($id, $tipo){
-         $marca= DB::table('distribuidor_marca')
-                ->select('marca.nombre', 'distribuidor_marca.distribuidor_id')
-                ->join('marca', 'distribuidor_marca.marca_id', '=', 'marca.id')
-                ->where('distribuidor_marca.id','=', $id)
-                ->first();
+                DB::table('importador')
+                    ->where('id', '=', $request->creador_id)
+                    ->update([ 'saldo' => ($saldo->saldo - $request->precio) ]);
+            }elseif ($request->tipo_creador == 'D'){
+                $saldo = DB::table('distribuidor')
+                            ->where('id', '=', $request->creador_id)
+                            ->select('saldo')
+                            ->first();
 
-        if ($tipo == 'S'){
-            $actualizacion = DB::table('distribuidor_marca')
-                                ->where('id', '=', $id)
-                                ->update(['status' => '1']);
-
-            Productor::find(0)->distribuidores()->attach($marca->distribuidor_id);
-
-            //NOTIFICAR AL DISTRIBUIDOR
-            $notificaciones_distribuidor = new Notificacion_D();
-            $notificaciones_distribuidor->creador_id = '0';
-            $notificaciones_distribuidor->tipo_creador = 'U';
-            $notificaciones_distribuidor->titulo = 'El administrador Web lo ha confirmado como importador de la marca: '. $marca->nombre;
-            $notificaciones_distribuidor->url='marca';
-            $notificaciones_distribuidor->distribuidor_id = $marca->distribuidor_id;
-            $notificaciones_distribuidor->descripcion = "Confirmación de Distribuidor";
-            $notificaciones_distribuidor->color = 'bg-blue';
-            $notificaciones_distribuidor->icono = 'fa fa-thumbs-o-up';
-            $notificaciones_distribuidor->fecha = new \DateTime();
-            $notificaciones_distribuidor->tipo = 'CD';
-            $notificaciones_distribuidor->leida = '0';
-            $notificaciones_distribuidor->save();
-            // *** //
-
-            return redirect('admin/confirmar-distribuidores-marcas')->with('msj-success', 'La relación Distribuidor / Marca ha sido confirmada exitosamente');
-        }else{
-            DB::table('distribuidor_marca')->where('id', '=', $id)->delete();
-
-            //NOTIFICAR AL DISTRIBUIDOR
-            $notificaciones_distribuidor = new Notificacion_D();
-            $notificaciones_distribuidor->creador_id = '0';
-            $notificaciones_distribuidor->tipo_creador = 'U';
-            $notificaciones_distribuidor->titulo = 'El administrador Web lo ha denegado como importador de la marca: '. $marca->nombre;
-            $notificaciones_distribuidor->url='marca';
-            $notificaciones_distribuidor->distribuidor_id = $marca->distribuidor_id;
-            $notificaciones_distribuidor->descripcion = "Denegación de Distribuidor";
-            $notificaciones_distribuidor->color = 'bg-red';
-            $notificaciones_distribuidor->icono = 'fa fa-thumbs-o-down';
-            $notificaciones_distribuidor->fecha = new \DateTime();
-            $notificaciones_distribuidor->tipo = 'CD';
-            $notificaciones_distribuidor->leida = '0';
-            $notificaciones_distribuidor->save();
-            // *** //
-
-            return redirect('admin/confirmar-distribuidores-marcas')->with('msj-success', 'La relación Distribuidor / Marca ha sido eliminada exitosamente');
+                DB::table('distribuidor')
+                    ->where('id', '=', $request->creador_id)
+                    ->update([ 'saldo' => ($saldo->saldo - $request->precio) ]);
+            }
         }
+        return redirect('admin/publicar-banner')->with('msj', 'La publicidad ha sido registrada con éxito.');
     }
 
+    public function publicaciones_en_curso(Request $request){
+        $fecha = new \DateTime();
+
+        $paises = DB::table('pais')
+                    ->orderBy('pais', 'ASC')
+                    ->pluck('pais', 'id');
+
+        $publicaciones = Impresion_Banner::entidad($request->get('tipo_entidad'), $request->get('entidad_id'))
+                            ->nombre($request->get('busqueda'))
+                            ->pais($request->get('pais'))
+                            ->where('fecha_inicio', '<=', $fecha)
+                            ->where('fecha_fin', '>=', $fecha )
+                            ->orderBy('fecha_inicio', 'ASC')
+                            ->paginate(20);
+
+        $cont = 0;
+
+        return view('adminWeb.banner.publicacionesEnCurso')->with(compact('publicaciones', 'paises', 'cont'));
+    }
+
+     public function historial_de_publicaciones(Request $request){
+        $fecha = new \DateTime();
+
+        $paises = DB::table('pais')
+                    ->orderBy('pais', 'ASC')
+                    ->pluck('pais', 'id');
+
+        $publicaciones = Impresion_Banner::entidad($request->get('tipo_entidad'), $request->get('entidad_id'))
+                            ->nombre($request->get('busqueda'))
+                            ->pais($request->get('pais'))
+                            ->orderBy('fecha_inicio', 'ASC')
+                            ->paginate(20);
+
+        $cont = 0;
+
+        return view('adminWeb.banner.historialPublicaciones')->with(compact('publicaciones', 'paises', 'cont'));
+    }
+    // **** FIN DE MÉTODOS PARA EL MENÚ PUBLICIDAD **** //
+    
     public function banners_sin_aprobar(){
         $banners = Banner::where('aprobado', '=', '0')
                     ->orderBy('created_at', 'ASC')
@@ -722,92 +735,5 @@ class AdminController extends Controller
         $notificacion->save();
 
         return redirect('admin/banners-sin-aprobar')->with('msj-success', 'El banner ha sido puesto en revisión. Se ha enviado una notificación a su creador.');
-    }
-
-    //Solicitudes de publicación de banners que no han sido programados en el calendario
-    public function banners_sin_publicar(){
-        $solicitudes = Impresion_Banner::where('publicado', '=', '0')
-                    ->orderBy('created_at', 'ASC')
-                    ->paginate(10);
-
-        return view('adminWeb.banner.bannersSinPublicar')->with(compact('solicitudes'));
-    }
-
-    public function asignar_fecha($id){
-        $solicitud = Impresion_Banner::find($id);
-
-        // Establecer el idioma al Español para strftime().
-        setlocale( LC_TIME, 'spanish' );
-        // Obtenemos el mes actual
-        $month = date( 'Y-n' );
-        $week = 1;
-        for ( $i=1;$i<=date( 't', strtotime( $month ) );$i++ ) {
-            $day_week = date( 'N', strtotime( $month.'-'.$i )  );
-            $calendar[ $week ][ $day_week ] = date('Y')."-".date('m')."-".$i;
-            if ( $day_week == 7 )
-                $week++;
-        }
-
-        return view('adminWeb.banner.asignarFechas')->with(compact('calendar', 'month', 'solicitud'));
-    }
-
-    public function guardar_fechas(Request $request){
-        $fin = count($request->fechas)-1;
-
-        $impresion = Impresion_Banner::find($request->solicitud_id);
-        $impresion->fecha_inicio = $request->fechas[0];
-        $impresion->fecha_fin = $request->fechas[$fin];
-        $impresion->publicado = 2;
-        $impresion->save();
-
-        $banner = DB::table('banner')
-                        ->select('id', 'tipo_creador', 'creador_id', 'titulo')
-                        ->where('id', '=', $impresion->banner_id)
-                        ->first();
-
-        if ($banner->tipo_creador == 'P'){
-            //CREAR NOTIFICACIÓN AL PRODUCTOR
-            $notificacion = new Notificacion_P();
-            $notificacion->productor_id = $banner->creador_id;
-            // *** //
-        }elseif ($banner->tipo_creador == 'I'){
-            //CREAR NOTIFICACIÓN AL IMPORTADOR
-            $notificacion = new Notificacion_I();
-            $notificacion->importador_id = $banner->creador_id;
-            // *** //
-        }elseif ($banner->tipo_creador == 'D'){
-            //CREAR NOTIFICACIÓN AL DISTRIBUIDOR
-            $notificacion = new Notificacion_D();
-            $notificacion->distribuidor_id = $banner->creador_id;
-            // *** //
-        }elseif ($banner->tipo_creador == 'H'){
-            //CREAR NOTIFICACIÓN AL HORECA
-            $notificacion = new Notificacion_H();
-            $notificacion->horeca_id = $banner->creador_id;
-            // *** //
-        }
-
-        $notificacion->creador_id = '0';
-        $notificacion->tipo_creador = 'U';
-        $notificacion->titulo = 'El administrador Web le ha asignado fechas de publicación a tu banner '.$banner->titulo;
-        $notificacion->url='banner-publicitario/detalle-solicitud/'.$request->solicitud_id;
-        $notificacion->descripcion = 'Publicación de Banner';
-        $notificacion->color = 'bg-green';
-        $notificacion->icono = 'fa fa-check';
-        $notificacion->tipo ='PB';
-        $notificacion->fecha = new \DateTime();
-        $notificacion->leida = '0';
-        $notificacion->save();
-
-        return redirect('admin/banners-sin-publicar')->with('msj-success', 'Las fechas para la solicitud de publicación han sido asignadas exitosamente. Se ha enviado una notificación a su creador.');
-    }
-
-    //Enviar Correos de Invitación
-    public function correo_invitacion(){
-        $productores = Productor::where('user_id', '=', '0')
-                        ->orderBy('nombre')
-                        ->paginate(10);
-
-        return view('adminWeb.perfilesSinUsuario')->with(compact('productores'));
     }
 }

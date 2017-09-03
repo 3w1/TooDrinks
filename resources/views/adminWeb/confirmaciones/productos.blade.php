@@ -11,7 +11,7 @@
    (Por Publicar)
 @endsection
 
-@include('adminWeb.modales.detalleProducto')
+@include('adminWeb.confirmaciones.modales.detalleProducto')
 
 @section('content-left')   
    @section('alertas')

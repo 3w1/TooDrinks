@@ -26,18 +26,6 @@
                <img src="{{ asset('imagenes/productos/thumbnails/') }}/{{ $producto->imagen }}" class="img-responsive">
             </div>             
             <div class="caption">
-               <p>
-                  @if ($producto->aprobado == '0')
-                     <label class="label label-danger">Sin Publicar</label>
-                  @else
-                     <label class="label label-success">Publicado</label>
-                  @endif
-                  @if ($producto->confirmado == '0')
-                     <label class="label label-danger">Sin Confirmar</label>
-                  @else
-                     <label class="label label-success">Confirmado</label>
-                  @endif
-               </p>
                <h3>{{ $producto->nombre }}</h3>
                <p><strong>{{ $producto->bebida->nombre }}</strong> ({{ $producto->clase_bebida->clase }})</p>
                <p><center>
