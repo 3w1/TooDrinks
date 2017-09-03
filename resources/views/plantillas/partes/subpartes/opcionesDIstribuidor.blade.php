@@ -1,18 +1,6 @@
 <li class="li"><a href="{{route('marca.index')}}"><i class="fa fa-diamond"></i> Marcas</a></li>
-        
-<li class="treeview">
-   <a href="#">
-      <i class="fa fa-share"></i> <span>Productos</span>
-      <span class="pull-right-container">
-         <i class="fa fa-angle-left pull-right"></i>
-      </span>
-   </a>
-   <ul class="treeview-menu">
-      <li><a href="{{ route('producto.mis-productos', 'todos') }}"><i class="fa fa-circle-o"></i> Mis Productos</a></li>
-      <li><a href="{{ route('producto.mundiales') }}"><i class="fa fa-circle-o"></i> Agregar Producto</a></li>
-      <li><a href="{{ route('producto.agregar', ['0', 'Marca']) }}"><i class="fa fa-circle-o"></i> Nuevo Producto</a></li>
-   </ul>
-</li>
+<li class="li"><a href="{{route('producto.index')}}"><i class="fa fa-diamond"></i> Productos</a></li>      
+
 <li class="treeview">
    <a href="#"><i class="fa fa-share"></i> Mercado
       <span class="pull-right-container">

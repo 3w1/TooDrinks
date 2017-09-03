@@ -1,8 +1,7 @@
 <li class="li"><a href="{{route('marca.index')}}"><i class="fa fa-diamond"></i> Marcas</a>
-      <li class="li"><a href="#"><i class="fa fa-diamond"></i> Productos</a>
-      </li>
-         <!-- SECCIÓN DE PRODUCTORES -->
-         <li class="treeview">
+<li class="li"><a href="{{route('producto.index')}}"><i class="fa fa-diamond"></i> Productos</a></li>
+
+<li class="treeview">
              <a href="#">
                <i class="fa fa-share"></i> <span>Mercado</span>
                <span class="pull-right-container">
@@ -62,18 +61,16 @@
                      @if($cont_DB > 0) <small class="label pull-right bg-aqua">{{$cont_DB}}</small>@endif
                   </span>
                </a></li>
-               <li><a href="{{ route('solicitud-importacion.solicitudes')}}"><i class="fa fa-circle-o"></i> Importadores
+               <li><a href="{{ route('solicitud-importacion.solicitudes')}}"><i class="fa fa-circle-o"></i> Importación
                   <span class="pull-right-container">
                      @if($cont_SI > 0) <small class="label pull-right bg-orange">{{$cont_SI}}</small>@endif
                   </span>
                </a></li>
-               <li><a href="{{ route('solicitud-distribucion.solicitudes')}}"><i class="fa fa-circle-o"></i> Distribuidores
+               <li><a href="{{ route('solicitud-distribucion.solicitudes')}}"><i class="fa fa-circle-o"></i> Distribución
                   <span class="pull-right-container">
                      @if($cont_SD > 0) <small class="label pull-right bg-green">{{$cont_SD}}</small>@endif
                   </span>
                </a></li>
-               
-               <li><a href="#"><i class="fa fa-circle-o"></i> Marca</a></li>
                <li><a href=""><i class="fa fa-circle-o"></i> Historial de Solicitudes</a></li>
             </ul>
          </li>

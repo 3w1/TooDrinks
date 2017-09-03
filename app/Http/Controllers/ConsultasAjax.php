@@ -151,4 +151,15 @@ class ConsultasAjax extends Controller
         );
     }
 
+    //Cargar las marcas de un productor (Agregar Producto)
+    public function cargar_marcas($productor){
+        $marcas = DB::table('marca')
+                    ->select('id', 'nombre')
+                    ->where('productor_id', '=', $productor)
+                    ->get();
+
+        return response()->json(
+            $marcas->toArray()
+        );
+    }
 }

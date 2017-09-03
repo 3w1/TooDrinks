@@ -53,6 +53,8 @@ Route::resource('usuario','UsuarioController');
 
 // RUTAS PARA LOS PRODUCTORES
 Route::prefix('productor')->group(function (){
+    Route::post('asociar-producto', 'ProductorController@asociar_producto')->name('productor.asociar-producto');
+
     Route::get('confirmar-importadores', 'ProductorController@confirmar_importadores')->name('productor.confirmar-importadores');
     Route::get('confirmar-importador/{id}-{tipo}-{imp}', 'ProductorController@confirmar_importador')->name('productor.confirmar-importador');
 
@@ -119,8 +121,6 @@ Route::prefix('marca')->group(function (){
 
     //Agregar una marca al listado de una entidad (Marcas Mundiales)
     Route::get('agregar-marca', 'MarcaController@agregar_marca')->name('marca.agregar-marca');
-
-    Route::get('marcas-mundiales', 'MarcaController@marcas_mundiales')->name('marca.mundiales');
     
     //Peticiones AJAX
     Route::get('prueba/{nombre}', 'MarcaController@buscar_por_nombre');
@@ -145,6 +145,9 @@ Route::resource('bebida','BebidaController');
 
 // RUTAS PARA LOS PRODUCTOS
 Route::prefix('producto')->group(function (){
+    //Agregar un producto al listado de una entidad (Productos Mundiales)
+    Route::get('agregar-producto', 'ProductoController@agregar_producto')->name('producto.agregar-producto');
+
     Route::get('agregar/{id}-{marca}', 'ProductoController@agregar')->name('producto.agregar');
     Route::get('listado-de-productos/{id}-{marca}', 'ProductoController@listado')->name('producto.listado');
     Route::get('detalle-de-producto/{id}/{nombre_seo}', 'ProductoController@detalle')->name('producto.detalle');
@@ -152,8 +155,8 @@ Route::prefix('producto')->group(function (){
     Route::post('asociar-productos', 'ProductoController@asociar_productos')->name('producto.asociar-productos');
     Route::get('verificar-producto/{id}', 'ProductoController@verificar_producto');
     Route::get('mis-productos/{filtro}', 'ProductoController@mis_productos')->name('producto.mis-productos');
-    Route::get('productos-m', 'ProductoController@productos_mundiales')->name('producto.mundiales');
-    Route::post('asociar-producto', 'ProductoController@asociar_producto')->name('producto.asociar-producto');
+   // Route::get('productos-m', 'ProductoController@productos_mundiales')->name('producto.mundiales');
+    Route::get('asociar-producto/{id}', 'ProductoController@asociar_producto')->name('producto.asociar-producto');
     //Peticiones AJAX
     Route::get('productos-por-clase/{bebida}/{clase}', 'ProductoController@productos_por_clase');
     Route::get('productos-por-pais/{bebida}/{pais}', 'ProductoController@productos_por_pais');
@@ -400,6 +403,8 @@ Route::prefix('admin')->group(function () {
     Route::get('notificaciones', 'AdminController@notificaciones')->name('admin.notificaciones');
     Route::get('marcar-leida/{id}', 'AdminController@marcar_leida')->name('admin.marcar-leida');
 
+
+
     Route::get('banners-sin-aprobar', 'AdminController@banners_sin_aprobar')->name('admin.banners-sin-aprobar');
     Route::get('aprobar-banner/{id}', 'AdminController@aprobar_banner')->name('admin.aprobar-banner');
     Route::get('sugerir-correcciones-banner/{id}', 'AdminController@sugerir_correcciones_banner')
@@ -437,4 +442,5 @@ Route::prefix('consulta')->group(function () {
     Route::get('cargar-detalles-banner/{id}', 'ConsultasAjax@cargar_detalles_banner');
     Route::get('cargar-datos-banner/{id}', 'ConsultasAjax@cargar_datos_banner');
     Route::get('consultar-fechas-banner/{pais}/{semanas}', 'ConsultasAjax@consultar_fechas_banner');
+    Route::get('cargar-marcas/{productor}', 'ConsultasAjax@cargar_marcas');
 });

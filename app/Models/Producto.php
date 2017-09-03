@@ -63,7 +63,16 @@ class Producto extends Model
 
     public function scopeNombre ($query, $nombre)
     {
-        return $query->where('nombre', 'ILIKE', '%'.$nombre.'%');
+        if ($nombre != ""){
+            return $query->where('producto.nombre', 'ILIKE', '%'.$nombre.'%');
+        }
+    }
+
+    public function scopePais ($query, $pais)
+    {
+        if ($pais != ""){
+            return $query->where('producto.pais_id', '=', $pais);
+        }
     }
 
 }

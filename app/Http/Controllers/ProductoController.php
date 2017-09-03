@@ -18,15 +18,76 @@ class ProductoController extends Controller
         $this->middleware('auth');
     }
     
-    public function index()
+    //Pestaña Mis Productos 
+    public function index(Request $request)
     {
-        $productos = DB::table('producto')
-                        ->where('tipo_creador', '=', 'U')
-                        ->where('creador_id', '=', Auth::user()->id)
-                        ->orderBy('nombre')
-                        ->paginate(6);
+        if (session('perfilTipo') == 'P'){
+            $productos = Producto::select('producto.*')
+                            ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                            ->where('marca.productor_id', '=', session('perfilId'))
+                            ->nombre($request->get('busqueda'))
+                            ->pais($request->get('pais'))
+                            ->orderBy('producto.nombre', 'ASC')
+                            ->paginate(9);
+        }elseif (session('perfilTipo') == 'I'){
+            $productos = Producto::select('producto.*')
+                            ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
+                            ->where('producto.id', '<>', '0')
+                            ->nombre($request->get('busqueda'))
+                            ->pais($request->get('pais'))
+                            ->orderBy('producto.nombre', 'ASC')
+                            ->paginate(9);
+        }elseif (session('perfilTipo') == 'D'){
+            $productos = Producto::select('producto.*')
+                            ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
+                            ->where('producto.id', '<>', '0')
+                            ->nombre($request->get('busqueda'))
+                            ->pais($request->get('pais'))
+                            ->orderBy('producto.nombre', 'ASC')
+                            ->paginate(9);
+        }
 
-        return view('usuario.listados.productos')->with(compact('productos'));
+        $paises = DB::table('pais')
+                ->orderBy('pais', 'ASC')
+                ->pluck('pais', 'id');
+
+        return view('producto.tabs.misProductos')->with(compact('productos', 'paises'));
+    }
+
+    //Pestaña Agregar Producto
+    public function agregar_producto(Request $request){
+        if (session('perfilTipo') == 'P'){
+            $productos = Producto::nombre($request->get('busqueda'))
+                        ->pais($request->get('pais'))
+                        ->where('marca_id', '=', '0')
+                        ->where('id', '<>', '0')
+                        ->orderBy('nombre', 'ASC')
+                        ->paginate(9);
+        }elseif (session('perfilTipo') == 'I'){
+            $productos = Producto::select('producto.*')
+                            ->leftjoin('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
+                            ->where('importador_producto.importador_id', '!=', session('perfilId'))
+                            ->orwhere('importador_producto.producto_id', '=', null)
+                            ->nombre($request->get('busqueda'))
+                            ->pais($request->get('pais'))
+                            ->orderBy('producto.nombre', 'ASC')
+                            ->paginate(9);
+        }elseif (session('perfilTipo') == 'D'){
+            $productos = Producto::select('producto.*')
+                            ->leftjoin('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
+                            ->where('distribuidor_producto.distribuidor_id', '!=', session('perfilId'))
+                            ->orwhere('distribuidor_producto.producto_id', '=', null)
+                            ->nombre($request->get('busqueda'))
+                            ->pais($request->get('pais'))
+                            ->orderBy('producto.nombre', 'ASC')
+                            ->paginate(9);
+        }
+
+         $paises = DB::table('pais')
+                ->orderBy('pais', 'ASC')
+                ->pluck('pais', 'id');
+
+        return view('producto.tabs.agregarProducto')->with(compact('productos', 'paises'));
     }
 
     //Agregar un Producto (Usuarios (MB, AD, SA))
@@ -339,16 +400,14 @@ class ProductoController extends Controller
         return view('producto.productosMundiales')->with(compact('bebidas', 'paises'));
     }
 
-    public function asociar_producto(Request $request){
+    public function asociar_producto($id){
         if (session('perfilTipo') == 'I'){
-            Producto::find($request->producto_id)->importadores()->attach(session('perfilId'));
+            Producto::find($id)->importadores()->attach(session('perfilId'));
         }elseif (session('perfilTipo') == 'D'){
-            Producto::find($request->producto_id)->distribuidores()->attach(session('perfilId'));
-        }elseif (session('perfilTipo') == 'H'){
-             Producto::find($request->producto_id)->horecas()->attach(session('perfilId'));
+            Producto::find($id)->distribuidores()->attach(session('perfilId'));
         }
 
-        return redirect('producto/mis-productos/todos')->with('msj', 'El producto ha sido agregado a su listado con éxito.');   
+        return redirect('producto')->with('msj', 'El producto ha sido agregado a su listado con éxito.');   
     }
 
     public function show($id)

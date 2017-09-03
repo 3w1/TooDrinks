@@ -198,8 +198,8 @@
             <li><a href="{{ route('banner-publicitario.index') }}"><i class="fa fa-circle-o"></i> Mis Banners</a></li>
             <li><a href="{{ route('banner-publicitario.create')}}"><i class="fa fa-circle-o"></i> Nuevo Banner</a></li>
             <li><a href="{{ route('banner-publicitario.nueva-publicacion') }}"><i class="fa fa-circle-o"></i> Nueva Publicación</a></li>
-            <li><a href="{{ route('banner-publicitario.publicidades') }}"><i class="fa fa-circle-o"></i> Publicaciones en Curso</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Historial de Publicaciones</a></li>
+            <li><a href="#"><i class="fa fa-circle-o"></i> Publicaciones en Curso</a></li>
+            <li><a href="{{ route('banner-publicitario.publicidades') }}"><i class="fa fa-circle-o"></i> Historial de Publicaciones</a></li>
          </ul>
       </li>
 

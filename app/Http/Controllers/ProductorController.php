@@ -149,6 +149,15 @@ class ProductorController extends Controller
         return redirect('marca')->with('msj', 'La marca '.$nombre.' ha sido reclamada de su propiedad con éxito.');
     }
 
+    public function asociar_producto(Request $request){
+    	DB::table('producto')
+    		->where('id', '=', $request->producto_id)
+    		->update([ 'marca_id' => $request->marca_id,
+    					'confirmado' => '1']);
+
+    	return redirect('producto')->with('msj', 'El producto ha sido agregado a su listado con éxito');
+    }
+
     public function listado_importadores(){
         if ( session('perfilSuscripcion') != 'G'){
             $check = 1;
