@@ -53,6 +53,8 @@ Route::resource('usuario','UsuarioController');
 
 // RUTAS PARA LOS PRODUCTORES
 Route::prefix('productor')->group(function (){
+    Route::get('inicio', 'ProductorController@inicio')->name('productor.inicio');
+    
     Route::post('asociar-producto', 'ProductorController@asociar_producto')->name('productor.asociar-producto');
 
     Route::get('confirmar-importadores', 'ProductorController@confirmar_importadores')->name('productor.confirmar-importadores');
@@ -347,19 +349,31 @@ Route::prefix('admin')->group(function () {
     //OPCIONES DE PRODUCTOR
     Route::get('crear-productor', 'ProductorController@create')->name('admin.crear-productor');
     Route::get('listado-productores', 'ProductorController@index')->name('admin.listado-productores');
-
+    Route::get('actualizar-productor/{id}/{nombre_seo}', 'AdminController@actualizar_productor')->name('admin.actualizar-productor');
+    Route::put('productor-update/{id}', 'AdminController@productor_update')->name('admin.productor-update');
+    Route::post('actualizar-avatar-productor', 'AdminController@productor_updateAvatar')->name('admin.productor-update-avatar');
+    
     //OPCIONES DE IMPORTADOR
     Route::get('crear-importador', 'ImportadorController@create')->name('admin.crear-importador');
     Route::get('listado-importadores', 'ImportadorController@index')->name('admin.listado-importadores');
-
+    Route::get('actualizar-importador/{id}/{nombre_seo}', 'AdminController@actualizar_importador')->name('admin.actualizar-importador');
+    Route::put('importador-update/{id}', 'AdminController@importador_update')->name('admin.importador-update');
+    Route::post('actualizar-avatar-importador', 'AdminController@importador_updateAvatar')->name('admin.importador-update-avatar');
+    
     //OPCIONES DE DISTRIBUIDOR
     Route::get('crear-distribuidor', 'DistribuidorController@create')->name('admin.crear-distribuidor');
     Route::get('listado-distribuidores', 'DistribuidorController@index')->name('admin.listado-distribuidores');
-
+    Route::get('actualizar-distribuidor/{id}/{nombre_seo}', 'AdminController@actualizar_distribuidor')->name('admin.actualizar-distribuidor');
+    Route::put('distribuidor-update/{id}', 'AdminController@distribuidor_update')->name('admin.distribuidor-update');
+    Route::post('actualizar-avatar-distribuidor', 'AdminController@distribuidor_updateAvatar')->name('admin.distribuidor-update-avatar');
+    
     //OPCIONES DE HORECA
     Route::get('crear-horeca', 'HorecaController@create')->name('admin.crear-horeca');
     Route::get('listado-horecas', 'HorecaController@index')->name('admin.listado-horecas');
-
+    Route::get('actualizar-horeca/{id}/{nombre_seo}', 'AdminController@actualizar_horeca')->name('admin.actualizar-horeca');
+    Route::put('horeca-update/{id}', 'AdminController@horeca_update')->name('admin.horeca-update');
+    Route::post('actualizar-avatar-horeca', 'AdminController@horeca_updateAvatar')->name('admin.horeca-update-avatar');
+    
     //OPCIONES DE MARCA
     Route::get('nueva-marca', 'AdminController@crear_marca')->name('admin.crear-marca');
     Route::post('guardar-marca', 'AdminController@marca_store')->name('admin.marca-store');

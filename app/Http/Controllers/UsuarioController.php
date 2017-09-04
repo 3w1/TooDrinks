@@ -103,11 +103,7 @@ class UsuarioController extends Controller
     }
 
     public function inicio(){
-        if (session('perfilTipo') == 'AD'){
-            return view('adminWeb.index');
-        }else{
-            return view('usuario.index');
-        }
+        return view('usuario.index');
     }
 
     public function index()

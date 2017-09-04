@@ -627,11 +627,7 @@ class ProductoController extends Controller
         $producto->fill($request->all());
         $producto->save();
 
-        if (session('perfilTipo') == 'AD'){
-            return redirect('admin/detalle-producto/'.$request->id)->with('msj-success', 'Los datos del producto han sido actualizados con éxito.');
-        }
-
-       return redirect('producto/detalle-de-producto/'.$request->id)->with('msj', 'Los datos de su producto han sido actualizados con éxito.');
+        return redirect('producto/detalle-de-producto/'.$request->id.'/'.$producto->nombre)->with('msj', 'Los datos de su producto han sido actualizados con éxito.');
     }
 
      public function updateImagen(Request $request){

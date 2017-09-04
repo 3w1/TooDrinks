@@ -11,27 +11,27 @@
 
 	<div class="form-group">
 		{!! Form::label('nombre', 'Nombre (*)') !!}
-		{!! Form::text('nombre', null, ['class' => 'form-control', 'placeholder' => 'Nombre', 'required'] ) !!}
+		{!! Form::text('nombre', null, ['class' => 'form-control', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('nombre_seo', 'Nombre SEO') !!}
-		{!! Form::text('nombre_seo', null, ['class' => 'form-control', 'placeholder' => 'Nombre SEO'] ) !!}
+		{!! Form::text('nombre_seo', null, ['class' => 'form-control'] ) !!}
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('descripcion', 'Descripcion') !!}
-		{!! Form::textarea('descripcion', null, ['class' => 'form-control', 'placeholder' => 'Descripcion', 'rows' => '5'] ) !!}
+		{!! Form::label('descripcion', 'Descripción') !!}
+		{!! Form::textarea('descripcion', null, ['class' => 'form-control', 'rows' => '5'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('direccion', 'Dirección') !!}
-		{!! Form::textarea('direccion', null, ['class' => 'form-control', 'placeholder' => 'Dirección', 'rows' => '5'] ) !!}
+		{!! Form::textarea('direccion', null, ['class' => 'form-control', 'rows' => '5'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('codigo_postal', 'Código Postal') !!}
-		{!! Form::text('codigo_postal', null, ['class' => 'form-control', 'placeholder' => 'Código Postal'] ) !!}
+		{!! Form::text('codigo_postal', null, ['class' => 'form-control'] ) !!}
 	</div>
 	
 	<div class="form-group">
@@ -41,59 +41,59 @@
 
 	<div class="form-group">
 		{!! Form::label('provincia', 'Provincia (*)') !!}
-		<select name="provincia_region_id" class="form-control" id="provincias">
+		<select name="provincia_region_id" class="form-control" id="provincias" required>
 			<option value="">Seleccione una provincia..</option>
 		</select>
 	</div>
 	
 	<div class="form-group">
 		{!! Form::label('persona_contacto', 'Persona de Contacto') !!}
-		{!! Form::text('persona_contacto', null, ['class' => 'form-control', 'placeholder' => 'Persona de Contacto'] ) !!}
+		{!! Form::text('persona_contacto', null, ['class' => 'form-control'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('telefono', 'Teléfono') !!}
-		{!! Form::text('telefono', null, ['class' => 'form-control', 'placeholder' => 'Teléfono'] ) !!}
+		{!! Form::text('telefono', null, ['class' => 'form-control'] ) !!}
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('telefono_opcional', 'Teléfono') !!}
-		{!! Form::text('telefono_opcional', null, ['class' => 'form-control', 'placeholder' => 'Teléfono Opcional'] ) !!}
+		{!! Form::label('telefono_opcional', 'Teléfono Opcional') !!}
+		{!! Form::text('telefono_opcional', null, ['class' => 'form-control'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('email', 'Correo Electrónico (*)') !!}
-		{!! Form::email('email', null, ['class' => 'form-control', 'placeholder' => 'Correo Electrónico', 'required'] ) !!}
+		{!! Form::email('email', null, ['class' => 'form-control', 'placeholder' => '(correo@servicio.com)', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('website', 'Website') !!}
-		{!! Form::url('website', null, ['class' => 'form-control', 'placeholder' => 'Website'] ) !!}
+		{!! Form::url('website', null, ['class' => 'form-control', 'placeholder' => '(http://www.dominio.com)'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('facebook', 'Facebook') !!}
-		{!! Form::url('facebook', null, ['class' => 'form-control', 'placeholder' => 'Facebook'] ) !!}
+		{!! Form::text('facebook', null, ['class' => 'form-control'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('twitter', 'Twitter') !!}
-		{!! Form::text('twitter', null, ['class' => 'form-control', 'placeholder' => 'Twitter'] ) !!}
+		{!! Form::text('twitter', null, ['class' => 'form-control'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('instagram', 'Instagram') !!}
-		{!! Form::text('instagram', null, ['class' => 'form-control', 'placeholder' => 'Instagram'] ) !!}
+		{!! Form::text('instagram', null, ['class' => 'form-control'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('latitud', 'Latitud') !!}
-		{!! Form::text('latitud', null, ['class' => 'form-control', 'placeholder' => 'Latitud'] ) !!}
+		{!! Form::text('latitud', null, ['class' => 'form-control', 'placeholder' => '00.000'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('longitud', 'Longitud') !!}
-		{!! Form::text('longitud', null, ['class' => 'form-control', 'placeholder' => 'Longitud'] ) !!}
+		{!! Form::text('longitud', null, ['class' => 'form-control', 'placeholder' => '00.000'] ) !!}
 	</div>
 
 	<div class="form-group">

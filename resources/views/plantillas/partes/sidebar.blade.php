@@ -174,7 +174,6 @@
 
 <ul class="sidebar-menu">
    <li class="header">PRINCIPAL</li>
-   <li class="li"><a href="{{ route('usuario.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
    @if(session('perfilTipo') == 'P')
       @include('plantillas.partes.subpartes.opcionesProductor')
    @elseif(session('perfilTipo') == 'I')

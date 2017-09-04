@@ -1,5 +1,7 @@
+<li class="li"><a href="{{ route('productor.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
+
 <li class="li"><a href="{{route('marca.index')}}"><i class="fa fa-diamond"></i> Marcas</a>
-<li class="li"><a href="{{route('producto.index')}}"><i class="fa fa-diamond"></i> Productos</a></li>
+<li class="li"><a href="{{route('producto.index')}}"><i class="fa fa-product-hunt"></i> Productos</a></li>
 
 <li class="treeview">
              <a href="#">

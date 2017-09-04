@@ -1,25 +1,25 @@
-@extends('plantillas.main')
-@section('title', 'Mi Perfil')
+@extends('adminWeb.plantillas.main')
+@section('title', 'Productor')
 
 @section('title-header')
-   Editar Perfil
+   Editar Productor
 @endsection
 
 @section('content-left')
 	{!! Html::script('js/productores/edit.js') !!}
 	
 	@section('alertas')
-      @if (Session::has('msj'))
+      @if (Session::has('msj-success'))
            <div class="alert alert-success alert-dismissable">
                <button type="button" class="close" data-dismiss="alert">&times;</button>
-               <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+               <strong>¡Enhorabuena!</strong> {{Session::get('msj-success')}}.
            </div>
       @endif
    	@endsection
 	
-	@include('productor.modales.modalAvatar')
+	@include('adminWeb.productor.modales.editAvatar')
 	
-	{!! Form::open(['route' => ['productor.update', $productor->id], 'method' => 'PUT']) !!}
+	{!! Form::open(['route' => ['admin.productor-update', $productor->id], 'method' => 'PUT']) !!}
 		<div class="panel with-nav-tabs panel-info">
         	<div class="panel-heading">
         		<ul class="nav nav-pills">
@@ -27,7 +27,6 @@
                 	<li><a href="#tab2default" data-toggle="tab">Datos de Ubicación</a></li>
                 	<li><a href="#tab3default" data-toggle="tab">Datos de Contacto</a></li>
                 	<li><a href="#tab4default" data-toggle="tab">Redes Sociales</a></li> 
-                	<li><a href="#tab5default" data-toggle="tab">Países Destino</a></li> 
             	</ul>
         	</div>
         	<div class="panel-body">
@@ -69,21 +68,21 @@
 						
 						<div class="form-group">
 							{!! Form::label('pais', 'País (*)') !!}
-							{!! Form::select('pais_id', $paises, $productor->pais_id, ['class' => 'form-control', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();', 'required']) !!}
+							{!! Form::select('pais_id', $paises, $productor->pais_id, ['class' => 'form-control', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();']) !!}
 						</div>
 
 						<div class="form-group">
-							{!! Form::label('provincias', 'Provincia / Estado (*)') !!}
-							{!! Form::select('provincia_region_id', $provincias, $productor->provincia_region_id, ['class' => 'form-control', 'id' => 'provincias', 'required']) !!}
+							{!! Form::label('provincias', 'Provincia/Estado (*)') !!}
+							{!! Form::select('provincia_region_id', $provincias, $productor->provincia_region_id, ['class' => 'form-control', 'id' => 'provincias']) !!}
 						</div>
 						<div class="form-group">
 							{!! Form::label('latitud', 'Latitud') !!}
-							{!! Form::text('latitud', $productor->latitud, ['class' => 'form-control', 'placeholder' => 'xx.xxx'] ) !!}
+							{!! Form::text('latitud', $productor->latitud, ['class' => 'form-control', 'placeholder' => 'Latitud'] ) !!}
 						</div>
 
 						<div class="form-group">
 							{!! Form::label('longitud', 'Longitud') !!}
-							{!! Form::text('longitud', $productor->longitud, ['class' => 'form-control', 'placeholder' => 'xx.xxx'] ) !!}
+							{!! Form::text('longitud', $productor->longitud, ['class' => 'form-control', 'placeholder' => 'Longitud'] ) !!}
 						</div>
 	                </div>
 	                <div class="tab-pane fade" id="tab3default">
@@ -104,7 +103,7 @@
 
 						<div class="form-group">
 							{!! Form::label('email', 'Correo Electrónico (*)') !!}
-							{!! Form::email('email', $productor->email, ['class' => 'form-control', 'placeholder' => '(correo@servicio.com)', 'required'] ) !!}
+							{!! Form::email('email', $productor->email, ['class' => 'form-control', 'required'] ) !!}
 						</div>    	
 	                </div>
 	                <div class="tab-pane fade" id="tab4default">
@@ -115,7 +114,7 @@
 
 						<div class="form-group">
 							{!! Form::label('facebook', 'Facebook') !!}
-							{!! Form::text('facebook', $productor->facebook, ['class' => 'form-control'] ) !!}
+							{!! Form::url('facebook', $productor->facebook, ['class' => 'form-control'] ) !!}
 						</div>
 
 						<div class="form-group">
@@ -127,13 +126,6 @@
 							{!! Form::label('instagram', 'Instagram') !!}
 							{!! Form::text('instagram', $productor->instagram, ['class' => 'form-control'] ) !!}
 						</div>
-	                </div>
-	                <div class="tab-pane fade" id="tab5default">
-	                	@foreach ($paises_destino as $pais)
-							<div class="col-md-4">
-								<h4><label class='checkbox-inline'><input type="checkbox" name="paises[]" value="{{$pais->id}}"> {{$pais->pais}}</label></h4>
-							</div>
-						@endforeach
 	                </div>
 	            </div>
 	        </div>

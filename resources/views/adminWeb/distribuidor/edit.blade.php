@@ -1,25 +1,25 @@
-@extends('plantillas.main')
-@section('title', 'Mi Perfil')
+@extends('adminWeb.plantillas.main')
+@section('title', 'Distribuidor')
 
 @section('title-header')
-   Editar Perfil
+   Editar Distribuidor
 @endsection
 
 @section('content-left')
 	{!! Html::script('js/distribuidores/edit.js') !!}
 
 	@section('alertas')
-      	@if (Session::has('msj'))
+      	@if (Session::has('msj-success'))
            <div class="alert alert-success alert-dismissable">
                <button type="button" class="close" data-dismiss="alert">&times;</button>
-               <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+               <strong>¡Enhorabuena!</strong> {{Session::get('msj-success')}}.
            </div>
       	@endif
    	@endsection
 
-	@include('distribuidor.modales.modalAvatar')
+	@include('adminWeb.distribuidor.modales.editAvatar')
 
-	{!! Form::open(['route' => ['distribuidor.update', $distribuidor->id], 'method' => 'PUT']) !!}
+	{!! Form::open(['route' => ['admin.distribuidor-update', $distribuidor->id], 'method' => 'PUT']) !!}
 		<div class="panel with-nav-tabs panel-info">
 	        <div class="panel-heading">
 	        	<ul class="nav nav-tabs">
@@ -72,17 +72,17 @@
 						</div>
 
 						<div class="form-group">
-							{!! Form::label('provincias', 'Provincia / Estado (*)') !!}
+							{!! Form::label('provincias', 'Provincia/Estado (*)') !!}
 							{!! Form::select('provincia_region_id', $provincias, $distribuidor->provincia_region_id, ['class' => 'form-control', 'id' => 'provincias', 'required']) !!}
 						</div>
 						<div class="form-group">
 							{!! Form::label('latitud', 'Latitud') !!}
-							{!! Form::text('latitud', $distribuidor->latitud, ['class' => 'form-control', 'placeholder' => '00.000'] ) !!}
+							{!! Form::text('latitud', $distribuidor->latitud, ['class' => 'form-control', 'placeholder' => 'Latitud'] ) !!}
 						</div>
 
 						<div class="form-group">
 							{!! Form::label('longitud', 'Longitud') !!}
-							{!! Form::text('longitud', $distribuidor->longitud, ['class' => 'form-control', 'placeholder' => '00.000'] ) !!}
+							{!! Form::text('longitud', $distribuidor->longitud, ['class' => 'form-control', 'placeholder' => 'Longitud'] ) !!}
 						</div>
 	                </div>
 	                <div class="tab-pane fade" id="tab3default">
@@ -103,13 +103,13 @@
 
 						<div class="form-group">
 							{!! Form::label('email', 'Correo Electrónico (*)') !!}
-							{!! Form::email('email', $distribuidor->email, ['class' => 'form-control', 'placeholder' => 'correo@servicio.com', 'required'] ) !!}
+							{!! Form::email('email', $distribuidor->email, ['class' => 'form-control', 'required'] ) !!}
 						</div>    	
 	                </div>
 	                <div class="tab-pane fade" id="tab4default">
 	                	<div class="form-group">
 							{!! Form::label('website', 'Website') !!}
-							{!! Form::url('website', $distribuidor->website, ['class' => 'form-control', 'placeholder' => '(http://www.dominio.com)'] ) !!}
+							{!! Form::url('website', $distribuidor->website, ['class' => 'form-control', 'placeholder' => 'http://www.dominio.com'] ) !!}
 						</div>
 
 						<div class="form-group">
@@ -131,7 +131,7 @@
 	        </div>
 	    </div>
 	    <div class="form-group">
-			{!! Form::submit('Actualizar Datos', ['class' => 'btn btn-primary pull-right']) !!}
+			{!! Form::submit('Actualizar Distribuidor', ['class' => 'btn btn-primary pull-right']) !!}
 		</div>
 
     {!! Form::close() !!}	

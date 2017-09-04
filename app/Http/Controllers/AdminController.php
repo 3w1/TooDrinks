@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Admin;
-use App\Models\Marca; use App\Models\Producto; use App\Models\Productor; 
+use App\Models\Marca; use App\Models\Producto; 
+use App\Models\Productor; use App\Models\Importador; use App\Models\Distribuidor; use App\Models\Horeca;
 use App\Models\Banner; use App\Models\Impresion_Banner; use App\Models\Banner_Diario;
 use App\Models\Notificacion_P; use App\Models\Notificacion_I; use App\Models\Notificacion_D;
 use DB; use Input; use Image; use DateInterval;
@@ -82,6 +83,222 @@ class AdminController extends Controller
     {
         //
     }
+
+    // *** MÉTODOS PARA MENÚ DE PRODUCTOR *** //
+    public function actualizar_productor($id, $nombre_seo)
+    {
+        $productor = Productor::find($id);
+       
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+
+        $provincias = DB::table('provincia_region')
+                        ->orderBy('provincia')
+                        ->where('pais_id', '=', $productor->pais_id)
+                        ->pluck('provincia', 'id');
+
+       return view('adminWeb.productor.edit')->with(compact('productor','paises', 'provincias'));
+
+    }
+
+    public function productor_update(Request $request, $id)
+    {
+        $productor = Productor::find($id);
+        $productor->fill($request->all());
+        $productor->save();
+
+        return redirect('admin/actualizar-productor/'.$productor->id.'/'.$productor->nombre)
+            ->with('msj-success', 'Los datos del productor han sido actualizados con éxito.');
+    }
+
+    public function productor_updateAvatar(Request $request){
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
+
+        $path = public_path().'/imagenes/productores/';
+        $path2 = public_path().'/imagenes/productores/thumbnails/';      
+        $nombre = 'productor_'.time().'.'.$file->getClientOriginalExtension();
+
+        $image->save($path.$nombre);
+        $image->resize(240,200);
+        $image->save($path2.$nombre);
+
+        $actualizacion = DB::table('productor')
+                            ->where('id', '=', $request->id)
+                            ->update(['logo' => $nombre ]);
+
+        $productor = DB::table('productor')
+                        ->where('id', '=', $request->id)
+                        ->select('nombre')
+                        ->first();
+
+        return redirect('admin/actualizar-productor/'.$request->id.'/'.$productor->nombre)
+            ->with('msj-success', 'La imagen del productor ha sido actualizada con éxito.');
+    }
+    // **** FIN DE MÉTODOS PARA MENÚ DE PRODUCTOR **** //
+
+    // *** MÉTODOS PARA MENÚ DE IMPORTADOR *** //
+    public function actualizar_importador($id, $nombre_seo)
+    {
+        $importador = Importador::find($id);
+       
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+
+        $provincias = DB::table('provincia_region')
+                        ->orderBy('provincia')
+                        ->where('pais_id', '=', $importador->pais_id)
+                        ->pluck('provincia', 'id');
+
+       return view('adminWeb.importador.edit')->with(compact('importador','paises', 'provincias'));
+
+    }
+
+    public function importador_update(Request $request, $id)
+    {
+        $importador = Importador::find($id);
+        $importador->fill($request->all());
+        $importador->save();
+
+        return redirect('admin/actualizar-importador/'.$id.'/'.$importador->nombre)
+            ->with('msj-success', 'Los datos del importador han sido actualizados con éxito.');
+    }
+
+    public function importador_updateAvatar(Request $request){
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
+
+        $path = public_path().'/imagenes/importadores/';
+        $path2 = public_path().'/imagenes/importadores/thumbnails/';      
+        $nombre = 'importador_'.time().'.'.$file->getClientOriginalExtension();
+
+        $image->save($path.$nombre);
+        $image->resize(240,200);
+        $image->save($path2.$nombre);
+
+        $actualizacion = DB::table('importador')
+                            ->where('id', '=', $request->id)
+                            ->update(['logo' => $nombre ]);
+
+        $importador = DB::table('importador')
+                        ->where('id', '=', $request->id)
+                        ->select('nombre')
+                        ->first();
+
+        return redirect('admin/actualizar-importador/'.$request->id.'/'.$importador->nombre)
+            ->with('msj-success', 'La imagen del importador ha sido actualizada con éxito.');
+    }
+    // **** FIN DE MÉTODOS PARA MENÚ DE IMPORTADOR **** //
+    
+    // *** MÉTODOS PARA MENÚ DE DISTRIBUIDOR *** //
+    public function actualizar_distribuidor($id, $nombre_seo)
+    {
+        $distribuidor = Distribuidor::find($id);
+       
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+
+        $provincias = DB::table('provincia_region')
+                        ->orderBy('provincia')
+                        ->where('pais_id', '=', $distribuidor->pais_id)
+                        ->pluck('provincia', 'id');
+
+       return view('adminWeb.distribuidor.edit')->with(compact('distribuidor','paises', 'provincias'));
+
+    }
+
+    public function distribuidor_update(Request $request, $id)
+    {
+        $distribuidor = Distribuidor::find($id);
+        $distribuidor->fill($request->all());
+        $distribuidor->save();
+
+        return redirect('admin/actualizar-distribuidor/'.$id.'/'.$distribuidor->nombre)
+            ->with('msj-success', 'Los datos del distribuidor han sido actualizados con éxito.');
+    }
+
+    public function distribuidor_updateAvatar(Request $request){
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
+
+        $path = public_path().'/imagenes/distribuidores/';
+        $path2 = public_path().'/imagenes/distribuidores/thumbnails/';      
+        $nombre = 'distribuidor_'.time().'.'.$file->getClientOriginalExtension();
+
+        $image->save($path.$nombre);
+        $image->resize(240,200);
+        $image->save($path2.$nombre);
+
+        $actualizacion = DB::table('distribuidor')
+                            ->where('id', '=', $request->id)
+                            ->update(['logo' => $nombre ]);
+
+        $distribuidor = DB::table('distribuidor')
+                        ->where('id', '=', $request->id)
+                        ->select('nombre')
+                        ->first();
+
+        return redirect('admin/actualizar-distribuidor/'.$request->id.'/'.$distribuidor->nombre)
+            ->with('msj-success', 'La imagen del distribuidor ha sido actualizada con éxito.');
+    }
+    // **** FIN DE MÉTODOS PARA MENÚ DE DISTRIBUIDOR **** //
+
+    // *** MÉTODOS PARA MENÚ DE HORECA *** //
+    public function actualizar_horeca($id, $nombre_seo)
+    {
+        $horeca = Horeca::find($id);
+       
+        $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->pluck('pais', 'id');
+
+        $provincias = DB::table('provincia_region')
+                        ->orderBy('provincia')
+                        ->where('pais_id', '=', $horeca->pais_id)
+                        ->pluck('provincia', 'id');
+
+       return view('adminWeb.horeca.edit')->with(compact('horeca','paises', 'provincias'));
+
+    }
+
+    public function horeca_update(Request $request, $id)
+    {
+        $horeca = Horeca::find($id);
+        $horeca->fill($request->all());
+        $horeca->save();
+
+        return redirect('admin/actualizar-horeca/'.$id.'/'.$horeca->nombre)
+            ->with('msj-success', 'Los datos del horeca han sido actualizados con éxito.');
+    }
+
+    public function horeca_updateAvatar(Request $request){
+        $file = Input::file('logo');   
+        $image = Image::make(Input::file('logo'));
+
+        $path = public_path().'/imagenes/horecas/';
+        $path2 = public_path().'/imagenes/horecas/thumbnails/';      
+        $nombre = 'horeca_'.time().'.'.$file->getClientOriginalExtension();
+
+        $image->save($path.$nombre);
+        $image->resize(240,200);
+        $image->save($path2.$nombre);
+
+        $actualizacion = DB::table('horeca')
+                            ->where('id', '=', $request->id)
+                            ->update(['logo' => $nombre ]);
+
+        $horeca = DB::table('horeca')
+                        ->where('id', '=', $request->id)
+                        ->select('nombre')
+                        ->first();
+
+        return redirect('admin/actualizar-horeca/'.$request->id.'/'.$horeca->nombre)
+            ->with('msj-success', 'La imagen del horeca ha sido actualizada con éxito.');
+    }
+    // **** FIN DE MÉTODOS PARA MENÚ DE HORECA **** //
 
     // *** MÉTODOS PARA MENÚ DE MARCAS *** //
     public function crear_marca(){

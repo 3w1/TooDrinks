@@ -296,7 +296,7 @@ class MarcaController extends Controller
         $marca->fill($request->all());
         $marca->save();
         
-        return redirect('marca/'.$id)->with('msj', 'Los datos de su marca se han actualizado con éxito.');       
+        return redirect('marca/'.$id.'/'.$marca->nombre_seo)->with('msj', 'Los datos de su marca se han actualizado con éxito.');       
     }
 
     public function updateLogo(Request $request){

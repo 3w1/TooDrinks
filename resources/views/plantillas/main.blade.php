@@ -144,10 +144,10 @@
             <section class="content-header">
                <h1>@yield('title-header')
                <small>@yield('title-complement')</small></h1>
-               <ol class="breadcrumb">
+               <!--<ol class="breadcrumb">
                   <li><a href="#"><i class="fa fa-dashboard"></i> Breadcrumbs</a></li>
                   <li class="active">En construcción</li>
-               </ol>
+               </ol>-->
             </section>
 
             <section class="content">

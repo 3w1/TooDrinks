@@ -25,17 +25,17 @@
 
 		<div class="form-group">
 			{!! Form::label ('nombre','Nombre (*)') !!}
-			{!! Form::text ('nombre',null,['class'=>'form-control','placeholder'=>'Ej. Polar', 'required']) !!}
+			{!! Form::text ('nombre',null,['class'=>'form-control', 'required']) !!}
 		</div>
 
 		<div class="form-group">
-			{!! Form::label('nombre_seo','Nombre Seo') !!}
-			{!! Form::text ('nombre_seo',null,['class'=>'form-control']) !!}
+			{!! Form::label('nombre_seo','Nombre Seo (*)') !!}
+			{!! Form::text ('nombre_seo', null, ['class'=>'form-control', 'required']) !!}
 		</div>
 
 		<div class="form-group">
 			{!! Form::label('descripcion','Descripción') !!}
-			{!! Form::textarea('descripcion',null,['class'=>'form-control', 'rows' => '4']) !!}
+			{!! Form::textarea('descripcion', null, ['class'=>'form-control', 'rows' => '4']) !!}
 		</div>
 
 		<div class="form-group">
@@ -45,12 +45,12 @@
 
 		<div class="form-group">
 			{!! Form::label ('website','Website') !!}
-			{!! Form::text ('website', null, ['class'=>'form-control']) !!}
+			{!! Form::url('website', null, ['class'=>'form-control', 'placeholder' => '(http://www.dominio.com)']) !!}
 		</div>
 
 		<div class="form-group">
-			{!! Form::label ('logo', 'Logo') !!}
-			{!! Form::file ('logo', ['class'=>'form-control','required']) !!}
+			{!! Form::label ('logo', 'Logo (*)') !!}
+			{!! Form::file ('logo', ['class'=>'form-control', 'required']) !!}
 		</div>
 
 		{!! Form::submit ('Agregar',['class'=>'btn btn-primary']) !!}

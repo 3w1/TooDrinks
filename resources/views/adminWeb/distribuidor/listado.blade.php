@@ -49,7 +49,7 @@
                         <td><center>{{ $distribuidor->telefono }}</center></td>
                         <td><center>{{ $distribuidor->email }}</center></td>
                         <td><center>
-                           <a class="btn btn-primary btn-xs" data-toggle='modal' data-target='#myModal'><i class="fa fa-edit"></i></a>
+                           <a class="btn btn-primary btn-xs" href="{{ route('admin.actualizar-distribuidor', [$distribuidor->id, $distribuidor->nombre]) }}"><i class="fa fa-edit"></i></a>
                            @if ($distribuidor->reclamada == '0')
                               <a class="btn btn-success btn-xs" href="{{ route('admin.enviar-invitacion', ['D', $distribuidor->id]) }}"><i class="fa fa-envelope-o"></i></a>
                            @endif

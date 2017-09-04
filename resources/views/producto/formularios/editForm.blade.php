@@ -45,12 +45,7 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::label ('provincia_region_id','Provincia / Región') !!}
-		{!! Form::select('provincia_region_id', $provincias, $producto->provincia_region_id, ['class' => 'form-control', 'id' => 'provincias']) !!}
-	</div>
-
-	<div class="form-group">
-		{!! Form::label('bebida', 'País') !!}
+		{!! Form::label('bebida', 'Bebida') !!}
 		{!! Form::select('bebida_id', $bebidas, $producto->bebida_id, ['class' => 'form-control', 'onchange' => 'cargarClases();', 'id' => 'bebida_id']) !!}
 	</div>
 

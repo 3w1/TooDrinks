@@ -49,7 +49,7 @@
                         <td><center>{{ $productor->telefono }}</center></td>
                         <td><center>{{ $productor->email }}</center></td>
                         <td><center>
-                           <a class="btn btn-primary btn-xs" data-toggle='modal' data-target='#myModal'><i class="fa fa-edit"></i></a>
+                           <a class="btn btn-primary btn-xs" href="{{ route('admin.actualizar-productor', [$productor->id, $productor->nombre]) }}"><i class="fa fa-edit"></i></a>
                            @if ($productor->reclamada == '0')
                               <a class="btn btn-success btn-xs" href="{{ route('admin.enviar-invitacion', ['P', $productor->id]) }}"><i class="fa fa-envelope-o"></i></a>
                            @endif

@@ -16,6 +16,7 @@ class ProductorController extends Controller
         $this->middleware('auth', ['except' => ['index', 'create', 'store']]);
     }
     
+    //**** MÉTODOS QUE FUNCIONAN PARA EL ADMIN WEB ****//
     public function index()
     {
         $productores = Productor::select('id', 'nombre', 'pais_id', 'telefono', 'persona_contacto', 'email', 'reclamada')
@@ -42,6 +43,45 @@ class ProductorController extends Controller
         $productor->save();
 
         return redirect('admin/listado-productores')->with('msj-success', 'Se ha creado el productor con éxito.');
+    }
+    //**** FIN DE MÉTODOS QUE FUNCIONAN PARA EL ADMIN WEB ****//
+    
+    public function inicio(){
+        $marcas = DB::table('marca')
+                    ->where('productor_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $productos = DB::table('producto')
+                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                    ->where('marca.productor_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $ofertas = DB::table('oferta')
+                    ->where('tipo_creador', '=', 'P')
+                    ->where('creador_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $banners = DB::table('banner')
+                    ->where('tipo_creador', '=', 'P')
+                    ->where('creador_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $notificaciones = DB::table('notificacion_p')
+                            ->orderBy('fecha', 'DESC')
+                            ->take(10)
+                            ->get();
+
+        $gastos = DB::table('deduccion_credito_productor')
+                    ->where('productor_id', '=', session('perfilId'))
+                    ->orderBy('fecha', 'DESC')
+                    ->take(6)
+                    ->get();
+
+        return view('productor.inicio')->with(compact('marcas', 'productos', 'ofertas', 'banners', 'notificaciones', 'gastos'));
     }
 
     public function show(Request $request, $id)

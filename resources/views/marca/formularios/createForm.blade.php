@@ -12,31 +12,30 @@
 		{!! Form::hidden('productor_id', '0') !!}
 		{!! Form::hidden('reclamada', '0') !!}
 	@endif
-
-	@if (session('perfilTipo') == 'AD')
-		{!! Form::hidden('publicada', '1') !!}
-	@else
-		{!! Form::hidden('publicada', '0') !!}
-	@endif
 	
 	<div class="form-group">
 	    {!! Form::label ('nombre','Nombre (*)') !!}
-	    {!! Form::text ('nombre',null,['class'=>'form-control','placeholder'=>'Ingrese un nombre para la marca', 'required']) !!}
+	    {!! Form::text ('nombre',null,['class'=>'form-control', 'required']) !!}
     </div>
 
     <div class="form-group">
     	{!! Form::label ('nombre_seo','Nombre SEO (*)') !!}
-	    {!! Form::text ('nombre_seo',null,['class'=>'form-control','placeholder'=>'Ingrese un nombre seo para la marca']) !!}
+	    {!! Form::text ('nombre_seo',null,['class'=>'form-control', 'required']) !!}
     </div>
 
 	<div class="form-group">
-		{!! Form::label ('descripcion','Descripción (*)') !!}
-		{!! Form::textarea('descripcion',null,['class'=>'form-control','placeholder'=>'Ingrese una breve descripción para la marca', 'rows' => '5', 'required']) !!}
+		{!! Form::label ('descripcion', 'Descripción') !!}
+		{!! Form::textarea('descripcion',null,['class'=>'form-control', 'rows' => '5']) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label ('pais_id','País de Origen (*)') !!}
 		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'id' => 'pais_id', 'placeholder' => 'Seleccione un país..', 'required']) !!}
+	</div>
+
+	<div class="form-group">
+		{!! Form::label ('website', 'Website') !!}
+		{!! Form::url('website', null, ['class'=>'form-control', 'placeholder' => '(http://www.dominio.com)' ]) !!}
 	</div>
 			
 	<div class="form-group">

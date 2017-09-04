@@ -41,8 +41,8 @@
 	                	</div>
 	                	
 	                	<div class="form-group">
-							{!! Form::label('nombre', 'Nombre') !!}
-							{!! Form::text('nombre', $horeca->nombre, ['class' => 'form-control'] ) !!}
+							{!! Form::label('nombre', 'Nombre (*)') !!}
+							{!! Form::text('nombre', $horeca->nombre, ['class' => 'form-control', 'required'] ) !!}
 						</div>
 
 						<div class="form-group">
@@ -51,7 +51,7 @@
 						</div>
 
 						<div class="form-group">
-							{!! Form::label('descripcion', 'Descripcion') !!}
+							{!! Form::label('descripcion', 'Descripción') !!}
 							{!! Form::textarea('descripcion', $horeca->descripcion, ['class' => 'form-control', 'rows' => '5'] ) !!}
 						</div>
 	                </div>
@@ -67,22 +67,22 @@
 						</div>
 						
 						<div class="form-group">
-							{!! Form::label('pais', 'País') !!}
-							{!! Form::select('pais_id', $paises, $horeca->pais_id, ['class' => 'form-control', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();']) !!}
+							{!! Form::label('pais', 'País (*)') !!}
+							{!! Form::select('pais_id', $paises, $horeca->pais_id, ['class' => 'form-control', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();', 'required']) !!}
 						</div>
 
 						<div class="form-group">
-							{!! Form::label('provincias', 'Provincia') !!}
-							{!! Form::select('provincia_region_id', $provincias, $horeca->provincia_region_id, ['class' => 'form-control', 'id' => 'provincias']) !!}
+							{!! Form::label('provincias', 'Provincia / Estado (*)') !!}
+							{!! Form::select('provincia_region_id', $provincias, $horeca->provincia_region_id, ['class' => 'form-control', 'id' => 'provincias', 'required']) !!}
 						</div>
 						<div class="form-group">
 							{!! Form::label('latitud', 'Latitud') !!}
-							{!! Form::text('latitud', $horeca->latitud, ['class' => 'form-control', 'placeholder' => 'Latitud'] ) !!}
+							{!! Form::text('latitud', $horeca->latitud, ['class' => 'form-control', 'placeholder' => '00.000'] ) !!}
 						</div>
 
 						<div class="form-group">
 							{!! Form::label('longitud', 'Longitud') !!}
-							{!! Form::text('longitud', $horeca->longitud, ['class' => 'form-control', 'placeholder' => 'Longitud'] ) !!}
+							{!! Form::text('longitud', $horeca->longitud, ['class' => 'form-control', 'placeholder' => '00.000'] ) !!}
 						</div>
 	                </div>
 	                <div class="tab-pane fade" id="tab3default">
@@ -102,19 +102,19 @@
 						</div>
 
 						<div class="form-group">
-							{!! Form::label('email', 'Correo Electrónico') !!}
-							{!! Form::email('email', $horeca->email, ['class' => 'form-control'] ) !!}
+							{!! Form::label('email', 'Correo Electrónico (*)') !!}
+							{!! Form::email('email', $horeca->email, ['class' => 'form-control', 'placeholder' => 'correo@servicio.com', 'required'] ) !!}
 						</div>    	
 	                </div>
 	                <div class="tab-pane fade" id="tab4default">
 	                	<div class="form-group">
 							{!! Form::label('website', 'Website') !!}
-							{!! Form::url('website', $horeca->website, ['class' => 'form-control'] ) !!}
+							{!! Form::url('website', $horeca->website, ['class' => 'form-control', 'placeholder' => '(http://www.dominio.com)'] ) !!}
 						</div>
 
 						<div class="form-group">
 							{!! Form::label('facebook', 'Facebook') !!}
-							{!! Form::url('facebook', $horeca->facebook, ['class' => 'form-control'] ) !!}
+							{!! Form::text('facebook', $horeca->facebook, ['class' => 'form-control'] ) !!}
 						</div>
 
 						<div class="form-group">
