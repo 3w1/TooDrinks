@@ -1,5 +1,5 @@
 function cargarDatosBanner($id){
-    //var route = "http://www.toodrinks.com/consulta/cargar-datos-banner/"+$id"";
+    //var route = "http://www.toodrinks.com/consulta/cargar-datos-banner/"+$id+"";
     var route = "http://localhost:8000/consulta/cargar-datos-banner/"+$id+"";
                     
     $.ajax({

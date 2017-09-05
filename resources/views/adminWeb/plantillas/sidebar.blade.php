@@ -135,7 +135,7 @@
       </ul>
    </li>
    
-   <!--@if (session('adminRol') == 'SA')
+   @if (session('adminRol') == 'SA')
       <li class="header">Finanzas</li>
       
       <li class="treeview">
@@ -160,7 +160,7 @@
             </span>
          </a>
          <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> Añadir/Quitar Créditos</a></li>
+            <li><a href="{{ route('admin.agregar-quitar-creditos') }}"><i class="fa fa-circle-o"></i> Añadir/Quitar Créditos</a></li>
          </ul>
       </li>
 
@@ -187,7 +187,7 @@
             <li><a href="#"><i class="fa fa-circle-o"></i> Listado de Movimientos</a></li>
          </ul>
       </li>
-   @endif-->
+   @endif
 </ul>
 
    

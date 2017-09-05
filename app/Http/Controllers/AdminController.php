@@ -788,7 +788,7 @@ class AdminController extends Controller
                     ->update([ 'saldo' => ($saldo->saldo - $request->precio) ]);
             }
         }
-        return redirect('admin/publicar-banner')->with('msj', 'La publicidad ha sido registrada con éxito.');
+        return redirect('admin/publicar-banner')->with('msj-success', 'La publicidad ha sido registrada con éxito.');
     }
 
     public function publicaciones_en_curso(Request $request){
@@ -853,6 +853,46 @@ class AdminController extends Controller
         return redirect($notificacion->url);
     }
     // **** FIN MÉTODOS PARA LAS NOTIFICACIONES **** //
+    
+
+    // *** MÉTODOS PARA LAS FINANZAS ***//
+   	public function agregar_quitar_creditos(){
+   		return view('adminWeb.creditos.agregarQuitarCreditos');
+   	}
+
+    public function sumar_restar_creditos(Request $request){
+    	if ($request->tipo_entidad == 'P'){
+    		$saldo = DB::table('productor')
+    				->where('id', '=', $request->entidad_id)
+    				->select('saldo')
+    				->first();
+
+    		DB::table('productor')
+    			->where('id', '=', $request->entidad_id)
+    			->update(['saldo' => ($saldo->saldo + $request->cantidad_creditos) ]);
+    	}elseif ($request->tipo_entidad == 'I'){
+    		$saldo = DB::table('importador')
+    				->where('id', '=', $request->entidad_id)
+    				->select('saldo')
+    				->first();
+
+    		DB::table('importador')
+    			->where('id', '=', $request->entidad_id)
+    			->update(['saldo' => ($saldo->saldo + $request->cantidad_creditos) ]);
+    	}elseif ($request->tipo_entidad == 'D'){
+    		$saldo = DB::table('distribuidor')
+    				->where('id', '=', $request->entidad_id)
+    				->select('saldo')
+    				->first();
+
+    		DB::table('distribuidor')
+    			->where('id', '=', $request->entidad_id)
+    			->update(['saldo' => ($saldo->saldo + $request->cantidad_creditos) ]);
+    	}
+
+    	return redirect('admin/agregar-quitar-creditos')->with('msj-success', 'Los créditos han sido Agregados / Quitados con éxito.');
+    }
+
     public function banners_sin_aprobar(){
         $banners = Banner::where('aprobado', '=', '0')
                     ->orderBy('created_at', 'ASC')

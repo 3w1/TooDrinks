@@ -22,8 +22,6 @@
          <div id="mensaje"></div>
       </div>
    @endsection  
-
-    @include('marca.modales.detallesMarca') 
    
     <ul class="nav nav-pills">
       	<li class="active btn btn-default"><a href="{{ route('marca.index') }}"><strong>MIS MARCAS</strong></a></li>

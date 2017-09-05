@@ -34,6 +34,9 @@
                <div class="form-group" id="precio" style="display: none;">   
                   {!! Form::label('precio', 'Costo en Créditos')!!}
                   {!! Form::number('precio', null, ['class' => 'form-control']) !!}
+                  <div class="alert alert-info">
+                     Deje el campo vacío si no se aplicarán costos por la publicación.
+                  </div>
                </div>
          </div>
          <div class="modal-footer">

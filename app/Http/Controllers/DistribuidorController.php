@@ -119,8 +119,7 @@ class DistribuidorController extends Controller
          
     }
 
-    public function asociar_marca(Request $request, $id){
-        $id = $request->marca_id2;
+    public function asociar_marca($id, $nombre){
         $marca = Marca::find($id);
 
         $marca->distribuidores()->attach(session('perfilId'), ['status' => '0']);
@@ -158,6 +157,7 @@ class DistribuidorController extends Controller
             $notificaciones_productor->save();
             // *** //
         }
-         return redirect('producto/seleccionar-productos/'.$id)->with('msj', 'Se ha agregado la marca a su lista con éxito. Debe esperar la confirmación del productor.');
+         return redirect('marca')->with('msj', 'La marca '.$marca->nombre.' ha sido agregada a su lista con éxito. Debe esperar la confirmación del productor.');
+
     }   
 }

@@ -23,9 +23,7 @@
       </div>
    @endsection  
 
-    @include('marca.modales.detallesMarca') 
-   
-    <ul class="nav nav-pills">
+   <ul class="nav nav-pills">
       	<li class="btn btn-default"><a href="{{ route('marca.index') }}"><strong>MIS MARCAS</strong></a></li>
       	<li class="active btn btn-default"><a href="{{ route('marca.agregar-marca') }}"><strong>AGREGAR MARCA</strong></a></li>
    	</ul>
@@ -69,7 +67,16 @@
 				                           			<label class="label label-success">Confirmada</label></a></li>
 				                        		@endif
 				                     		@endif
-				                     	<li class="active"><center><a href="{{ route('productor.asociar-marca', [$marca->id, $marca->nombre]) }}" class="btn btn-primary">Agregar</a></center></li>
+				                     	<li class="active"><center>
+                                       @if (session('perfilTipo') == 'P')
+                                          <a href="{{ route('productor.asociar-marca', [$marca->id, $marca->nombre]) }}" class="btn btn-primary">Agregar</a>
+                                       @elseif (session('perfilTipo') == 'I')
+                                          <a href="{{ route('importador.asociar-marca', [$marca->id, $marca->nombre]) }}" class="btn btn-primary">Agregar</a>
+                                       @elseif (session('perfilTipo') == 'D')
+                                          <a href="{{ route('distribuidor.asociar-marca', [$marca->id, $marca->nombre]) }}" class="btn btn-primary">Agregar</a>
+                                       @endif
+
+                                    </center></li>
 				               		</ul>
 				         		</div>
 				      		</div>

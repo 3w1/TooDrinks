@@ -77,7 +77,7 @@ Route::resource('productor','ProductorController');
 
 // RUTAS PARA LOS IMPORTADORES
 Route::prefix('importador')->group(function (){
-    Route::get('asociar-marca/{id}', 'ImportadorController@asociar_marca')->name('importador.asociar-marca');
+    Route::get('asociar-marca/{id}/{nombre}', 'ImportadorController@asociar_marca')->name('importador.asociar-marca');
 
     Route::get('ver-listado-distribuidores', 'ImportadorController@listado_distribuidores')->name('importador.listado-distribuidores');
 
@@ -95,7 +95,7 @@ Route::resource('multinacional', 'MultinacionalController');
 
 // RUTAS PARA LOS DISTRIBUIDORES
 Route::prefix('distribuidor')->group(function (){
-    Route::get('asociar-marca/{id}', 'DistribuidorController@asociar_marca')->name('distribuidor.asociar-marca');
+    Route::get('asociar-marca/{id}/{nombre}', 'DistribuidorController@asociar_marca')->name('distribuidor.asociar-marca');
 
     //Consulta AJAX
     Route::get('datos/{id}', 'DistribuidorController@datos');
@@ -417,7 +417,9 @@ Route::prefix('admin')->group(function () {
     Route::get('notificaciones', 'AdminController@notificaciones')->name('admin.notificaciones');
     Route::get('marcar-leida/{id}', 'AdminController@marcar_leida')->name('admin.marcar-leida');
 
-
+    //OPCIONES DE FINANZAS
+    Route::get('agregar-quitar-creditos', 'AdminController@agregar_quitar_creditos')->name('admin.agregar-quitar-creditos');
+    Route::post('sumar-restar-creditos', 'AdminController@sumar_restar_creditos')->name('admin.sumar-restar-creditos');
 
     Route::get('banners-sin-aprobar', 'AdminController@banners_sin_aprobar')->name('admin.banners-sin-aprobar');
     Route::get('aprobar-banner/{id}', 'AdminController@aprobar_banner')->name('admin.aprobar-banner');

@@ -3,7 +3,7 @@
 
 {!! Html::script('js/adminWeb/cargarEntidades.js') !!}
 {!! Html::script('js/adminWeb/detallesBanner.js') !!}
-{!! Html::script('js/adminWeb/cargarDatosBanner.js') !!}
+{!! Html::script('js/adminWeb/publicarBanner.js') !!}
 {!! Html::script('js/adminWeb/consultarFechasBanner.js') !!}
 
 @section('title-header')

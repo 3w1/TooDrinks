@@ -120,8 +120,7 @@ class ImportadorController extends Controller
 
     }
     
-    public function asociar_marca(Request $request, $id){
-        $id = $request->marca_id2;
+    public function asociar_marca($id, $nombre){
         $fecha = new \DateTime();
 
         $marca = Marca::find($id);
@@ -164,7 +163,7 @@ class ImportadorController extends Controller
             // *** //
         }
 
-        return redirect('producto/seleccionar-productos/'.$id)->with('msj', 'Se ha agregado la marca a su lista con éxito. Debe esperar la confirmación del productor.');
+        return redirect('marca')->with('msj', 'La marca '.$marca->nombre.' ha sido agregada a su lista con éxito. Debe esperar la confirmación del productor.');
     }
 
     public function solicitar_importacion(){
