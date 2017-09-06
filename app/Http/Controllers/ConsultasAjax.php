@@ -97,7 +97,7 @@ class ConsultasAjax extends Controller
     //Cargar los detalles de un banner específico (Editar Banners ADMIN)
     public function cargar_detalles_banner($id){
         $banner = DB::table('banner')
-                    ->select('id', 'titulo', 'descripcion', 'url_banner')
+                    ->select('id', 'titulo', 'descripcion', 'url_banner', 'correcciones')
                     ->where('id', '=', $id)
                     ->first();
 

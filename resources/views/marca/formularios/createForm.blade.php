@@ -4,15 +4,10 @@
 	
 	{!! Form::hidden ('tipo_creador', session('perfilTipo')) !!}
 	{!! Form::hidden('creador_id', session('perfilId')) !!}
-	
-	@if (session('perfilTipo') == 'P')
-		{!! Form::hidden('productor_id', session('perfilId')) !!}
-		{!! Form::hidden('reclamada', '1') !!}
-	@else
-		{!! Form::hidden('productor_id', '0') !!}
-		{!! Form::hidden('reclamada', '0') !!}
-	@endif
-	
+	{!! Form::hidden('productor_id', session('perfilId')) !!}
+	{!! Form::hidden('reclamada', '1') !!}
+	{!! Form::hidden('publicada', '1') !!}
+
 	<div class="form-group">
 	    {!! Form::label ('nombre','Nombre (*)') !!}
 	    {!! Form::text ('nombre',null,['class'=>'form-control', 'required']) !!}

@@ -15,6 +15,7 @@
 						->pluck('nombre', 'id');
 	
 	$clases_bebidas = DB::table('clase_bebida')
+						->where('bebida_id', $producto->bebida_id)
 						->orderBy('clase')
 						->pluck('clase', 'id');
 ?>

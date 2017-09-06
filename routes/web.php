@@ -408,6 +408,12 @@ Route::prefix('admin')->group(function () {
     Route::post('guardar-banner', 'AdminController@banner_store')->name('admin.banner-store');
     Route::get('editar-banner', 'AdminController@editar_banner')->name('admin.editar-banner'); 
     Route::post('actualizar-banner', 'AdminController@update_banner')->name('admin.banner-update');
+    Route::post('actualizar-imagen-banner', 'AdminController@update_imagen_banner')->name('admin.imagen-banner-update');
+    Route::get('aprobar-banners', 'AdminController@aprobar_banners')->name('admin.aprobar-banners');
+    Route::get('aprobar-banner/{id}', 'AdminController@aprobar_banner')->name('admin.aprobar-banner');
+    Route::get('sugerir-correcciones-banner/{id}', 'AdminController@sugerir_correcciones_banner')
+    ->name('admin.sugerir-correcciones-banner');
+    Route::post('guardar-sugerencias', 'AdminController@guardar_sugerencias_banner')->name('admin.guardar-sugerencias-banner');
     Route::get('publicar-banner', 'AdminController@publicar_banner')->name('admin.publicar-banner');
     Route::post('guardar-publicacion', 'AdminController@guardar_publicacion')->name('admin.guardar-publicacion');
     Route::get('publicaciones-en-curso', 'AdminController@publicaciones_en_curso')->name('admin.publicaciones-en-curso'); 
@@ -421,12 +427,7 @@ Route::prefix('admin')->group(function () {
     Route::get('agregar-quitar-creditos', 'AdminController@agregar_quitar_creditos')->name('admin.agregar-quitar-creditos');
     Route::post('sumar-restar-creditos', 'AdminController@sumar_restar_creditos')->name('admin.sumar-restar-creditos');
 
-    Route::get('banners-sin-aprobar', 'AdminController@banners_sin_aprobar')->name('admin.banners-sin-aprobar');
-    Route::get('aprobar-banner/{id}', 'AdminController@aprobar_banner')->name('admin.aprobar-banner');
-    Route::get('sugerir-correcciones-banner/{id}', 'AdminController@sugerir_correcciones_banner')
-    ->name('admin.sugerir-correcciones-banner');
-    Route::post('guardar-sugerencias', 'AdminController@guardar_sugerencias_banner')->name('admin.guardar-sugerencias-banner');
-   
+
 	Route::get('listado-de-suscripciones', 'SuscripcionController@index')->name('admin.suscripciones');
 
 	Route::get('listado-de-planes-de-credito', 'CreditoController@index')->name('admin.creditos');

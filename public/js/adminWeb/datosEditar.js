@@ -17,3 +17,11 @@ function cargarDatos($id){
         }
     });
 }
+
+function cargarImagen($id){
+    document.getElementById("id_banner").value = $id;
+           
+    $("#imagenModal").modal({
+        show: 'true'
+    });
+}

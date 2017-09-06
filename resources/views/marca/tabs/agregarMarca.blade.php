@@ -26,6 +26,9 @@
    <ul class="nav nav-pills">
       	<li class="btn btn-default"><a href="{{ route('marca.index') }}"><strong>MIS MARCAS</strong></a></li>
       	<li class="active btn btn-default"><a href="{{ route('marca.agregar-marca') }}"><strong>AGREGAR MARCA</strong></a></li>
+         @if (session('perfilTipo') == 'P')
+            <li class="btn btn-default"><a href="{{ route('marca.create') }}"><strong>CREAR MARCA</strong></a></li>
+         @endif
    	</ul>
    	<div class="panel with-nav-tabs panel-primary">
       	<div class="panel-heading">

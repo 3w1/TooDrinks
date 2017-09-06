@@ -126,6 +126,7 @@
       <ul class="treeview-menu">
          <li><a href="{{ route('admin.nuevo-banner') }}"><i class="fa fa-circle-o"></i> Crear Banner</a></li>
          <li><a href="{{ route('admin.editar-banner') }}"><i class="fa fa-circle-o"></i> Editar Banner </a></li>
+         <li><a href="{{ route('admin.aprobar-banners') }}"><i class="fa fa-circle-o"></i> Aprobar Banner</a></li>
          <li><a href="{{ route('admin.publicar-banner') }}"><i class="fa fa-circle-o"></i> Publicar Banner</a></li>
          <!--@if (session('adminRol') == 'SA')
             <li><a href="#"><i class="fa fa-circle-o"></i> Editar Publicación</a></li>

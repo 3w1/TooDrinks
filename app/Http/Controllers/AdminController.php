@@ -723,6 +723,130 @@ class AdminController extends Controller
         return redirect('admin/editar-banner')->with('msj-success', 'Los datos del banner han sido actualizados con éxito.');  
     }
 
+    public function update_imagen_banner(Request $request){
+        $file = Input::file('imagen');   
+        $image = Image::make(Input::file('imagen'));
+
+        $path = public_path().'/imagenes/banners/';
+        $path2 = public_path().'/imagenes/banners/thumbnails/';
+        $nombre = 'banner_'.time().'.'.$file->getClientOriginalExtension();
+
+        $image->save($path.$nombre);
+        $image->resize(240,200);
+        $image->save($path2.$nombre);
+
+        DB::table('banner')
+            ->where('id', '=', $request->id_banner)
+            ->update([ 'imagen' => $nombre]);
+
+        return redirect('admin/editar-banner')->with('msj-success', 'La imagen del banner ha sido cambiado con éxito.');
+    }
+
+    public function aprobar_banners(){
+        $banners = Banner::where('aprobado', '=', '0')
+                    ->orderBy('created_at', 'ASC')
+                    ->paginate(10);
+
+        return view('adminWeb.banner.aprobarBanners')->with(compact('banners'));
+    }
+
+    public function aprobar_banner($id, Request $request){
+        $actualizacion = DB::table('banner')
+                            ->where('id', '=', $id)
+                            ->update(['aprobado' => '1',
+                                      'correcciones' => null]);
+
+        $banner = DB::table('banner')
+                        ->select('id', 'tipo_creador', 'creador_id', 'titulo')
+                        ->where('id', '=', $id)
+                        ->first();
+        
+        if ($banner->tipo_creador == 'P'){
+            //CREAR NOTIFICACIÓN AL PRODUCTOR
+            $notificacion = new Notificacion_P();
+            $notificacion->productor_id = $banner->creador_id;
+            // *** //
+        }elseif ($banner->tipo_creador == 'I'){
+            //CREAR NOTIFICACIÓN AL IMPORTADOR
+            $notificacion = new Notificacion_I();
+            $notificacion->importador_id = $banner->creador_id;
+            // *** //
+        }elseif ($banner->tipo_creador == 'D'){
+            //CREAR NOTIFICACIÓN AL DISTRIBUIDOR
+            $notificacion = new Notificacion_D();
+            $notificacion->distribuidor_id = $banner->creador_id;
+            // *** //
+        }elseif ($banner->tipo_creador == 'H'){
+            //CREAR NOTIFICACIÓN AL HORECA
+            $notificacion = new Notificacion_H();
+            $notificacion->horeca_id = $banner->creador_id;
+            // *** //
+        }
+
+        $notificacion->creador_id = session('adminId');
+        $notificacion->tipo_creador = session('adminRol');
+        $notificacion->titulo = 'El administrador Web ha aprobado el contenido de tu banner '.$banner->titulo;
+        $notificacion->url='banner-publicitario/'.$banner->id;
+        $notificacion->descripcion = 'Aprobación de Banner';
+        $notificacion->color = 'bg-aqua';
+        $notificacion->icono = 'fa fa-plus-circle';
+        $notificacion->tipo ='AB';
+        $notificacion->fecha = new \DateTime();
+        $notificacion->leida = '0';
+        $notificacion->save();
+
+        return redirect('admin/aprobar-banners')->with('msj-success', 'El banner '.$banner->titulo.' ha sido aprobado con éxito.');
+    }
+
+    public function sugerir_correcciones_banner($id){
+        $banner = Banner::find($id);
+
+        return view('adminWeb.banner.sugerirCorrecciones')->with(compact('banner'));
+    }
+
+    public function guardar_sugerencias_banner(Request $request){
+        DB::table('banner')
+            ->where('id', '=', $request->banner_id)
+            ->update(['aprobado' => '2',
+                      'correcciones' => $request->sugerencias]);
+
+        $banner = DB::table('banner')
+                        ->select('id', 'tipo_creador', 'creador_id', 'titulo')
+                        ->where('id', '=', $request->banner_id)
+                        ->first();
+
+        if ($banner->tipo_creador == 'P'){
+            //CREAR NOTIFICACIÓN AL PRODUCTOR
+            $notificacion = new Notificacion_P();
+            $notificacion->productor_id = $banner->creador_id;
+            // *** //
+        }elseif ($banner->tipo_creador == 'I'){
+            //CREAR NOTIFICACIÓN AL IMPORTADOR
+            $notificacion = new Notificacion_I();
+            $notificacion->importador_id = $banner->creador_id;
+            // *** //
+        }elseif ($banner->tipo_creador == 'D'){
+            //CREAR NOTIFICACIÓN AL DISTRIBUIDOR
+            $notificacion = new Notificacion_D();
+            $notificacion->distribuidor_id = $banner->creador_id;
+            // *** //
+        }
+
+        $notificacion->creador_id = session('adminId');
+        $notificacion->tipo_creador = session('adminRol');
+        $notificacion->titulo = 'El administrador Web ha sugerido cambios para el contenido de tu banner '.$banner->titulo;
+        $notificacion->url='banner-publicitario/'.$banner->id;
+        $notificacion->descripcion = 'Sugerencias de Banner';
+        $notificacion->color = 'bg-orange';
+        $notificacion->icono = 'fa fa-edit';
+        $notificacion->tipo ='CB';
+        $notificacion->fecha = new \DateTime();
+        $notificacion->leida = '0';
+        $notificacion->save();
+
+        return redirect('admin/aprobar-banners')->with('msj-success', 'La sugerencias para el banner '.$banner->titulo.' han sido guardadas con éxito. El banner ha sido puesto en revisión.');
+    }
+
     public function publicar_banner(Request $request){
         $banners = Banner::entidad($request->get('tipo_entidad'), $request->get('entidad_id'))
                         ->nombre($request->get('busqueda'))
@@ -891,129 +1015,5 @@ class AdminController extends Controller
     	}
 
     	return redirect('admin/agregar-quitar-creditos')->with('msj-success', 'Los créditos han sido Agregados / Quitados con éxito.');
-    }
-
-    public function banners_sin_aprobar(){
-        $banners = Banner::where('aprobado', '=', '0')
-                    ->orderBy('created_at', 'ASC')
-                    ->paginate(10);
-
-        return view('adminWeb.aprobaciones.bannersSinAprobar')->with(compact('banners'));
-    }
-
-    public function aprobar_banner($id, Request $request){
-        //Aprobar Banner desde la página general
-        if ($id != '0'){
-            $actualizacion = DB::table('banner')
-                            ->where('id', '=', $id)
-                            ->update(['aprobado' => '1',
-                                      'correcciones' => null]);
-
-            $banner = DB::table('banner')
-                        ->select('id', 'tipo_creador', 'creador_id', 'titulo')
-                        ->where('id', '=', $id)
-                        ->first();
-        }else{
-            //Aprobar Banner desde la modal
-            $actualizacion = DB::table('banner')
-                            ->where('id', '=', $request->banner_id)
-                            ->update(['aprobado' => '1',
-                                      'correcciones' => null]);
-
-            $banner = DB::table('banner')
-                        ->select('id', 'tipo_creador', 'creador_id', 'titulo')
-                        ->where('id', '=', $request->banner_id)
-                        ->first();
-        }
-
-        if ($banner->tipo_creador == 'P'){
-            //CREAR NOTIFICACIÓN AL PRODUCTOR
-            $notificacion = new Notificacion_P();
-            $notificacion->productor_id = $banner->creador_id;
-            // *** //
-        }elseif ($banner->tipo_creador == 'I'){
-            //CREAR NOTIFICACIÓN AL IMPORTADOR
-            $notificacion = new Notificacion_I();
-            $notificacion->importador_id = $banner->creador_id;
-            // *** //
-        }elseif ($banner->tipo_creador == 'D'){
-            //CREAR NOTIFICACIÓN AL DISTRIBUIDOR
-            $notificacion = new Notificacion_D();
-            $notificacion->distribuidor_id = $banner->creador_id;
-            // *** //
-        }elseif ($banner->tipo_creador == 'H'){
-            //CREAR NOTIFICACIÓN AL HORECA
-            $notificacion = new Notificacion_H();
-            $notificacion->horeca_id = $banner->creador_id;
-            // *** //
-        }
-
-        $notificacion->creador_id = '0';
-        $notificacion->tipo_creador = 'U';
-        $notificacion->titulo = 'El administrador Web ha aprobado el contenido de tu banner '.$banner->titulo;
-        $notificacion->url='banner-publicitario/'.$banner->id;
-        $notificacion->descripcion = 'Aprobación de Banner';
-        $notificacion->color = 'bg-aqua';
-        $notificacion->icono = 'fa fa-plus-circle';
-        $notificacion->tipo ='AB';
-        $notificacion->fecha = new \DateTime();
-        $notificacion->leida = '0';
-        $notificacion->save();
-
-        return redirect('admin/banners-sin-aprobar')->with('msj-success', 'El banner ha sido aprobado exitosamente');
-    }
-
-    public function sugerir_correcciones_banner($id){
-        $banner = Banner::find($id);
-
-        return view('adminWeb.banner.sugerirCorrecciones')->with(compact('banner'));
-    }
-
-    public function guardar_sugerencias_banner(Request $request){
-        DB::table('banner')
-            ->where('id', '=', $request->banner_id)
-            ->update(['aprobado' => '2',
-                      'correcciones' => $request->sugerencias]);
-
-        $banner = DB::table('banner')
-                        ->select('id', 'tipo_creador', 'creador_id', 'titulo')
-                        ->where('id', '=', $request->banner_id)
-                        ->first();
-
-        if ($banner->tipo_creador == 'P'){
-            //CREAR NOTIFICACIÓN AL PRODUCTOR
-            $notificacion = new Notificacion_P();
-            $notificacion->productor_id = $banner->creador_id;
-            // *** //
-        }elseif ($banner->tipo_creador == 'I'){
-            //CREAR NOTIFICACIÓN AL IMPORTADOR
-            $notificacion = new Notificacion_I();
-            $notificacion->importador_id = $banner->creador_id;
-            // *** //
-        }elseif ($banner->tipo_creador == 'D'){
-            //CREAR NOTIFICACIÓN AL DISTRIBUIDOR
-            $notificacion = new Notificacion_D();
-            $notificacion->distribuidor_id = $banner->creador_id;
-            // *** //
-        }elseif ($banner->tipo_creador == 'H'){
-            //CREAR NOTIFICACIÓN AL HORECA
-            $notificacion = new Notificacion_H();
-            $notificacion->horeca_id = $banner->creador_id;
-            // *** //
-        }
-
-        $notificacion->creador_id = '0';
-        $notificacion->tipo_creador = 'U';
-        $notificacion->titulo = 'El administrador Web ha sugerido cambios para el contenido de tu banner '.$banner->titulo;
-        $notificacion->url='banner-publicitario/'.$banner->id;
-        $notificacion->descripcion = 'Sugerencias de Banner';
-        $notificacion->color = 'bg-orange';
-        $notificacion->icono = 'fa fa-edit';
-        $notificacion->tipo ='CB';
-        $notificacion->fecha = new \DateTime();
-        $notificacion->leida = '0';
-        $notificacion->save();
-
-        return redirect('admin/banners-sin-aprobar')->with('msj-success', 'El banner ha sido puesto en revisión. Se ha enviado una notificación a su creador.');
     }
 }

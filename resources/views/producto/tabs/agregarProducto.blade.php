@@ -30,6 +30,9 @@
     <ul class="nav nav-pills">
       	<li class="btn btn-default"><a href="{{ route('producto.index') }}"><strong>MIS PRODUCTOS</strong></a></li>
       	<li class="active btn btn-default"><a href="{{ route('producto.agregar-producto') }}"><strong>AGREGAR PRODUCTO</strong></a></li>
+         @if (session('perfilTipo') == 'P')
+            <li class="btn btn-default"><a href="{{ route('producto.create') }}"><strong>CREAR PRODUCTO</strong></a></li>
+         @endif
    	</ul>
 
    	<div class="panel with-nav-tabs panel-primary">

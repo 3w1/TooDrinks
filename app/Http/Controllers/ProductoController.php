@@ -90,6 +90,7 @@ class ProductoController extends Controller
         return view('producto.tabs.agregarProducto')->with(compact('productos', 'paises'));
     }
 
+    //Pestaña Crear Producto
     //Agregar un Producto (Usuarios (MB, AD, SA))
     public function create()
     {
@@ -100,6 +101,7 @@ class ProductoController extends Controller
 
         $marcas = DB::table('marca')
                     ->orderBy('nombre')
+                    ->where('productor_id', '=', session('perfilId'))
                     ->pluck('nombre', 'id');
 
         $paises = DB::table('pais')
@@ -110,7 +112,7 @@ class ProductoController extends Controller
                     ->orderBy('nombre')
                     ->pluck('nombre', 'id');
         
-        return view('producto.create')->with(compact('marcas', 'paises', 'tipos_bebidas', 'usuario', 'id', 'marca'));
+        return view('producto.tabs.create')->with(compact('marcas', 'paises', 'tipos_bebidas', 'usuario', 'id', 'marca'));
     }
 
     //Agregar Producto a una Marca ya seleccionada

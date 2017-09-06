@@ -28,12 +28,13 @@
 
 	@include('adminWeb.banner.modales.editBanner')
 
+	@include('adminWeb.banner.modales.editImagen')
+
 	@foreach($banners as $banner)
 		<div class="col-md-4 col-xs-6">
 	        <div class="thumbnail">
 	            <div>
-	            	<a href="" class="thumbnail" data-toggle='modal' data-target="#myModal">
-		            <img src="{{ asset('imagenes/banners/thumbnails/') }}/{{ $banner->imagen }}" class="img-responsive"></a>
+		            <img src="{{ asset('imagenes/banners/thumbnails/') }}/{{ $banner->imagen }}" class="img-responsive">
 		        </div>             
 		        <div class="caption">
 		        	<p><strong>{{ $banner->titulo }}<strong></p>
@@ -50,6 +51,11 @@
 		           		<a href="#" onclick="cargarDetalles({{$banner->id}});" class="btn btn-info" role="button">Ver Detalles</a>
 		               	<a href="#" onclick="cargarDatos({{$banner->id}});" class="btn btn-primary" role="button">Editar</a>
 		            </center></p>
+		            @if (session('adminRol') == 'SA')
+		            	<p><center>
+		               		<a href="#" onclick="cargarImagen({{$banner->id}});" class="btn btn-warning" role="button">Cambiar Imagen</a>
+		               	</center></p>
+		            @endif
 		        </div>
 		    </div>
 		</div>

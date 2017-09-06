@@ -79,13 +79,14 @@ class MarcaController extends Controller
         return view('marca.tabs.agregarMarca')->with(compact('marcas'));
     }
 
+    //Pestaña Crear Marca
     public function create()
     {
         $paises = DB::table('pais')
                         ->orderBy('pais')
                         ->pluck('pais', 'id');
 
-        return view('marca.create')->with(compact('paises'));
+        return view('marca.tabs.create')->with(compact('paises'));
     }
 
     public function store(Request $request)

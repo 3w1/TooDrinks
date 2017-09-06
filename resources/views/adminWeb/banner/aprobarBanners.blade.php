@@ -1,7 +1,7 @@
-@extends('plantillas.adminWeb.mainAdmin')
+@extends('adminWeb.plantillas.main')
 @section('title', 'Banners')
 
-{!! Html::script('js/adminWeb/detalleBanner.js') !!}
+{!! Html::script('js/adminWeb/detallesBanner.js') !!}
 
 @section('title-header')
    Banners
@@ -11,9 +11,10 @@
    (Por Aprobar)
 @endsection
 
-@include('adminWeb.modales.detalleBanner')
+@include('adminWeb.banner.modales.detallesBanner')
 
 @section('content-left')  
+
    @section('alertas')
       @if (Session::has('msj-success'))
          <div class="alert alert-success alert-dismissable">
@@ -30,22 +31,22 @@
                <img src="{{ asset('imagenes/banners/thumbnails/') }}/{{ $banner->imagen }}" class="img-responsive">
             </div>             
             <div class="caption">
+               <p><strong>{{ $banner->titulo}}</strong></p>
                <p><center>
                   <a href="#" class="btn btn-info" role="button" onclick="cargarDetalles({{$banner->id}});">Detalles</a>
-                  <a href="{{ route('admin.sugerir-correcciones-banner', $banner->id) }}" class="btn btn-warning" role="button">Sugerir Correcciones</a>
+                  <a href="{{ route('admin.aprobar-banner', $banner->id) }}" class="btn btn-primary" role="button">Aprobar</a>
                </center></p>
                <p><center>
-                  <a href="{{ route('admin.aprobar-banner', $banner->id) }}" class="btn btn-primary" role="button">Aprobar</a>
-
+                  <a href="{{ route('admin.sugerir-correcciones-banner', $banner->id) }}" class="btn btn-warning" role="button">Sugerir Correcciones</a>
                </center></p>
-               </div>
             </div>
          </div>
-      @endforeach
-      <div>
-         {{ $banners->render() }}
       </div>
-   </div>
+   @endforeach
+@endsection
+
+@section('pagination')
+   {{ $banners->render()}}
 @endsection
 
 

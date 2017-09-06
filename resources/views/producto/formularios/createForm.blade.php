@@ -14,11 +14,7 @@
 		{!! Form::hidden('tipo_creador', session('perfilTipo')) !!}
 		{!! Form::hidden('creador_id', session('perfilId')) !!}
 		{!! Form::hidden('publicado', '1') !!}
-		@if (session('perfilTipo') == 'P')
-			{!! Form::hidden('confirmado', '1') !!}
-		@else 
-			{!! Form::hidden('confirmado', '0') !!}
-		@endif
+		{!! Form::hidden('confirmado', '1') !!}
 	@endif
 	
 	@if ($id == '0')
@@ -32,17 +28,17 @@
 
 	<div class="form-group">
 		{!! Form::label('nombre', 'Nombre (*)') !!}
-		{!! Form::text('nombre', null, ['class' => 'form-control', 'required', 'placeholder' => 'Ingrese un nombre para el producto'] ) !!}
+		{!! Form::text('nombre', null, ['class' => 'form-control', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('nombre_seo', 'Nombre Seo (*)') !!}
-		{!! Form::text('nombre_seo', null, ['class' => 'form-control', 'required', 'placeholder' => 'Ingrese un Nombre SEO para el producto'] ) !!}
+		{!! Form::text('nombre_seo', null, ['class' => 'form-control', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('descripcion', 'Descripción (*)') !!}
-		{!! Form::text('descripcion', null, ['class' => 'form-control', 'required', 'placeholder' => 'Ingrese una descripción para el producto'] ) !!}
+		{!! Form::label('descripcion', 'Descripción') !!}
+		{!! Form::text('descripcion', null, ['class' => 'form-control'] ) !!}
 	</div>
 		
 	<div class="form-group">
@@ -63,12 +59,12 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('ano_produccion', 'Año de Producción (*)') !!}
-		{!! Form::text('ano_produccion', null, ['class' => 'form-control', 'required', 'placeholder' => 'Año de Producción'] ) !!}
+		{!! Form::label('ano_produccion', 'Año de Producción') !!}
+		{!! Form::text('ano_produccion', null, ['class' => 'form-control'] ) !!}
 	</div>
 		
 	<div class="form-group">
-		{!! Form::label('imagen', 'Logo /Imgane (*)') !!}
+		{!! Form::label('imagen', 'Logo / Imagen (*)') !!}
 		{!! Form::file('imagen', ['class' => 'form-control', 'required'] ) !!}
 	</div>
 
