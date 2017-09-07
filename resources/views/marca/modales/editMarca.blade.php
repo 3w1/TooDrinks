@@ -9,7 +9,7 @@
             @include('marca.formularios.editForm')        
          </div>
          <div class="modal-footer">
-            {!! Form::submit('Modificar Marca', ['class' => 'btn btn-primary']) !!}
+            <a class="btn btn-primary" onclick="verificarNombre();">Modificar Marca</a>
          </div>
          {!! Form::close() !!}
       </div>

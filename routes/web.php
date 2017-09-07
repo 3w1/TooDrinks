@@ -26,7 +26,7 @@ Route::get('productos/{id}', 'FrontendController@detalle_producto')->name('front
 
 //RUTAS DE INICIO Y AUTENTICACIÓN
 Auth::routes();
-
+Route::get('iniciar-sesion', 'Auth\LoginController@iniciar_sesion')->name('iniciar-sesion');
 Route::get('/home', 'FrontendController@index')->name('welcome');
 
 Route::get('/', function () {
@@ -450,6 +450,9 @@ Route::get('payment/status', array(
 
 //CONSULTAS AJAX
 Route::prefix('consulta')->group(function () {
+    //CONSULTAS PARA MARCAS
+    Route::get('verificar-nombre-marca/{nombre}/{id_marca}', 'ConsultasAjax@verificar_nombre_marca');
+
     Route::get('buscar-productor/{nombre}', 'ConsultasAjax@buscar_productor');
     Route::get('buscar-marca/{nombre}', 'ConsultasAjax@buscar_marca');
     Route::get('cargar-clases-bebida/{bebida}', 'ConsultasAjax@cargar_clases_bebidas');

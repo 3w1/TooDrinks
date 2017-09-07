@@ -4,13 +4,25 @@
 	
 	{!! Form::hidden ('tipo_creador', session('perfilTipo')) !!}
 	{!! Form::hidden('creador_id', session('perfilId')) !!}
-	{!! Form::hidden('productor_id', session('perfilId')) !!}
-	{!! Form::hidden('reclamada', '1') !!}
-	{!! Form::hidden('publicada', '1') !!}
+	@if (session('perfilTipo') == 'P')
+		{!! Form::hidden('productor_id', session('perfilId')) !!}
+		{!! Form::hidden('reclamada', '1') !!}
+		{!! Form::hidden('publicada', '1') !!}
+	@else
+		{!! Form::hidden('productor_id', '0') !!}
+		{!! Form::hidden('reclamada', '0') !!}
+		{!! Form::hidden('publicada', '0') !!}
+	@endif
+	
+	<!-- Para efectos de la Consulta Ajax de Verificar Nombre-->
+	{!! Form::hidden('id_marca', '0', ['id' => 'id_marca']) !!}
 
 	<div class="form-group">
 	    {!! Form::label ('nombre','Nombre (*)') !!}
-	    {!! Form::text ('nombre',null,['class'=>'form-control', 'required']) !!}
+	    {!! Form::text ('nombre',null,['class'=>'form-control', 'required', 'id' => 'nombre', 'onblur' => 'verificarNombre();']) !!}
+	    <div class="alert alert-danger" style="display: none;" id="errorNombre">
+			<strong>Ups!!</strong> Ya existe una marca con este nombre.
+		</div>
     </div>
 
     <div class="form-group">
@@ -38,8 +50,8 @@
 		{!! Form::file ('logo', ['class'=>'form-control', 'required']) !!}
 	</div>
 	
-	<div class="fom-group">
-		{!! Form::submit ('Registrar Marca',['class'=>'btn btn-primary pull-right']) !!}
+	<div class="form-group">
+		{!! Form::submit ('Registrar Marca',['class'=>'btn btn-primary pull-right', 'id' => 'boton']) !!}
 	</div>
 	
 {!! Form::close() !!}

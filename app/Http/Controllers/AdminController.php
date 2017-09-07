@@ -609,7 +609,7 @@ class AdminController extends Controller
                             ->update(['publicado' => '1']);
 
             $producto = DB::table('producto')
-                        ->select('producto.tipo_creador', 'producto.creador_id', 'producto.nombre', 'producto.id', 'marca.productor_id')
+                        ->select('producto.tipo_creador', 'producto.creador_id', 'producto.nombre', 'producto.id', 'producto.marca_id', 'marca.productor_id')
                         ->join('marca', 'producto.marca_id', '=', 'marca.id')
                         ->where('producto.id', '=', $id)
                         ->first();

@@ -15,10 +15,6 @@
 
 @section('content-left')
 	
-	@section('alertas')
-     	@include('plantillas.alertas.AlertasRequest')
-   	@endsection 
-	
 	@include('producto.formularios.createForm')
 
 @endsection

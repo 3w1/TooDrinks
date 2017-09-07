@@ -26,57 +26,88 @@ class MarcaController extends Controller
             			->where('productor_id', '=', session('perfilId'))
                         ->orderBy('nombre', 'ASC')
                         ->paginate(6);
+
+            $cont=0;
+            foreach ($marcas as $m){
+                $cont++;
+            }
         }elseif (session('perfilTipo') == 'I'){
-            $marcas = Importador::find(session('perfilId'))
-                        ->marcas()
-                        ->orderBy('nombre', 'ASC')
+            $marcas = Marca::select('marca.*', 'importador_marca.status')
+                        ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                        ->where('importador_marca.importador_id', '=', session('perfilId'))
+                        ->nombre($request->get('busqueda'))
+                        ->status($request->get('status'))
+                        ->orderBy('marca.nombre', 'ASC')
                         ->paginate(6);
+
+            $cont=0;
+            foreach ($marcas as $m){
+                $cont++;
+            }
         }elseif (session('perfilTipo') == 'D'){
-            $marcas = Distribuidor::find(session('perfilId'))
-                        ->marcas()
-                        ->orderBy('nombre', 'ASC')
+            $marcas = Marca::select('marca.*', 'distribuidor_marca.status')
+                        ->join('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
+                        ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
+                        ->nombre($request->get('busqueda'))
+                        ->status($request->get('status'))
+                        ->orderBy('marca.nombre', 'ASC')
                         ->paginate(6);
-        }elseif (session('perfilTipo') == 'M'){
-            $marcas = Marca::orderBy('nombre', 'ASC')
-                        ->where('productor_id', '=', session('perfilPadre'))
-                        ->paginate(6);
+            $cont=0;
+            foreach ($marcas as $m){
+                $cont++;
+            }
         }
 
-        return view('marca.tabs.misMarcas')->with(compact('marcas'));
+        return view('marca.tabs.misMarcas')->with(compact('marcas', 'cont'));
     }
 
     //Pestaña Agregar Marca para asociar
     public function agregar_marca(Request $request){
     	if (session('perfilTipo') == 'P'){
             $marcas = Marca::nombre($request->get('busqueda'))
-            			->pais($request->get('pais'))
-            			->where('productor_id', '=', '0')
-            			->where('id', '<>', '0')
+                        ->where('id', '<>', '0')
+                        ->where('productor_id', '=', '0')
+                        ->where('publicada', '=', '1')
                         ->orderBy('nombre', 'ASC')
                         ->paginate(6);
+
+            $cont=0;
+            foreach ($marcas as $m){
+                $cont++;
+            }
         }elseif (session('perfilTipo') == 'I'){
             $marcas = Marca::select('marca.*')
                     ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
                     ->where('importador_marca.importador_id', '!=', session('perfilId'))
                     ->orwhere('importador_marca.marca_id', '=', null)
                     ->where('marca.id', '<>', '0')
+                    ->where('publicada', '=', '1')
                     ->nombre($request->get('busqueda'))
-            		->pais($request->get('pais'))
                     ->orderBy('nombre', 'ASC')
                     ->paginate(6);
+
+            $cont=0;
+            foreach ($marcas as $m){
+                $cont++;
+            }
         }elseif (session('perfilTipo') == 'D'){
             $marcas = Marca::select('marca.*')
                     ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
                     ->where('distribuidor_marca.distribuidor_id', '!=', session('perfilId'))
                     ->orwhere('distribuidor_marca.marca_id', '=', null)
                     ->where('marca.id', '<>', '0')
+                    ->where('publicada', '=', '1')
                     ->nombre($request->get('busqueda'))
-            		->pais($request->get('pais'))
                     ->orderBy('nombre', 'ASC')
                     ->paginate(6);
+
+            $cont=0;
+            foreach ($marcas as $m){
+                $cont++;
+            }
         }
 
-        return view('marca.tabs.agregarMarca')->with(compact('marcas'));
+        return view('marca.tabs.agregarMarca')->with(compact('marcas', 'cont'));
     }
 
     //Pestaña Crear Marca
@@ -89,6 +120,7 @@ class MarcaController extends Controller
         return view('marca.tabs.create')->with(compact('paises'));
     }
 
+    //Almacenar una Marca
     public function store(Request $request)
     {
         $fecha = new \DateTime();
@@ -114,21 +146,27 @@ class MarcaController extends Controller
             $marca->distribuidores()->attach(session('perfilId'), ['status' => '0']);
         }       
 
-        $notificaciones_admin = new Notificacion_Admin();
-        $notificaciones_admin->creador_id = session('perfilId');
-        $notificaciones_admin->tipo_creador = session('perfilTipo');
-        $notificaciones_admin->titulo = session('perfilNombre') . ' ha creado una nueva marca';
-        $notificaciones_admin->url='admin/marcas-sin-aprobar';
-        $notificaciones_admin->user_id = 0;
-        $notificaciones_admin->descripcion = 'Nueva Marca';
-        $notificaciones_admin->color = 'bg-purple';
-        $notificaciones_admin->icono = 'fa fa-plus-circle';
-        $notificaciones_admin->fecha = $fecha;
-        $notificaciones_admin->tipo = 'NM';
-        $notificaciones_admin->leida = '0';
-        $notificaciones_admin->save();
-
-        return redirect('marca')->with('msj', 'Su marca ha sido creada con éxito.');
+        if (session('perfilTipo') != 'P'){
+            $notificacion_admin = new Notificacion_Admin();
+            $notificacion_admin->creador_id = session('perfilId');
+            $notificacion_admin->tipo_creador = session('perfilTipo');
+            $notificacion_admin->titulo = session('perfilNombre') . ' ha creado una nueva marca';
+            $notificacion_admin->url='admin/aprobar-marcas';
+            $notificacion_admin->user_id = 0;
+            $notificacion_admin->descripcion = 'Nueva Marca';
+            $notificacion_admin->color = 'bg-purple';
+            $notificacion_admin->icono = 'fa fa-plus-circle';
+            $notificacion_admin->fecha = $fecha;
+            $notificacion_admin->tipo = 'NM';
+            $notificacion_admin->leida = '0';
+            $notificacion_admin->save();
+        }
+        
+        if (session('perfilTipo') == 'P'){ 
+            return redirect('marca')->with('msj', 'Su marca '.$marca->nombre.' ha sido creada con éxito.');
+        }else{
+            return redirect('marca')->with('msj', 'La marca '.$marca->nombre.' ha sido creada con éxito. Debe esperar la aprobación del Administrador para comercializarla.');
+        }
     }
     
     public function show(Request $request, $id, $nombre_seo)
@@ -316,7 +354,7 @@ class MarcaController extends Controller
                             ->where('id', '=', $request->id)
                             ->update(['logo' => $nombre ]);
 
-        return redirect('marca/'.$request->id)->with('msj', 'El logo de la marca se ha actualizado con éxito.');     
+        return redirect('marca/'.$request->id.'/'.$request->nombre_seo)->with('msj', 'El logo de la marca se ha actualizado con éxito.');     
     }
 
     public function destroy($id)

@@ -74,7 +74,6 @@
                 @endif
             @endif
                         
-            @include('frontend.plantillas.partes.loginPopUp')
         </header>
 
         @yield('content')

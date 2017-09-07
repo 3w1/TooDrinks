@@ -58,29 +58,19 @@
                     <div class="col-sm-8 col-md-6 col-lg-5 no-float no-padding center-block">
                         <form class="login-form" method="POST" action="{{ route('login') }}">
                         	{{ csrf_field() }}
-
+                            
+                            <div class="form-group">
+                                @if ( ($errors->has('email')) || ($errors->has('password')) )
+                                    <div class="alert alert-error">
+                                        <strong>El correo electrónico o la contraseña no son correctos.</strong>
+                                    </div>
+                                @endif
+                            </div>
                             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                                 <input type="email" class="input-text input-large full-width" name="email" id="email" value="{{ old('email')}}" placeholder="ingresa tu correo electrónico" required autofocus>
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
                             </div>
                             <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                                 <input type="password" class="input-text input-large full-width" name="password" id="password" placeholder="ingresa tu contraseña" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                            <div class="form-group">
-                                <label class="checkbox">
-                                    <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>Recordarme
-                                </label>
                             </div>
                             <button type="submit" class="btn-large full-width yellow">Iniciar Sesión</button>
                         </form>

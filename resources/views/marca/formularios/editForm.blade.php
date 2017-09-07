@@ -4,11 +4,18 @@
 				->pluck('pais', 'id');
 ?>
 
-{!! Form::open(['route' => ['marca.update', $marca->id], 'method' => 'PUT']) !!}
+{!! Html::script('js/marcas/edit.js') !!}
 
+{!! Form::open(['route' => ['marca.update', $marca->id], 'method' => 'PUT', 'name' => 'editForm']) !!}
+	
+	{!! Form::hidden('id_marca', $marca->id, ['id' => 'id_marca']) !!}
+	
 	<div class="form-group">
 		{!! Form::label ('nombre','Nombre (*)') !!}
-		{!! Form::text ('nombre', $marca->nombre,['class' => 'form-control', 'required']) !!}
+		{!! Form::text ('nombre', $marca->nombre,['class' => 'form-control', 'required', 'id' => 'nombre']) !!}
+		<div class="alert alert-danger" style="display: none;" id="errorNombre">
+			<strong>Ups!!</strong> Ya existe una marca con este nombre.
+		</div>
 	</div>
 
 	<div class="form-group">

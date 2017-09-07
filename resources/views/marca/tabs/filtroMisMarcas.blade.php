@@ -1,6 +1,6 @@
 <div class="box box-success">
    <div class="box-header with-border">
-      <h3 class="box-title">Búsqueda por Nombre</h3>
+      <h3 class="box-title">Por Nombre</h3>
    	<div class="box-tools pull-right">
       	<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
       </div>
@@ -20,7 +20,7 @@
 
 <div class="box box-warning">
    	<div class="box-header with-border">
-      	<h3 class="box-title">Búsqueda por Status</h3>
+      	<h3 class="box-title">Por Status (Publicación)</h3>
       	<div class="box-tools pull-right">
          	<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
       	</div>

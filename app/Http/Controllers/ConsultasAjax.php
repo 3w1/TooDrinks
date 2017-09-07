@@ -8,6 +8,21 @@ use DB; use Carbon\Carbon;
 
 class ConsultasAjax extends Controller
 {   
+    //CONSULTAS PARA MARCAS
+    
+    //Verificar el nombre de una marca para que no se repita (Editar y Crear Marca)
+    public function verificar_nombre_marca($nombre, $id_marca){
+        $existe = DB::table('marca')
+            ->select(DB::raw('count(*) as cant'))
+            ->where('id', '<>', $id_marca)
+            ->where('nombre', 'ILIKE', $nombre)
+            ->first();
+
+        return response()->json(
+            $existe
+        );
+    }
+
     //Buscar un productor específico (Asociar Productor a Marca ADMIN)
 	public function buscar_productor($nombre){
         $productor = DB::table('productor')

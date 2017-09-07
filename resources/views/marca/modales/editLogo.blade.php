@@ -10,6 +10,7 @@
 				
 				{!! Form::open(['route' => 'marca.updateLogo', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
 					{!! Form::hidden('id', $marca->id) !!}
+					{!! Form::hidden('nombre_seo', $marca->nombre_seo) !!}
 					               
 					<div class="form-group">
 					    {!! Form::label('logo', 'Logo / Imagen') !!}
