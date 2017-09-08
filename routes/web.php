@@ -182,15 +182,17 @@ Route::resource('demanda-importador','DemandaImportacionController');
 
 // RUTAS PARA LAS DEMANDAS DE DISTRIBUIDORES
 Route::prefix('demanda-distribuidor')->group(function () {
+    Route::post('cambiar-status', 'DemandaDistribucionController@cambiar_status')
+    ->name('demanda-distribuidor.status');
+    Route::get('historial', 'DemandaDistribucionController@historial')->name('demanda-distribuidor.historial');
+
+
     Route::get('demandas-disponibles', 'DemandaDistribucionController@demandas_disponibles')
     ->name('demanda-distribuidor.demandas-disponibles');
 
     Route::get('marcar-demanda/{id}/{check}', 'DemandaDistribucionController@marcar_demanda')->name('demanda-distribuidor.marcar');
     Route::get('demandas-de-interes', 'DemandaDistribucionController@demandas_interes')
-    ->name('demanda-distribuidor.demandas-interes');
-
-    Route::post('cambiar-status', 'DemandaDistribucionController@cambiar_status')
-    ->name('demanda-distribuidor.status');
+    ->name('demanda-distribuidor.demandas-interes');    
 });
 Route::resource('demanda-distribuidor','DemandaDistribucionController');
 // ./RUTAS PARA LAS DEMANDAS DE DISTRIBUIDORES ./

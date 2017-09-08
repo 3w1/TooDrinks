@@ -8,33 +8,7 @@
 
 <li class="li"><a href="{{route('demanda-importador.index')}}"><i class="fa fa-user-plus"></i> Exportación</a></li>
 
-         <li class="treeview">
-             <a href="#">
-               <i class="fa fa-share"></i> <span>Exportación</span>
-               <span class="pull-right-container">
-                 <i class="fa fa-angle-left pull-right"></i>
-               </span>
-             </a>
-             <ul class="treeview-menu">
-               <li><a href="{{ route('demanda-importador.index') }}"><i class="fa fa-circle-o"></i> Mis Búsqueda de Importadores</a></li>
-               <li><a href="{{ route('demanda-importador.create') }}"><i class="fa fa-circle-o"></i> Nueva Búsqueda de Importador</a></li>
-               <li><a href="#"><i class="fa fa-circle-o"></i> Historial de Búsquedas</a></li>
-            </ul>
-         </li>
-
-         <li class="treeview">
-             <a href="#">
-               <i class="fa fa-share"></i> <span>Distribución</span>
-               <span class="pull-right-container">
-                 <i class="fa fa-angle-left pull-right"></i>
-               </span>
-             </a>
-             <ul class="treeview-menu">
-               <li><a href="{{ route('demanda-distribuidor.index') }}"><i class="fa fa-circle-o"></i> Mis Búsqueda de Distribuidores</a></li>
-               <li><a href="{{ route('demanda-distribuidor.create') }}"><i class="fa fa-circle-o"></i> Nueva Búsqueda de Distribuidor</a></li>
-               <li><a href="#"><i class="fa fa-circle-o"></i> Historial de Búsquedas</a></li>
-            </ul>
-         </li>
+<li class="li"><a href="{{route('demanda-distribuidor.index')}}"><i class="fa fa-user-plus"></i> Distribución</a></li>
 
          <li class="treeview">
             <a href="#"><i class="fa fa-share"></i> Solicitudes

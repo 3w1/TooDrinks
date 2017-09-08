@@ -424,7 +424,7 @@ class CreditoController extends Controller
         $deduccion->accion_id = $id;
         $deduccion->save();
 
-        return redirect('demanda-distribuidor')->with('msj', 'Su demanda de distribuidor ha sido creada con éxito');    
+        return redirect('demanda-distribuidor')->with('msj', 'Su búsqueda de distribuidor ha sido creada con éxito.');    
     }
 
     public function gastar_creditos_DD($id){

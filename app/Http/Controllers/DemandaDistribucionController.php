@@ -16,82 +16,74 @@ class DemandaDistribucionController extends Controller
         $this->middleware('auth');
     }
     
-    public function index()
-    {
+    //Pestaña Mis Búsquedas Activas
+    public function index(Request $request){
+        $demandasDistribuidores = Demanda_Distribuidor::where('tipo_creador', '=', session('perfilTipo')) 
+                                        ->where('creador_id', '=', session('perfilId')) 
+                                        ->where('status', '=', '1')
+                                        ->marca($request->get('marca'))
+                                        ->provincia($request->get('provincia'))
+                                        ->orderBy('created_at', 'ASC')
+                                        ->paginate(12);
         $cont = 0;
-
-        $demandasDistribuidores = Demanda_Distribuidor::where([ 
-                                        ['tipo_creador', '=', session('perfilTipo')], 
-                                        ['creador_id', '=', session('perfilId')], 
-                                    ])
-                                    ->orderBy('created_at', 'ASC')
-                                    ->paginate(8);
-
-        return view('demandaDistribucion.index')->with(compact('demandasDistribuidores', 'cont'));
-    }
-
-    public function demandas_disponibles(){
-        $notificaciones_pendientes_DD = DB::table('notificacion_d')
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'DD')
-                                        ->get();
-
-        foreach ($notificaciones_pendientes_DD as $notificacion){
-            $act = DB::table('notificacion_d')
-                    ->where('id', '=', $notificacion->id)
-                    ->update(['leida' => '1']);
+        foreach ($demandasDistribuidores as $d){
+            $cont++;
         }
 
-        $provincia_origen = DB::table('distribuidor')
-                        ->where('id', '=', session('perfilId'))
-                        ->select('provincia_region_id')
-                        ->get()
-                        ->first();
+        if (session('perfilTipo') == 'P'){
+            $marcas = DB::table('marca')
+                    ->where('productor_id', '=', session('perfilId'))
+                    ->orderBy('nombre', 'ASC')
+                    ->pluck('nombre', 'id');
+        }elseif (session('perfilTipo') == 'I'){
+            $marcas = DB::table('marca')
+                    ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                    ->where('importador_marca.importador_id', '=', session('perfilId'))
+                    ->where('importador_marca.status', '=', '1')
+                    ->orderBy('marca.nombre', 'ASC')
+                    ->pluck('marca.nombre', 'marca.id');
+        }
 
-        $demandasDistribuidores = Demanda_Distribuidor::orderBy('created_at', 'DESC')
-                                    ->where('provincia_region_id', '=', $provincia_origen->provincia_region_id)
-                                    ->where('status', '=', '1')
-                                    ->paginate(10);
+        $provincias = DB::table('provincia_region')
+                    ->where('pais_id', '=', session('perfilPais'))
+                    ->orderBy('provincia', 'ASC')
+                    ->pluck('provincia', 'id');
 
-        return view('demandaDistribucion.demandasDisponibles')->with(compact('demandasDistribuidores'));
+        return view('distribucion.tabs.busquedasActivas')->with(compact('demandasDistribuidores', 'cont', 'marcas', 'provincias'));
     }
 
+    //Cambia el status de una demanda
+    public function cambiar_status(Request $request){
+        Demanda_Distribuidor::find($request->id)
+            ->update(['status' => $request->status]);
 
-    public function create()
-    {   
+        return redirect("demanda-distribuidor")->with('msj', 'El status de su demanda ha sido actualizado con éxito. Ahora aparecerá en su Historial de Búsqueda');
+    }
+
+    //Pestaña Nueva Búsqueda (Distribución)
+    public function create(){   
         if (session('perfilTipo') == 'P'){
-            $pais_origen = DB::table('productor')
-                        ->select('pais_id')
-                        ->where('id', '=', session('perfilId'))
-                        ->get()
-                        ->first();
-
             $marcas = DB::table('marca')
                         ->where('productor_id', '=', session('perfilId'))
+                        ->orderBy('nombre', 'ASC')
                         ->pluck('nombre', 'id');
-        }else{
-            $pais_origen = DB::table('importador')
-                            ->select('pais_id')
-                            ->where('id', '=', session('perfilId'))
-                            ->get()
-                            ->first();
-
+        }elseif (session('perfilTipo') == 'I'){
             $marcas = DB::table('marca')
                         ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
                         ->where('importador_marca.importador_id', '=', session('perfilId'))
+                        ->orderBy('marca.nombre', 'ASC')
                         ->pluck('marca.nombre', 'marca.id');
         }
        
         $provincias = DB::table('provincia_region')
-                        ->orderBy('provincia')
-                        ->where('pais_id', '=', $pais_origen->pais_id)
+                        ->where('pais_id', '=', session('perfilPais'))
+                        ->orderBy('provincia', 'ASC')
                         ->pluck('provincia', 'id');
 
-        return view('demandaDistribucion.create')->with(compact('marcas', 'provincias'));
+        return view('distribucion.tabs.nuevaBusqueda')->with(compact('marcas', 'provincias'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $fecha = new \DateTime();
 
          if ( (session('perfilSuscripcion') == 'Gratis') || (session('perfilSuscripcion') == 'Bronce') ){
@@ -148,11 +140,72 @@ class DemandaDistribucionController extends Controller
         }
 
         if ($creditos == '1'){
-            $url = ('credito/gastar-creditos-pdd/'.$ult_demanda->id);
-            return redirect($url); 
+            return redirect('credito/gastar-creditos-pdd/'.$ult_demanda->id); 
         }else{
-            return redirect('demanda-distribuidor')->with('msj', 'Su demanda de distribuidor ha sido creada con éxito.');    
+            return redirect('demanda-distribuidor')->with('msj', 'Su búsqueda de distribuidor ha sido creada con éxito.');    
         } 
+    }
+
+    //Pestaña Historial de Búsqueda
+    public function historial(Request $request){
+        $demandasDistribuidores = Demanda_Distribuidor::where('tipo_creador', '=', session('perfilTipo')) 
+                                        ->where('creador_id', '=', session('perfilId')) 
+                                        ->where('status', '=', '0')
+                                        ->marca($request->get('marca'))
+                                        ->provincia($request->get('provincia'))
+                                        ->orderBy('created_at', 'ASC')
+                                        ->paginate(12);
+        $cont = 0;
+        foreach ($demandasDistribuidores as $d){
+            $cont++;
+        }
+
+        if (session('perfilTipo') == 'P'){
+            $marcas = DB::table('marca')
+                    ->where('productor_id', '=', session('perfilId'))
+                    ->orderBy('nombre', 'ASC')
+                    ->pluck('nombre', 'id');
+        }elseif (session('perfilTipo') == 'I'){
+            $marcas = DB::table('marca')
+                    ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                    ->where('importador_marca.importador_id', '=', session('perfilId'))
+                    ->where('importador_marca.status', '=', '1')
+                    ->orderBy('marca.nombre', 'ASC')
+                    ->pluck('marca.nombre', 'marca.id');
+        }
+
+        $provincias = DB::table('provincia_region')
+                    ->where('pais_id', '=', session('perfilPais'))
+                    ->orderBy('provincia', 'ASC')
+                    ->pluck('provincia', 'id');
+
+        return view('distribucion.tabs.historialBusqueda')->with(compact('demandasDistribuidores', 'cont', 'marcas', 'provincias'));
+    }
+
+     public function demandas_disponibles(){
+        $notificaciones_pendientes_DD = DB::table('notificacion_d')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'DD')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_DD as $notificacion){
+            $act = DB::table('notificacion_d')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
+
+        $provincia_origen = DB::table('distribuidor')
+                        ->where('id', '=', session('perfilId'))
+                        ->select('provincia_region_id')
+                        ->get()
+                        ->first();
+
+        $demandasDistribuidores = Demanda_Distribuidor::orderBy('created_at', 'DESC')
+                                    ->where('provincia_region_id', '=', $provincia_origen->provincia_region_id)
+                                    ->where('status', '=', '1')
+                                    ->paginate(10);
+
+        return view('demandaDistribucion.demandasDisponibles')->with(compact('demandasDistribuidores'));
     }
 
     public function show($id)
@@ -257,14 +310,6 @@ class DemandaDistribucionController extends Controller
         $demanda_distribuidor->save();
 
         return redirect('demanda-distribuidor')->with('msj', 'Los datos de su demanda de distribución han sido actualizados con éxito.');
-    }
-
-    //Cambia el status de una demanda
-    public function cambiar_status(Request $request){
-        Demanda_Distribuidor::find($request->id)
-            ->update(['status' => $request->status]);
-
-        return redirect("demanda-distribuidor")->with('msj', 'El status de su demanda ha sido actualizado con éxito.');
     }
 
     public function destroy($id)

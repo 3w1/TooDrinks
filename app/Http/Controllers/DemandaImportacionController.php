@@ -57,7 +57,7 @@ class DemandaImportacionController extends Controller
                         ->pluck('pais.pais', 'pais.id');
         }
 
-        return view('exportacion.tabs.demandasActivas')->with(compact('demandasImportadores', 'cont', 'marcas', 'paises'));
+        return view('exportacion.tabs.busquedasActivas')->with(compact('demandasImportadores', 'cont', 'marcas', 'paises'));
     }
 
     //Cambia el status de una demanda
