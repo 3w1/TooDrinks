@@ -143,11 +143,8 @@ Route::resource('bebida','BebidaController');
 Route::prefix('producto')->group(function (){
     Route::get('agregar-producto', 'ProductoController@agregar_producto')->name('producto.agregar-producto');
     Route::get('asociar-producto/{id}', 'ProductoController@asociar_producto')->name('producto.asociar-producto');
-    
     Route::post('updateImagen', 'ProductoController@updateImagen')->name('producto.updateImagen');
-
     Route::get('detalle-de-producto/{id}/{nombre_seo}', 'ProductoController@detalle')->name('producto.detalle');
-    Route::get('verificar-producto/{id}', 'ProductoController@verificar_producto');    
 });
 Route::resource('producto','ProductoController');
 // ./RUTAS PARA LOS PRODUCTOS ./
@@ -167,6 +164,11 @@ Route::resource('oferta','OfertaController');
 
 // RUTAS PARA LAS DEMANDAS DE IMPORTADORES
 Route::prefix('demanda-importador')->group(function () {
+    Route::post('cambiar-status', 'DemandaImportacionController@cambiar_status')
+    ->name('demanda-importador.status');
+    Route::get('historial', 'DemandaImportacionController@historial')->name('demanda-importador.historial');
+
+
     Route::get('demandas-disponibles', 'DemandaImportacionController@demandas_disponibles')
     ->name('demanda-importador.demandas-disponibles');
 
@@ -174,9 +176,6 @@ Route::prefix('demanda-importador')->group(function () {
     ->name('demanda-importador.marcar');
     Route::get('demandas-de-interes', 'DemandaImportacionController@demandas_interes')
     ->name('demanda-importador.demandas-interes');
-
-    Route::post('cambiar-status', 'DemandaImportacionController@cambiar_status')
-    ->name('demanda-importador.status');
 });
 Route::resource('demanda-importador','DemandaImportacionController');
 // ./RUTAS PARA LAS DEMANDAS DE IMPORTADORES ./

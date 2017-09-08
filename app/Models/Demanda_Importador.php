@@ -27,4 +27,16 @@ class Demanda_Importador extends Model
     public function importadores(){
         return $this->belongsToMany('App\Models\Importador', 'importador_demanda_importador')->withPivot('fecha')->withTimestamps();
     }
+
+    public function scopeMarca($query, $marca){
+        if ($marca != ""){
+            $query->where('marca_id', '=', $marca);
+        }
+    }
+
+    public function scopePais($query, $pais){
+        if ($pais != ""){
+            $query->where('pais_id', '=', $pais);
+        }
+    }
 }

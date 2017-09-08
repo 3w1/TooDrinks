@@ -17,42 +17,61 @@ class DemandaImportacionController extends Controller
         $this->middleware('auth');
     }
     
+    //Pestaña Mis Búsquedas Activas
     public function index(Request $request)
     {
-        $cont = 0;
-
         $demandasImportadores = Demanda_Importador::where('productor_id', '=', session('perfilId'))
+                                    ->where('status', '=', '1')
+                                    ->marca($request->get('marca'))
+                                    ->pais($request->get('pais'))
                                     ->orderBy('created_at', 'ASC')
                                     ->paginate(8);
 
-        return view('demandaImportacion.index')->with(compact('demandasImportadores', 'cont'));
-    }
-
-    public function demandas_disponibles(){
-        $notificaciones_pendientes_DI = DB::table('notificacion_i')
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'DI')
-                                        ->get();
-
-        foreach ($notificaciones_pendientes_DI as $notificacion){
-            $act = DB::table('notificacion_i')
-                    ->where('id', '=', $notificacion->id)
-                    ->update(['leida' => '1']);
+        $cont = 0;
+        foreach ($demandasImportadores as $d){
+            $cont++;
         }
 
-        $demandasImportadores = Demanda_Importador::orderBy('created_at', 'DESC')
-                                ->where('pais_id', '=', session('perfilPais'))
-                                ->where('status', '=', '1')
-                                ->paginate(10);
+        $marcas = DB::table('marca')
+                    ->where('productor_id', '=', session('perfilId'))
+                    ->orderBy('nombre', 'ASC')
+                    ->pluck('nombre', 'id');
 
-        return view('demandaImportacion.demandasDisponibles')->with(compact('demandasImportadores'));
+        $paises_posibles = DB::table('pais')
+                    ->select('pais.id')
+                    ->join('productor_pais', 'pais.id', '=', 'productor_pais.pais_id')
+                    ->where('productor_pais.productor_id', '=', session('perfilId'))
+                    ->first();
+
+        if ($paises_posibles == null){
+            $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->where('id', '<>', session('perfilPais'))
+                        ->pluck('pais', 'id');
+        }else{
+            $paises = DB::table('pais')
+                        ->join('productor_pais', 'pais.id', '=', 'productor_pais.pais_id')
+                        ->where('productor_pais.productor_id', '=', session('perfilId'))
+                        ->where('productor_pais.pais_id', '<>', session('perfilPais'))
+                        ->orderBy('pais.pais')
+                        ->pluck('pais.pais', 'pais.id');
+        }
+
+        return view('exportacion.tabs.demandasActivas')->with(compact('demandasImportadores', 'cont', 'marcas', 'paises'));
     }
 
-    public function create()
-    {
+    //Cambia el status de una demanda
+    public function cambiar_status(Request $request){
+        Demanda_Importador::find($request->id)
+            ->update(['status' => $request->status]);
+
+        return redirect("demanda-importador")->with('msj', 'El status de su demanda ha sido actualizado con éxito. Ahora aparecerá en su Historial de Búsquedas.');
+    }
+
+    public function create(){
         $marcas = DB::table('marca')
-                    ->orderBy('nombre')
                     ->where('productor_id', '=', session('perfilId'))
+                    ->orderBy('nombre', 'ASC')
                     ->pluck('nombre', 'id');
 
         $pais_origen = DB::table('productor')
@@ -81,11 +100,10 @@ class DemandaImportacionController extends Controller
                         ->pluck('pais.pais', 'pais.id');
         }
 
-        return view('demandaImportacion.create')->with(compact('marcas', 'paises'));
+        return view('exportacion.tabs.nuevaBusqueda')->with(compact('marcas', 'paises'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $fecha = new \DateTime();
 
         if ( (session('perfilSuscripcion') == 'Gratis') || (session('perfilSuscripcion') == 'Bronce') ){
@@ -136,11 +154,71 @@ class DemandaImportacionController extends Controller
         }
         
         if ($creditos == '1'){
-            $url = ('credito/gastar-creditos-pdi/'.$ult_demanda->id);
-            return redirect($url); 
+            return redirect('credito/gastar-creditos-pdi/'.$ult_demanda->id); 
         }else{
-            return redirect('demanda-importador')->with('msj', 'Su demanda de importador ha sido creada con éxito.');    
+            return redirect('demanda-importador')->with('msj', 'Su búsqueda de importador ha sido creada con éxito.');    
         } 
+    }
+
+    public function historial(Request $request){
+        $demandasImportadores = Demanda_Importador::where('productor_id', '=', session('perfilId'))
+                                    ->where('status', '=', '0')
+                                    ->marca($request->get('marca'))
+                                    ->pais($request->get('pais'))
+                                    ->orderBy('created_at', 'ASC')
+                                    ->paginate(8);
+
+        $cont = 0;
+        foreach ($demandasImportadores as $d){
+            $cont++;
+        }
+
+        $marcas = DB::table('marca')
+                    ->where('productor_id', '=', session('perfilId'))
+                    ->orderBy('nombre', 'ASC')
+                    ->pluck('nombre', 'id');
+
+        $paises_posibles = DB::table('pais')
+                    ->select('pais.id')
+                    ->join('productor_pais', 'pais.id', '=', 'productor_pais.pais_id')
+                    ->where('productor_pais.productor_id', '=', session('perfilId'))
+                    ->first();
+
+        if ($paises_posibles == null){
+            $paises = DB::table('pais')
+                        ->orderBy('pais')
+                        ->where('id', '<>', session('perfilPais'))
+                        ->pluck('pais', 'id');
+        }else{
+            $paises = DB::table('pais')
+                        ->join('productor_pais', 'pais.id', '=', 'productor_pais.pais_id')
+                        ->where('productor_pais.productor_id', '=', session('perfilId'))
+                        ->where('productor_pais.pais_id', '<>', session('perfilPais'))
+                        ->orderBy('pais.pais')
+                        ->pluck('pais.pais', 'pais.id');
+        }
+
+        return view('exportacion.tabs.historialBusqueda')->with(compact('demandasImportadores', 'cont', 'marcas', 'paises'));
+    }
+
+    public function demandas_disponibles(){
+        $notificaciones_pendientes_DI = DB::table('notificacion_i')
+                                        ->where('leida', '=', '0')
+                                        ->where('tipo', '=', 'DI')
+                                        ->get();
+
+        foreach ($notificaciones_pendientes_DI as $notificacion){
+            $act = DB::table('notificacion_i')
+                    ->where('id', '=', $notificacion->id)
+                    ->update(['leida' => '1']);
+        }
+
+        $demandasImportadores = Demanda_Importador::orderBy('created_at', 'DESC')
+                                ->where('pais_id', '=', session('perfilPais'))
+                                ->where('status', '=', '1')
+                                ->paginate(10);
+
+        return view('demandaImportacion.demandasDisponibles')->with(compact('demandasImportadores'));
     }
 
     public function show($id)
@@ -231,14 +309,6 @@ class DemandaImportacionController extends Controller
         $demanda_importador->save();
 
         return redirect('demanda-importador')->with('msj', 'Los datos de su demanda se han actualizado con éxito.');
-    }
-
-    //Cambia el status de una demanda
-    public function cambiar_status(Request $request){
-        Demanda_Importador::find($request->id)
-            ->update(['status' => $request->status]);
-
-        return redirect("demanda-importador")->with('msj', 'El status de su demanda ha sido actualizado con éxito.');
     }
 
     public function destroy($id)

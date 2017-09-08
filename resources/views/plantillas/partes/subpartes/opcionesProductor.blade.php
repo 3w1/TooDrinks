@@ -6,6 +6,8 @@
 
 <li class="li"><a href="{{route('oferta.index')}}"><i class="fa fa-shopping-cart"></i> Mercado</a></li>
 
+<li class="li"><a href="{{route('demanda-importador.index')}}"><i class="fa fa-user-plus"></i> Exportación</a></li>
+
          <li class="treeview">
              <a href="#">
                <i class="fa fa-share"></i> <span>Exportación</span>

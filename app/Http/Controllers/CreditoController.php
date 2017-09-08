@@ -344,7 +344,7 @@ class CreditoController extends Controller
         $deduccion->accion_id = $id;
         $deduccion->save();
 
-        return redirect('demanda-importador')->with('msj', 'Su demanda de importador ha sido creada con éxito');    
+        return redirect('demanda-importador')->with('msj', 'Su búsqueda de importador ha sido creada con éxito.');    
     }
 
     public function gastar_creditos_DI($id){
