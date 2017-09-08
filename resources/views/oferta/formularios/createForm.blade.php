@@ -5,6 +5,7 @@
 	{!! Form::hidden('creador_id', session('perfilId')) !!}
 	{!! Form::hidden('cantidad_visitas', '0') !!}
 	{!! Form::hidden('cantidad_contactos', '0') !!}
+	{!! Form::hidden('status', '1') !!}
 
 	@if ($tipo == '1')
 		{!! Form::hidden('producto_id', $id) !!}
@@ -19,6 +20,9 @@
 			<select class="form-control" id="productos" name="producto_id" disabled required>
 				<option value="">Seleccione un producto..</option>
 			</select>
+			<div class="alert alert-warning" style="display: none;" id="errorProductos">
+				<strong>Actualmente no posee productos asociados de la marca seleccionada</strong>
+			</div>
 		</div>
 	@endif
 
@@ -43,18 +47,18 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('cantidad_producto', 'Cantidad de Productos (*)') !!}
-		{!! Form::number('cantidad_producto', null, ['class' => 'form-control', 'required'] ) !!}
+		{!! Form::label('cantidad_producto', 'Cantidad de Productos') !!}
+		{!! Form::number('cantidad_producto', null, ['class' => 'form-control'] ) !!}
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('cantidad_caja', 'Cantidad de Cajas (*)') !!}
-		{!! Form::number('cantidad_caja', null, ['class' => 'form-control', 'required'] ) !!}
+		{!! Form::label('cantidad_caja', 'Cantidad de Cajas)') !!}
+		{!! Form::number('cantidad_caja', null, ['class' => 'form-control'] ) !!}
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('cantidad_minima', 'Cantidad Mínima de Venta (*)') !!}
-		{!! Form::number('cantidad_minima', null, ['class' => 'form-control', 'required'] ) !!}
+		{!! Form::label('cantidad_minima', 'Cantidad Mínima de Venta') !!}
+		{!! Form::number('cantidad_minima', null, ['class' => 'form-control'] ) !!}
 	</div>
 
 	<div class="form-group">

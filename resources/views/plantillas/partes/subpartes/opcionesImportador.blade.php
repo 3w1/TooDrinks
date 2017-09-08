@@ -1,24 +1,9 @@
 <li class="li"><a href="{{route('marca.index')}}"><i class="fa fa-diamond"></i> Marcas</a></li>
+
 <li class="li"><a href="{{route('producto.index')}}"><i class="fa fa-product-hunt"></i> Productos</a>
 
-<li class="treeview">
-   <a href="#"><i class="fa fa-share"></i> Mercado
-      <span class="pull-right-container">
-         <i class="fa fa-angle-left pull-right"></i>
-         @if($cont_NO > 0)<small class="label pull-right bg-purple">{{$cont_NO}}</small>@endif
-      </span>
-   </a>
-   <ul class="treeview-menu">
-      <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas Activas</a></li>
-      <li><a href="{{ route('oferta.disponibles') }}"><i class="fa fa-circle-o"></i> Ofertas Disponibles
-         <span class="pull-right-container">
-            @if($cont_NO > 0) <small class="label pull-right bg-purple">{{$cont_NO}}</small>@endif
-         </span>
-      </a></li>
-      <li><a href="{{ route('oferta.crear-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
-      <li><a href="#"><i class="fa fa-circle-o"></i> Historial de Ofertas</a></li>
-   </ul>
-</li>
+<li class="li"><a href="{{route('oferta.index')}}"><i class="fa fa-shopping-cart"></i> Mercado</a></li>
+
 <li class="treeview">
    <a href="#">
       <i class="fa fa-share"></i> <span>Importación</span>

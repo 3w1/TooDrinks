@@ -24,21 +24,26 @@ function cargarProvincias() {
 
 function cargarProductos() {
 
-    var marca = document.getElementById('marca').value+".1";
-    //var route = "http://www.toodrinks.com/producto/"+marca+"";
-	var route = "http://localhost:8000/producto/"+marca+"";
+    var marca = document.getElementById('marca').value;
+    //var route = "http://www.toodrinks.com/consulta/cargar-productos/"+marca+"";
+	var route = "http://localhost:8000/consulta/cargar-productos/"+marca+"";
                     
     $.ajax({
         url:route,
         type:'GET',
         success:function(ans){
         	document.getElementById("productos").innerHTML = "<option value=''>Seleccione un producto..</option>";
-     		document.getElementById("productos").disabled = false;
-        	console.log(ans[0]);
-            for (var i = 0; i < ans.length; i++ ){
-
-                document.getElementById("productos").innerHTML += "<option value='"+ans[i].id+"'>"+ans[i].nombre+"</option>";
-            }
+        	if (ans.length > 0){
+        		for (var i = 0; i < ans.length; i++ ){
+                	document.getElementById("productos").innerHTML += "<option value='"+ans[i].id+"'>"+ans[i].nombre+"</option>";
+            		document.getElementById("productos").disabled = false;
+            		document.getElementById("errorProductos").style.display = 'none';
+            	}
+        	}else{
+        		document.getElementById("productos").disabled = true;
+        		document.getElementById("errorProductos").style.display = 'block';
+        	}
+            
         }
     });
 }

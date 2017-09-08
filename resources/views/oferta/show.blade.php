@@ -20,7 +20,7 @@
       @endif
    @endsection
    
-   @include('oferta.modales.editarOferta')
+   @include('oferta.modales.edit')
 
    <div class="row">
       <div class="col-md-4"></div>
@@ -29,30 +29,42 @@
       </div>
       <div class="col-md-4"></div>
    </div>
-   
+
    <div class="row">
-      <center>
-      <div class="btn-group btn-toggle"> 
-         @if ($oferta->status == '1')
-            <button class="btn btn-primary active" id="on" onclick="cambiar(this.id);">Visible</button>
-            <button class="btn btn-default" id="off" onclick="cambiar(this.id);">No Visible</button>
-         @else
-            <button class="btn btn-default" id="on" onclick="cambiar(this.id);">Visible</button>
-            <button class="btn btn-primary active" id="off" onclick="cambiar(this.id);">No Visible</button>
-         @endif
-         {!! Form::open(['route' => ['oferta.status', $oferta->id], 'method' => 'GET', 'id' => 'formStatus' ]) !!}
-            <input type="hidden" name="status" id="status">
-         {!! Form::close() !!}
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+         <center>
+            <b>Visitas:</b> <label class="label bg-blue label-lg">{{$oferta->cantidad_visitas}}</label>
+            <b>Contactos:</b> <small class="label bg-green">{{$oferta->cantidad_contactos}}</small>
+         </center>
       </div>
-      </center>
-   </div><br>
+      <div class="col-md-4"></div>
+   </div><br />
+   
+   @if ($oferta->status == '1')
+      <div class="row">
+         <center>
+         <div class="btn-group btn-toggle"> 
+               <button class="btn btn-primary active" id="on" onclick="cambiar(this.id);">Visible</button>
+               <button class="btn btn-default" id="off" onclick="cambiar(this.id);">No Visible</button>
+            {!! Form::open(['route' => 'oferta.status', 'method' => 'POST', 'id' => 'formStatus' ]) !!}
+               {!! Form::hidden('id_oferta', $oferta->id) !!}
+               {!! Form::hidden('titulo_oferta', $oferta->titulo) !!}
+               {!! Form::hidden('status', null, ['id' => 'status']) !!}
+            {!! Form::close() !!}
+         </div>
+         </center>
+      </div><br>
+   @endif
   
    <div class="row">
       <div class="col-md-1"></div>
       <div class="col-md-10 col-xs-12">
         
          <div class="panel panel-default panel-success">
-            <div class="pull-right"><a class="btn btn-primary btn-xs" href="" data-toggle='modal' data-target='#myModal'><i class="fa fa-edit"></i></a></div>
+            @if ($oferta->status == '1')
+               <div class="pull-right"><a class="btn btn-primary btn-xs" href="" data-toggle='modal' data-target='#myModal'><i class="fa fa-edit"></i></a></div>
+            @endif
             <div class="panel-heading"><h4>Producto Ofertado: <b>{{ $oferta->producto->nombre }}</b></h4>
             </div>
            

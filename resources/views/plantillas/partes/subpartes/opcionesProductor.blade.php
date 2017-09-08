@@ -1,21 +1,10 @@
 <li class="li"><a href="{{ route('productor.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
 
 <li class="li"><a href="{{route('marca.index')}}"><i class="fa fa-diamond"></i> Marcas</a>
+
 <li class="li"><a href="{{route('producto.index')}}"><i class="fa fa-product-hunt"></i> Productos</a></li>
 
-<li class="treeview">
-             <a href="#">
-               <i class="fa fa-share"></i> <span>Mercado</span>
-               <span class="pull-right-container">
-                 <i class="fa fa-angle-left pull-right"></i>
-               </span>
-             </a>
-             <ul class="treeview-menu">
-               <li><a href="{{ route('oferta.index') }}"><i class="fa fa-circle-o"></i> Mis Ofertas Activas</a></li>
-               <li><a href="{{ route('oferta.crear-oferta', ['0','0']) }}"><i class="fa fa-circle-o"></i> Nueva Oferta</a></li>
-               <li><a href="#"><i class="fa fa-circle-o"></i> Historial de Ofertas</a></li>
-            </ul>
-         </li>
+<li class="li"><a href="{{route('oferta.index')}}"><i class="fa fa-shopping-cart"></i> Mercado</a></li>
 
          <li class="treeview">
              <a href="#">

@@ -38,6 +38,7 @@ class ProductoController extends Controller
         }elseif (session('perfilTipo') == 'I'){
             $productos = Producto::select('producto.*')
                             ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
+                            ->where('importador_producto.importador_id', '=', session('perfilId'))
                             ->where('producto.id', '<>', '0')
                             ->nombre($request->get('busqueda'))
                             ->bebida($request->get('bebida'), $request->get('clase_bebida'))
@@ -53,7 +54,8 @@ class ProductoController extends Controller
         }elseif (session('perfilTipo') == 'D'){
             $productos = Producto::select('producto.*')
                             ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
-                            ->where('producto.id', '<>', '0')
+                            ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
+                            >where('producto.id', '<>', '0')
                             ->nombre($request->get('busqueda'))
                             ->bebida($request->get('bebida'), $request->get('clase_bebida'))
                             ->marca($request->get('marca'))
@@ -254,58 +256,15 @@ class ProductoController extends Controller
         return redirect('producto/detalle-de-producto/'.$request->id.'/'.$request->nombre_seo)->with('msj', 'La imagen del producto ha sido actualizada con éxito.');
     }
 
-    //Metodo que permite seleccionar los productos que se importan / distribuyen
-    //cuando la entidad se asocia a una marca
-    public function seleccionar_productos($marca){
-        $productos = Producto::where('marca_id', '=', $marca)
-                        ->orderBy('nombre', 'ASC')
-                        ->paginate();
+    public function detalle(Request $request, $id, $nombre_seo){
+        $producto = Producto::find($id);
 
-        $nombre_marca = DB::table('marca')
+        $productor = Productor::find($producto->marca->productor_id)
                         ->select('nombre')
-                        ->where('id', '=', $marca)
+                        ->get()
                         ->first();
 
-        return view('producto.seleccionarProductos')->with(compact('productos','nombre_marca'));
-    }
-
-    //Método que guarda los productos seleccionados en el método anterior
-    public function asociar_productos(Request $request){
-        foreach ($request->productos as $producto){
-            if (session('perfilTipo') == 'I'){
-                Importador::find(session('perfilId'))->productos()->attach($producto);
-            }elseif (session('perfilTipo') == 'D'){
-                Distribuidor::find(session('perfilId'))->productos()->attach($producto);
-            }elseif (session('perfilTipo') == 'H'){
-                Horeca::find(session('perfilId'))->productos()->attach($producto);
-            }
-        }
-        return redirect('marca')->with('msj', 'Los productos han sido asociados a su lista con éxito.');
-    }
-
-    //Listado de productos de una marca específica
-    public function listado($id, $marca){
-        $productos = Producto::where('marca_id', '=', $id)
-                        ->paginate(9);
-
-        if (session('perfilTipo') == 'AD'){
-            return view('adminWeb.listados.productos')->with(compact('productos', 'marca'));
-        }
-
-        return view('producto.listado')->with(compact('productos', 'marca'));
-    }
-
-    //Productos a nivel mundial para su búsqueda y asociación
-    function productos_mundiales(){
-        $bebidas = DB::table('bebida')
-                    ->orderBy('nombre', 'ASC')
-                    ->pluck('nombre', 'id'); 
-
-        $paises = DB::table('pais')
-                    ->orderBy('pais', 'ASC')
-                    ->pluck('pais', 'id');
-
-        return view('producto.productosMundiales')->with(compact('bebidas', 'paises'));
+        return view('producto.show')->with(compact('producto', 'productor'));
     }
 
     //Asociar un producto con un importador / distribuidor (Pestaña Agregar Producto)
@@ -323,14 +282,7 @@ class ProductoController extends Controller
     {
         $tipo = explode('.', $id);
 
-        if ($tipo[1] == '1'){
-            //Mostrar Productos de una Marca específica
-            $productos = DB::table('producto')
-                    ->select('id', 'nombre')
-                    ->orderBy('nombre')
-                    ->where('marca_id', '=', $tipo[0])
-                    ->get();
-        }elseif ($tipo[1] == '2'){
+        if ($tipo[1] == '2'){
             //Método para buscar un producto específico
             $productos = DB::table('producto')
                     ->select('producto.id', 'producto.nombre', 'producto.nombre_seo', 'producto.imagen', 'productor.id as productor')
@@ -370,95 +322,6 @@ class ProductoController extends Controller
         );
     }
 
-    //Buscar productos por tipo de bebida y clase (opcional)
-    public function productos_por_clase($bebida, $clase){
-        if ($clase == '0'){
-            $productos = DB::table('producto')
-                    ->select('producto.id', 'producto.nombre', 'producto.nombre_seo', 'producto.imagen', 'productor.id as productor')
-                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
-                    ->orderBy('producto.nombre')
-                    ->where('producto.bebida_id', '=', $bebida)
-                    ->get();
-        }else{
-            $productos = DB::table('producto')
-                    ->select('producto.id', 'producto.nombre', 'producto.nombre_seo', 'producto.imagen', 'productor.id as productor')
-                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
-                    ->orderBy('producto.nombre')
-                    ->where('producto.clase_bebida_id', '=', $clase)
-                    ->get();
-        }
-
-        foreach ($productos as $producto){
-            //Consulto los paises marcados como destino por el productor
-            $paises_productor = DB::table('productor_pais')
-                                ->select('pais_id')
-                                ->where('productor_id', '=', $producto->productor)
-                                ->get();
-            $check = 0;
-            $cont = 0;
-            //Verifico si el país es destino laboral del productor
-            foreach ($paises_productor as $pais){
-                $cont++;
-                if ($pais->pais_id == session('perfilPais')){
-                    $check = 1;
-                }
-            }
-
-            //Si todavía el productor no ha marcado ningún país
-            if ($cont == 0){
-                $check = 1;
-            }
-
-            $producto->check = $check;
-        }
-
-        return response()->json(
-            $productos->toArray()
-        );
-    }
-
-    //Buscar productos por tipo de bebida y país
-    public function productos_por_pais($bebida, $pais){
-        $productos = DB::table('producto')
-                    ->select('producto.id', 'producto.nombre', 'producto.nombre_seo', 'producto.imagen', 'productor.id as productor')
-                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
-                    ->orderBy('producto.nombre')
-                    ->where('producto.bebida_id', '=', $bebida)
-                    ->where('producto.pais_id', '=', $pais)
-                    ->get();
-
-        foreach ($productos as $producto){
-            //Consulto los paises marcados como destino por el productor
-            $paises_productor = DB::table('productor_pais')
-                                ->select('pais_id')
-                                ->where('productor_id', '=', $producto->productor)
-                                ->get();
-            $check = 0;
-            $cont = 0;
-            //Verifico si el país es destino laboral del productor
-            foreach ($paises_productor as $pais){
-                $cont++;
-                if ($pais->pais_id == session('perfilPais')){
-                    $check = 1;
-                }
-            }
-
-            //Si todavía el productor no ha marcado ningún país
-            if ($cont == 0){
-                $check = 1;
-            }
-
-            $producto->check = $check;
-        }
-
-        return response()->json(
-            $productos->toArray()
-        );
-    }
-
     //Método para cargar los detalles de un producto
     //Para solicitarlo en importación o distribución
     //Para asociarlo a una entidad
@@ -492,37 +355,6 @@ class ProductoController extends Controller
         return response()->json(
             $producto
         );
-    }
-
-    public function detalle(Request $request, $id, $nombre_seo){
-        $producto = Producto::find($id);
-
-        $productor = Productor::find($producto->marca->productor_id)
-                        ->select('nombre')
-                        ->get()
-                        ->first();
-
-        $comentarios = DB::table('opinion')
-                        ->orderBy('fecha', 'DESC')
-                        ->where('producto_id', '=', $id)
-                        ->take(6)
-                        ->get();
-
-        $cont = 0;
-        foreach ($comentarios as $comentario)
-            $cont++;
-            
-        $comentarioPerfil = DB::table('opinion')
-                            ->where('tipo_creador', '=', session('perfilTipo'))
-                            ->where('creador_id', '=', session('perfilId'))
-                            ->where('producto_id', '=', $id)
-                            ->first();
-
-        $existe = 0;
-        if ( $comentarioPerfil != null)
-            $existe = '1';
-
-        return view('producto.show')->with(compact('producto', 'productor', 'comentarios', 'cont', 'comentarioPerfil', 'existe'));
     }
 
     public function edit($id)

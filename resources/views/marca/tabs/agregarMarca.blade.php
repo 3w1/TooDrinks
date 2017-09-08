@@ -97,6 +97,6 @@
 @endsection
 
 @section('paginacion')
-   {{$marcas->appends(Request::only(['busqueda', 'status']))->render()}}
+   {{$marcas->appends(Request::only(['busqueda']))->render()}}
 @endsection
 

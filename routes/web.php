@@ -116,25 +116,19 @@ Route::resource('horeca','HorecaController');
 
 // RUTAS PARA LAS MARCAS 
 Route::prefix('marca')->group(function (){ 
-    Route::get('descripcion/{id}', 'MarcaController@descripcion');
-    Route::post('cambiar-logo', 'MarcaController@updateLogo')->name('marca.updateLogo');
+    Route::get('agregar-marca', 'MarcaController@agregar_marca')->name('marca.agregar-marca');
 
     Route::get('{id}/{nombre_seo}', 'MarcaController@show')->name('marca.detalles');
+    Route::post('cambiar-logo', 'MarcaController@updateLogo')->name('marca.updateLogo');
+    
 
-    //Agregar una marca al listado de una entidad (Marcas Mundiales)
-    Route::get('agregar-marca', 'MarcaController@agregar_marca')->name('marca.agregar-marca');
+    Route::get('descripcion/{id}', 'MarcaController@descripcion');
     
     //Peticiones AJAX
-    Route::get('prueba/{nombre}', 'MarcaController@buscar_por_nombre');
-    Route::get('buscar-por-productor/{productor}', 'MarcaController@buscar_por_productor');
-    Route::get('buscar-por-pais/{pais}', 'MarcaController@buscar_por_pais');
     Route::get('detalles-marca/{id}', 'MarcaController@detalles_marca');
 });
 Route::resource('marca','MarcaController');
 
-Route::get('buscar-marca-por-nombre/{nombre}', 'MarcaController@buscar_por_nombre');
-Route::get('buscar-marca-por-productor/{productor}', 'MarcaController@buscar_por_productor');
-Route::get('buscar-marca-por-pais/{pais}', 'MarcaController@buscar_por_pais');
 Route::get('detalles-marca/{id}', 'MarcaController@detalles_marca');
 // ./RUTAS PARA LAS MARCAS ./
 
@@ -147,36 +141,26 @@ Route::resource('bebida','BebidaController');
 
 // RUTAS PARA LOS PRODUCTOS
 Route::prefix('producto')->group(function (){
-    //Agregar un producto al listado de una entidad (Productos Mundiales)
     Route::get('agregar-producto', 'ProductoController@agregar_producto')->name('producto.agregar-producto');
-
-    Route::get('agregar/{id}-{marca}', 'ProductoController@agregar')->name('producto.agregar');
-    Route::get('listado-de-productos/{id}-{marca}', 'ProductoController@listado')->name('producto.listado');
-    Route::get('detalle-de-producto/{id}/{nombre_seo}', 'ProductoController@detalle')->name('producto.detalle');
-    Route::get('seleccionar-productos/{id}', 'ProductoController@seleccionar_productos')->name('producto.seleccionar');
-    Route::post('asociar-productos', 'ProductoController@asociar_productos')->name('producto.asociar-productos');
-    Route::get('verificar-producto/{id}', 'ProductoController@verificar_producto');
-    Route::get('mis-productos/{filtro}', 'ProductoController@mis_productos')->name('producto.mis-productos');
-   // Route::get('productos-m', 'ProductoController@productos_mundiales')->name('producto.mundiales');
     Route::get('asociar-producto/{id}', 'ProductoController@asociar_producto')->name('producto.asociar-producto');
-    //Peticiones AJAX
-    Route::get('productos-por-clase/{bebida}/{clase}', 'ProductoController@productos_por_clase');
-    Route::get('productos-por-pais/{bebida}/{pais}', 'ProductoController@productos_por_pais');
-
+    
     Route::post('updateImagen', 'ProductoController@updateImagen')->name('producto.updateImagen');
+
+    Route::get('detalle-de-producto/{id}/{nombre_seo}', 'ProductoController@detalle')->name('producto.detalle');
+    Route::get('verificar-producto/{id}', 'ProductoController@verificar_producto');    
 });
 Route::resource('producto','ProductoController');
 // ./RUTAS PARA LOS PRODUCTOS ./
 
 // RUTAS PARA LAS OFERTAS
 Route::prefix('oferta')->group(function () {
+    Route::get('{id}/{titulo}', 'OfertaController@show')->name('oferta.detalles');
+    Route::post('cambiar-status', 'OfertaController@cambiar_status')->name('oferta.status');
     Route::get('crear-oferta/{id}/{producto}', 'OfertaController@crear_oferta')->name('oferta.crear-oferta');
-    
     Route::get('ofertas-disponibles', 'OfertaController@ofertas_disponibles')->name('oferta.disponibles');
-    Route::get('ver-detalle-oferta/{id}', 'OfertaController@detalle_oferta')->name('oferta.detalle');
-    Route::get('marcar-oferta/{id}', 'OfertaController@marcar_oferta')->name('oferta.marcar');
-
-    Route::get('cambiar-status/{id}', 'OfertaController@cambiar_status')->name('oferta.status');
+    Route::get('detalles-de-oferta', 'OfertaController@detalle_oferta')->name('oferta.ver-detalles');
+    Route::get('marcar-oferta/{id}/{tipo}', 'OfertaController@marcar_oferta')->name('oferta.marcar');
+    Route::get('historial', 'OfertaController@historial')->name('oferta.historial');
 });
 Route::resource('oferta','OfertaController');
 // ./RUTAS PARA LAS OFERTAS ./
@@ -458,6 +442,7 @@ Route::prefix('consulta')->group(function () {
 
     //CONSULTAS PARA PRODUCTOS
     Route::get('verificar-nombre-producto/{nombre}/{id_producto}', 'ConsultasAjax@verificar_nombre_producto');
+    Route::get('cargar-productos/{marca}', 'ConsultasAjax@cargar_productos');
 
     Route::get('buscar-productor/{nombre}', 'ConsultasAjax@buscar_productor');
     Route::get('buscar-marca/{nombre}', 'ConsultasAjax@buscar_marca');

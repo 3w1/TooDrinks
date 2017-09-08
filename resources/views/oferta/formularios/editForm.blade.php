@@ -10,7 +10,7 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::label('descripcion', 'Descripcion (*)') !!}
+		{!! Form::label('descripcion', 'Descripción (*)') !!}
 		{!! Form::textarea('descripcion', $oferta->descripcion, ['class' => 'form-control', 'required', 'rows' => '5'] ) !!}
 	</div>
 
@@ -55,14 +55,14 @@
 	
 	@if (session('perfilTipo') == 'P')
 		<div class="form-group">
-            {!! Form::label('visible_importador', 'Disponible para Importadores (*)') !!}
+            {!! Form::label('visible_importador', 'Visible para Importadores (*)') !!}
             {!! Form::select('visible_importadores', ['0' => 'No', '1' => 'Si'], $oferta->visible_importadores, ['class' => 'form-control']) !!}
         </div>
     @endif
 
     @if (session('perfilTipo') != 'D')
         <div class="form-group">
-            {!! Form::label('visible_distribuidor', 'Disponible para Distribuidores (*)') !!}
+            {!! Form::label('visible_distribuidor', 'Visible para Distribuidores (*)') !!}
             {!! Form::select('visible_distribuidores', ['0' => 'No', '1' => 'Si'], $oferta->visible_distribuidores, ['class' => 'form-control']) !!}
         </div>
 

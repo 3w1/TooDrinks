@@ -63,6 +63,39 @@ class ConsultasAjax extends Controller
         );
     }
 
+    //Cargar productos de una marca específica (Pestaña Crear Oferta)
+    public function cargar_productos($marca){
+        if (session('perfilTipo') == 'P'){
+            $productos = DB::table('producto')
+                    ->select('id', 'nombre')
+                    ->orderBy('nombre')
+                    ->where('marca_id', '=', $marca)
+                    ->get();
+        }elseif (session('perfilTipo') == 'I'){
+            $productos = DB::table('marca')
+                    ->select('producto.id', 'producto.nombre')
+                    ->join('producto', 'marca.id', '=', 'producto.marca_id')
+                    ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
+                    ->where('importador_producto.importador_id', '=', session('perfilId'))
+                    ->where('marca.id', '=', $marca)
+                    ->orderBy('nombre')
+                    ->get();   
+        }elseif (session('perfilTipo') == 'D'){
+            $productos = DB::table('marca')
+                    ->select('producto.id', 'producto.nombre')
+                    ->join('producto', 'marca.id', '=', 'producto.marca_id')
+                    ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
+                    ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
+                    ->where('marca.id', '=', $marca)
+                    ->orderBy('nombre')
+                    ->get();   
+        }
+       
+        return response()->json(
+            $productos->toArray()
+        );
+    }
+
     //Cargar categorías de una bebida específica 
     //(Crear Productos, Editar Producto)
     public function cargar_clases_bebidas($bebida){

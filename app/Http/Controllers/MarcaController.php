@@ -187,67 +187,6 @@ class MarcaController extends Controller
         );
     }
 
-    //Búsqueda de Marcas por Nombre (Asociar Marca (Establecer Relación Entidad-Marca))
-    public function buscar_por_nombre($nombre){
-        if (session('perfilTipo') == 'P'){
-            $marcas = DB::table('marca')
-                        ->select('id', 'nombre', 'logo')
-                        ->orderBy('nombre')
-                        ->where('nombre', 'ILIKE', '%'.$nombre.'%')
-                        ->where('productor_id', '<>', session('perfilId'))
-                        ->get();
-        }elseif (session('perfilTipo') == 'I'){
-            $marcas = DB::table('marca')
-                        ->select('marca.id', 'marca.nombre', 'marca.logo')
-                        ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
-                        ->where('importador_marca.importador_id', '!=', session('perfilId'))
-                        ->orwhere('importador_marca.marca_id', '=', null)
-                        ->where('marca.nombre', 'ILIKE', '%'.$nombre.'%')
-                        ->orderBy('nombre')
-                        ->get();
-        }elseif (session('perfilTipo') == 'D'){
-            $marcas = DB::table('marca')
-                        ->select('marca.id', 'marca.nombre', 'marca.logo')
-                        ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
-                        ->where('distribuidor_marca.distribuidor_id', '!=', session('perfilId'))
-                        ->orwhere('distribuidor_marca.marca_id', '=', null)
-                        ->where('marca.nombre', 'ILIKE', '%'.$nombre.'%')
-                        ->orderBy('nombre')
-                        ->get();
-        }
-
-        return response()->json(
-            $marcas->toArray()
-        );
-    }
-
-    //Búsqueda de Marcas por Productor (Marcas Mundiales)
-    public function buscar_por_productor($productor){
-        $marcas = DB::table('marca')
-                    ->select('marca.id', 'marca.nombre', 'marca.logo')
-                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
-                    ->orderBy('marca.nombre')
-                    ->where('productor.nombre', 'ILIKE', '%'.$productor.'%')
-                    ->get();
-
-        return response()->json(
-            $marcas->toArray()
-        );
-    }
-
-    //Búsqueda de Marcas por País (Marcas Mundiales)
-    public function buscar_por_pais($pais){
-        $marcas = DB::table('marca')
-                    ->select('id', 'nombre', 'logo', 'productor_id')
-                    ->orderBy('nombre')
-                    ->where('pais_id', '=', $pais)
-                    ->get();
-
-        return response()->json(
-            $marcas->toArray()
-        );
-    }
-
     public function detalles_marca($id){
         $marca = Marca::where('id', '=', $id)->with('productor', 'pais')
                     ->first()->toArray();
@@ -300,28 +239,6 @@ class MarcaController extends Controller
         return response()->json(
             $marca
         );
-    }
-
-    public function marcas_mundiales(){
-        $paises = DB::table('pais')
-                    ->orderBy('pais', 'ASC')
-                    ->pluck('pais', 'id');
-
-        if (session('perfilTipo') == 'I'){
-            $marcas = Marca::select('marca.*')
-                    ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
-                    ->where('importador_marca.importador_id', '!=', session('perfilId'))
-                    ->orwhere('importador_marca.marca_id', '=', null)
-                    ->paginate(6);
-        }elseif (session('perfilTipo') == 'D'){
-        	$marcas = Marca::select('marca.*')
-                    ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
-                    ->where('distribuidor_marca.distribuidor_id', '!=', session('perfilId'))
-                    ->orwhere('distribuidor_marca.marca_id', '=', null)
-                    ->paginate(6);
-        }
-
-        return view('marca.marcasMundiales')->with(compact('marcas', 'paises'));
     }
 
     public function edit($id)

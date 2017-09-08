@@ -1,13 +1,12 @@
 @extends('plantillas.main')
 @section('title', 'Detalle de Oferta')
 
-@section('items')
-   @if (Session::has('msj'))
-    <div class="alert alert-success alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
-    </div>
-  @endif
+@section('title-header')
+   Detalle de Oferta
+@endsection
+
+@section('title-complement')
+   ({{$oferta->titulo}})
 @endsection
 
 @section('content-left')
@@ -30,8 +29,13 @@
       }
    ?>
 
-   @section('title-header')
-      <h3>Detalle de la Oferta <strong> {{ $oferta->titulo }} </strong></h3>
+   @section('alertas')
+      @if (Session::has('msj'))
+       <div class="alert alert-success alert-dismissable">
+           <button type="button" class="close" data-dismiss="alert">&times;</button>
+           <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+       </div>
+     @endif
    @endsection
 
    <div class="row">
@@ -74,7 +78,10 @@
                <li class="list-group-item"><b>Envío Disponible:</b> @if ($oferta->envio == '1') Si @else No @endif </li>
                <li class="list-group-item"><b>Costo del Envío:</b> {{ $oferta->costo_envio }}</li>
                @if ($restringido == '1')
-                  <li class="list-group-item"><center><a href="{{ route('oferta.marcar', $oferta->id) }}" class="btn btn-warning">¡Me Interesa!</a></center></li>
+                  <li class="list-group-item"><center>
+                     <a href="{{ route('oferta.marcar', [$oferta->id, '1']) }}" class="btn btn-warning">¡Me Interesa!</a>
+                     <a href="{{ route('oferta.marcar', [$oferta->id, '0']) }}" class="btn btn-danger">¡No Me Interesa!</a>
+                  </center></li>
                @else
                   <li class="list-group-item">
                   @if ($oferta->tipo_creador == 'P')

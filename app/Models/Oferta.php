@@ -33,4 +33,16 @@ class Oferta extends Model
     public function horecas(){
         return $this->belongsToMany('App\Models\Horeca', 'horeca_oferta')->withPivot('fecha')->withTimestamps();
     }
+
+    public function scopeTitulo($query, $titulo){
+        if ($titulo != ""){
+            $query->where('titulo', 'ILIKE', '%'.$titulo.'%');
+        }
+    }
+
+    public function scopeProducto($query, $producto){
+        if ($producto != ""){
+            $query->where('producto_id', '=', $producto);
+        }
+    }
 }

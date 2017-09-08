@@ -6,11 +6,7 @@
 @endsection
 
 @section('title-complement')
-	@if ($tipo == '1')
-   		(Nueva Oferta de {{$producto}})
-   	@else
-   		(Nueva Oferta)
-   	@endif
+   	(Nueva Oferta de {{$producto}})
 @endsection
 
 @section('content-left')
