@@ -1,16 +1,10 @@
 {!! Html::script('js/ofertas/create.js') !!}
-	
+
 {!! Form::open(['route' => 'oferta.store', 'method' => 'POST']) !!}
 	{!! Form::hidden('tipo_creador', session('perfilTipo')) !!}
 	{!! Form::hidden('creador_id', session('perfilId')) !!}
 	{!! Form::hidden('cantidad_visitas', '0') !!}
 	{!! Form::hidden('cantidad_contactos', '0') !!}
-	
-	@if (session('perfilTipo') == 'M')
-		{!! Form::hidden('pais_id', session('perfilPais')) !!}
-	@endif
-
-	<input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
 
 	@if ($tipo == '1')
 		{!! Form::hidden('producto_id', $id) !!}
@@ -30,37 +24,37 @@
 
 	<div class="form-group">
 		{!! Form::label('titulo', 'Título (*)') !!}
-		{!! Form::text('titulo', null, ['class' => 'form-control', 'placeholder' => 'Ingrese un título para la oferta'] ) !!}
+		{!! Form::text('titulo', null, ['class' => 'form-control'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('descripcion', 'Descripción (*)') !!}
-		{!! Form::textarea('descripcion', null, ['class' => 'form-control', 'placeholder' => 'Ingrese una descripción para la oferta', 'required', 'rows'=>'5'] ) !!}
+		{!! Form::textarea('descripcion', null, ['class' => 'form-control', 'required', 'rows'=>'5'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('precio_unitario', 'Precio por Unidad (*)') !!}
-		{!! Form::text('precio_unitario', null, ['class' => 'form-control', 'placeholder' => 'Ingrese el precio por unidad', 'required'] ) !!}
+		{!! Form::text('precio_unitario', null, ['class' => 'form-control', 'placeholder' => '00.000', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('precio_lote', 'Precio por Lote (*)') !!}
-		{!! Form::text('precio_lote', null, ['class' => 'form-control', 'placeholder' => 'Ingrese el precio por lote', 'required'] ) !!}
+		{!! Form::text('precio_lote', null, ['class' => 'form-control', 'placeholder' => '00.000', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('cantidad_producto', 'Cantidad de Productos (*)') !!}
-		{!! Form::number('cantidad_producto', null, ['class' => 'form-control', 'placeholder' => 'Ingrese la cantidad de productos', 'required'] ) !!}
+		{!! Form::number('cantidad_producto', null, ['class' => 'form-control', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('cantidad_caja', 'Cantidad de Cajas (*)') !!}
-		{!! Form::number('cantidad_caja', null, ['class' => 'form-control', 'placeholder' => 'Ingrese la cantidad de cajas', 'required'] ) !!}
+		{!! Form::number('cantidad_caja', null, ['class' => 'form-control', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('cantidad_minima', 'Cantidad Mínima de Venta (*)') !!}
-		{!! Form::number('cantidad_minima', null, ['class' => 'form-control', 'placeholder' => 'Ingrese la cantidad mínima de venta', 'required'] ) !!}
+		{!! Form::number('cantidad_minima', null, ['class' => 'form-control', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">
@@ -70,13 +64,20 @@
 
 	<div class="form-group">
 		{!! Form::label('costo_envio', 'Costo del Envío') !!}
-		{!! Form::text('costo_envio', null, ['class' => 'form-control', 'placeholder' => 'Ingrese el costo del envío', 'id' => 'costo', 'disabled'] ) !!}
+		{!! Form::text('costo_envio', null, ['class' => 'form-control', 'id' => 'costo', 'disabled'] ) !!}
 	</div>
 	
-	@if (session('perfilTipo') != 'M')
+	@if (session('perfilTipo') == 'P')
 		<div class="form-group">
 			{!! Form::label('pais', 'País Destino (*)') !!}
-			{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'id' => 'pais_id', 'required']) !!}
+			{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'id' => 'pais_id', 'required']) !!}
+			<div class="alert alert-info">Se muestran los países que eligió como posibles destinos laborales. Para agregar o quitar países, diríjase a su perfil.</div>
+		</div>
+	@else
+		<div class="form-group">
+			{!! Form::label('pais', 'País Destino (*)') !!}
+			{!! Form::text('pais', $paises->pais, ['class' => 'form-control', 'disabled']) !!}
+			{!! Form::hidden('pais_id', $paises->id, ['id' => 'pais_id'])!!}
 		</div>
 	@endif
 
@@ -91,7 +92,7 @@
 		<br>
 	</div>
 	
-	@if( (session('perfilTipo') == 'P') || (session('perfilTipo') == 'M') )
+	@if (session('perfilTipo') == 'P')
 		<div class="form-group">
             {!! Form::label('visible_importador', 'Disponible para Importadores') !!}
             {!! Form::select('visible_importadores', ['0' => 'No', '1' => 'Si'], null, ['class' => 'form-control']) !!}

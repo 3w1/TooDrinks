@@ -1,5 +1,5 @@
 <li class="li"><a href="{{route('marca.index')}}"><i class="fa fa-diamond"></i> Marcas</a></li>
-<li class="li"><a href="{{route('producto.index')}}"><i class="fa fa-diamond"></i> Productos</a></li>
+<li class="li"><a href="{{route('producto.index')}}"><i class="fa fa-product-hunt"></i> Productos</a>
 
 <li class="treeview">
    <a href="#"><i class="fa fa-share"></i> Mercado

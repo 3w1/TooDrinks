@@ -68,10 +68,21 @@ class Producto extends Model
         }
     }
 
-    public function scopePais ($query, $pais)
+    public function scopeMarca ($query, $marca)
     {
-        if ($pais != ""){
-            return $query->where('producto.pais_id', '=', $pais);
+        if ($marca != ""){
+            return $query->where('producto.marca_id', '=', $marca);
+        }
+    }
+
+    public function scopeBebida ($query, $bebida, $clase){
+        if ($bebida != ""){
+        	if ($clase != ""){
+        		return $query->where('producto.bebida_id', '=', $bebida)
+            			->where('producto.clase_bebida_id', '=', $clase);
+            }else{
+            	return $query->where('producto.bebida_id', '=', $bebida);
+            }
         }
     }
 

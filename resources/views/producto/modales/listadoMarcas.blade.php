@@ -6,13 +6,12 @@
         <h4 class="modal-title" id="myModalLabel">Mis Marcas</h4>
       </div>
       <div class="modal-body">
-        {!! Form::open(['route' => 'productor.asociar-producto', 'method' => 'POST']) !!}
-               {!! Form::hidden('producto_id', null, ['id' => 'producto_id']) !!}
-               
-               <div class="form-group">
-                  {!! Form::label('marca', 'Marca') !!}
-                  <select name="marca_id" id="marcas" class="form-control"></select>
-               </div>
+         {!! Form::open(['route' => 'productor.asociar-producto', 'method' => 'POST']) !!}
+            {!! Form::hidden('producto_id', null, ['id' => 'producto_id']) !!}
+            <div class="form-group">
+               {!! Form::label('marca', 'Marca') !!}
+               <select name="marca_id" id="marcas" class="form-control"></select>
+            </div>
       </div>
       <div class="modal-footer">
          {!! Form::submit('Agregar', ['class' => 'btn btn-primary']) !!}

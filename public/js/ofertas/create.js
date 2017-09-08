@@ -5,13 +5,11 @@ function cargarProvincias() {
 		document.getElementById("estados").innerHTML = "";
 			
 		var id = document.getElementById('pais_id').value;
-		//var urls = "http://www.toodrinks.com/pais/"+id+"";
-		var urls = "http://localhost:8000/pais/"+id+"";
-		var token = document.getElementById('token').value;
+		//var urls = "http://www.toodrinks.com/consulta/cargar-provincias/"+id+"";
+		var urls = "http://localhost:8000/consulta/cargar-provincias/"+id+"";
 			    
 		$.ajax({
 	        url:urls,
-			headers: {'X-CSRF-TOKEN': token},
 			type:'GET',
 			success:function(ans){
 			    for (var i = 0; i < ans.length; i++ ){

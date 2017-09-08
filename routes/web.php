@@ -170,7 +170,7 @@ Route::resource('producto','ProductoController');
 
 // RUTAS PARA LAS OFERTAS
 Route::prefix('oferta')->group(function () {
-    Route::get('{id}-{producto}/crear-oferta', 'OfertaController@crear_oferta')->name('oferta.crear-oferta');
+    Route::get('crear-oferta/{id}/{producto}', 'OfertaController@crear_oferta')->name('oferta.crear-oferta');
     
     Route::get('ofertas-disponibles', 'OfertaController@ofertas_disponibles')->name('oferta.disponibles');
     Route::get('ver-detalle-oferta/{id}', 'OfertaController@detalle_oferta')->name('oferta.detalle');
@@ -450,8 +450,14 @@ Route::get('payment/status', array(
 
 //CONSULTAS AJAX
 Route::prefix('consulta')->group(function () {
+    //CONSULTA PARA PAISES Y PROVINCIAS
+    Route::get('cargar-provincias/{pais}', 'ConsultasAjax@cargar_provincias');
+
     //CONSULTAS PARA MARCAS
     Route::get('verificar-nombre-marca/{nombre}/{id_marca}', 'ConsultasAjax@verificar_nombre_marca');
+
+    //CONSULTAS PARA PRODUCTOS
+    Route::get('verificar-nombre-producto/{nombre}/{id_producto}', 'ConsultasAjax@verificar_nombre_producto');
 
     Route::get('buscar-productor/{nombre}', 'ConsultasAjax@buscar_productor');
     Route::get('buscar-marca/{nombre}', 'ConsultasAjax@buscar_marca');

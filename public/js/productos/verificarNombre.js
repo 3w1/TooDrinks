@@ -10,9 +10,10 @@ function verificarNombre(){
         success:function(ans){
             if (ans.cant == '0'){
                 document.getElementById('errorNombre').style.display = 'none';
-                document.editForm.submit();
+                document.getElementById("boton").disabled = false;
             }else{
                 document.getElementById('errorNombre').style.display = 'block';
+                document.getElementById("boton").disabled = true;
             } 
         }
 

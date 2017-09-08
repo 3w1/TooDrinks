@@ -33,7 +33,7 @@ class BebidaController extends Controller
         
     }
 
-    public function clases($id){
+    /*public function clases($id){
         $clases = DB::table('clase_bebida')
                     ->orderBy('clase', 'ASC')
                     ->select('id', 'clase')
@@ -43,7 +43,7 @@ class BebidaController extends Controller
         return response()->json(
             $clases->toArray()
         );
-    }
+    }*/
     
     public function edit($id)
     {

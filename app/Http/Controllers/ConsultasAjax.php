@@ -8,8 +8,21 @@ use DB; use Carbon\Carbon;
 
 class ConsultasAjax extends Controller
 {   
-    //CONSULTAS PARA MARCAS
-    
+    //*** CONSULTA PARA CARGAR LAS PROVINCIAS DE UN PAÍS *** //
+    public function cargar_provincias($pais){
+        $estados= DB::table('provincia_region')
+                    ->orderBy('provincia', 'ASC')
+                    ->select('id', 'provincia')
+                    ->where('pais_id', '=', $pais)
+                    ->get();
+
+        return response()->json(
+            $estados->toArray()
+        );
+    }
+    //*** FIN DE CONSULTA PARA CARGAR LAS PROVINCIAS DE UN PAÍS *** //
+
+    // *** CONSULTAS PARA MARCAS  ***//
     //Verificar el nombre de una marca para que no se repita (Editar y Crear Marca)
     public function verificar_nombre_marca($nombre, $id_marca){
         $existe = DB::table('marca')
@@ -22,6 +35,48 @@ class ConsultasAjax extends Controller
             $existe
         );
     }
+
+    //Cargar las marcas de un productor (Agregar Producto)
+    public function cargar_marcas($productor){
+        $marcas = DB::table('marca')
+                    ->select('id', 'nombre')
+                    ->where('productor_id', '=', $productor)
+                    ->get();
+
+        return response()->json(
+            $marcas->toArray()
+        );
+    }
+     // *** FIN DE CONSULTAS PARA MARCAS  ***//
+
+    // *** CONSULTAS PARA PRODUCTOS ***//
+    //Verificar el nombre de una marca para que no se repita (Editar y Crear Marca)
+    public function verificar_nombre_producto($nombre, $id_producto){
+        $existe = DB::table('producto')
+            ->select(DB::raw('count(*) as cant'))
+            ->where('id', '<>', $id_producto)
+            ->where('nombre', 'ILIKE', $nombre)
+            ->first();
+
+        return response()->json(
+            $existe
+        );
+    }
+
+    //Cargar categorías de una bebida específica 
+    //(Crear Productos, Editar Producto)
+    public function cargar_clases_bebidas($bebida){
+        $clases = DB::table('clase_bebida')
+                    ->orderBy('clase', 'ASC')
+                    ->select('id', 'clase')
+                    ->where('bebida_id', '=', $bebida)
+                    ->get();
+
+        return response()->json(
+            $clases->toArray()
+        );
+    }
+     // *** FIN DE CONSULTAS PARA PRODUCTOS  ***//
 
     //Buscar un productor específico (Asociar Productor a Marca ADMIN)
 	public function buscar_productor($nombre){
@@ -46,19 +101,6 @@ class ConsultasAjax extends Controller
 
         return response()->json(
             $marca->toArray()
-        );
-    }
-
-    //Cargar categorías de una bebida específica (Crear Productos)
-    public function cargar_clases_bebidas($bebida){
-        $clases = DB::table('clase_bebida')
-                    ->orderBy('clase', 'ASC')
-                    ->select('id', 'clase')
-                    ->where('bebida_id', '=', $bebida)
-                    ->get();
-
-        return response()->json(
-            $clases->toArray()
         );
     }
 
@@ -163,18 +205,6 @@ class ConsultasAjax extends Controller
 
         return response()->json(
             $datos
-        );
-    }
-
-    //Cargar las marcas de un productor (Agregar Producto)
-    public function cargar_marcas($productor){
-        $marcas = DB::table('marca')
-                    ->select('id', 'nombre')
-                    ->where('productor_id', '=', $productor)
-                    ->get();
-
-        return response()->json(
-            $marcas->toArray()
         );
     }
 }

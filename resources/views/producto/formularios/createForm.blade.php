@@ -1,34 +1,33 @@
-{!! Html::script('js/productos/create.js') !!}
+{!! Html::script('js/productos/cargarClases.js') !!}
+{!! Html::script('js/productos/verificarNombre.js') !!}
 
 {!! Form::open(['route' => 'producto.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
-	
-	{!! Form::hidden('marca_nombre', $marca) !!}
-	{!! Form::hidden('usuario', $usuario) !!}
 
-	@if ($usuario == '1')
-		{!! Form::hidden('tipo_creador', 'U') !!}
-		{!! Form::hidden('creador_id', Auth::user()->id) !!}
-		{!! Form::hidden('publicado', '0') !!}
-		{!! Form::hidden('confirmado', '0') !!}
-	@else
-		{!! Form::hidden('tipo_creador', session('perfilTipo')) !!}
-		{!! Form::hidden('creador_id', session('perfilId')) !!}
+	{!! Form::hidden('tipo_creador', session('perfilTipo')) !!}
+	{!! Form::hidden('creador_id', session('perfilId')) !!}
+
+	@if (session('perfilTipo') == 'P')
 		{!! Form::hidden('publicado', '1') !!}
 		{!! Form::hidden('confirmado', '1') !!}
+	@else
+		{!! Form::hidden('publicado', '0') !!}
+		{!! Form::hidden('confirmado', '0') !!}
 	@endif
 	
-	@if ($id == '0')
-		<div class="form-group">
-			{!! Form::label('marca', 'Marca') !!}
-			{!! Form::select('marca_id', $marcas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una marca..', 'required']) !!}
-		</div>
-	@else
-		{!! Form::hidden('marca_id', $id)!!}
-	@endif		
+	<!-- Para efectos de la Consulta Ajax de Verificar Nombre-->
+	{!! Form::hidden('id_producto', '0', ['id' => 'id_producto']) !!}
 
 	<div class="form-group">
+		{!! Form::label('marca', 'Marca (*)') !!}
+		{!! Form::select('marca_id', $marcas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una marca..', 'required']) !!}
+	</div>
+	
+	<div class="form-group">
 		{!! Form::label('nombre', 'Nombre (*)') !!}
-		{!! Form::text('nombre', null, ['class' => 'form-control', 'required'] ) !!}
+		{!! Form::text('nombre', null, ['class' => 'form-control', 'required', 'id' => 'nombre', 'onblur' => 'verificarNombre();'] ) !!}
+		<div class="alert alert-danger" style="display: none;" id="errorNombre">
+			<strong>Ups!!</strong> Ya existe un producto con este nombre.
+		</div>
 	</div>
 
 	<div class="form-group">
@@ -43,12 +42,12 @@
 		
 	<div class="form-group">
 		{!! Form::label('pais_id', 'País de origen (*)') !!}
-		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'id' => 'pais_id', 'onchange' => 'cargarProvincias();', 'required'] ) !!}
+		{!! Form::select('pais_id', $paises, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un país..', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('bebida', 'Tipo de Bebida (*)') !!}
-		{!! Form::select('bebida_id', $tipos_bebidas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un tipo..', 'id' => 'bebida_id', 'onchange' => 'cargarClases();', 'required'] ) !!}
+		{!! Form::select('bebida_id', $tipos_bebidas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione un tipo..', 'id' => 'bebida_id', 'onchange' => 'cargarClases("N");', 'required'] ) !!}
 	</div>
 
 	<div class="form-group">
@@ -69,7 +68,7 @@
 	</div>
 
 	<div class="form-group">
-		{!! Form::submit('Registrar Producto', ['class' => 'btn btn-primary pull-right']) !!}
+		{!! Form::submit('Crear Producto', ['class' => 'btn btn-primary pull-right', 'id' => 'boton']) !!}
 	</div>
 		
 {!! Form::close() !!}

@@ -6,12 +6,9 @@
         <h4 class="modal-title" id="myModalLabel">Cambiar Imagen de Producto</h4>
       </div>
       <div class="modal-body">
-      
-         <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token">
-
             {!! Form::open(['route' => 'producto.updateImagen', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
                {!! Form::hidden('id', $producto->id) !!}
-               {!! Form::hidden('nombre', $producto->nombre) !!}
+               {!! Form::hidden('nombre_seo', $producto->nombre_seo) !!}
                
                <div class="form-group">
                   {!! Form::label('imagen', 'Logo / Imagen') !!}

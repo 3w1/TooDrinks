@@ -189,6 +189,7 @@ class ProductorController extends Controller
         return redirect('marca')->with('msj', 'La marca '.$nombre.' ha sido reclamada de su propiedad con éxito.');
     }
 
+    //Asociar el producto a una marca del productor (Pestaña Agregar Producto)
     public function asociar_producto(Request $request){
     	DB::table('producto')
     		->where('id', '=', $request->producto_id)

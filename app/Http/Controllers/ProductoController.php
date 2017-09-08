@@ -26,84 +26,148 @@ class ProductoController extends Controller
                             ->join('marca', 'producto.marca_id', '=', 'marca.id')
                             ->where('marca.productor_id', '=', session('perfilId'))
                             ->nombre($request->get('busqueda'))
-                            ->pais($request->get('pais'))
+                            ->bebida($request->get('bebida'), $request->get('clase_bebida'))
+                            ->marca($request->get('marca'))
                             ->orderBy('producto.nombre', 'ASC')
                             ->paginate(9);
+
+            $marcas = DB::table('marca')
+                        ->where('productor_id', '=', session('perfilId'))
+                        ->orderBy('nombre', 'ASC')
+                        ->pluck('nombre', 'id');
         }elseif (session('perfilTipo') == 'I'){
             $productos = Producto::select('producto.*')
                             ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
                             ->where('producto.id', '<>', '0')
                             ->nombre($request->get('busqueda'))
-                            ->pais($request->get('pais'))
+                            ->bebida($request->get('bebida'), $request->get('clase_bebida'))
+                            ->marca($request->get('marca'))
                             ->orderBy('producto.nombre', 'ASC')
                             ->paginate(9);
+
+            $marcas = DB::table('marca')
+                        ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                        ->where('importador_marca.importador_id', '=', session('perfilId'))
+                        ->orderBy('nombre', 'ASC')
+                        ->pluck('marca.nombre', 'marca.id');
         }elseif (session('perfilTipo') == 'D'){
             $productos = Producto::select('producto.*')
                             ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
                             ->where('producto.id', '<>', '0')
                             ->nombre($request->get('busqueda'))
-                            ->pais($request->get('pais'))
+                            ->bebida($request->get('bebida'), $request->get('clase_bebida'))
+                            ->marca($request->get('marca'))
                             ->orderBy('producto.nombre', 'ASC')
                             ->paginate(9);
+
+            $marcas = DB::table('marca')
+                        ->join('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
+                        ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
+                        ->orderBy('nombre', 'ASC')
+                        ->pluck('marca.nombre', 'marca.id');
         }
 
-        $paises = DB::table('pais')
-                ->orderBy('pais', 'ASC')
-                ->pluck('pais', 'id');
+        $cont=0;
+        foreach ($productos as $p){
+            $cont++;
+        }
 
-        return view('producto.tabs.misProductos')->with(compact('productos', 'paises'));
+        $tipos_bebidas = DB::table('bebida')
+                    ->orderBy('nombre', 'ASC')
+                    ->pluck('nombre', 'id')
+                    ->toArray();
+        $tipos_bebidas = array('' => "Seleccione una bebida...") + $tipos_bebidas;
+
+        return view('producto.tabs.misProductos')->with(compact('productos', 'tipos_bebidas', 'cont', 'marcas'));
     }
 
     //Pestaña Agregar Producto
     public function agregar_producto(Request $request){
         if (session('perfilTipo') == 'P'){
             $productos = Producto::nombre($request->get('busqueda'))
-                        ->pais($request->get('pais'))
+                        ->bebida($request->get('bebida'), $request->get('clase_bebida'))
                         ->where('marca_id', '=', '0')
+                        ->where('publicado', '=', '1')
                         ->where('id', '<>', '0')
                         ->orderBy('nombre', 'ASC')
                         ->paginate(9);
         }elseif (session('perfilTipo') == 'I'){
             $productos = Producto::select('producto.*')
+                            ->join('importador_marca', 'producto.marca_id', '=', 'importador_marca.marca_id')
+                            ->where('importador_marca.status', '=', 1)
+                            ->where('importador_marca.importador_id', '=', session('perfilId'))
                             ->leftjoin('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
-                            ->where('importador_producto.importador_id', '!=', session('perfilId'))
-                            ->orwhere('importador_producto.producto_id', '=', null)
+                            ->where('importador_producto.producto_id', '=', null)
+                            ->orwhere('importador_producto.importador_id', '!=', session('perfilId'))
                             ->nombre($request->get('busqueda'))
-                            ->pais($request->get('pais'))
+                            ->marca($request->get('marca'))
+                            ->bebida($request->get('bebida'), $request->get('clase_bebida'))
                             ->orderBy('producto.nombre', 'ASC')
                             ->paginate(9);
+
+            $marcas = DB::table('marca')
+                        ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                        ->where('importador_marca.importador_id', '=', session('perfilId'))
+                        ->orderBy('nombre', 'ASC')
+                        ->pluck('marca.nombre', 'marca.id');
         }elseif (session('perfilTipo') == 'D'){
             $productos = Producto::select('producto.*')
+                            ->join('distribuidor_marca', 'producto.marca_id', '=', 'distribuidor_marca.marca_id')
+                            ->where('distribuidor_marca.status', '=', 1)
+                            ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
                             ->leftjoin('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
-                            ->where('distribuidor_producto.distribuidor_id', '!=', session('perfilId'))
-                            ->orwhere('distribuidor_producto.producto_id', '=', null)
+                            ->where('distribuidor_producto.producto_id', '=', null)
+                            ->orwhere('distribuidor_producto.distribuidor_id', '!=', session('perfilId'))
                             ->nombre($request->get('busqueda'))
-                            ->pais($request->get('pais'))
+                            ->marca($request->get('marca'))
+                            ->bebida($request->get('bebida'), $request->get('clase_bebida'))
                             ->orderBy('producto.nombre', 'ASC')
                             ->paginate(9);
+
+            $marcas = DB::table('marca')
+                        ->join('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
+                        ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
+                        ->orderBy('nombre', 'ASC')
+                        ->pluck('marca.nombre', 'marca.id');
         }
 
-         $paises = DB::table('pais')
-                ->orderBy('pais', 'ASC')
-                ->pluck('pais', 'id');
+        $cont=0;
+        foreach ($productos as $p){
+            $cont++;
+        }
 
-        return view('producto.tabs.agregarProducto')->with(compact('productos', 'paises'));
+        $tipos_bebidas = DB::table('bebida')
+                    ->orderBy('nombre', 'ASC')
+                    ->pluck('nombre', 'id')
+                    ->toArray();
+
+        $tipos_bebidas = array('' => "Seleccione una bebida...") + $tipos_bebidas;
+
+        return view('producto.tabs.agregarProducto')->with(compact('productos', 'tipos_bebidas', 'cont', 'marcas'));
     }
 
-    //Pestaña Crear Producto
-    //Agregar un Producto (Usuarios (MB, AD, SA))
+    //Pestaña Crear Producto (Productor, Importador, Distribuidor)
     public function create()
     {
-        $usuario = '1';
-
-        $id = 0; 
-        $marca = 0;
-
-        $marcas = DB::table('marca')
+        if (session('perfilTipo')== 'P'){
+            $marcas = DB::table('marca')
                     ->orderBy('nombre')
                     ->where('productor_id', '=', session('perfilId'))
                     ->pluck('nombre', 'id');
-
+        }elseif (session('perfilTipo') == 'I'){
+            $marcas = DB::table('marca')
+                        ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                        ->where('importador_marca.importador_id', '=', session('perfilId'))
+                        ->orderBy('nombre', 'ASC')
+                        ->pluck('marca.nombre', 'marca.id');
+        }elseif (session('perfilTipo') == 'D'){
+            $marcas = DB::table('marca')
+                        ->join('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
+                        ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
+                        ->orderBy('nombre', 'ASC')
+                        ->pluck('marca.nombre', 'marca.id');
+        }
+        
         $paises = DB::table('pais')
                     ->orderBy('pais')
                     ->pluck('pais', 'id');
@@ -112,52 +176,7 @@ class ProductoController extends Controller
                     ->orderBy('nombre')
                     ->pluck('nombre', 'id');
         
-        return view('producto.tabs.create')->with(compact('marcas', 'paises', 'tipos_bebidas', 'usuario', 'id', 'marca'));
-    }
-
-    //Agregar Producto a una Marca ya seleccionada
-    public function agregar($id, $marca){
-        $usuario = '0';
-
-        if ($id == 0){
-            if (session('perfilTipo') == 'P'){
-                $marcas = DB::table('marca')
-                        ->where('productor_id', '=', session('perfilId'))
-                        ->pluck('nombre', 'id');
-            }elseif (session('perfilTipo') == 'I'){
-                $marcas = DB::table('marca')
-                            ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
-                            ->where('importador_marca.importador_id', '=', session('perfilId'))
-                            ->pluck('marca.nombre', 'marca.id');
-            }elseif (session('perfilTipo') == 'D'){
-                $marcas = DB::table('marca')
-                            ->join('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
-                            ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
-                            ->pluck('marca.nombre', 'marca.id');
-            }elseif (session('perfilTipo') == 'H'){
-                $marcas = DB::table('marca')
-                            ->orderBy('nombre', 'ASC')
-                            ->pluck('nombre', 'id');
-            }
-        }
-
-        $paises = DB::table('pais')
-                    ->orderBy('pais')
-                    ->pluck('pais', 'id');
-
-        $tipos_bebidas = DB::table('bebida')
-                    ->orderBy('nombre')
-                    ->pluck('nombre', 'id');
-
-        if (session('perfilTipo') == 'AD'){
-            return view('adminWeb.producto.create')->with(compact('marcas', 'paises', 'tipos_bebidas', 'marca'));
-        }
-
-        if ($id == 0){
-            return view('producto.create')->with(compact('id', 'marca', 'marcas', 'paises', 'tipos_bebidas', 'usuario'));
-        }else{
-            return view('producto.create')->with(compact('id', 'marca', 'paises', 'tipos_bebidas', 'usuario'));
-        }
+        return view('producto.tabs.create')->with(compact('marcas', 'paises', 'tipos_bebidas'));
     }
 
     public function store(Request $request)
@@ -179,39 +198,60 @@ class ProductoController extends Controller
         $producto->imagen = $nombre;
         $producto->save();
 
-        if (session('perfilTipo') == 'I'){
-            $producto->importadores()->attach(session('perfilId'));
-        }elseif (session('perfilTipo') == 'D'){
-            $producto->distribuidores()->attach(session('perfilId'));
-        }elseif (session('perfilTipo') == 'H'){
-            $producto->horecas()->attach(session('perfilId'));
-        }
+        if (session('perfilTipo') != 'P'){
+            $ult_producto = Producto::select('id', 'marca_id')
+                                ->orderBY('id', 'DESC')
+                                ->get()
+                                ->first();
 
-        $ult_producto = DB::table('producto')
-                            ->select('id')
-                            ->orderBY('id', 'DESC')
-                            ->get()
-                            ->first();
-
-        $notificaciones_admin = new Notificacion_Admin();
-        $notificaciones_admin->creador_id = session('perfilId');
-        $notificaciones_admin->tipo_creador = session('perfilTipo');
-        $notificaciones_admin->titulo = session('perfilNombre') . ' ha creado un nuevo producto en la marca '. $request->marca_nombre;
-        $notificaciones_admin->url='admin/productos-sin-aprobar';
-        $notificaciones_admin->user_id = 0;
-        $notificaciones_admin->descripcion = 'Nuevo Producto';
-        $notificaciones_admin->color = 'bg-yellow';
-        $notificaciones_admin->icono = 'fa fa-plus-square-o';
-        $notificaciones_admin->fecha = $fecha;
-        $notificaciones_admin->tipo = 'NP';
-        $notificaciones_admin->leida = '0';
-        $notificaciones_admin->save();            
-    
-        if ($request->usuario == '1'){
-            return redirect('producto')->with('msj', 'Su producto ha sido agregado con éxito.');
-        }else{
-            return redirect('producto/listado-de-productos/'.$request->marca_id.'-'.$request->marca_nombre)->with('msj', 'Su producto ha sido agregado con éxito.');
+            $notificaciones_admin = new Notificacion_Admin();
+            $notificaciones_admin->creador_id = session('perfilId');
+            $notificaciones_admin->tipo_creador = session('perfilTipo');
+            $notificaciones_admin->titulo = session('perfilNombre') . ' ha creado un nuevo producto en la marca '. $ult_producto->marca->nombre;
+            $notificaciones_admin->url='admin/productos-sin-aprobar';
+            $notificaciones_admin->user_id = 0;
+            $notificaciones_admin->descripcion = 'Nuevo Producto';
+            $notificaciones_admin->color = 'bg-yellow';
+            $notificaciones_admin->icono = 'fa fa-plus-square-o';
+            $notificaciones_admin->fecha = $fecha;
+            $notificaciones_admin->tipo = 'NP';
+            $notificaciones_admin->leida = '0';
+            $notificaciones_admin->save(); 
         }           
+        
+        if (session('perfilTipo') == 'P'){
+            return redirect('producto')->with('msj', 'Su producto '.$producto->nombre.' ha sido creado con éxito.'); 
+        }else{
+            return redirect('producto')->with('msj', 'El producto '.$producto->nombre.' ha sido creado con éxito. Debe esperar la revisión del Administrador para visualizarlo en sus listados.');
+        }                
+    }
+
+    public function update(Request $request, $id)
+    {
+        $producto = Producto::find($id);
+        $producto->fill($request->all());
+        $producto->save();
+
+        return redirect('producto/detalle-de-producto/'.$id.'/'.$producto->nombre_seo)->with('msj', 'Los datos de su producto han sido actualizados con éxito.');
+    }
+
+    public function updateImagen(Request $request){
+        $file = Input::file('imagen');   
+        $image = Image::make(Input::file('imagen'));
+
+        $path = public_path().'/imagenes/productos/';
+        $path2 = public_path().'/imagenes/productos/thumbnails/';
+        $nombre = 'producto_'.time().'.'.$file->getClientOriginalExtension();
+
+        $image->save($path.$nombre);
+        $image->resize(240,200);
+        $image->save($path2.$nombre);
+
+        $actualizacion = DB::table('producto')
+                            ->where('id', '=', $request->id)
+                            ->update(['imagen' => $nombre ]);
+
+        return redirect('producto/detalle-de-producto/'.$request->id.'/'.$request->nombre_seo)->with('msj', 'La imagen del producto ha sido actualizada con éxito.');
     }
 
     //Metodo que permite seleccionar los productos que se importan / distribuyen
@@ -255,140 +295,6 @@ class ProductoController extends Controller
         return view('producto.listado')->with(compact('productos', 'marca'));
     }
 
-    //Listado de productos asociados a una entidad
-    public function mis_productos($filtro){
-        if ($filtro == 'todos'){
-            if (session('perfilTipo') == 'I'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
-                            ->where('importador_producto.importador_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->paginate(9);
-            }elseif (session('perfilTipo') == 'D'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
-                            ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->paginate(9);
-            }elseif (session('perfilTipo') == 'H'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('horeca_producto', 'producto.id', '=', 'horeca_producto.producto_id')
-                            ->where('horeca_producto.horeca_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->paginate(9);
-            }
-        }elseif ($filtro == 'confirmados') {
-            if (session('perfilTipo') == 'I'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
-                            ->where('importador_producto.importador_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->where('producto.confirmado', '=', 1)
-                            ->paginate(9);
-            }elseif (session('perfilTipo') == 'D'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
-                            ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->where('producto.confirmado', '=', 1)
-                            ->paginate(9);
-            }elseif (session('perfilTipo') == 'H'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('horeca_producto', 'producto.id', '=', 'horeca_producto.producto_id')
-                            ->where('horeca_producto.horeca_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->where('producto.confirmado', '=', 1)
-                            ->paginate(9);
-            }
-        }elseif ($filtro == 'no-confirmados'){
-            if (session('perfilTipo') == 'I'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
-                            ->where('importador_producto.importador_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->where('producto.confirmado', '=', 0)
-                            ->paginate(9);
-            }elseif (session('perfilTipo') == 'D'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
-                            ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->where('producto.confirmado', '=', 0)
-                            ->paginate(9);
-            }elseif (session('perfilTipo') == 'H'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('horeca_producto', 'producto.id', '=', 'horeca_producto.producto_id')
-                            ->where('horeca_producto.horeca_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->where('producto.confirmado', '=', 0)
-                            ->paginate(9);
-            }
-        }elseif ($filtro == 'publicados'){
-            if (session('perfilTipo') == 'I'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
-                            ->where('importador_producto.importador_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->where('producto.publicado', '=', 1)
-                            ->paginate(9);
-            }elseif (session('perfilTipo') == 'D'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
-                            ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->where('producto.publicado', '=', 1)
-                            ->paginate(9);
-            }elseif (session('perfilTipo') == 'H'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('horeca_producto', 'producto.id', '=', 'horeca_producto.producto_id')
-                            ->where('horeca_producto.horeca_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->where('producto.publicado', '=', 1)
-                            ->paginate(9);
-            }
-        }elseif ($filtro == 'no-publicados'){
-            if (session('perfilTipo') == 'I'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
-                            ->where('importador_producto.importador_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->where('producto.publicado', '=', 0)
-                            ->paginate(9);
-            }elseif (session('perfilTipo') == 'D'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
-                            ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->where('producto.publicado', '=', 0)
-                            ->paginate(9);
-            }elseif (session('perfilTipo') == 'H'){
-                $productos = Producto::orderBy('nombre', 'ASC')
-                            ->select('producto.*')
-                            ->join('horeca_producto', 'producto.id', '=', 'horeca_producto.producto_id')
-                            ->where('horeca_producto.horeca_id', '=', session('perfilId'))
-                            ->where('producto.id', '<>', 0)
-                            ->where('producto.publicado', '=', 0)
-                            ->paginate(9);
-            }
-        }
-
-        return view('producto.misProductos')->with(compact('productos'));
-    }
-
     //Productos a nivel mundial para su búsqueda y asociación
     function productos_mundiales(){
         $bebidas = DB::table('bebida')
@@ -402,6 +308,7 @@ class ProductoController extends Controller
         return view('producto.productosMundiales')->with(compact('bebidas', 'paises'));
     }
 
+    //Asociar un producto con un importador / distribuidor (Pestaña Agregar Producto)
     public function asociar_producto($id){
         if (session('perfilTipo') == 'I'){
             Producto::find($id)->importadores()->attach(session('perfilId'));
@@ -621,34 +528,6 @@ class ProductoController extends Controller
     public function edit($id)
     {
        
-    }
-
-    public function update(Request $request, $id)
-    {
-        $producto = Producto::find($id);
-        $producto->fill($request->all());
-        $producto->save();
-
-        return redirect('producto/detalle-de-producto/'.$request->id.'/'.$producto->nombre)->with('msj', 'Los datos de su producto han sido actualizados con éxito.');
-    }
-
-     public function updateImagen(Request $request){
-        $file = Input::file('imagen');   
-        $image = Image::make(Input::file('imagen'));
-
-        $path = public_path().'/imagenes/productos/';
-        $path2 = public_path().'/imagenes/productos/thumbnails/';
-        $nombre = 'producto_'.time().'.'.$file->getClientOriginalExtension();
-
-        $image->save($path.$nombre);
-        $image->resize(240,200);
-        $image->save($path2.$nombre);
-
-        $actualizacion = DB::table('producto')
-                            ->where('id', '=', $request->id)
-                            ->update(['imagen' => $nombre ]);
-
-        return redirect('producto/detalle-de-producto/'.$request->id)->with('msj', 'La imagen del producto ha sido actualizada con éxito.');
     }
 
     public function destroy($id)

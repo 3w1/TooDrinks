@@ -111,18 +111,31 @@ class OfertaController extends Controller
     	}
     }
 
-    public function create()
-    {   
-
+    public function create(Request $request){   
+    	        if ( session('perfilTipo') == 'P'){
+            $marcas = DB::table('marca')
+                        ->orderBy('nombre')
+                        ->where('productor_id', '=', session('perfilId'))
+                        ->pluck('nombre', 'id');
+        }elseif ( session('perfilTipo') == 'I'){
+             $marcas = DB::table('marca')
+                    ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                    ->where('importador_marca.importador_id', '=', session('perfilId'))
+                    ->pluck('marca.nombre', 'marca.id');
+        }elseif (session('perfilTipo') == 'D'){
+            $marcas = DB::table('marca')
+                    ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
+                    ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
+                    ->pluck('marca.nombre', 'marca.id');
+        }elseif (session('perfilTipo') == 'M'){
+            $marcas = DB::table('marca')
+                        ->orderBy('nombre', 'ASC')
+                        ->where('productor_id', '=', session('perfilPadre'))
+                        ->pluck('nombre', 'id');
+        }
     }
 
     public function crear_oferta($id, $producto){ 
-        if ($id != '0'){
-            $tipo = '1';
-        }else{
-            $tipo = '2';
-        }
-
         if (session('perfilTipo') == 'P'){
             $paises_posibles = DB::table('pais')
                     ->select('pais.id')
@@ -144,33 +157,14 @@ class OfertaController extends Controller
             }
         }else{
             $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
-        }
-        
-        if ( session('perfilTipo') == 'P'){
-            $marcas = DB::table('marca')
-                        ->orderBy('nombre')
-                        ->where('productor_id', '=', session('perfilId'))
-                        ->pluck('nombre', 'id');
-        }elseif ( session('perfilTipo') == 'I'){
-             $marcas = DB::table('marca')
-                    ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
-                    ->where('importador_marca.importador_id', '=', session('perfilId'))
-                    ->pluck('marca.nombre', 'marca.id');
-        }elseif (session('perfilTipo') == 'D'){
-            $marcas = DB::table('marca')
-                    ->leftjoin('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
-                    ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
-                    ->pluck('marca.nombre', 'marca.id');
-        }elseif (session('perfilTipo') == 'M'){
-            $marcas = DB::table('marca')
-                        ->orderBy('nombre', 'ASC')
-                        ->where('productor_id', '=', session('perfilPadre'))
-                        ->pluck('nombre', 'id');
+                        ->where('id', '=', session('perfilPais'))
+                        ->select('pais', 'id')
+                        ->first();
         }
 
-        return view('oferta.create')->with(compact('id', 'producto', 'paises', 'marcas', 'tipo'));
+        $tipo = '1';
+
+        return view('oferta.create')->with(compact('id', 'producto', 'paises', 'tipo'));
     }
 
     public function store(Request $request)

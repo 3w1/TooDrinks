@@ -11,7 +11,7 @@
          
       </div>
       <div class="modal-footer">
-         {!! Form::submit('Modificar Producto', ['class' => 'btn btn-primary']) !!}
+         <a class="btn btn-primary" onclick="verificarNombre();">Modificar Producto</a>
       </div>
       {!! Form::close() !!}
     </div>
