@@ -28,4 +28,10 @@ class Banner extends Model
     		$query->where('titulo', 'ILIKE', '%'.$nombre.'%');
     	}
     }
+
+    public function scopeStatus($query, $status){
+        if ($status != ""){
+            $query->where('aprobado', '=', $status);
+        }
+    }
 }

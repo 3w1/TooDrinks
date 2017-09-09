@@ -47,8 +47,36 @@ class ConsultasAjax extends Controller
             $marcas->toArray()
         );
     }
-     // *** FIN DE CONSULTAS PARA MARCAS  ***//
+    // *** FIN DE CONSULTAS PARA MARCAS  ***//
 
+    // *** CONSULTAS PARA IMPORTADORES  ***//
+    //Cargar los datos de un importador (Pestaña Productor / Confirmaciones / Importadores)
+    public function datos_importador($id){
+        $importador = DB::table('importador')
+                        ->select('nombre', 'nombre_seo', 'descripcion', 'direccion', 'persona_contacto')
+                        ->where('id', '=', $id)
+                        ->first();
+
+        return response()->json(
+            $importador
+        );
+    }
+    // *** FIN DE CONSULTAS PARA IMPORTADORES  ***//
+    
+     // *** CONSULTAS PARA DISTRIBUIDORES  ***//
+    //Cargar los datos de un distribuidor (Pestaña Productor / Confirmaciones / Distribuidores)
+    public function datos_distribuidor($id){
+        $distribuidor = DB::table('distribuidor')
+                        ->select('nombre', 'nombre_seo', 'descripcion', 'direccion', 'persona_contacto')
+                        ->where('id', '=', $id)
+                        ->first();
+
+        return response()->json(
+            $distribuidor
+        );
+    }
+    // *** FIN DE CONSULTAS PARA IMPORTADORES  ***//
+    
     // *** CONSULTAS PARA PRODUCTOS ***//
     //Verificar el nombre de una marca para que no se repita (Editar y Crear Marca)
     public function verificar_nombre_producto($nombre, $id_producto){
@@ -109,7 +137,42 @@ class ConsultasAjax extends Controller
             $clases->toArray()
         );
     }
-     // *** FIN DE CONSULTAS PARA PRODUCTOS  ***//
+    // *** FIN DE CONSULTAS PARA PRODUCTOS  ***//
+
+    // *** CONSULTAS PARA PUBLICIDADES  ***//
+    // Consultar fechas disponibles para la publicación de un banner
+    public function consultar_fechas_banner($pais, $semanas){
+        $fecha_actual = Carbon::now();
+        $fecha_actual = $fecha_actual->format('Y-m-d');
+
+        $ultima_fecha = DB::table('banner_diario')
+                        ->select('fecha')
+                        ->where('pais_id', '=', $pais)
+                        ->orderBy('fecha', 'DESC')
+                        ->first();
+
+        if ($ultima_fecha != null){
+            if ( $ultima_fecha->fecha > $fecha_actual ) {
+                $fa = Carbon::createFromFormat('Y-m-d', $ultima_fecha->fecha);
+            }else{
+                $fa = Carbon::createFromFormat('Y-m-d', $fecha_actual);
+            }
+        }else{
+            $fa = Carbon::createFromFormat('Y-m-d', $fecha_actual);
+        }
+
+        $fecha1 = $fa->next(Carbon::MONDAY);
+        $datos[0] = $fecha1->format('d-m-Y');
+            
+        $fecha2 = $fa->addWeek($semanas);
+        $fecha2 = $fecha2->subDay(1);
+        $datos[1] = $fecha2->format('d-m-Y');
+
+        return response()->json(
+            $datos
+        );
+    }
+    // *** FIN DE CONSULTAS PARA PUBLICIDADES  ***//
 
     //Buscar un productor específico (Asociar Productor a Marca ADMIN)
 	public function buscar_productor($nombre){
@@ -209,35 +272,5 @@ class ConsultasAjax extends Controller
     }
 
     //Consultar las fechas disponibles para la publicación de un banner (Publicar Banner ADMIN)
-    public function consultar_fechas_banner($pais, $semanas){
-        $fecha_actual = Carbon::now();
-        $fecha_actual = $fecha_actual->format('Y-m-d');
-
-        $ultima_fecha = DB::table('banner_diario')
-                        ->select('fecha')
-                        ->where('pais_id', '=', $pais)
-                        ->orderBy('fecha', 'DESC')
-                        ->first();
-
-        if ($ultima_fecha != null){
-            if ( $ultima_fecha->fecha > $fecha_actual ) {
-                $fa = Carbon::createFromFormat('Y-m-d', $ultima_fecha->fecha);
-            }else{
-                $fa = Carbon::createFromFormat('Y-m-d', $fecha_actual);
-            }
-        }else{
-            $fa = Carbon::createFromFormat('Y-m-d', $fecha_actual);
-        }
-
-        $fecha1 = $fa->next(Carbon::MONDAY);
-        $datos[0] = $fecha1->format('d-m-Y');
-            
-        $fecha2 = $fa->addWeek($semanas);
-        $fecha2 = $fecha2->subDay(1);
-        $datos[1] = $fecha2->format('d-m-Y');
-
-        return response()->json(
-            $datos
-        );
-    }
+   
 }

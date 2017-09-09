@@ -54,20 +54,18 @@ Route::resource('usuario','UsuarioController');
 // RUTAS PARA LOS PRODUCTORES
 Route::prefix('productor')->group(function (){
     Route::get('inicio', 'ProductorController@inicio')->name('productor.inicio');
-    
+    Route::get('asociar-marca/{id}/{nombre}', 'ProductorController@asociar_marca')->name('productor.asociar-marca');
     Route::post('asociar-producto', 'ProductorController@asociar_producto')->name('productor.asociar-producto');
-
     Route::get('confirmar-importadores', 'ProductorController@confirmar_importadores')->name('productor.confirmar-importadores');
     Route::get('confirmar-importador/{id}-{tipo}-{imp}', 'ProductorController@confirmar_importador')->name('productor.confirmar-importador');
-
     Route::get('confirmar-distribuidores', 'ProductorController@confirmar_distribuidores')->name('productor.confirmar-distribuidores');
     Route::get('confirmar-distribuidor/{id}-{tipo}-{dist}', 'ProductorController@confirmar_distribuidor')->name('productor.confirmar-distribuidor');
-
     Route::get('confirmar-productos', 'ProductorController@confirmar_productos')->name('productor.confirmar-productos');
     Route::get('confirmar-producto/{id}-{tipo}', 'ProductorController@confirmar_producto')->name('productor.confirmar-producto');
+    Route::get('confirmar-marcas', 'ProductorController@confirmar_marcas')->name('productor.confirmar-marcas');
+    Route::get('confirmar-marca/{id}-{tipo}', 'ProductorController@confirmar_marca')->name('productor.confirmar-marca');
 
-    Route::get('asociar-marca/{id}/{nombre}', 'ProductorController@asociar_marca')->name('productor.asociar-marca');
-
+   
     Route::get('ver-listado-importadores', 'ProductorController@listado_importadores')->name('productor.listado-importadores');
 
     Route::post('updateAvatar', 'ProductorController@updateAvatar')->name('productor.updateAvatar');
@@ -80,9 +78,6 @@ Route::prefix('importador')->group(function (){
     Route::get('asociar-marca/{id}/{nombre}', 'ImportadorController@asociar_marca')->name('importador.asociar-marca');
 
     Route::get('ver-listado-distribuidores', 'ImportadorController@listado_distribuidores')->name('importador.listado-distribuidores');
-
-    //Consulta AJAX
-    Route::get('datos/{id}', 'ImportadorController@datos');
     
     Route::post('updateAvatar', 'ImportadorController@updateAvatar')->name('importador.updateAvatar');
 });
@@ -96,9 +91,6 @@ Route::resource('multinacional', 'MultinacionalController');
 // RUTAS PARA LOS DISTRIBUIDORES
 Route::prefix('distribuidor')->group(function (){
     Route::get('asociar-marca/{id}/{nombre}', 'DistribuidorController@asociar_marca')->name('distribuidor.asociar-marca');
-
-    //Consulta AJAX
-    Route::get('datos/{id}', 'DistribuidorController@datos');
 
     Route::post('updateAvatar', 'DistribuidorController@updateAvatar')->name('distribuidor.updateAvatar');
 });
@@ -216,32 +208,32 @@ Route::resource('demanda-producto','DemandaProductoController');
 
 // RUTAS PARA LAS DEMANDAS DE IMPORTACIÓN
 Route::prefix('solicitud-importacion')->group(function () {
-    Route::get('marcar-solicitud/{id}/{check}', 'SolicitudImportacionController@marcar_solicitud')
-    ->name('solicitud-importacion.marcar');
-    Route::get('demandas-de-interes', 'SolicitudImportacionController@demandas_interes')
-    ->name('solicitud-importacion.demandas-interes');
-
-    Route::post('cambiar-status', 'SolicitudImportacionController@cambiar_status')
-    ->name('solicitud-importacion.status');
-
     Route::get('solicitudes-importacion', 'SolicitudImportacionController@solicitudes_importacion')
     ->name('solicitud-importacion.solicitudes');
+    Route::get('marcar-solicitud/{id}/{check}', 'SolicitudImportacionController@marcar_solicitud')
+    ->name('solicitud-importacion.marcar');
+    
+
+    Route::get('demandas-de-interes', 'SolicitudImportacionController@demandas_interes')
+    ->name('solicitud-importacion.demandas-interes');
+    Route::post('cambiar-status', 'SolicitudImportacionController@cambiar_status')
+    ->name('solicitud-importacion.status');
 });
 Route::resource('solicitud-importacion', 'SolicitudImportacionController');
 // ./RUTAS PARA LAS DEMANDAS DE IMPORTACIÓN ./
 
 // RUTAS PARA LAS DEMANDAS DE DISTRIBUCIÓN
 Route::prefix('solicitud-distribucion')->group(function () {
-    Route::get('marcar-solicitud/{id}/{check}', 'SolicitudDistribucionController@marcar_solicitud')
-    ->name('solicitud-distribucion.marcar');
-    Route::get('demandas-de-interes', 'SolicitudDistribucionController@demandas_interes')
-    ->name('solicitud-distribucion.demandas-interes');
-
-    Route::post('cambiar-status', 'SolicitudDistribucionController@cambiar_status')
-    ->name('solicitud-distribucion.status');
-
     Route::get('solicitudes-distribucion', 'SolicitudDistribucionController@solicitudes_distribucion')
     ->name('solicitud-distribucion.solicitudes');
+    Route::get('marcar-solicitud/{id}/{check}', 'SolicitudDistribucionController@marcar_solicitud')
+    ->name('solicitud-distribucion.marcar');
+   
+
+    Route::get('demandas-de-interes', 'SolicitudDistribucionController@demandas_interes')
+    ->name('solicitud-distribucion.demandas-interes');
+    Route::post('cambiar-status', 'SolicitudDistribucionController@cambiar_status')
+    ->name('solicitud-distribucion.status');
 });
 Route::resource('solicitud-distribucion', 'SolicitudDistribucionController');
 // ./RUTAS PARA LAS DEMANDAS DE DISTRIBUCIÓN ./
@@ -289,17 +281,15 @@ Route::resource('opinion','OpinionController');
 //RUTAS PARA LOS BANNERS
 Route::prefix('banner-publicitario')->group(function () {
     Route::post('cambiar-imagen', 'BannerController@updateImagen')->name('banner-publicitario.updateImagen');
-    Route::get('detalles/{id}', 'BannerController@detalles')->name('banner-publicitario.detalles');
-
     Route::get('nueva-publicacion', 'BannerController@nueva_publicacion')->name('banner-publicitario.nueva-publicacion');
-    //Consulta AJAX
-    Route::get('consultar-disponibilidad/{pais}/{dias}', 'BannerController@consultar_disponibilidad')
-    ->name('banner-publicitario.consultar-disponibilidad');
-      
     Route::get('confirmar-pago/{id}', 'BannerController@confirmar_pago')->name('banner-publicitario.confirmar-pago');    
-
-    Route::get('mis-publicidades', 'BannerController@mis_publicidades')
-    ->name('banner-publicitario.publicidades');
+    Route::get('publicaciones-en-curso', 'BannerController@publicaciones_en_curso')->name('banner-publicitario.publicaciones-en-curso');
+    Route::get('historial', 'BannerController@historial')->name('banner-publicitario.historial');
+    
+    //Consulta AJAX
+    Route::get('detalles/{id}', 'BannerController@detalles')->name('banner-publicitario.detalles');
+      
+    
     Route::get('detalle-publicacion/{id}', 'BannerController@detalle_publicacion')
     ->name('banner-publicitario.detalle-publicacion');
     Route::get('corregir-solicitud/{id}', 'BannerController@corregir_solicitud')
@@ -439,12 +429,21 @@ Route::prefix('consulta')->group(function () {
     //CONSULTA PARA PAISES Y PROVINCIAS
     Route::get('cargar-provincias/{pais}', 'ConsultasAjax@cargar_provincias');
 
+    //CONSULTAS PARA IMPORTADORES
+    Route::get('datos-importador/{id}', 'ConsultasAjax@datos_importador');
+
+    //CONSULTAS PARA DISTRIBUIDORES
+    Route::get('datos-distribuidor/{id}', 'ConsultasAjax@datos_distribuidor');
+
     //CONSULTAS PARA MARCAS
     Route::get('verificar-nombre-marca/{nombre}/{id_marca}', 'ConsultasAjax@verificar_nombre_marca');
 
     //CONSULTAS PARA PRODUCTOS
     Route::get('verificar-nombre-producto/{nombre}/{id_producto}', 'ConsultasAjax@verificar_nombre_producto');
     Route::get('cargar-productos/{marca}', 'ConsultasAjax@cargar_productos');
+
+    //CONSULTAS PARA BANNERS
+     Route::get('consultar-fechas-banner/{pais}/{dias}', 'ConsultasAjax@consultar_fechas_banner');
 
     Route::get('buscar-productor/{nombre}', 'ConsultasAjax@buscar_productor');
     Route::get('buscar-marca/{nombre}', 'ConsultasAjax@buscar_marca');
@@ -454,6 +453,5 @@ Route::prefix('consulta')->group(function () {
     Route::get('cargar-entidades/{tipo}', 'ConsultasAjax@cargar_entidades');
     Route::get('cargar-detalles-banner/{id}', 'ConsultasAjax@cargar_detalles_banner');
     Route::get('cargar-datos-banner/{id}', 'ConsultasAjax@cargar_datos_banner');
-    Route::get('consultar-fechas-banner/{pais}/{semanas}', 'ConsultasAjax@consultar_fechas_banner');
     Route::get('cargar-marcas/{productor}', 'ConsultasAjax@cargar_marcas');
 });

@@ -1,6 +1,6 @@
 function mostrarDatos($id){
-
-    var route = "http://localhost:8000/distribuidor/datos/"+$id+"";
+    //var route = "http://www.toodrinks.com/consulta/datos-distribuidor/"+$id+"";
+    var route = "http://localhost:8000/consulta/datos-distribuidor/"+$id+"";
                     
     $.ajax({
         url:route,
