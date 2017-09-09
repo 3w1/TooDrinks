@@ -658,7 +658,7 @@ class CreditoController extends Controller
                 ->where('id', '=', $id)
                 ->update(['cantidad_contactos' => $contactos]);
 
-        return redirect('solicitud-importacion/'.$id)->with('msj', 'Se han descontado '.$coste->cantidad_creditos.' créditos de su saldo.');
+        return redirect('solicitud-importacion/'.$id)->with('msj', 'Se han descontado '.$coste->cantidad_creditos.' créditos de su saldo. La solicitud ha sido agregado a su historial de solicitudes');
     }
 
     public function gastar_creditos_SD($id){
@@ -713,7 +713,7 @@ class CreditoController extends Controller
                 ->where('id', '=', $id)
                 ->update(['cantidad_contactos' => $contactos]);
 
-        return redirect('solicitud-distribucion/'.$id)->with('msj', 'Se han descontado '.$coste->cantidad_creditos.' créditos de su saldo.');
+        return redirect('solicitud-distribucion/'.$id)->with('msj', 'Se han descontado '.$coste->cantidad_creditos.' créditos de su saldo. La solicitud ha sido agregada a su historial de solicitudes.');
     }
 }
 

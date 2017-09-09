@@ -1,8 +1,8 @@
 @extends('plantillas.main')
-@section('title', 'Demanda de Distribución')
+@section('title', 'Solicitudes')
 
 @section('title-header')
-   Demanda de Distribución
+   Solicitud de Distribución
 @endsection
 
 @section('title-complement')
@@ -44,8 +44,8 @@
    <div class="row">
       <div class="col-md-4"></div>
       <div class="col-sm-6 col-md-4">
-         @if ($demandaDistribucion->producto_id != '0')
-            <a href="" class="thumbnail"><img src="{{ asset('imagenes/productos/thumbnails') }}/{{ $demandaDistribucion->producto->imagen }}"></a>
+         @if ($demandaDistribucion->bebida_id != null)
+            <a href="" class="thumbnail"><img src="{{ asset('imagenes/bebida.jpg') }}"></a>
          @else
             <a href="" class="thumbnail"><img src="{{ asset('imagenes/marcas/thumbnails') }}/{{ $demandaDistribucion->marca->logo }}"></a>
          @endif
@@ -70,8 +70,8 @@
       <div class="col-md-10 col-xs-12"> 
          <div class="panel panel-default panel-success">
             <div class="panel-heading"><h4><b> 
-               @if ($demandaDistribucion->producto_id != '0')
-                  Producto Demandado: {{ $demandaDistribucion->producto->nombre }}</b></h4>
+               @if ($demandaDistribucion->bebida_id != null)
+                  Bebida Demandada: {{ $demandaDistribucion->bebida->nombre }}</b></h4>
                @else
                   Marca Demandada: {{ $demandaDistribucion->marca->nombre }}</b></h4>
                @endif
@@ -79,7 +79,7 @@
              
             <ul class="list-group">
                <li class="list-group-item"><b>Provincia:</b> {{ $demandaDistribucion->provincia_region->provincia }}</li>
-               <li class="list-group-item"><b>Fecha:</b> {{ $demandaDistribucion->created_at->format('d-m-Y') }}</li>
+               <li class="list-group-item"><b>Fecha:</b> {{ date('d-m-Y', strtotime($demandaDistribucion->fecha)) }}</li>
                @if ( $restringido == '1' )
                   <li class="list-group-item"><center>
                      @if (session('perfilSuscripcion') == 'Gratis')
@@ -94,7 +94,7 @@
                      <a href="{{ route('solicitud-distribucion.marcar', [$demandaDistribucion->id, '0']) }}" class="btn btn-danger">¡No Me Interesa! <i class="fa fa-thumbs-o-down"></i></a>
                   </center></li>
                @else
-                  <li class="list-group-item"><b>Importador:</b> {{ $demandaDistribucion->distribuidor->nombre }}</li>
+                  <li class="list-group-item"><b>Distribuidor:</b> {{ $demandaDistribucion->distribuidor->nombre }}</li>
                   <li class="list-group-item"><b>Persona de Contacto:</b> {{ $demandaDistribucion->distribuidor->persona_contacto }}</li>
                   <li class="list-group-item"><b>Teléfono:</b> {{ $demandaDistribucion->distribuidor->telefono }}</li>
                   <li class="list-group-item"><b>Correo Electrónico:</b> {{ $demandaDistribucion->distribuidor->email }}</li>

@@ -6,6 +6,9 @@
 
 <li class="li"><a href="{{route('demanda-distribuidor.index')}}"><i class="fa fa-user-plus"></i> Distribución</a></li>
 
+<li class="li"><a href="{{route('demanda-producto.demandas-productos-disponibles')}}"><i class="fa fa-handshake-o"></i> Solicitudes</a></li>
+
+
 <li class="treeview">
    <a href="#">
       <i class="fa fa-share"></i> <span>Importación</span>

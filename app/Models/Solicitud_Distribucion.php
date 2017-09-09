@@ -16,8 +16,8 @@ class Solicitud_Distribucion extends Model
         return $this->belongsTo('App\Models\Marca');
     }
 
-    public function producto(){
-    	return $this->belongsTo('App\Models\Producto');
+    public function bebida(){
+    	return $this->belongsTo('App\Models\Bebida');
     }
 
     public function distribuidor(){

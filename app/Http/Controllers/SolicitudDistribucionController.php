@@ -20,8 +20,119 @@ class SolicitudDistribucionController extends Controller
         return view('solicitudDistribucion.index')->with(compact('solicitudesDistribucion', 'cont'));
     }
 
-    public function create()
-    {
+    //Pestaña Distribución (Solicitudes Productor / Importador)
+    public function solicitudes_distribucion(Request $request){
+        if (session('perfilTipo') == 'P'){
+            $demandasDistribucion = Solicitud_Distribucion::select('solicitud_distribucion.id')
+                                ->join('marca', 'solicitud_distribucion.marca_id', '=', 'marca.id')
+                                ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                                ->where('productor.id', '=', session('perfilId'))
+                                ->where('solicitud_distribucion.status', '=', '1')
+                                ->orderBy('solicitud_distribucion.created_at', 'DESC')
+                                ->paginate(8);
+
+            if ($request->get('tipo') == 'B'){
+                $demandasDistribucion = Solicitud_Distribucion::select('solicitud_distribucion.id')
+                                ->join('bebida', 'solicitud_distribucion.bebida_id', '=', 'bebida.id')
+                                ->join('producto', 'bebida.id', '=', 'producto.bebida_id')
+                                ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                                ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                                ->where('productor.id', '=', session('perfilId'))
+                                ->where('solicitud_distribucion.status', '=', '1')
+                                ->groupBy('solicitud_distribucion.id', 'producto.bebida_id')
+                                ->orderBy('solicitud_distribucion.created_at', 'DESC')
+                                ->paginate(8);
+            }
+
+            $cont = 0;
+            foreach ($demandasDistribucion as $dd){
+                $relacion = DB::table('productor_solicitud_distribucion')
+                        ->select('id')
+                        ->where('solicitud_distribucion_id', '=', $dd->id)
+                        ->where('productor_id', '=', session('perfilId'))
+                        ->first();
+
+                if ($relacion == null){
+                    $cont++;
+                }
+            }
+        }elseif (session('perfilTipo') == 'I'){
+            $demandasDistribucion = Solicitud_Distribucion::select('solicitud_distribucion.*')
+                                    ->join('marca', 'solicitud_distribucion.marca_id', '=', 'marca.id')
+                                    ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                                    ->where('importador_marca.importador_id', '=', session('perfilId'))
+                                    ->where('solicitud_distribucion.status', '=', '1')
+                                    ->orderBy('solicitud_distribucion.created_at', 'DESC')
+                                    ->paginate(7);
+
+        }
+
+        return view('solicitudes.tabs.distribucion')->with(compact('demandasDistribucion', 'cont')); 
+    }
+
+    public function show($id){
+        if (session('perfilTipo') == 'P'){
+            $demandaMarcada = DB::table('productor_solicitud_distribucion')
+                            ->where('productor_id', '=', session('perfilId'))
+                            ->where('solicitud_distribucion_id', '=', $id)
+                            ->first();
+        }else{
+            $demandaMarcada = DB::table('importador_solicitud_distribucion')
+                            ->where('importador_id', '=', session('perfilId'))
+                            ->where('solicitud_distribucion_id', '=', $id)
+                            ->first();
+        }
+            
+        if ($demandaMarcada == null){
+            $restringido = '1';
+        }else{
+            $restringido = '0';
+        }
+        
+        $demandaDistribucion = Solicitud_Distribucion::find($id);
+
+        $visitas = $demandaDistribucion->cantidad_visitas + 1;
+
+        $act = DB::table('solicitud_distribucion')
+                ->where('id', '=', $id)
+                ->update(['cantidad_visitas' => $visitas ]);
+
+        $demandaDistribucion->cantidad_visitas = $visitas;
+
+        return view('solicitudDistribucion.show')->with(compact('demandaDistribucion', 'restringido'));
+    }
+
+    //Marca una solicitud de distribución "de interes" o "no me interesa" para el productor o importador loggeado
+    public function marcar_solicitud($id, $check){
+        $fecha = new \DateTime();
+
+        $demanda = Solicitud_Distribucion::find($id);
+      
+        //Asociar productor a la solicitud
+        if (session('perfilTipo') == 'P'){
+             DB::table('productor_solicitud_distribucion')->insertGetId(
+                                        ['productor_id' => session('perfilId'), 'solicitud_distribucion_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
+        }else{
+             DB::table('importador_solicitud_distribucion')->insertGetId(
+                                        ['importador_id' => session('perfilId'), 'solicitud_distribucion_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
+        }
+        // ... //
+        
+        if ($check == '1'){
+            //Aumentar el contador de contactos de la demanda
+            DB::table('solicitud_distribucion')
+            ->where('id', '=', $id)
+            ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
+            // ... //
+            
+            return redirect('solicitud-distribucion/'.$id)->with('msj', 'Se ha agregado la solicitud de distribución a su historial de solicitudes."');
+        }
+        
+        return redirect('solicitud-distribucion/solicitudes-distribucion')->with('msj', 'Se ha eliminado la solicitud de distribución de los listados.');
+        
+    }
+
+    public function create(){
         $bebidas = DB::table('bebida')
                     ->orderBy('nombre', 'ASC')
                     ->pluck('nombre', 'id'); 
@@ -33,8 +144,7 @@ class SolicitudDistribucionController extends Controller
         return view('solicitudDistribucion.create')->with(compact('bebidas', 'paises'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $fecha = new \DateTime();
         $solicitudDistribucion =new Solicitud_Distribucion($request->all());
         $solicitudDistribucion->fecha = $fecha;
@@ -127,69 +237,6 @@ class SolicitudDistribucionController extends Controller
         return redirect('solicitud-distribucion')->with('msj', 'Su solicitud ha sido creada con éxito. Debe esperar la aprobación del Productor / Importador');
     }
 
-    public function show($id)
-    {
-        if (session('perfilTipo') == 'P'){
-            $demandaMarcada = DB::table('productor_solicitud_distribucion')
-                            ->where('productor_id', '=', session('perfilId'))
-                            ->where('solicitud_distribucion_id', '=', $id)
-                            ->first();
-        }else{
-            $demandaMarcada = DB::table('importador_solicitud_distribucion')
-                            ->where('importador_id', '=', session('perfilId'))
-                            ->where('solicitud_distribucion_id', '=', $id)
-                            ->first();
-        }
-            
-        if ($demandaMarcada == null){
-            $restringido = '1';
-        }else{
-            $restringido = '0';
-        }
-        
-        $demandaDistribucion = Solicitud_Distribucion::find($id);
-
-        $visitas = $demandaDistribucion->cantidad_visitas + 1;
-
-        $act = DB::table('solicitud_distribucion')
-                ->where('id', '=', $id)
-                ->update(['cantidad_visitas' => $visitas ]);
-
-        $demandaDistribucion->cantidad_visitas = $visitas;
-
-        return view('solicitudDistribucion.show')->with(compact('demandaDistribucion', 'restringido'));
-    }
-
-    //Marca una solicitud de distribución "de interes" o "no me interesa" para el productor o importador loggeado
-    public function marcar_solicitud($id, $check){
-        $fecha = new \DateTime();
-
-        $demanda = Solicitud_Distribucion::find($id);
-      
-        //Asociar productor a la solicitud
-        if (session('perfilTipo') == 'P'){
-             DB::table('productor_solicitud_distribucion')->insertGetId(
-                                        ['productor_id' => session('perfilId'), 'solicitud_distribucion_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
-        }else{
-             DB::table('importador_solicitud_distribucion')->insertGetId(
-                                        ['importador_id' => session('perfilId'), 'solicitud_distribucion_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
-        }
-        // ... //
-        
-        if ($check == '1'){
-            //Aumentar el contador de contactos de la demanda
-            DB::table('solicitud_distribucion')
-            ->where('id', '=', $id)
-            ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
-            // ... //
-            
-            return redirect('solicitud-distribucion/'.$id)->with('msj', 'Se ha agregado la Demanda de Distribución a su sección de "Demandas De Interés"');
-        }
-        
-        return redirect('solicitud-distribucion/solicitudes-distribucion')->with('msj', 'Se ha eliminado la demanda de distribución de los listados.');
-        
-    }
-
     public function demandas_interes(){
         if (session('perfilTipo') == 'P'){
             $demandas = Solicitud_Distribucion::select('solicitud_distribucion.*')
@@ -231,53 +278,5 @@ class SolicitudDistribucionController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function solicitudes_distribucion(){
-        if (session('perfilTipo') == 'P'){
-            $notificaciones_pendientes_SD = DB::table('notificacion_p')
-                                        ->where('productor_id', '=', session('perfilId'))
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'SD')
-                                        ->get();
-
-            foreach ($notificaciones_pendientes_SD as $notificacion){
-                $act = DB::table('notificacion_p')
-                        ->where('id', '=', $notificacion->id)
-                        ->update(['leida' => '1']);
-            }
-
-            $demandasDistribucion = Solicitud_Distribucion::select('solicitud_distribucion.*')
-                                ->join('marca', 'solicitud_distribucion.marca_id', '=', 'marca.id')
-                                ->join('productor', 'marca.productor_id', '=', 'productor.id')
-                                ->where('productor.id', '=', session('perfilId'))
-                                ->where('solicitud_distribucion.status', '=', '1')
-                                ->orderBy('solicitud_distribucion.created_at', 'DESC')
-                                ->paginate(8);
-
-        }elseif (session('perfilTipo') == 'I'){
-            $notificaciones_pendientes_SD = DB::table('notificacion_i')
-                                        ->where('importador_id', '=', session('perfilId'))
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'SD')
-                                        ->get();
-
-            foreach ($notificaciones_pendientes_SD as $notificacion){
-                $act = DB::table('notificacion_i')
-                        ->where('id', '=', $notificacion->id)
-                        ->update(['leida' => '1']);
-            }
-
-            $demandasDistribucion = Solicitud_Distribucion::select('solicitud_distribucion.*')
-                                    ->join('marca', 'solicitud_distribucion.marca_id', '=', 'marca.id')
-                                    ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
-                                    ->where('importador_marca.importador_id', '=', session('perfilId'))
-                                    ->where('solicitud_distribucion.status', '=', '1')
-                                    ->orderBy('solicitud_distribucion.created_at', 'DESC')
-                                    ->paginate(7);
-
-        }
-        
-        return view('solicitudDistribucion.solicitudesDisponibles')->with(compact('demandasDistribucion'));
     }
 }

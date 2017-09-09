@@ -41,4 +41,10 @@ class Demanda_Producto extends Model
         return $this->belongsToMany('App\Models\Distribuidor', 'distribuidor_demanda_producto')->withPivot('fecha')->withTimestamps();
     }
 
+    public function scopeProducto($query, $producto){
+        if ($producto != ""){
+            $query->where('producto_id', '=', $producto);
+        }
+    }
+
 }

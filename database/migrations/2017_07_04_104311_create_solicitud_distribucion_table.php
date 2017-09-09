@@ -11,8 +11,8 @@ class CreateSolicitudDistribucionTable extends Migration
         Schema::create('solicitud_distribucion', function (Blueprint $table){
             $table->increments('id');
             $table->integer('distribuidor_id');
-            $table->integer('producto_id');
-            $table->integer('marca_id');
+            $table->integer('marca_id')->nullable();
+            $table->integer('bebida_id')->nullable();
             $table->integer('provincia_region_id');
             $table->boolean('status');
             $table->date('fecha');
@@ -20,8 +20,8 @@ class CreateSolicitudDistribucionTable extends Migration
             $table->integer('cantidad_contactos');
             $table->timestamps();
 
-            $table->foreign('producto_id')
-                  ->references('id')->on('producto')
+            $table->foreign('bebida_id')
+                  ->references('id')->on('bebida')
                   ->onDelete('restrict')
                   ->onUpdate('cascade');
 

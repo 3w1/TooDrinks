@@ -31,80 +31,69 @@ class DemandaProductoController extends Controller
         return view('demandaProducto.index')->with(compact('demandasProductos', 'cont'));
     }
 
-    public function demandas_productos_disponibles(){
+    //Pestaña Producto (Solicitudes)
+    public function demandas_productos_disponibles(Request $request){
         if (session('perfilTipo') == 'P'){
-            $notificaciones_pendientes_DP = DB::table('notificacion_p')
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'DP')
-                                        ->get();
+            $demandasProductos = Demanda_Producto::select('demanda_producto.*', 'producto.nombre', 'producto.marca_id', 'marca.productor_id')
+                                ->producto($request->get('producto'))
+                                ->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
+                                ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                                ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                                ->where('marca.productor_id', '=', session('perfilId'))
+                                ->where('demanda_producto.status', '=', '1')
+                                ->paginate(6);
 
-            foreach ($notificaciones_pendientes_DP as $notificacion){
-                $act = DB::table('notificacion_p')
-                        ->where('id', '=', $notificacion->id)
-                        ->update(['leida' => '1']);
+            $cont = 0;
+            foreach ($demandasProductos as $dp){
+                $relacion = DB::table('productor_demanda_producto')
+                                    ->select('demanda_producto_id')
+                                    ->where('demanda_producto_id', '=', $dp->id)
+                                    ->where('productor_id', '=', session('perfilId'))
+                                    ->first();
+
+                if ($relacion == null){
+                    $cont++;
+                }
             }
 
-            $demandasProductos = DB::table('demanda_producto')
-                                    ->select('demanda_producto.*', 'producto.nombre', 'producto.marca_id', 'marca.productor_id')
-                                    ->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
-                                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
-                                    ->where('marca.productor_id', '=', session('perfilId'))
-                                    ->where('demanda_producto.status', '=', '1')
-                                    ->paginate(10);
+            $productos = DB::table('producto')
+                            ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                            ->where('marca.productor_id', '=', session('perfilId'))
+                            ->orderBy('producto.nombre', 'ASC')
+                            ->pluck('producto.nombre', 'producto.id');
 
         }elseif (session('perfilTipo') == 'I'){
-            $notificaciones_pendientes_DP = DB::table('notificacion_i')
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'DP')
-                                        ->get();
-
-            foreach ($notificaciones_pendientes_DP as $notificacion){
-                $act = DB::table('notificacion_i')
-                        ->where('id', '=', $notificacion->id)
-                        ->update(['leida' => '1']);
-            }
-               
-            $demandasProductos = DB::table('demanda_producto')
-                                    ->select('demanda_producto.*', 'producto.nombre', 'producto.marca_id')
+            $demandasProductos = Demanda_Producto::select('demanda_producto.*', 'producto.nombre', 'producto.marca_id')
+                                    ->producto($request->get('producto'))
                                     ->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
                                     ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
                                     ->where('importador_producto.importador_id', '=', session('perfilId'))
                                     ->where('demanda_producto.status', '=', '1')
                                     ->where('demanda_producto.tipo_creador', '<>', 'I')
                                     ->paginate(10);
-        }elseif (session('perfilTipo') == 'M'){
-            $notificaciones_pendientes_DP = DB::table('notificacion_m')
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'DP')
-                                        ->get();
+            $cont = 0;
+            foreach ($demandasProductos as $dp){
+                $relacion = DB::table('importador_demanda_producto')
+                                    ->select('demanda_producto_id')
+                                    ->where('demanda_producto_id', '=', $dp->id)
+                                    ->where('importador_id', '=', session('perfilId'))
+                                    ->first();
 
-            foreach ($notificaciones_pendientes_DP as $notificacion){
-                $act = DB::table('notificacion_m')
-                        ->where('id', '=', $notificacion->id)
-                        ->update(['leida' => '1']);
+                if ($relacion == null){
+                    $cont++;
+                }
             }
-               
-            $demandasProductos = DB::table('demanda_producto')
-                                    ->select('demanda_producto.*', 'producto.nombre', 'producto.marca_id', 'marca.productor_id')
-                                    ->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
-                                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                                    ->where('marca.productor_id', '=', session('perfilPadre'))
-                                    ->where('demanda_producto.status', '=', '1')
-                                    ->paginate(10);
+
+            $productos = DB::table('producto')
+                            ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
+                            ->where('importador_producto.importador_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', '0')
+                            ->orderBy('producto.nombre', 'ASC')
+                            ->pluck('producto.nombre', 'producto.id');
+
         }elseif (session('perfilTipo') == 'D'){
-            $notificaciones_pendientes_DP = DB::table('notificacion_d')
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'DP')
-                                        ->get();
-
-            foreach ($notificaciones_pendientes_DP as $notificacion){
-                $act = DB::table('notificacion_d')
-                        ->where('id', '=', $notificacion->id)
-                        ->update(['leida' => '1']);
-            }
-
             $demandasProductos = DB::table('demanda_producto')
+                                    ->producto($request->get('producto'))
                                     ->select('demanda_producto.*', 'producto.nombre', 'producto.marca_id')
                                     ->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
                                     ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
@@ -112,105 +101,159 @@ class DemandaProductoController extends Controller
                                     ->where('demanda_producto.status', '=', '1')
                                     ->where('demanda_producto.tipo_creador', '=', 'H')
                                     ->paginate(10);
+
+            $cont = 0;
+            foreach ($demandasProductos as $dp){
+                $relacion = DB::table('distribuidor_demanda_producto')
+                                    ->select('demanda_producto_id')
+                                    ->where('demanda_producto_id', '=', $dp->id)
+                                    ->where('distribuidor_id', '=', session('perfilId'))
+                                    ->first();
+
+                if ($relacion == null){
+                    $cont++;
+                }
+            }
+
+            $productos = DB::table('producto')
+                            ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
+                            ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
+                            ->where('producto.id', '<>', '0')
+                            ->orderBy('producto.nombre', 'ASC')
+                            ->pluck('producto.nombre', 'producto.id');
         }
 
-        return view('demandaProducto.demandasProductos')->with(compact('demandasProductos'));
+        return view('solicitudes.tabs.producto')->with(compact('demandasProductos', 'productos', 'cont'));
     }
 
-    public function demandas_bebidas_disponibles(){
+    //Pestaña Bebida (Solicitudes)
+    public function demandas_bebidas_disponibles(Request $request){
         if (session('perfilTipo') == 'P'){
-             $notificaciones_pendientes_DB = DB::table('notificacion_p')
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'DB')
-                                        ->get();
-
-            foreach ($notificaciones_pendientes_DB as $notificacion){
-                $act = DB::table('notificacion_p')
-                        ->where('id', '=', $notificacion->id)
-                        ->update(['leida' => '1']);
-            }
-
             $demandasBebidas = DB::table('demanda_producto')
-                                    ->select('demanda_producto.id')
-                                    ->join('producto', 'demanda_producto.bebida_id', '=', 'producto.bebida_id')
-                                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
-                                    ->where('marca.productor_id', '=', session('perfilId'))
-                                    ->where('demanda_producto.producto_id', '=', '0')
-                                    ->where('demanda_producto.status', '=', '1')
-                                    ->groupBy('demanda_producto.id', 'producto.bebida_id')
-                                    ->paginate(10);
+                                ->select('demanda_producto.id')
+                                ->join('producto', 'demanda_producto.bebida_id', '=', 'producto.bebida_id')
+                                ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                                ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                                ->where('marca.productor_id', '=', session('perfilId'))
+                                ->where('demanda_producto.producto_id', '=', '0')
+                                ->where('demanda_producto.status', '=', '1')
+                                ->groupBy('demanda_producto.id', 'producto.bebida_id')
+                                ->paginate(10);
 
+            $cont = 0;
+            foreach ($demandasBebidas as $db){
+                $relacion = DB::table('productor_demanda_producto')
+                            ->select('demanda_producto_id')
+                            ->where('demanda_producto_id', '=', $db->id)
+                            ->where('productor_id', '=', session('perfilId'))
+                            ->first();
+
+                if ($relacion == null){
+                    $cont++;
+                }
+            }
         }elseif (session('perfilTipo') == 'I'){
-            $notificaciones_pendientes_DB = DB::table('notificacion_i')
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'DB')
-                                        ->get();
-
-            foreach ($notificaciones_pendientes_DB as $notificacion){
-                $act = DB::table('notificacion_i')
-                        ->where('id', '=', $notificacion->id)
-                        ->update(['leida' => '1']);
-            }
-
             $demandasBebidas = DB::table('demanda_producto')
-                                    ->select('demanda_producto.id')
-                                    ->join('producto', 'demanda_producto.bebida_id', '=', 'producto.bebida_id')
-                                    ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
-                                    ->where('importador_producto.importador_id', '=', session('perfilId'))
-                                    ->where('demanda_producto.producto_id', '=', '0')
-                                    ->where('demanda_producto.status', '=', '1')
-                                    ->where('demanda_producto.tipo_creador', '<>', 'I')
-                                    ->groupBy('demanda_producto.id', 'producto.bebida_id')
-                                    ->paginate(10);
+                                ->select('demanda_producto.id')
+                                ->join('producto', 'demanda_producto.bebida_id', '=', 'producto.bebida_id')
+                                ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
+                                ->where('importador_producto.importador_id', '=', session('perfilId'))
+                                ->where('demanda_producto.producto_id', '=', '0')
+                                ->where('demanda_producto.status', '=', '1')
+                                ->where('demanda_producto.tipo_creador', '<>', 'I')
+                                ->groupBy('demanda_producto.id', 'producto.bebida_id')
+                                ->paginate(10);
 
         }elseif (session('perfilTipo') == 'D'){
-            $notificaciones_pendientes_DB = DB::table('notificacion_d')
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'DP')
-                                        ->get();
-
-            foreach ($notificaciones_pendientes_DB as $notificacion){
-                $act = DB::table('notificacion_d')
-                        ->where('id', '=', $notificacion->id)
-                        ->update(['leida' => '1']);
-            }
-
             $demandasBebidas = DB::table('demanda_producto')
-                                    ->select('demanda_producto.id')
-                                    ->join('producto', 'demanda_producto.bebida_id', '=', 'producto.bebida_id')
-                                    ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
-                                    ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
-                                    ->where('demanda_producto.producto_id', '=', '0')
-                                    ->where('demanda_producto.status', '=', '1')
-                                    ->where('demanda_producto.tipo_creador', '=', 'H')
-                                    ->groupBy('demanda_producto.id', 'producto.bebida_id')
-                                    ->paginate(10);
+                                ->select('demanda_producto.id')
+                                ->join('producto', 'demanda_producto.bebida_id', '=', 'producto.bebida_id')
+                                ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
+                                ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
+                                ->where('demanda_producto.producto_id', '=', '0')
+                                ->where('demanda_producto.status', '=', '1')
+                                ->where('demanda_producto.tipo_creador', '=', 'H')
+                                ->groupBy('demanda_producto.id', 'producto.bebida_id')
+                                ->paginate(10);
                                     
-        }elseif (session('perfilTipo') == 'M'){
-            $notificaciones_pendientes_DB = DB::table('notificacion_m')
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'DB')
-                                        ->get();
-
-            foreach ($notificaciones_pendientes_DB as $notificacion){
-                $act = DB::table('notificacion_m')
-                        ->where('id', '=', $notificacion->id)
-                        ->update(['leida' => '1']);
-            }
-               
-             $demandasBebidas = DB::table('demanda_producto')
-                                    ->select('demanda_producto.id')
-                                    ->join('producto', 'demanda_producto.bebida_id', '=', 'producto.bebida_id')
-                                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                                    ->where('marca.productor_id', '=', session('perfilPadre'))
-                                    ->where('demanda_producto.producto_id', '=', '0')
-                                    ->where('demanda_producto.status', '=', '1')
-                                    ->groupBy('demanda_producto.id', 'producto.bebida_id')
-                                    ->paginate(10);
         }
-       
-        return view('demandaProducto.demandasBebidas')->with(compact('demandasBebidas'));
+
+        return view('solicitudes.tabs.bebida')->with(compact('demandasBebidas', 'cont'));
+    }
+
+    public function show($id){
+        if (session('perfilTipo') == 'P'){
+            $demandaMarcada = DB::table('productor_demanda_producto')
+                                ->where('productor_id', '=', session('perfilId'))
+                                ->where('demanda_producto_id', '=', $id)
+                                ->first();
+        }elseif (session('perfilTipo') == 'I'){
+            $demandaMarcada = DB::table('importador_demanda_producto')
+                                ->where('importador_id', '=', session('perfilId'))
+                                ->where('demanda_producto_id', '=', $id)
+                                ->first();
+        }elseif (session('perfilTipo') == 'D'){
+            $demandaMarcada = DB::table('distribuidor_demanda_producto')
+                                ->where('distribuidor_id', '=', session('perfilId'))
+                                ->where('demanda_producto_id', '=', $id)
+                                ->first();
+        }
+
+        if ($demandaMarcada == null){
+            $restringido = '1';
+        }else{
+            $restringido = '0';
+        }
+
+        $demandaProducto = Demanda_Producto::find($id);
+
+        $visitas = $demandaProducto->cantidad_visitas + 1;
+
+        $act = DB::table('demanda_producto')
+                ->where('id', '=', $id)
+                ->update(['cantidad_visitas' => $visitas ]);
+
+        $demandaProducto->cantidad_visitas = $visitas;
+
+        return view('demandaProducto.show')->with(compact('demandaProducto', 'restringido'));
+    }
+
+    //Marca una demanda de producto "de interes" o "no me interesa" para las entidades con Suscripción 
+    public function marcar_demanda($id, $check){
+        $fecha = new \DateTime();
+
+        $demanda = Demanda_Producto::find($id);
+        
+        //Asociar entidad a la demanda 
+        if (session('perfilTipo') == 'P'){
+            DB::table('productor_demanda_producto')->insertGetId(
+                                        ['productor_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
+        }elseif (session('perfilTipo') == 'I'){
+            DB::table('importador_demanda_producto')->insertGetId(
+                                        ['importador_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
+        }elseif (session('perfilTipo') == 'D'){
+            DB::table('distribuidor_demanda_producto')->insertGetId(
+                                        ['distribuidor_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
+        }
+        // ... //
+        
+        if ($check == '1'){
+            //Aumentar el contador de contactos de la demanda
+            DB::table('demanda_producto')
+            ->where('id', '=', $id)
+            ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
+            // ... //
+            
+            if ($demanda->producto_id == '0'){
+                return redirect('demanda-producto/'.$id)->with('msj', 'Se ha agregado la demanda de bebida a su historial de demandas.');
+            }
+            return redirect('demanda-producto/'.$id)->with('msj', 'Se ha agregado la demanda de producto a su sección de "Demandas De Interés"');
+        }
+
+        if ($demanda->producto_id == '0'){
+            return redirect('demanda-producto/demandas-bebidas-disponibles')->with('msj', 'Se ha eliminado la demanda de bebida de los listados.');
+        }
+        return redirect('demanda-producto/demandas-productos-disponibles')->with('msj', 'Se ha eliminado la demanda de producto de los listados.'); 
     }
 
     public function create()
@@ -615,76 +658,6 @@ class DemandaProductoController extends Controller
         }
         
         return redirect('demanda-producto')->with('msj', 'Se ha creado su demanda de producto con éxito.');
-    }
-
-    public function show($id)
-    {
-        if (session('perfilTipo') == 'P'){
-            $demandaMarcada = DB::table('productor_demanda_producto')
-                                ->where('productor_id', '=', session('perfilId'))
-                                ->where('demanda_producto_id', '=', $id)
-                                ->first();
-        }elseif (session('perfilTipo') == 'I'){
-            $demandaMarcada = DB::table('importador_demanda_producto')
-                                ->where('importador_id', '=', session('perfilId'))
-                                ->where('demanda_producto_id', '=', $id)
-                                ->first();
-        }elseif (session('perfilTipo') == 'D'){
-            $demandaMarcada = DB::table('distribuidor_demanda_producto')
-                                ->where('distribuidor_id', '=', session('perfilId'))
-                                ->where('demanda_producto_id', '=', $id)
-                                ->first();
-        }
-
-        if ($demandaMarcada == null){
-            $restringido = '1';
-        }else{
-            $restringido = '0';
-        }
-
-        $demandaProducto = Demanda_Producto::find($id);
-
-        $visitas = $demandaProducto->cantidad_visitas + 1;
-
-        $act = DB::table('demanda_producto')
-                ->where('id', '=', $id)
-                ->update(['cantidad_visitas' => $visitas ]);
-
-        $demandaProducto->cantidad_visitas = $visitas;
-
-        return view('demandaProducto.show')->with(compact('demandaProducto', 'restringido'));
-    }
-
-    //Marca una demanda de producto "de interes" o "no me interesa" para las entidades con Suscripción 
-    public function marcar_demanda($id, $check){
-        $fecha = new \DateTime();
-
-        $demanda = Demanda_Producto::find($id);
-        
-        //Asociar entidad a la demanda 
-        if (session('perfilTipo') == 'P'){
-            DB::table('productor_demanda_producto')->insertGetId(
-                                        ['productor_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
-        }elseif (session('perfilTipo') == 'I'){
-            DB::table('importador_demanda_producto')->insertGetId(
-                                        ['importador_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
-        }elseif (session('perfilTipo') == 'D'){
-            DB::table('distribuidor_demanda_producto')->insertGetId(
-                                        ['distribuidor_id' => session('perfilId'), 'demanda_producto_id' => $id, 'fecha' => $fecha, 'marcada' => $check]);    
-        }
-        // ... //
-        
-        if ($check == '1'){
-            //Aumentar el contador de contactos de la demanda
-            DB::table('demanda_producto')
-            ->where('id', '=', $id)
-            ->update(['cantidad_contactos' => ($demanda->cantidad_contactos + 1) ]); 
-            // ... //
-            
-            return redirect('demanda-producto/'.$id)->with('msj', 'Se ha agregado la demanda de producto a su sección de "Demandas De Interés"');
-        }
-
-        return redirect('demanda-producto/demandas-productos-disponibles')->with('msj', 'Se ha eliminado la demanda de producto de los listados.'); 
     }
 
     public function demandas_interes(){

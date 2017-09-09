@@ -12,8 +12,8 @@ class CreateSolicitudImportacionTable extends Migration
         Schema::create('solicitud_importacion', function (Blueprint $table){
             $table->increments('id');
             $table->integer('importador_id');
-            $table->integer('producto_id');
-            $table->integer('marca_id');
+            $table->integer('marca_id')->nullable();
+            $table->integer('bebida_id')->nullable();
             $table->integer('pais_id');
             $table->boolean('status');
             $table->date('fecha');
@@ -21,8 +21,8 @@ class CreateSolicitudImportacionTable extends Migration
             $table->integer('cantidad_contactos');
             $table->timestamps();
 
-            $table->foreign('producto_id')
-                  ->references('id')->on('producto')
+            $table->foreign('bebida_id')
+                  ->references('id')->on('bebida')
                   ->onDelete('restrict')
                   ->onUpdate('cascade');
 

@@ -1,8 +1,8 @@
 @extends('plantillas.main')
-@section('title', 'Detalles de Demanda')
+@section('title', 'Solicitudes')
 
 @section('title-header')
-   Demanda de Importación
+   Solicitud de Importación
 @endsection
 
 @section('title-complement')
@@ -44,8 +44,8 @@
    <div class="row">
       <div class="col-md-4"></div>
       <div class="col-sm-6 col-md-4">
-         @if ($demandaImportacion->producto_id != '0')
-            <a href="" class="thumbnail"><img src="{{ asset('imagenes/productos/thumbnails') }}/{{ $demandaImportacion->producto->imagen }}"></a>
+         @if ($demandaImportacion->bebida_id != null)
+            <a href="" class="thumbnail"><img src="{{ asset('imagenes/bebida.jpg') }}"></a>
          @else
             <a href="" class="thumbnail"><img src="{{ asset('imagenes/marcas/thumbnails') }}/{{ $demandaImportacion->marca->logo }}"></a>
          @endif
@@ -70,8 +70,8 @@
       <div class="col-md-10 col-xs-12"> 
          <div class="panel panel-default panel-success">
             <div class="panel-heading"><h4><b>
-               @if ($demandaImportacion->producto_id != '0' )
-                  Producto Demandado: {{ $demandaImportacion->producto->nombre }}</b></h4>
+               @if ($demandaImportacion->bebida_id != null )
+                  Bebida Demandada: {{ $demandaImportacion->bebida->nombre }}</b></h4>
                @else
                   Marca Demandada: {{ $demandaImportacion->marca->nombre }}</b></h4>
                @endif
@@ -79,7 +79,7 @@
              
             <ul class="list-group">
                <li class="list-group-item"><b>País:</b> {{ $demandaImportacion->pais->pais }}</li>
-               <li class="list-group-item"><b>Fecha:</b> {{ $demandaImportacion->created_at->format('d-m-Y') }}</li>
+               <li class="list-group-item"><b>Fecha:</b> {{ date('d-m-Y', strtotime($demandaImportacion->fecha)) }}</li>
                @if ( $restringido == '1' )
                   <li class="list-group-item"><center>
                      @if (session('perfilSuscripcion') == 'Gratis')

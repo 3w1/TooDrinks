@@ -203,11 +203,12 @@ Route::prefix('demanda-producto')->group(function () {
     ->name('demanda-producto.demandas-productos-disponibles');
     Route::get('demandas-bebidas-disponibles', 'DemandaProductoController@demandas_bebidas_disponibles')
     ->name('demanda-producto.demandas-bebidas-disponibles');
+    Route::get('marcar-demanda/{id}/{check}', 'DemandaProductoController@marcar_demanda')->name('demanda-producto.marcar');
+    
 
     Route::post('cambiar-status', 'DemandaProductoController@cambiar_status')
     ->name('demanda-producto.status');
 
-    Route::get('marcar-demanda/{id}/{check}', 'DemandaProductoController@marcar_demanda')->name('demanda-producto.marcar');
     Route::get('demandas-de-interes', 'DemandaProductoController@demandas_interes')->name('demanda-producto.demandas-interes');
 });
 Route::resource('demanda-producto','DemandaProductoController');
