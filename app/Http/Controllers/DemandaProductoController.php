@@ -31,7 +31,7 @@ class DemandaProductoController extends Controller
         return view('demandaProducto.index')->with(compact('demandasProductos', 'cont'));
     }
 
-    //Pestaña Producto (Solicitudes)
+    //Pestaña Solicitudes / Producto
     public function demandas_productos_disponibles(Request $request){
         if (session('perfilTipo') == 'P'){
             $demandasProductos = Demanda_Producto::select('demanda_producto.*', 'producto.nombre', 'producto.marca_id', 'marca.productor_id')
@@ -62,6 +62,8 @@ class DemandaProductoController extends Controller
                             ->orderBy('producto.nombre', 'ASC')
                             ->pluck('producto.nombre', 'producto.id');
 
+            return view('solicitudes.tabs.producto')->with(compact('demandasProductos', 'productos', 'cont'));
+
         }elseif (session('perfilTipo') == 'I'){
             $demandasProductos = Demanda_Producto::select('demanda_producto.*', 'producto.nombre', 'producto.marca_id')
                                     ->producto($request->get('producto'))
@@ -90,6 +92,8 @@ class DemandaProductoController extends Controller
                             ->where('producto.id', '<>', '0')
                             ->orderBy('producto.nombre', 'ASC')
                             ->pluck('producto.nombre', 'producto.id');
+
+            return view('solicitudes.tabsImportador.producto')->with(compact('demandasProductos', 'productos', 'cont'));
 
         }elseif (session('perfilTipo') == 'D'){
             $demandasProductos = DB::table('demanda_producto')
@@ -122,8 +126,6 @@ class DemandaProductoController extends Controller
                             ->orderBy('producto.nombre', 'ASC')
                             ->pluck('producto.nombre', 'producto.id');
         }
-
-        return view('solicitudes.tabs.producto')->with(compact('demandasProductos', 'productos', 'cont'));
     }
 
     //Pestaña Bebida (Solicitudes)
@@ -152,6 +154,9 @@ class DemandaProductoController extends Controller
                     $cont++;
                 }
             }
+
+            return view('solicitudes.tabs.bebida')->with(compact('demandasBebidas', 'cont'));
+
         }elseif (session('perfilTipo') == 'I'){
             $demandasBebidas = DB::table('demanda_producto')
                                 ->select('demanda_producto.id')
@@ -163,6 +168,21 @@ class DemandaProductoController extends Controller
                                 ->where('demanda_producto.tipo_creador', '<>', 'I')
                                 ->groupBy('demanda_producto.id', 'producto.bebida_id')
                                 ->paginate(10);
+
+            $cont = 0;
+            foreach ($demandasBebidas as $db){
+                $relacion = DB::table('importador_demanda_producto')
+                            ->select('demanda_producto_id')
+                            ->where('demanda_producto_id', '=', $db->id)
+                            ->where('importador_id', '=', session('perfilId'))
+                            ->first();
+
+                if ($relacion == null){
+                    $cont++;
+                }
+            }
+
+            return view('solicitudes.tabsImportador.bebida')->with(compact('demandasBebidas', 'cont'));
 
         }elseif (session('perfilTipo') == 'D'){
             $demandasBebidas = DB::table('demanda_producto')
@@ -177,8 +197,6 @@ class DemandaProductoController extends Controller
                                 ->paginate(10);
                                     
         }
-
-        return view('solicitudes.tabs.bebida')->with(compact('demandasBebidas', 'cont'));
     }
 
     public function show($id){

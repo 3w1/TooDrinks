@@ -11,33 +11,33 @@
 
 @section('content-left')
    <?php 
-      $not_dp = DB::table('notificacion_p')->select('id')
-               ->where('productor_id', '=', session('perfilId'))
+      $not_dp = DB::table('notificacion_i')->select('id')
+               ->where('importador_id', '=', session('perfilId'))
                ->where('tipo', '=', 'DP')->where('leida', '=', '0')->get();
       $dp=0;
       foreach($not_dp as $ndp){
          $dp++;
-         DB::table('notificacion_p')->where('id', '=', $ndp->id)->update(['leida' => '1']);
+         DB::table('notificacion_i')->where('id', '=', $ndp->id)->update(['leida' => '1']);
       }
 
-      $not_db = DB::table('notificacion_p')->select('id')
-               ->where('productor_id', '=', session('perfilId'))
+      $not_db = DB::table('notificacion_i')->select('id')
+               ->where('importador_id', '=', session('perfilId'))
                ->where('tipo', '=', 'DB')->where('leida', '=', '0')->get();
       $db=0;
       foreach($not_db as $ndb){
          $db++;
       }
 
-      $not_si = DB::table('notificacion_p')->select('id')
-               ->where('productor_id', '=', session('perfilId'))
-               ->where('tipo', '=', 'SI')->where('leida', '=', '0')->get();
-      $si=0;
-      foreach($not_si as $nsi){
-         $si++;
+      $not_di = DB::table('notificacion_i')->select('id')
+               ->where('importador_id', '=', session('perfilId'))
+               ->where('tipo', '=', 'DI')->where('leida', '=', '0')->get();
+      $di=0;
+      foreach($not_di as $ndi){
+         $di++;
       }
 
-      $not_sd = DB::table('notificacion_p')->select('id')
-               ->where('productor_id', '=', session('perfilId'))
+      $not_sd = DB::table('notificacion_i')->select('id')
+               ->where('importador_id', '=', session('perfilId'))
                ->where('tipo', '=', 'SD')->where('leida', '=', '0')->get();
       $sd=0;
       foreach($not_sd as $nsd){
@@ -63,7 +63,7 @@
          <a href="{{ route('demanda-producto.demandas-bebidas-disponibles') }}"><strong>BEBIDA | <small class="label bg-red">{{ $db }}</small></strong></a>
       </li>
       <li class="btn btn-default">
-         <a href="{{ route('solicitud-importacion.solicitudes') }}"><strong>IMPORTACIÓN | <small class="label bg-red">{{ $si }}</small></strong></a>
+         <a href="{{ route('demanda-importador.demandas-disponibles') }}"><strong>IMPORTACIÓN | <small class="label bg-red">{{ $di }}</small></strong></a>
       </li>
       <li class="btn btn-default">
          <a href="{{ route('solicitud-distribucion.solicitudes') }}"><strong>DISTRIBUCIÓN | <small class="label bg-red">{{ $sd }}</small></strong></a>
@@ -79,10 +79,10 @@
                   @if ($cont > 0)
                      @foreach($demandasProductos as $demandaProducto)
                         <?php 
-                           $relacion = DB::table('productor_demanda_producto')
+                           $relacion = DB::table('importador_demanda_producto')
                                     ->select('demanda_producto_id')
                                     ->where('demanda_producto_id', '=', $demandaProducto->id)
-                                    ->where('productor_id', '=', session('perfilId'))
+                                    ->where('importador_id', '=', session('perfilId'))
                                     ->first();
                         ?>
                         @if ($relacion == null)

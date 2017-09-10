@@ -159,15 +159,10 @@ Route::prefix('demanda-importador')->group(function () {
     Route::post('cambiar-status', 'DemandaImportacionController@cambiar_status')
     ->name('demanda-importador.status');
     Route::get('historial', 'DemandaImportacionController@historial')->name('demanda-importador.historial');
-
-
     Route::get('demandas-disponibles', 'DemandaImportacionController@demandas_disponibles')
     ->name('demanda-importador.demandas-disponibles');
-
     Route::get('marcar-demanda/{id}/{check}', 'DemandaImportacionController@marcar_demanda')
     ->name('demanda-importador.marcar');
-    Route::get('demandas-de-interes', 'DemandaImportacionController@demandas_interes')
-    ->name('demanda-importador.demandas-interes');
 });
 Route::resource('demanda-importador','DemandaImportacionController');
 // ./RUTAS PARA LAS DEMANDAS DE IMPORTADORES ./
@@ -177,7 +172,6 @@ Route::prefix('demanda-distribuidor')->group(function () {
     Route::post('cambiar-status', 'DemandaDistribucionController@cambiar_status')
     ->name('demanda-distribuidor.status');
     Route::get('historial', 'DemandaDistribucionController@historial')->name('demanda-distribuidor.historial');
-
 
     Route::get('demandas-disponibles', 'DemandaDistribucionController@demandas_disponibles')
     ->name('demanda-distribuidor.demandas-disponibles');

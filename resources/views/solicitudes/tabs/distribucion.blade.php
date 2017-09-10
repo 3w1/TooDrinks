@@ -11,43 +11,37 @@
 
 @section('content-left')
    <?php 
-      if (session('perfilTipo') == 'P'){
-         $not_dp = DB::table('notificacion_p')->select('id')
-                  ->where('productor_id', '=', session('perfilId'))
-                  ->where('tipo', '=', 'DP')->where('leida', '=', '0')->get();
-         $dp=0;
-         foreach($not_dp as $ndp){
-            $dp++;
-         }
+      $not_dp = DB::table('notificacion_p')->select('id')
+               ->where('productor_id', '=', session('perfilId'))
+               ->where('tipo', '=', 'DP')->where('leida', '=', '0')->get();
+      $dp=0;
+      foreach($not_dp as $ndp){
+         $dp++;
+      }
 
-         $not_db = DB::table('notificacion_p')->select('id')
-                  ->where('productor_id', '=', session('perfilId'))
-                  ->where('tipo', '=', 'DB')->where('leida', '=', '0')->get();
-         $db=0;
-         foreach($not_db as $ndb){
-            $db++;
-         }
+      $not_db = DB::table('notificacion_p')->select('id')
+               ->where('productor_id', '=', session('perfilId'))
+               ->where('tipo', '=', 'DB')->where('leida', '=', '0')->get();
+      $db=0;
+      foreach($not_db as $ndb){
+         $db++;
+      }
 
-         $not_si = DB::table('notificacion_p')->select('id')
-                  ->where('productor_id', '=', session('perfilId'))
-                  ->where('tipo', '=', 'SI')->where('leida', '=', '0')->get();
-         $si=0;
-         foreach($not_si as $nsi){
-            $si++;
-         }
+      $not_si = DB::table('notificacion_p')->select('id')
+               ->where('productor_id', '=', session('perfilId'))
+               ->where('tipo', '=', 'SI')->where('leida', '=', '0')->get();
+      $si=0;
+      foreach($not_si as $nsi){
+         $si++;
+      }
 
-         $not_sd = DB::table('notificacion_p')->select('id')
-                  ->where('productor_id', '=', session('perfilId'))
-                  ->where('tipo', '=', 'SD')->where('leida', '=', '0')->get();
-         $sd=0;
-         foreach($not_sd as $nsd){
-            $sd++;
-            DB::table('notificacion_p')->where('id', '=', $nsd->id)->update(['leida' => '1']);
-         }
-      }elseif (session('perfilTipo') == 'I'){
-         
-      }elseif (session('perfilTipo') == 'D'){
-         
+      $not_sd = DB::table('notificacion_p')->select('id')
+               ->where('productor_id', '=', session('perfilId'))
+               ->where('tipo', '=', 'SD')->where('leida', '=', '0')->get();
+      $sd=0;
+      foreach($not_sd as $nsd){
+         $sd++;
+         DB::table('notificacion_p')->where('id', '=', $nsd->id)->update(['leida' => '1']);
       }
    ?>
 
@@ -85,19 +79,11 @@
                   @if ($cont > 0)
                      @foreach($demandasDistribucion as $demandaDistribucion)
                         <?php 
-                           if (session('perfilTipo') == 'P'){
-                              $relacion = DB::table('productor_solicitud_distribucion')
-                                       ->select('solicitud_distribucion_id')
-                                       ->where('solicitud_distribucion_id', '=', $demandaDistribucion->id)
-                                       ->where('productor_id', '=', session('perfilId'))
-                                       ->first();
-                           }elseif (session('perfilTipo') == 'I'){
-                              $relacion = DB::table('importador_solicitud_distribucion')
-                                       ->select('solicitud_distribucion_id')
-                                       ->where('solicitud_distribucion_id', '=', $demandaDistribucion->id)
-                                       ->where('importador_id', '=', session('perfilId'))
-                                       ->first();
-                           }
+                           $relacion = DB::table('productor_solicitud_distribucion')
+                                    ->select('solicitud_distribucion_id')
+                                    ->where('solicitud_distribucion_id', '=', $demandaDistribucion->id)
+                                    ->where('productor_id', '=', session('perfilId'))
+                                    ->first();
 
                            $demanda = App\Models\Solicitud_Distribucion::find($demandaDistribucion->id);
                         ?>

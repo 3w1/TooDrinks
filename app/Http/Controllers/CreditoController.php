@@ -386,7 +386,7 @@ class CreditoController extends Controller
                 ->where('id', '=', $id)
                 ->update(['cantidad_contactos' => $contactos]);
 
-        return redirect('demanda-importador/'.$id)->with('msj', 'Se han descontado '.$coste->cantidad_creditos.' créditos de su saldo.');
+        return redirect('demanda-importador/'.$id)->with('msj', 'Se han descontado '.$coste->cantidad_creditos.' créditos de su saldo. Se ha agregado la demanda a su historial.');
     }
 
     public function gastar_creditos_PDD($id){
