@@ -40,9 +40,14 @@
                                     <td><center>{{ date('d-m-Y', strtotime($solicitudImportacion->fecha)) }}</td>
                                     <td><center>
                                        @if ($solicitudImportacion->marca_id != null)
-                                          {{ $solicitudImportacion->marca->nombre }} (M)
+                                          (M) {{ $solicitudImportacion->marca->nombre }} 
                                        @else
-                                          {{ $solicitudImportacion->bebida->nombre }} (B)
+                                          (B) {{ $solicitudImportacion->bebida->nombre }} 
+                                          @if ($solicitudImportacion->pais_id == null)
+                                             [Cualquier País]
+                                          @else 
+                                             [{{ $solicitudImportacion->pais->pais}}]
+                                          @endif
                                        @endif
                                     </center></td>
                                     <td><center>

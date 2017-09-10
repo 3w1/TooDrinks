@@ -59,7 +59,7 @@ class SolicitudImportacionController extends Controller{
         $solicitudImportacion->fecha = $fecha;
         $solicitudImportacion->save();
 
-        $ult_solicitud = DB::table('solicitud_importacion')
+       /* $ult_solicitud = DB::table('solicitud_importacion')
                             ->select('id')
                             ->orderBy('created_at', 'DESC')
                             ->first();
@@ -91,17 +91,35 @@ class SolicitudImportacionController extends Controller{
 
     //Pestaña Importador / Importación / Solicitar Bebida
     public function solicitar_bebida(Request $request){
-        $bebidas = Bebida::select('bebida.*')
-                    ->nombre($request->get('busqueda'))
+        $pais_elegido = null;
+        
+        $bebidas = Bebida::nombre($request->get('busqueda'))
                     ->orderBy('nombre', 'ASC')
                     ->paginate(20);
+
+        if ($request->get('bebida') != null){
+            $bebidas = Bebida::where('id', '=', $request->get('bebida'))->paginate(1);
+            
+            $pais_elegido = DB::table('pais')
+                        ->select('id', 'pais')
+                        ->where('id', '=', $request->get('pais'))
+                        ->first();
+        }
+
+        $tipos_bebidas = DB::table('bebida')
+                        ->orderBy('nombre', 'ASC')
+                        ->pluck('nombre', 'id');
+
+        $paises = DB::table('pais')
+                    ->orderBy('pais', 'ASC')
+                    ->pluck('pais', 'id');
 
         $cont =0;
         foreach ($bebidas as $b){
             $cont++;
         }
 
-        return view('importacion.tabs.solicitarBebida')->with(compact('bebidas', 'cont'));
+        return view('importacion.tabs.solicitarBebida')->with(compact('bebidas', 'cont', 'tipos_bebidas', 'paises', 'pais_elegido'));
     }
 
     public function guardar_solicitud_bebida($id){

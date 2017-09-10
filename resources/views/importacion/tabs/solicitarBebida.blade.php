@@ -1,6 +1,8 @@
 @extends('plantillas.main')
 @section('title', 'Importación')
 
+{!! Html::script('js/productos/cargarClases.js') !!}
+
 @section('title-header')
    Solicitud de Importación
 @endsection
@@ -30,11 +32,33 @@
                               <div class="widget-user-image">
                                  <img class="img-rounded" src="{{ asset('imagenes/bebidas/thumbnails/')}}/{{ $bebida->imagen }}">
                               </div>
-                              <h3 class="widget-user-username">{{ $bebida->nombre }}
-                              <a href="{{ route('solicitud-importacion.guardar-solicitud-bebida', $bebida->id) }}" class="btn btn-primary pull-right">Solicitar bebida</a></h3>
+                              <h3 class="widget-user-username">{{ $bebida->nombre }}</h3>
                            </div>
-                                 
-                           
+                           <div class="box-footer no-padding">
+                              <ul class="nav nav-stacked">
+                                 <li class="active"><a><strong>Características:</strong> {{ $bebida->caracteristicas}}</a></li>
+                                 <li class="active"><a><strong>País:</strong> 
+                                    @if ($pais_elegido == null)
+                                       Cualquier País
+                                    @else 
+                                       {{$pais_elegido->pais}}
+                                    @endif
+                                 </a></li>
+                                 <li class="active"><center>
+                                    {!! Form::open(['route' => 'solicitud-importacion.store', 'method' => 'POST']) !!}
+                                       {!! Form::hidden('importador_id', session('perfilId') ) !!}
+                                       {!! Form::hidden('bebida_id', $bebida->id) !!}
+                                       @if ($pais_elegido != null)
+                                          {!! Form::hidden('pais_id', $pais_elegido->id ) !!}
+                                       @endif
+                                       {!! Form::hidden('status', '1') !!}
+                                       {!! Form::hidden('cantidad_visitas', '0') !!}
+                                       {!! Form::hidden('cantidad_contactos', '0') !!}
+                                       {!! Form::submit("Solicitar Bebida", ['class' => 'btn btn-primary'])!!}
+                                    {!! Form::close() !!}
+                                 </center></li>
+                              </ul>
+                           </div> 
                         </div>
                      </div>
                   @endforeach

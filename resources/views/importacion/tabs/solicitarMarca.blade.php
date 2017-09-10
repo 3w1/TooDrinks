@@ -48,7 +48,7 @@
                                     {!! Form::open(['route' => 'solicitud-importacion.store', 'method' => 'POST']) !!}
                                        {!! Form::hidden('importador_id', session('perfilId') ) !!}
                                        {!! Form::hidden('marca_id', $marca->id) !!}
-                                       {!! Form::hidden('pais_id', session('perfilPais') ) !!}
+                                       {!! Form::hidden('pais_id', $marca->pais_id ) !!}
                                        {!! Form::hidden('status', '1') !!}
                                        {!! Form::hidden('cantidad_visitas', '0') !!}
                                        {!! Form::hidden('cantidad_contactos', '0') !!}
