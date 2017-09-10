@@ -27,4 +27,14 @@ class Solicitud_Importacion extends Model
     public function pais(){
     	return $this->belongsTo('App\Models\Pais');
     }
+
+    public function scopeTipo($query, $tipo){
+        if ($tipo != ""){
+            if ($tipo == 'M'){
+                $query->where('marca_id', '<>', null);
+            }else{
+                $query->where('bebida_id', '<>', null);
+            }
+        }
+    }
 }

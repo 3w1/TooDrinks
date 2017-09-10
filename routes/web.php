@@ -212,12 +212,11 @@ Route::prefix('solicitud-importacion')->group(function () {
     ->name('solicitud-importacion.solicitudes');
     Route::get('marcar-solicitud/{id}/{check}', 'SolicitudImportacionController@marcar_solicitud')
     ->name('solicitud-importacion.marcar');
-    
-
-    Route::get('demandas-de-interes', 'SolicitudImportacionController@demandas_interes')
-    ->name('solicitud-importacion.demandas-interes');
-    Route::post('cambiar-status', 'SolicitudImportacionController@cambiar_status')
-    ->name('solicitud-importacion.status');
+    Route::post('cambiar-status', 'SolicitudImportacionController@cambiar_status')->name('solicitud-importacion.status');
+    Route::get('bebida', 'SolicitudImportacionController@solicitar_bebida')->name('solicitud-importacion.bebida');
+    Route::get('guardar-solicitud-bebida/{id}', 'SolicitudImportacionController@guardar_solicitud_bebida')
+    ->name('solicitud-importacion.guardar-solicitud-bebida');
+    Route::get('historial', 'SolicitudImportacionController@historial_solicitudes')->name('solicitud-importacion.historial');
 });
 Route::resource('solicitud-importacion', 'SolicitudImportacionController');
 // ./RUTAS PARA LAS DEMANDAS DE IMPORTACIÓN ./

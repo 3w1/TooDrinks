@@ -17,10 +17,6 @@
                <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
             </div>
       @endif
-
-      <div class="alert alert-danger alert-dismissable" style="display: none;" id="alerta">
-         <div id="mensaje"></div>
-      </div>
    @endsection  
 
    <ul class="nav nav-pills">
@@ -52,9 +48,9 @@
                                  @if (session('perfilTipo') != 'P')
    				                     <li class="active"><a>
                                        @if ($marca->reclamada == '0')
-   				                    			<label class="label label-danger">Reclamada</label>
+   				                    			<label class="label label-danger">Sin Reclamar</label>
    				                        @else
-   				                           <label class="label label-success">Sin Reclamar</label>
+   				                           <label class="label label-success">Reclamada</label>
    				                        @endif
                                     </a></li>
                                  @endif

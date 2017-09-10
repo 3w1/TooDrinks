@@ -69,8 +69,9 @@ class DemandaDistribucionController extends Controller
                         ->pluck('nombre', 'id');
         }elseif (session('perfilTipo') == 'I'){
             $marcas = DB::table('marca')
-                        ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                        ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
                         ->where('importador_marca.importador_id', '=', session('perfilId'))
+                        ->where('importador_marca.status', '=', '1')
                         ->orderBy('marca.nombre', 'ASC')
                         ->pluck('marca.nombre', 'marca.id');
         }

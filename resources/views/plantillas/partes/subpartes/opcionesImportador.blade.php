@@ -4,26 +4,12 @@
 
 <li class="li"><a href="{{route('oferta.index')}}"><i class="fa fa-shopping-cart"></i> Mercado</a></li>
 
+<li class="li"><a href="{{route('solicitud-importacion.index')}}"><i class="fa fa-hand-o-up"></i> Importación</a></li>
+
 <li class="li"><a href="{{route('demanda-distribuidor.index')}}"><i class="fa fa-user-plus"></i> Distribución</a></li>
 
 <li class="li"><a href="{{route('demanda-producto.demandas-productos-disponibles')}}"><i class="fa fa-handshake-o"></i> Solicitudes</a></li>
-
-
-<li class="treeview">
-   <a href="#">
-      <i class="fa fa-share"></i> <span>Importación</span>
-      <span class="pull-right-container">
-         <i class="fa fa-angle-left pull-right"></i>
-      </span>
-   </a>
-   <ul class="treeview-menu">
-      <li><a href="{{ route('solicitud-importacion.create') }}"><i class="fa fa-circle-o"></i> Buscar Marca para Importar</a></li>
-      <li><a href="{{ route('demanda-producto.create') }}"><i class="fa fa-circle-o"></i> Buscar Bebida para Importar</a></li>
-      <li><a href="{{ route('solicitud-importacion.index') }}"><i class="fa fa-circle-o"></i> Mis Búsquedas Activas</a></li>
-      <li><a href="#"><i class="fa fa-circle-o"></i> Historial de Búsquedas</a></li>
-   </ul>
-</li>
-         
+ 
 <li class="treeview">
    <a href="#"><i class="fa fa-share"></i> Solicitudes
       <span class="pull-right-container">

@@ -150,9 +150,9 @@
 
       <li class="header">Finanzas</li>
       <!--<li><a href="#"><i class="fa fa-circle-o"></i> Suscripciones</a></li>-->
-      <li><a href="{{ route('credito.index') }}"><i class="fa fa-circle-o"></i> Créditos</a></li>
-      <li><a href="{{ route('credito.historial-gastos') }}"><i class="fa fa-circle-o"></i> Facturación</a></li>
-      <li><a href="{{ route('credito.historial-planes') }}"><i class="fa fa-circle-o"></i> Historial</a></li>
+      <li><a href="{{ route('credito.index') }}"><i class="fa fa-certificate"></i> Créditos</a></li>
+      <!--<li><a href="{{ route('credito.historial-gastos') }}"><i class="fa fa-circle-o"></i> Facturación</a></li>-->
+      <li><a href="{{ route('credito.historial-planes') }}"><i class="fa fa-history"></i> Historial</a></li>
    @endif
 
    @if (Auth::user()->cantidad_entidades > 1)

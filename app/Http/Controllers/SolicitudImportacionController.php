@@ -3,21 +3,146 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Solicitud_Importacion;
-use App\Models\Notificacion_P;
+use App\Models\Solicitud_Importacion; use App\Models\Notificacion_P;
+use App\Models\Marca; use App\Models\Bebida;
 use DB;
 
-class SolicitudImportacionController extends Controller
-{
-    public function index()
-    {
-        $cont = 0;
-
+class SolicitudImportacionController extends Controller{
+   
+    //Pestaña Importador / Importación / Mis Búsquedas Activas
+    public function index(Request $request){
         $solicitudesImportacion = Solicitud_Importacion::where('importador_id', '=', session('perfilId'))
+                                    ->where('status', '=', '1')
+                                    ->tipo($request->get('tipo'))
                                     ->orderBy('created_at', 'ASC')
-                                    ->paginate(8);
+                                    ->paginate(20);
+        $cont = 0;
+        foreach ($solicitudesImportacion as $s){
+            $cont++;
+        }
 
-        return view('solicitudImportacion.index')->with(compact('solicitudesImportacion', 'cont'));
+        return view('importacion.tabs.busquedasActivas')->with(compact('solicitudesImportacion', 'cont'));
+    }
+
+    //Cambia el status de una demanda (Entidad Creadora)
+    public function cambiar_status(Request $request){
+        Solicitud_Importacion::find($request->id)
+            ->update(['status' => $request->status]);
+
+        return redirect("solicitud-importacion")->with('msj', 'El status de su solicitud ha sido actualizado con éxito. Ahora puede visualizarla en su historial de solicitudes.');
+    }
+
+    //Pestaña Importador / Importación / Solicitar Marca
+    public function create(Request $request){
+        $marcas = Marca::select('marca.*')
+                    ->leftjoin('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                    ->where('importador_marca.importador_id', '!=', session('perfilId'))
+                    ->orwhere('importador_marca.marca_id', '=', null)
+                    ->where('marca.id', '<>', '0')
+                    ->where('publicada', '=', '1')
+                    ->nombre($request->get('busqueda'))
+                    ->orderBy('nombre', 'ASC')
+                    ->paginate(9);
+
+        $cont =0;
+        foreach ($marcas as $m){
+            $cont++;
+        }
+
+        return view('importacion.tabs.solicitarMarca')->with(compact('marcas', 'cont'));
+    }
+
+    public function store(Request $request){
+        $fecha = new \DateTime();
+
+        $solicitudImportacion =new Solicitud_Importacion($request->all());
+        $solicitudImportacion->fecha = $fecha;
+        $solicitudImportacion->save();
+
+        $ult_solicitud = DB::table('solicitud_importacion')
+                            ->select('id')
+                            ->orderBy('created_at', 'DESC')
+                            ->first();
+        
+        $productor = DB::table('marca')
+                    ->select('marca.nombre', 'productor.id')
+                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                    ->where('marca.id', '=', $request->marca_id)
+                    ->first();
+
+        //NOTIFICAR AL PRODUCTOR
+        $notificacion_productor = new Notificacion_P();
+        $notificacion_productor->creador_id = session('perfilId');
+        $notificacion_productor->tipo_creador = session('perfilTipo');
+        $notificacion_productor->titulo = 'Estan solicitando la importación de tu marca '. $productor->nombre;
+        $notificacion_productor->url='solicitud-importacion/'.$ult_solicitud->id;
+        $notificacion_productor->descripcion = 'Nueva Solicitud de Importación';
+        $notificacion_productor->color = 'bg-orange';
+        $notificacion_productor->icono = 'fa fa-user-plus';
+        $notificacion_productor->tipo ='SI';
+        $notificacion_productor->productor_id = $productor->id;
+        $notificacion_productor->fecha = $fecha;
+        $notificacion_productor->leida = '0';
+        $notificacion_productor->save();
+        // *** //*/
+        
+        return redirect('solicitud-importacion')->with('msj', 'Su solicitud ha sido almacenada con éxito.');
+    }
+
+    //Pestaña Importador / Importación / Solicitar Bebida
+    public function solicitar_bebida(Request $request){
+        $bebidas = Bebida::select('bebida.*')
+                    ->nombre($request->get('busqueda'))
+                    ->orderBy('nombre', 'ASC')
+                    ->paginate(20);
+
+        $cont =0;
+        foreach ($bebidas as $b){
+            $cont++;
+        }
+
+        return view('importacion.tabs.solicitarBebida')->with(compact('bebidas', 'cont'));
+    }
+
+    public function guardar_solicitud_bebida($id){
+        $fecha = new \DateTime();
+
+        $solicitudImportacion =new Solicitud_Importacion();
+        $solicitudImportacion->importador_id = session('perfilId');
+        $solicitudImportacion->bebida_id = $id;
+        $solicitudImportacion->pais_id = session('perfilPais');
+        $solicitudImportacion->status = '1';
+        $solicitudImportacion->fecha = $fecha;
+        $solicitudImportacion->cantidad_visitas = 0;
+        $solicitudImportacion->cantidad_contactos = 0;
+        $solicitudImportacion->save();
+
+        //Enviar notificaciones
+        /*$productor = DB::table('bebida')
+                        ->select('productor.id', 'bebida.nombre')
+                        ->join('producto', 'bebida.id', '=', 'producto.bebida_id')
+                        ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                        ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                        ->where('bebida.id', '=', $request->bebida_id)
+                        ->groupBy('producto.bebida_id')
+                        ->get();*/
+
+        return redirect('solicitud-importacion')->with('msj', 'Su solicitud ha sido almacenada con éxito.');
+    }
+
+    //Pestaña Importador / Importación / Historial de Búsquedas
+    public function historial_solicitudes(Request $request){
+        $solicitudesImportacion = Solicitud_Importacion::where('importador_id', '=', session('perfilId'))
+                                    ->where('status', '=', '0')
+                                    ->tipo($request->get('tipo'))
+                                    ->orderBy('created_at', 'DESC')
+                                    ->paginate(20);
+        $cont = 0;
+        foreach ($solicitudesImportacion as $s){
+            $cont++;
+        }
+
+        return view('importacion.tabs.historial')->with(compact('solicitudesImportacion', 'cont'));
     }
 
     //Pestaña Importación (Solicitudes / Productor)
@@ -59,7 +184,7 @@ class SolicitudImportacionController extends Controller
         return view('solicitudes.tabs.importacion')->with(compact('demandasImportacion', 'cont'));
     }
 
-    //Detalles de una solicitud de importación 
+    //Detalles de una solicitud de importación (Entidad que visita)
     public function show($id){
         $demandaMarcada = DB::table('productor_solicitud_importacion')
                             ->where('solicitud_importacion_id', '=', $id)
@@ -109,80 +234,6 @@ class SolicitudImportacionController extends Controller
         return redirect('solicitud-importacion/solicitudes-importacion')->with('msj', 'Se ha eliminado la solicitud de importación de los listados.');
     }
 
-    public function create(){
-    	$bebidas = DB::table('bebida')
-    				->orderBy('nombre', 'ASC')
-    				->pluck('nombre', 'id'); 
-
-    	$paises = DB::table('pais')
-    				->orderBy('pais', 'ASC')
-    				->pluck('pais', 'id'); 
-
-        return view('solicitudImportacion.create')->with(compact('bebidas', 'paises'));
-    }
-
-    public function store(Request $request){
-        $fecha = new \DateTime();
-        $solicitudImportacion =new Solicitud_Importacion($request->all());
-        $solicitudImportacion->fecha = $fecha;
-        $solicitudImportacion->save();
-
-        $ult_solicitud = DB::table('solicitud_importacion')
-                            ->select('id')
-                            ->orderBy('created_at', 'DESC')
-                            ->first();
-
-        $notificaciones_productor = new Notificacion_P();
-        $notificaciones_productor->creador_id = session('perfilId');
-        $notificaciones_productor->tipo_creador = session('perfilTipo');
-
-        if ($request->producto_id == '0'){
-            $productor = DB::table('marca')
-                    ->select('marca.nombre', 'productor.id')
-                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
-                    ->where('marca.id', '=', $request->marca_id)
-                    ->first();
-
-            $notificaciones_productor->titulo = 'Estan solicitando la importación de tu marca '. $productor->nombre;
-        }else{
-            $productor = DB::table('producto')
-                        ->select('productor.id', 'producto.nombre')
-                        ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                        ->join('productor', 'marca.productor_id', '=', 'productor.id')
-                        ->where('producto.id', '=', $request->producto_id )
-                        ->first();
-
-            $notificaciones_productor->titulo = 'Estan solicitando la importación de tu producto '. $productor->nombre;
-        }
-
-        //NOTIFICAR AL PRODUCTOR
-        $notificaciones_productor->url='solicitud-importacion/'.$ult_solicitud->id;
-        $notificaciones_productor->descripcion = 'Nueva Solicitud de Importación';
-        $notificaciones_productor->color = 'bg-orange';
-        $notificaciones_productor->icono = 'fa fa-user-plus';
-        $notificaciones_productor->tipo ='SI';
-        $notificaciones_productor->productor_id = $productor->id;
-        $notificaciones_productor->fecha = $fecha;
-        $notificaciones_productor->leida = '0';
-        $notificaciones_productor->save();
-        // *** //
-        
-        return redirect('solicitud-importacion')->with('msj', 'Su solicitud ha sido almacenada con éxito.');
-    }
-
-   
-
-    public function demandas_interes(){
-        $demandas = Solicitud_Importacion::select('solicitud_importacion.*')
-                        ->join('productor_solicitud_importacion', 'solicitud_importacion.id', '=', 'productor_solicitud_importacion.solicitud_importacion_id')
-                        ->where('productor_solicitud_importacion.productor_id', '=', session('perfilId'))
-                        ->where('productor_solicitud_importacion.marcada', '=', '1')
-                        ->orderBy('created_at', 'DESC')
-                        ->paginate(10);    
-
-        return view('solicitudImportacion.demandasDeInteres')->with(compact('demandas'));
-    }
-
     public function edit($id)
     {
       
@@ -191,14 +242,6 @@ class SolicitudImportacionController extends Controller
     public function update(Request $request, $id)
     {
         
-    }
-
-     //Cambia el status de una demanda
-    public function cambiar_status(Request $request){
-        Solicitud_Importacion::find($request->id)
-            ->update(['status' => $request->status]);
-
-        return redirect("solicitud-importacion")->with('msj', 'El status de su demanda ha sido actualizado con éxito.');
     }
 
     public function destroy($id)

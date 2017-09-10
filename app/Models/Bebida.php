@@ -31,4 +31,10 @@ class Bebida extends Model
     public function solicitudes_distribucion(){
         return $this->hasMany('App\Models\Solicitud_Distribucion');
     }
+
+    public function scopeNombre($query, $nombre){
+        if ($nombre != ""){
+            $query->where('nombre', 'ILIKE', '%'.$nombre.'%');
+        }
+    }
 }

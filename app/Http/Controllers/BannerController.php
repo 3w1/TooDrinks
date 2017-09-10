@@ -181,23 +181,6 @@ class BannerController extends Controller
         return view('publicidad.tabs.historialPublicaciones')->with(compact('publicaciones', 'paises', 'cont'));
     }
 
-    //Ver las publicaciones de banners de la entidad loggeada
-    public function mis_publicidades(){
-        $publicidades = Impresion_Banner::select('impresion_banner.*')
-                            ->join('banner', 'impresion_banner.banner_id', '=', 'banner.id')
-                            ->where('banner.tipo_creador', '=', session('perfilTipo'))
-                            ->where('banner.creador_id', '=', session('perfilId'))
-                            ->paginate(10);
-
-        return view('banner.impresionesBanner')->with(compact('publicidades'));
-    }
-
-    //Ver detalles de una publicación
-    public function detalle_publicacion($id){
-        $publicacion = Impresion_Banner::find($id);
-
-        return view('banner.detallePublicacion')->with(compact('publicacion'));
-    }
     //Método para los detalles del Banner en el Módulo del AdminWeb (Aprobar Banner)
     public function detalles($id){
         $banner = Banner::find($id);
