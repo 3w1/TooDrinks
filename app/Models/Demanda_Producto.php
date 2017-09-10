@@ -43,7 +43,7 @@ class Demanda_Producto extends Model
 
     public function scopeProducto($query, $producto){
         if ($producto != ""){
-            $query->where('producto_id', '=', $producto);
+            $query->where('demanda_producto.producto_id', '=', $producto);
         }
     }
 

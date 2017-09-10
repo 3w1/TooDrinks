@@ -5,34 +5,8 @@
 <li class="li"><a href="{{route('oferta.index')}}"><i class="fa fa-shopping-cart"></i> Mercado</a></li>
  
 <li class="li"><a href="{{route('solicitud-distribucion.index')}}"><i class="fa fa-hand-o-up"></i> Distribución</a></li>     
-         
-<li class="treeview">
-   <a href="#"><i class="fa fa-share"></i> Solicitudes
-      <span class="pull-right-container">
-         <i class="fa fa-angle-left pull-right"></i>
-         @if($demandas > 0)<small class="label pull-right bg-blue">{{$demandas}}</small>@endif
-      </span>
-   </a>
-   <ul class="treeview-menu">
-      <li><a href="#"><i class="fa fa-circle-o"></i> Marca</a></li>
-      <li><a href="{{ route('demanda-producto.demandas-productos-disponibles') }}"><i class="fa fa-circle-o"></i> Producto
-         <span class="pull-right-container">
-            @if($cont_DP > 0) <small class="label pull-right bg-aqua">{{$cont_DP}}</small>@endif
-         </span>
-      </a></li>
-      <li><a href="{{ route('demanda-producto.demandas-bebidas-disponibles') }}"><i class="fa fa-circle-o"></i> Bebida
-         <span class="pull-right-container">
-            @if($cont_DB > 0) <small class="label pull-right bg-aqua">{{$cont_DB}}</small>@endif
-         </span>
-      </a></li>
-      <li><a href="{{ route('demanda-distribuidor.demandas-disponibles') }}"><i class="fa fa-circle-o"></i> 
-         <span class="pull-right-container">
-            @if($cont_DD > 0) <small class="label pull-right bg-green">{{$cont_DD}}</small>@endif
-         </span>
-      Distribuidor</a></li>
-      <li><a href=""><i class="fa fa-circle-o"></i> Historial de Solicitudes</a></li>
-   </ul>
-</li>
+
+<li class="li"><a href="{{route('demanda-producto.demandas-productos-disponibles')}}"><i class="fa fa-handshake-o"></i> Solicitudes</a></li>
 
 <li class="header">LISTADOS</li>
 <li><a href="#"><i class="fa fa-circle-o"></i> Marcas</a></li>

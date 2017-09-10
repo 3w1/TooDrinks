@@ -96,7 +96,7 @@ class DemandaProductoController extends Controller
             return view('solicitudes.tabsImportador.producto')->with(compact('demandasProductos', 'productos', 'cont'));
 
         }elseif (session('perfilTipo') == 'D'){
-            $demandasProductos = DB::table('demanda_producto')
+            $demandasProductos =  Demanda_Producto::select('demanda_producto.*')
                                     ->producto($request->get('producto'))
                                     ->select('demanda_producto.*', 'producto.nombre', 'producto.marca_id')
                                     ->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
@@ -125,6 +125,8 @@ class DemandaProductoController extends Controller
                             ->where('producto.id', '<>', '0')
                             ->orderBy('producto.nombre', 'ASC')
                             ->pluck('producto.nombre', 'producto.id');
+
+            return view('solicitudes.tabsDistribuidor.producto')->with(compact('demandasProductos', 'productos', 'cont'));
         }
     }
 
@@ -195,7 +197,21 @@ class DemandaProductoController extends Controller
                                 ->where('demanda_producto.tipo_creador', '=', 'H')
                                 ->groupBy('demanda_producto.id', 'producto.bebida_id')
                                 ->paginate(10);
-                                    
+
+            $cont = 0;
+            foreach ($demandasBebidas as $db){
+                $relacion = DB::table('distribuidor_demanda_producto')
+                            ->select('demanda_producto_id')
+                            ->where('demanda_producto_id', '=', $db->id)
+                            ->where('distribuidor_id', '=', session('perfilId'))
+                            ->first();
+
+                if ($relacion == null){
+                    $cont++;
+                }
+            }
+
+            return view('solicitudes.tabsDistribuidor.bebida')->with(compact('demandasBebidas', 'cont'));               
         }
     }
 
