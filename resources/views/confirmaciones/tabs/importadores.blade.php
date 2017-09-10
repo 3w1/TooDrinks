@@ -13,43 +13,37 @@
 
 @section('content-left')
    <?php 
-      if (session('perfilTipo') == 'P'){
-         $not_ai = DB::table('notificacion_p')->select('id')
-                  ->where('productor_id', '=', session('perfilId'))
-                  ->where('tipo', '=', 'AI')->where('leida', '=', '0')->get();
-         $ai=0;
-         foreach($not_ai as $nai){
-            $ai++;
-            DB::table('notificacion_p')->where('id', '=', $nai->id)->update(['leida' => '1']);
-         }
+      $not_ai = DB::table('notificacion_p')->select('id')
+               ->where('productor_id', '=', session('perfilId'))
+               ->where('tipo', '=', 'AI')->where('leida', '=', '0')->get();
+      $ai=0;
+      foreach($not_ai as $nai){
+         $ai++;
+         DB::table('notificacion_p')->where('id', '=', $nai->id)->update(['leida' => '1']);
+      }
 
-         $not_ad = DB::table('notificacion_p')->select('id')
-                  ->where('productor_id', '=', session('perfilId'))
-                  ->where('tipo', '=', 'AD')->where('leida', '=', '0')->get();
-         $ad=0;
-         foreach($not_ad as $nad){
-            $ad++;
-         }
+      $not_ad = DB::table('notificacion_p')->select('id')
+               ->where('productor_id', '=', session('perfilId'))
+               ->where('tipo', '=', 'AD')->where('leida', '=', '0')->get();
+      $ad=0;
+      foreach($not_ad as $nad){
+         $ad++;
+      }
 
-         $not_np = DB::table('notificacion_p')->select('id')
-                  ->where('productor_id', '=', session('perfilId'))
-                  ->where('tipo', '=', 'NP')->where('leida', '=', '0')->get();
-         $np=0;
-         foreach($not_np as $nnp){
-            $np++;
-         }
+      $not_np = DB::table('notificacion_p')->select('id')
+               ->where('productor_id', '=', session('perfilId'))
+               ->where('tipo', '=', 'NP')->where('leida', '=', '0')->get();
+      $np=0;
+      foreach($not_np as $nnp){
+         $np++;
+      }
 
-         $not_nm = DB::table('notificacion_p')->select('id')
-                  ->where('productor_id', '=', session('perfilId'))
-                  ->where('tipo', '=', 'NM')->where('leida', '=', '0')->get();
-         $nm=0;
-         foreach($not_nm as $nnm){
-            $nm++;
-         }
-      }elseif (session('perfilTipo') == 'I'){
-         
-      }elseif (session('perfilTipo') == 'D'){
-         
+      $not_nm = DB::table('notificacion_p')->select('id')
+               ->where('productor_id', '=', session('perfilId'))
+               ->where('tipo', '=', 'NM')->where('leida', '=', '0')->get();
+      $nm=0;
+      foreach($not_nm as $nnm){
+         $nm++;
       }
    ?>
 

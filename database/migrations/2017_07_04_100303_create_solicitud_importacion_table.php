@@ -14,7 +14,7 @@ class CreateSolicitudImportacionTable extends Migration
             $table->integer('importador_id');
             $table->integer('marca_id')->nullable();
             $table->integer('bebida_id')->nullable();
-            $table->integer('pais_id');
+            $table->integer('pais_id')->nullable();
             $table->boolean('status');
             $table->date('fecha');
             $table->integer('cantidad_visitas');

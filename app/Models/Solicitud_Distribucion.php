@@ -9,7 +9,7 @@ class Solicitud_Distribucion extends Model
     protected $table = "solicitud_distribucion";
 
     protected $fillable = [
-    	'distribuidor_id', 'marca_id', 'producto_id', 'provincia_region_id', 'status', 'fecha', 'cantidad_visitas', 'cantidad_contactos',
+    	'distribuidor_id', 'marca_id', 'bebida_id', 'pais_id', 'status', 'fecha', 'cantidad_visitas', 'cantidad_contactos',
     ]; 
 
     public function marca(){
@@ -24,7 +24,17 @@ class Solicitud_Distribucion extends Model
     	return $this->belongsTo('App\Models\Distribuidor');
     }
 
-    public function provincia_region(){
-    	return $this->belongsTo('App\Models\Provincia_Region');
+    public function pais(){
+    	return $this->belongsTo('App\Models\Pais');
+    }
+
+     public function scopeTipo($query, $tipo){
+        if ($tipo != ""){
+            if ($tipo == 'M'){
+                $query->where('marca_id', '<>', null);
+            }else{
+                $query->where('bebida_id', '<>', null);
+            }
+        }
     }
 }

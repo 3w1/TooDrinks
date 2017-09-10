@@ -13,7 +13,7 @@ class CreateSolicitudDistribucionTable extends Migration
             $table->integer('distribuidor_id');
             $table->integer('marca_id')->nullable();
             $table->integer('bebida_id')->nullable();
-            $table->integer('provincia_region_id');
+            $table->integer('pais_id')->nullable();
             $table->boolean('status');
             $table->date('fecha');
             $table->integer('cantidad_visitas');
@@ -35,8 +35,8 @@ class CreateSolicitudDistribucionTable extends Migration
                   ->onDelete('restrict')
                   ->onUpdate('cascade');
 
-            $table->foreign('provincia_region_id')
-                  ->references('id')->on('provincia_region')
+            $table->foreign('pais_id')
+                  ->references('id')->on('pais')
                   ->onDelete('restrict')
                   ->onUpdate('cascade');
         });

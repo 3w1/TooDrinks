@@ -7,10 +7,6 @@
    Mis Demandas de Distribuidores
 @endsection
 
-@section('title-complement')
-   (Activas)
-@endsection
-
 @section('content-left')
    @section('alertas')
    	@if (Session::has('msj'))

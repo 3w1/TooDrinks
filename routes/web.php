@@ -75,9 +75,6 @@ Route::prefix('importador')->group(function (){
     Route::get('asociar-marca/{id}/{nombre}', 'ImportadorController@asociar_marca')->name('importador.asociar-marca');
     Route::get('confirmar-distribuidores', 'ImportadorController@confirmar_distribuidores')->name('importador.confirmar-distribuidores');
     Route::get('confirmar-distribuidor/{id}-{tipo}-{dist}', 'ImportadorController@confirmar_distribuidor')->name('importador.confirmar-distribuidor');
-    
-    Route::get('ver-listado-distribuidores', 'ImportadorController@listado_distribuidores')->name('importador.listado-distribuidores');
-    
     Route::post('updateAvatar', 'ImportadorController@updateAvatar')->name('importador.updateAvatar');
 });
 Route::resource('importador','ImportadorController');
@@ -207,8 +204,6 @@ Route::prefix('solicitud-importacion')->group(function () {
     ->name('solicitud-importacion.marcar');
     Route::post('cambiar-status', 'SolicitudImportacionController@cambiar_status')->name('solicitud-importacion.status');
     Route::get('bebida', 'SolicitudImportacionController@solicitar_bebida')->name('solicitud-importacion.bebida');
-    Route::get('guardar-solicitud-bebida/{id}', 'SolicitudImportacionController@guardar_solicitud_bebida')
-    ->name('solicitud-importacion.guardar-solicitud-bebida');
     Route::get('historial', 'SolicitudImportacionController@historial_solicitudes')->name('solicitud-importacion.historial');
 });
 Route::resource('solicitud-importacion', 'SolicitudImportacionController');
@@ -218,10 +213,11 @@ Route::resource('solicitud-importacion', 'SolicitudImportacionController');
 Route::prefix('solicitud-distribucion')->group(function () {
     Route::get('solicitudes-distribucion', 'SolicitudDistribucionController@solicitudes_distribucion')
     ->name('solicitud-distribucion.solicitudes');
+    Route::post('cambiar-status', 'SolicitudDistribucionController@cambiar_status')->name('solicitud-distribucion.status');
     Route::get('marcar-solicitud/{id}/{check}', 'SolicitudDistribucionController@marcar_solicitud')
     ->name('solicitud-distribucion.marcar');
-    Route::post('cambiar-status', 'SolicitudDistribucionController@cambiar_status')
-    ->name('solicitud-distribucion.status');
+    Route::get('bebida', 'SolicitudDistribucionController@solicitar_bebida')->name('solicitud-distribucion.bebida');
+    Route::get('historial', 'SolicitudDistribucionController@historial_solicitudes')->name('solicitud-distribucion.historial');
 });
 Route::resource('solicitud-distribucion', 'SolicitudDistribucionController');
 // ./RUTAS PARA LAS DEMANDAS DE DISTRIBUCIÓN ./

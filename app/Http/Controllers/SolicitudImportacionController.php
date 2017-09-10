@@ -52,6 +52,39 @@ class SolicitudImportacionController extends Controller{
         return view('importacion.tabs.solicitarMarca')->with(compact('marcas', 'cont'));
     }
 
+    //Pestaña Importador / Importación / Solicitar Bebida
+    public function solicitar_bebida(Request $request){
+        $pais_elegido = null;
+        
+        $bebidas = Bebida::nombre($request->get('busqueda'))
+                    ->orderBy('nombre', 'ASC')
+                    ->paginate(20);
+
+        if ($request->get('bebida') != null){
+            $bebidas = Bebida::where('id', '=', $request->get('bebida'))->paginate(1);
+            
+            $pais_elegido = DB::table('pais')
+                        ->select('id', 'pais')
+                        ->where('id', '=', $request->get('pais'))
+                        ->first();
+        }
+
+        $tipos_bebidas = DB::table('bebida')
+                        ->orderBy('nombre', 'ASC')
+                        ->pluck('nombre', 'id');
+
+        $paises = DB::table('pais')
+                    ->orderBy('pais', 'ASC')
+                    ->pluck('pais', 'id');
+
+        $cont =0;
+        foreach ($bebidas as $b){
+            $cont++;
+        }
+
+        return view('importacion.tabs.solicitarBebida')->with(compact('bebidas', 'cont', 'tipos_bebidas', 'paises', 'pais_elegido'));
+    }
+
     public function store(Request $request){
         $fecha = new \DateTime();
 
@@ -86,65 +119,6 @@ class SolicitudImportacionController extends Controller{
         $notificacion_productor->save();
         // *** //*/
         
-        return redirect('solicitud-importacion')->with('msj', 'Su solicitud ha sido almacenada con éxito.');
-    }
-
-    //Pestaña Importador / Importación / Solicitar Bebida
-    public function solicitar_bebida(Request $request){
-        $pais_elegido = null;
-        
-        $bebidas = Bebida::nombre($request->get('busqueda'))
-                    ->orderBy('nombre', 'ASC')
-                    ->paginate(20);
-
-        if ($request->get('bebida') != null){
-            $bebidas = Bebida::where('id', '=', $request->get('bebida'))->paginate(1);
-            
-            $pais_elegido = DB::table('pais')
-                        ->select('id', 'pais')
-                        ->where('id', '=', $request->get('pais'))
-                        ->first();
-        }
-
-        $tipos_bebidas = DB::table('bebida')
-                        ->orderBy('nombre', 'ASC')
-                        ->pluck('nombre', 'id');
-
-        $paises = DB::table('pais')
-                    ->orderBy('pais', 'ASC')
-                    ->pluck('pais', 'id');
-
-        $cont =0;
-        foreach ($bebidas as $b){
-            $cont++;
-        }
-
-        return view('importacion.tabs.solicitarBebida')->with(compact('bebidas', 'cont', 'tipos_bebidas', 'paises', 'pais_elegido'));
-    }
-
-    public function guardar_solicitud_bebida($id){
-        $fecha = new \DateTime();
-
-        $solicitudImportacion =new Solicitud_Importacion();
-        $solicitudImportacion->importador_id = session('perfilId');
-        $solicitudImportacion->bebida_id = $id;
-        $solicitudImportacion->pais_id = session('perfilPais');
-        $solicitudImportacion->status = '1';
-        $solicitudImportacion->fecha = $fecha;
-        $solicitudImportacion->cantidad_visitas = 0;
-        $solicitudImportacion->cantidad_contactos = 0;
-        $solicitudImportacion->save();
-
-        //Enviar notificaciones
-        /*$productor = DB::table('bebida')
-                        ->select('productor.id', 'bebida.nombre')
-                        ->join('producto', 'bebida.id', '=', 'producto.bebida_id')
-                        ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                        ->join('productor', 'marca.productor_id', '=', 'productor.id')
-                        ->where('bebida.id', '=', $request->bebida_id)
-                        ->groupBy('producto.bebida_id')
-                        ->get();*/
-
         return redirect('solicitud-importacion')->with('msj', 'Su solicitud ha sido almacenada con éxito.');
     }
 

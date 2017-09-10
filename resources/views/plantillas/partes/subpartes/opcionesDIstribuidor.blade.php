@@ -3,21 +3,8 @@
 <li class="li"><a href="{{route('producto.index')}}"><i class="fa fa-product-hunt"></i> Productos</a>
 
 <li class="li"><a href="{{route('oferta.index')}}"><i class="fa fa-shopping-cart"></i> Mercado</a></li>
-      
-<li class="treeview">
-   <a href="#">
-      <i class="fa fa-share"></i> <span>Distribución</span>
-      <span class="pull-right-container">
-         <i class="fa fa-angle-left pull-right"></i>
-      </span>
-   </a>
-   <ul class="treeview-menu">
-      <li><a href="{{ route('solicitud-distribucion.create') }}"><i class="fa fa-circle-o"></i> Buscar Marca para Distribuir</a></li>
-      <li><a href="{{ route('demanda-producto.create') }}"><i class="fa fa-circle-o"></i> Buscar Bebida para Distribuir</a></li>
-      <li><a href="{{ route('solicitud-distribucion.index') }}"><i class="fa fa-circle-o"></i> Mis Búsquedas Activas</a></li>
-      <li><a href="#"><i class="fa fa-circle-o"></i> Historial de Búsquedas</a></li>
-   </ul>
-</li>
+ 
+<li class="li"><a href="{{route('solicitud-distribucion.index')}}"><i class="fa fa-hand-o-up"></i> Distribución</a></li>     
          
 <li class="treeview">
    <a href="#"><i class="fa fa-share"></i> Solicitudes

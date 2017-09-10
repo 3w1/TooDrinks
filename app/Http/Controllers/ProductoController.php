@@ -55,7 +55,7 @@ class ProductoController extends Controller
             $productos = Producto::select('producto.*')
                             ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
                             ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
-                            >where('producto.id', '<>', '0')
+                            ->where('producto.id', '<>', '0')
                             ->nombre($request->get('busqueda'))
                             ->bebida($request->get('bebida'), $request->get('clase_bebida'))
                             ->marca($request->get('marca'))
