@@ -318,17 +318,6 @@ class OfertaController extends Controller
     //Pestaña Ofertas Disponibles
     public function ofertas_disponibles(Request $request){
         if (session('perfilTipo') == 'I'){
-            /*$notificaciones_pendientes_NO = DB::table('notificacion_i')
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'NO')
-                                        ->get();
-
-            foreach ($notificaciones_pendientes_NO as $notificacion){
-                $act = DB::table('notificacion_i')
-                    ->where('id', '=', $notificacion->id)
-                    ->update(['leida' => '1']);
-            }*/
-
             $ofertas = Oferta::select('oferta.*')
                         ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
                         ->where('destino_oferta.pais_id', '=', session('perfilPais'))
@@ -339,17 +328,6 @@ class OfertaController extends Controller
                         ->groupBy('oferta.id')
                         ->paginate(6);
         }elseif (session('perfilTipo') == 'D'){
-            /*$notificaciones_pendientes_NO = DB::table('notificacion_d')
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'NO')
-                                        ->get();
-
-            foreach ($notificaciones_pendientes_NO as $notificacion){
-                $act = DB::table('notificacion_d')
-                        ->where('id', '=', $notificacion->id)
-                        ->update(['leida' => '1']);
-            }*/
-
             $ofertas = Oferta::select('oferta.*')
                         ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
                         ->where('destino_oferta.provincia_region_id', '=', session('perfilProvincia'))
@@ -359,23 +337,6 @@ class OfertaController extends Controller
                         ->producto($request->get('producto'))
                         ->paginate(6);
         }elseif (session('perfilTipo') == 'H'){
-            $notificaciones_pendientes_NO = DB::table('notificacion_h')
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'NO')
-                                        ->get();
-
-            foreach ($notificaciones_pendientes_NO as $notificacion){
-                $act = DB::table('notificacion_h')
-                        ->where('id', '=', $notificacion->id)
-                        ->update(['leida' => '1']);
-            }
-            
-            $horeca = DB::table('horeca')
-                                ->where('id', '=', session('perfilId') )
-                                ->select('provincia_region_id')
-                                ->get()
-                                ->first();
-
             $ofertas = Oferta::select('oferta.*')
                         ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
                         ->where('destino_oferta.provincia_region_id', '=', session('perfilProvincia'))
@@ -384,6 +345,13 @@ class OfertaController extends Controller
                         ->titulo($request->get('busqueda'))
                         ->producto($request->get('producto'))
                         ->paginate(6);
+
+            $cont = 0;
+            foreach ($ofertas as $o){
+                $cont++;
+            }
+
+            return view('mercado.tabsHoreca.ofertasDisponibles')->with(compact('ofertas', 'cont'));
         }
 
         $cont = 0;
@@ -496,7 +464,7 @@ class OfertaController extends Controller
                 ->where('id', '=', $id)
             ->update(['cantidad_contactos' => ($oferta->cantidad_contactos + 1) ]); 
 
-            return redirect('oferta/detalles-de-oferta?oferta_id='.$id)->with('msj', 'Se ha agregado la oferta a su listado de Ofertas De Interés.');
+            return redirect('oferta/detalles-de-oferta?oferta_id='.$id)->with('msj', 'Se ha agregado la oferta a su historial de Ofertas.');
         }
 
         return redirect('oferta/ofertas-disponibles')->with('msj', 'Se ha eliminado la oferta del listado con éxito.');

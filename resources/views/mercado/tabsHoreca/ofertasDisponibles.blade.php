@@ -1,12 +1,12 @@
 @extends('plantillas.main')
-@section('title', 'Mis Ofertas')
+@section('title', 'Ofertas')
 
 @section('title-header')
-   Mis Ofertas
+   Ofertas
 @endsection
 
 @section('title-complement')
-   (Activas)
+   (Disponibles)
 @endsection
 
 @section('content-left')
@@ -20,12 +20,7 @@
    @endsection  
    
    <ul class="nav nav-pills">
-      <li class="btn btn-default"><a href="{{ route('oferta.index') }}"><strong>MIS OFERTAS ACTIVAS</strong></a></li>
-      <li class="btn btn-default"><a href="{{ route('oferta.create') }}"><strong>NUEVA OFERTA</strong></a></li>
-      @if (session('perfilTipo') != 'P')
-         <li class="active btn btn-default"><a href="{{ route('oferta.disponibles') }}"><strong>OFERTAS DISPONIBLES</strong></a></li>
-      @endif
-      <li class="btn btn-default"><a href="{{ route('oferta.historial')}}"><strong>HISTORIAL DE OFERTAS</strong></a></li>
+      <li class="active btn btn-default"><a href="{{ route('oferta.disponibles') }}"><strong>OFERTAS DISPONIBLES</strong></a></li>
    </ul>
 
    <div class="panel with-nav-tabs panel-primary">
@@ -36,19 +31,11 @@
                @if ($cont > 0 )
                   @foreach($ofertas as $oferta) 
                      <?php 
-                        if (session('perfilTipo') == 'I'){
-                           $relacion = DB::table('importador_oferta')
-                                    ->select('id')
-                                    ->where('oferta_id', '=', $oferta->id)
-                                    ->where('importador_id', '=', session('perfilId'))
-                                    ->first();
-                        }elseif (session('perfilTipo')== 'D'){
-                           $relacion = DB::table('distribuidor_oferta')
-                                    ->select('id')
-                                    ->where('oferta_id', '=', $oferta->id)
-                                    ->where('distribuidor_id', '=', session('perfilId'))
-                                    ->first();
-                        }         
+                        $relacion = DB::table('horeca_oferta')
+                                 ->select('id')
+                                 ->where('oferta_id', '=', $oferta->id)
+                                 ->where('horeca_id', '=', session('perfilId'))
+                                 ->first();        
                      ?>
                      @if ($relacion == null)
                         <div class="col-md-4 col-xs-6">
@@ -88,7 +75,7 @@
          <div class="panel-body">
             <div class="tab-content">
                <div class="tab-pane fade in active">
-                  @include('mercado.tabs.filtroOfertasDisponibles')
+                  
                </div>
             </div>
          </div>

@@ -18,18 +18,30 @@ class DemandaProductoController extends Controller
         $this->middleware('auth');
     }
     
-    public function index()
-    {
+    //Pestaña Horeca / Comercialización / Mis Búsquedas Activas
+    public function index(Request $request){
         $cont = 0;
 
-        $demandasProductos = Demanda_Producto::where([
-                                        ['tipo_creador', '=', session('perfilTipo')], 
-                                        ['creador_id', '=', session('perfilId')]
-                                    ])->orderBy('created_at', 'ASC')
-                                    ->paginate(10);
+        $demandasProductos = Demanda_Producto::where('tipo_creador', '=', session('perfilTipo')) 
+                                    ->where('creador_id', '=', session('perfilId'))
+                                    ->where('status', '=', '1')
+                                    ->orderBy('created_at', 'DESC')
+                                    ->paginate(20);
+        
+        foreach ($demandasProductos as $d){
+            $cont++;
+        }
 
-        return view('demandaProducto.index')->with(compact('demandasProductos', 'cont'));
+        return view('comercializacion.tabs.busquedasActivas')->with(compact('demandasProductos', 'cont'));
     }
+
+    //Cambia el status de una demanda
+    public function cambiar_status(Request $request){
+        Demanda_Producto::find($request->id)
+            ->update(['status' => $request->status]);
+
+        return redirect("demanda-producto")->with('msj', 'El status de su demanda ha sido actualizado con éxito. Ahora puede visualizarla en su historial de búsquedas.');
+    } 
 
     //Pestaña Solicitudes / Producto
     public function demandas_productos_disponibles(Request $request){
@@ -215,6 +227,7 @@ class DemandaProductoController extends Controller
         }
     }
 
+    //Ver detalles de demanda para las entidaddes interesada
     public function show($id){
         if (session('perfilTipo') == 'P'){
             $demandaMarcada = DB::table('productor_demanda_producto')
@@ -290,69 +303,59 @@ class DemandaProductoController extends Controller
         return redirect('demanda-producto/demandas-productos-disponibles')->with('msj', 'Se ha eliminado la demanda de producto de los listados.'); 
     }
 
-    public function create()
-    {
-        $productos = DB::table('producto')
-                        ->orderBy('nombre')
-                        ->pluck('nombre', 'id');
+    //Pestaña Horeca / Comercialización / Buscar Producto
+    public function create(Request $request){
+        $productos = Producto::where('id', '<>', '0')
+                    ->where('publicado', '=', '1')
+                    ->nombre($request->get('busqueda'))
+                    ->marca($request->get('marca'))
+                    ->orderBy('nombre')
+                    ->paginate(8);
 
-        $bebidas = DB::table('bebida')
-                        ->orderBy('nombre')
-                        ->pluck('nombre', 'id');
+        $cont=0;
+        foreach ($productos as $p){
+            $cont++;
+        }
 
-        $paises = DB::table('pais')
-                        ->orderBy('pais')
-                        ->pluck('pais', 'id');
+        $marcas = DB::table('marca')
+                    ->where('id', '<>', '0')
+                    ->where('publicada', '=', '1')
+                    ->orderBy('nombre')
+                    ->pluck('nombre', 'id');
 
-        return view('demandaProducto.create')->with(compact('productos', 'bebidas', 'paises'));
+        return view('comercializacion.tabs.buscarProducto')->with(compact('productos', 'marcas', 'cont'));
     }
 
-    public function store(Request $request)
-    {
+    //Almacena la búsqueda de productos de horecas
+    public function store(Request $request){
         $fecha = new \DateTime();
 
         $demanda_producto  = new Demanda_Producto($request->all());
-
-        if ($request->tipo_producto == 'P'){
-            $producto = DB::table('producto')
-                    ->select('id', 'pais_id', 'bebida_id', 'marca_id', 'nombre')
-                    ->where('id', '=', $request->producto_id)
-                    ->get()
-                    ->first();
-
-            $demanda_producto->pais_id = $producto->pais_id;
-            $demanda_producto->bebida_id = $producto->bebida_id;
-        }else{
-            $demanda_producto->producto_id = '0';
-        }
-               
-        $demanda_producto->status = '1';
         $demanda_producto->fecha_creacion = $fecha;
         $demanda_producto ->save();
 
-        $ult_demanda = DB::table('demanda_producto')
+        /*$ult_demanda = DB::table('demanda_producto')
                         ->select('id')
                         ->orderBy('created_at', 'DESC')
                         ->first();
 
-        if ($request->tipo_producto == 'P'){
-            $productor = DB::table('producto')
-                        ->select('productor.id', 'productor.pais_id', 'productor.provincia_region_id')
-                        ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                        ->join('productor', 'marca.productor_id', '=', 'productor.id')
-                        ->where('producto.id', '=', $request->producto_id )
-                        ->first();
+        $productor = DB::table('producto')
+                    ->select('productor.id', 'productor.pais_id', 'productor.provincia_region_id')
+                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                    ->where('producto.id', '=', $request->producto_id )
+                    ->first();
 
-            $importadores = DB::table('importador_producto')
-                                    ->select('importador_producto.importador_id')
-                                    ->join('importador', 'importador_producto.importador_id', '=', 'importador.id')
-                                    ->where('importador_producto.producto_id', '=', $request->producto_id)
-                                    ->where('importador.pais_id', '=', session('perfilPais'))
-                                    ->get();
+        $importadores = DB::table('importador_producto')
+                        ->select('importador_producto.importador_id')
+                        ->join('importador', 'importador_producto.importador_id', '=', 'importador.id')
+                        ->where('importador_producto.producto_id', '=', $request->producto_id)
+                        ->where('importador.pais_id', '=', session('perfilPais'))
+                        ->get();
 
-            $distribuidores = DB::table('distribuidor_producto')
-                                    ->select('distribuidor_producto.distribuidor_id')
-                                    ->join('distribuidor', 'distribuidor_producto.distribuidor_id', '=', 'distribuidor.id')
+        $distribuidores = DB::table('distribuidor_producto')
+                        ->select('distribuidor_producto.distribuidor_id')
+                        ->join('distribuidor', 'distribuidor_producto.distribuidor_id', '=', 'distribuidor.id')
                                     ->where('distribuidor_producto.producto_id', '=', $request->producto_id)
                                     ->where('distribuidor.pais_id', '=', session('perfilPais'))
                                     ->get();
@@ -689,61 +692,81 @@ class DemandaProductoController extends Controller
                     } 
                 } 
             }
-        }
+        }*/
         
-        return redirect('demanda-producto')->with('msj', 'Se ha creado su demanda de producto con éxito.');
+        return redirect('demanda-producto')->with('msj', 'Se ha almacenado su solicitud de producto con éxito.');
     }
 
-    public function demandas_interes(){
-        if (session('perfilTipo') == 'P'){
-            $demandas = Demanda_Producto::select('demanda_producto.*')
-                        ->join('productor_demanda_producto', 'demanda_producto.id', '=', 'productor_demanda_producto.demanda_producto_id')
-                        ->where('productor_demanda_producto.productor_id', '=', session('perfilId'))
-                        ->where('productor_demanda_producto.marcada', '=', '1')
-                        ->orderBy('created_at', 'DESC')
-                        ->paginate(10);    
-        }elseif (session('perfilTipo') == 'I'){
-            $demandas = Demanda_Producto::select('demanda_producto.*')
-                        ->join('importador_demanda_producto', 'demanda_producto.id', '=', 'importador_demanda_producto.demanda_producto_id')
-                        ->where('importador_demanda_producto.importador_id', '=', session('perfilId'))
-                        ->where('importador_demanda_producto.marcada', '=', '1')
-                        ->orderBy('created_at', 'DESC')
-                        ->paginate(10); 
-        }elseif (session('perfilTipo') == 'D'){
-            $demandas = Demanda_Producto::select('demanda_producto.*')
-                        ->join('distribuidor_demanda_producto', 'demanda_producto.id', '=', 'distribuidor_demanda_producto.demanda_producto_id')
-                        ->where('distribuidor_demanda_producto.distribuidor_id', '=', session('perfilId'))
-                        ->where('distribuidor_demanda_producto.marcada', '=', '1')
-                        ->orderBy('created_at', 'DESC')
-                        ->paginate(10); 
+    //Pestaña Horeca / Comercializacion / Buscar Tipo de Bebida
+    public function solicitar_bebida(Request $request){
+        $pais_elegido = null;
+        
+        $bebidas = Bebida::nombre($request->get('busqueda'))
+                    ->orderBy('nombre', 'ASC')
+                    ->paginate(20);
+
+        if ($request->get('bebida') != null){
+            $bebidas = Bebida::where('id', '=', $request->get('bebida'))->paginate(1);
+            
+            $pais_elegido = DB::table('pais')
+                        ->select('id', 'pais')
+                        ->where('id', '=', $request->get('pais'))
+                        ->first();
         }
 
-        return view('demandaProducto.demandasDeInteres')->with(compact('demandas'));
+        $tipos_bebidas = DB::table('bebida')
+                        ->orderBy('nombre', 'ASC')
+                        ->pluck('nombre', 'id');
+
+        $paises = DB::table('pais')
+                    ->orderBy('pais', 'ASC')
+                    ->pluck('pais', 'id');
+
+        $cont =0;
+        foreach ($bebidas as $b){
+            $cont++;
+        }
+
+        return view('comercializacion.tabs.buscarBebida')->with(compact('bebidas', 'cont', 'tipos_bebidas', 'paises', 'pais_elegido'));
+    }
+
+    //Almacena una demanda de bebida
+    public function bebida_store(Request $request){
+        $fecha = new \DateTime();
+
+        $demanda_producto  = new Demanda_Producto($request->all());         
+        $demanda_producto->fecha_creacion = $fecha;
+        $demanda_producto ->save();
+
+        return redirect('demanda-producto')->with('msj', 'Su solicitud de bebida ha sido almacenada con éxito.');
+    }
+
+    //Pestaña Horeca / Comercialización / Historial
+    public function historial(){
+        $cont = 0;
+
+        $demandasProductos = Demanda_Producto::where('tipo_creador', '=', session('perfilTipo')) 
+                                    ->where('creador_id', '=', session('perfilId'))
+                                    ->where('status', '=', '0')
+                                    ->orderBy('created_at', 'DESC')
+                                    ->paginate(20);
+        
+        foreach ($demandasProductos as $d){
+            $cont++;
+        }
+
+        return view('comercializacion.tabs.historial')->with(compact('demandasProductos', 'cont'));
     }
 
     public function edit($id)
     {
-       $solicitudProducto = Demanda_Producto::find($id);
-
-        return view('demandaProducto.edit')->with(compact('solicitudProducto')); 
+       
     }
 
     public function update(Request $request, $id)
     {
-        $demanda_producto  = Demanda_Producto::find($id);
-        $demanda_producto ->fill($request->all());
-        $demanda_producto ->save();
-
-        return redirect('demanda-producto')->with('msj', 'Se han actualizado los datos de tu solicitud con éxito.');
-    }
     
-    //Cambia el status de una demanda
-    public function cambiar_status(Request $request){
-        Demanda_Producto::find($request->id)
-            ->update(['status' => $request->status]);
-
-        return redirect("demanda-producto")->with('msj', 'El status de su demanda ha sido actualizado con éxito.');
-    } 
+    }
     
     public function destroy($id)
     {

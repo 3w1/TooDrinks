@@ -186,12 +186,11 @@ Route::prefix('demanda-producto')->group(function () {
     Route::get('demandas-bebidas-disponibles', 'DemandaProductoController@demandas_bebidas_disponibles')
     ->name('demanda-producto.demandas-bebidas-disponibles');
     Route::get('marcar-demanda/{id}/{check}', 'DemandaProductoController@marcar_demanda')->name('demanda-producto.marcar');
-    
-
+    Route::get('bebida', 'DemandaProductoController@solicitar_bebida')->name('demanda-producto.bebida');
+    Route::post('store-bebida', 'DemandaProductoController@bebida_store')->name('demanda-producto.bebida-store');
     Route::post('cambiar-status', 'DemandaProductoController@cambiar_status')
     ->name('demanda-producto.status');
-
-    Route::get('demandas-de-interes', 'DemandaProductoController@demandas_interes')->name('demanda-producto.demandas-interes');
+    Route::get('historial', 'DemandaProductoController@historial')->name('demanda-producto.historial');
 });
 Route::resource('demanda-producto','DemandaProductoController');
 // ./RUTAS PARA LAS DEMANDAS DE PRODUCTOS ./
