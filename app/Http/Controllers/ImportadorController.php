@@ -9,7 +9,7 @@ use App\Models\Producto; use App\Models\Bebida;
 use App\Models\Productor;
 use App\Models\Oferta; use App\Models\Destino_Oferta;
 use App\Models\Demanda_Distribuidor; use App\Models\Demanda_Producto;
-use App\Models\Notificacion_P; use App\Models\Notificacion_Admin;
+use App\Models\Notificacion_P; use App\Models\Notificacion_Admin; use App\Models\Notificacion_D;
 use DB; use Auth; use Input; use Image;
 
 class ImportadorController extends Controller
@@ -19,8 +19,8 @@ class ImportadorController extends Controller
         $this->middleware('auth', ['except' => ['index', 'create', 'store']]);
     }
     
-    public function index()
-    {
+    // *** MÉTODOS DEL ADMIN WEB ***//
+    public function index(){
         $importadores = Importador::select('id', 'nombre', 'pais_id', 'telefono', 'persona_contacto', 'email', 'reclamada')
                         ->orderBy('nombre', 'ASC')
                         ->paginate(10);
@@ -28,8 +28,7 @@ class ImportadorController extends Controller
         return view('adminWeb.importador.listado')->with(compact('importadores'));
     }
 
-    public function create()
-    {      
+    public function create(){      
         $paises = DB::table('pais')
                     ->orderBy('pais')
                     ->pluck('pais', 'id');
@@ -37,23 +36,21 @@ class ImportadorController extends Controller
         return view('adminWeb.importador.create')->with(compact('paises'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $importador = new Importador($request->all());
         $importador->logo = 'usuario-icono.jpg';
         $importador->save();
 
         return redirect('admin/listado-importadores')->with('msj-success', 'Se ha creado el Importador con éxito.');
     }
+    // *** FIN DE MÉTODOS DEL ADMIN WEB ***/
 
-    public function show($id)
-    {
+    public function show($id){
         $importador = Importador::find($id);
         return view('importador.show')->with(compact('importador'));
     }
 
-   public function edit($id)
-    {
+    public function edit($id){
         $importador = Importador::find($id);
 
         $paises = DB::table('pais')
@@ -68,8 +65,7 @@ class ImportadorController extends Controller
        return view('importador.edit')->with(compact('importador', 'paises', 'provincias'));
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
         $importador = Importador::find($id);
         $importador->fill($request->all());
         $importador->save();
@@ -181,6 +177,92 @@ class ImportadorController extends Controller
                             ->paginate(6);
 
         return view('importador.listados.distribuidoresPais')->with(compact('distribuidores'));
+    }
+
+    //Pestaña importador / Confirmaciones / Distribuidores
+    public function confirmar_distribuidores(Request $request){
+        $solicitudes = DB::table('distribuidor_marca')
+                    ->select('distribuidor_marca.*')
+                    ->join('marca', 'distribuidor_marca.marca_id', '=', 'marca.id')
+                    ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                    ->where('importador_marca.importador_id', '=', session('perfilId'))
+                    ->where('distribuidor_marca.status', '=', '0')
+                    ->paginate(10);
+
+        if ($request->get('marca') != null){
+            $solicitudes = DB::table('distribuidor_marca')
+                    ->where('marca_id', '=', $request->get('marca'))
+                    ->where('status', '=', '0')
+                    ->paginate(10);
+        }
+
+        $cont = 0;
+        foreach ($solicitudes as $s){
+            $cont++;
+        }
+
+        $marcas = DB::table('marca')
+                ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                ->where('importador_marca.importador_id', '=', session('perfilId'))
+                ->where('importador_marca.status', '=', '1')
+                ->orderBy('marca.nombre', 'marca.id')
+                ->pluck('marca.nombre', 'marca.id');
+
+        return view('confirmaciones.tabsImportador.distribuidores')->with(compact('solicitudes', 'cont', 'marcas'));
+    }
+
+    public function confirmar_distribuidor($id, $tipo, $dist){
+        $fecha = new \DateTime();
+
+        $marca = DB::table('marca')
+                ->select('marca.nombre')
+                ->join('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
+                ->where('distribuidor_marca.id', '=', $id)
+                ->first();
+
+        $importador = Importador::find(session('perfilId'));
+        
+        if ($tipo == 'S'){
+            $actualizacion = DB::table('distribuidor_marca')
+                                ->where('id', '=', $id)
+                                ->update(['status' => '1']);
+
+            $importador->distribuidores()->attach($dist);
+
+            $notificaciones_distribuidor = new Notificacion_D();
+            $notificaciones_distribuidor->creador_id = session('perfilId');
+            $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
+            $notificaciones_distribuidor->titulo = 'El importador ' . $importador->nombre  . ' lo ha confirmado como distribuidor de la marca: '. $marca->nombre;
+            $notificaciones_distribuidor->url='marca';
+            $notificaciones_distribuidor->distribuidor_id = $dist;
+            $notificaciones_distribuidor->descripcion = "Confirmación de Distribuidor";
+            $notificaciones_distribuidor->color = 'bg-blue';
+            $notificaciones_distribuidor->icono = 'fa fa-thumbs-o-up';
+            $notificaciones_distribuidor->fecha = $fecha;
+            $notificaciones_distribuidor->tipo = 'CD';
+            $notificaciones_distribuidor->leida = '0';
+            $notificaciones_distribuidor->save();
+
+            return redirect('importador/confirmar-distribuidores')->with('msj', 'Solicitud aprobada con éxito.');
+        }else{
+            DB::table('distribuidor_marca')->where('id', '=', $id)->delete();
+
+            $notificaciones_distribuidor = new Notificacion_D();
+            $notificaciones_distribuidor->creador_id = session('perfilId');
+            $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
+            $notificaciones_distribuidor->titulo = 'El importador ' . $importador->nombre  . 'lo ha rechazado como distribuidor de la marca: '. $marca->nombre;
+            $notificaciones_distribuidor->url='marca';
+            $notificaciones_distribuidor->distribuidor_id = $dist;
+            $notificaciones_distribuidor->descripcion = "Denegación de Distribuidor";
+            $notificaciones_distribuidor->color = 'bg-red';
+            $notificaciones_distribuidor->icono = 'fa fa-thumbs-o-down';
+            $notificaciones_distribuidor->fecha = $fecha;
+            $notificaciones_distribuidor->tipo = 'CD';
+            $notificaciones_distribuidor->leida = '0';
+            $notificaciones_distribuidor->save();
+
+            return redirect('importador/confirmar-distribuidores')->with('msj', 'Solicitud denegada con éxito.');
+        }
     }
 
 }

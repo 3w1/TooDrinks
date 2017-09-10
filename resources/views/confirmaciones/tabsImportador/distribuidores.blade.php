@@ -12,38 +12,14 @@
 @endsection
 
 @section('content-left')
-   <?php 
-      $not_ai = DB::table('notificacion_p')->select('id')
-               ->where('productor_id', '=', session('perfilId'))
-               ->where('tipo', '=', 'AI')->where('leida', '=', '0')->get();
-      $ai=0;
-      foreach($not_ai as $nai){
-         $ai++;
-      }
-
-      $not_ad = DB::table('notificacion_p')->select('id')
-               ->where('productor_id', '=', session('perfilId'))
+    <?php 
+      $not_ad = DB::table('notificacion_i')->select('id')
+               ->where('importador_id', '=', session('perfilId'))
                ->where('tipo', '=', 'AD')->where('leida', '=', '0')->get();
       $ad=0;
       foreach($not_ad as $nad){
          $ad++;
-         DB::table('notificacion_p')->where('id', '=', $nad->id)->update(['leida' => '1']);
-      }
-
-      $not_np = DB::table('notificacion_p')->select('id')
-               ->where('productor_id', '=', session('perfilId'))
-               ->where('tipo', '=', 'NP')->where('leida', '=', '0')->get();
-      $np=0;
-      foreach($not_np as $nnp){
-         $np++;
-      }
-
-      $not_nm = DB::table('notificacion_p')->select('id')
-               ->where('productor_id', '=', session('perfilId'))
-               ->where('tipo', '=', 'NM')->where('leida', '=', '0')->get();
-      $nm=0;
-      foreach($not_nm as $nnm){
-         $nm++;
+         DB::table('notificacion_i')->where('id', '=', $nad->id)->update(['leida' => '1']);
       }
    ?>
 
@@ -59,18 +35,8 @@
    @include('confirmaciones.modales.datosDistribuidor')
    
    <ul class="nav nav-pills">
-      <li class="btn btn-default">
-         <a href="{{ route('productor.confirmar-importadores') }}"><strong>IMPORTADORES | 
-         <small class="label bg-red">{{ $ai }}</small></strong></a>
-      </li>
       <li class="active btn btn-default">
-         <a href="{{ route('productor.confirmar-distribuidores') }}"><strong>DISTRIBUIDORES | <small class="label bg-orange">{{ $ad }}</small></strong></a>
-      </li>
-      <li class="btn btn-default">
-         <a href="{{ route('productor.confirmar-productos') }}"><strong>PRODUCTOS| <small class="label bg-red">{{ $np }}</small></strong></a>
-      </li>
-      <li class="btn btn-default">
-         <a href="{{ route('productor.confirmar-marcas') }}"><strong>MARCAS | <small class="label bg-red">{{ $nm }}</small></strong></a>
+         <a href="{{ route('importador.confirmar-distribuidores') }}"><strong>DISTRIBUIDORES | <small class="label bg-orange">{{ $ad }}</small></strong></a>
       </li>
    </ul>
 
@@ -103,8 +69,8 @@
                               </div>
                         
                               <div class="timeline-footer">
-                                 <a class="btn btn-primary btn-xs" href="{{ route('productor.confirmar-distribuidor', [$solicitud->id, 'S', $distribuidor->id]) }}">¡Confirmar!</a>
-                                 <a class="btn btn-danger btn-xs" href="{{ route('productor.confirmar-distribuidor', [$solicitud->id, 'N', $distribuidor->id]) }}">¡No Confirmar!</a>
+                                 <a class="btn btn-primary btn-xs" href="{{ route('importador.confirmar-distribuidor', [$solicitud->id, 'S', $distribuidor->id]) }}">¡Confirmar!</a>
+                                 <a class="btn btn-danger btn-xs" href="{{ route('importador.confirmar-distribuidor', [$solicitud->id, 'N', $distribuidor->id]) }}">¡No Confirmar!</a>
                               </div>
                            </div>
                         </li>
@@ -127,7 +93,7 @@
          <div class="panel-body">
             <div class="tab-content">
                <div class="tab-pane fade in active">
-                  @include('confirmaciones.tabs.filtroDistribuidores')
+                  @include('confirmaciones.tabsImportador.filtroDistribuidores')
                </div>
             </div>
          </div>

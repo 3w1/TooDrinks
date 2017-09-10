@@ -65,9 +65,6 @@ Route::prefix('productor')->group(function (){
     Route::get('confirmar-marcas', 'ProductorController@confirmar_marcas')->name('productor.confirmar-marcas');
     Route::get('confirmar-marca/{id}-{tipo}', 'ProductorController@confirmar_marca')->name('productor.confirmar-marca');
 
-   
-    Route::get('ver-listado-importadores', 'ProductorController@listado_importadores')->name('productor.listado-importadores');
-
     Route::post('updateAvatar', 'ProductorController@updateAvatar')->name('productor.updateAvatar');
 });
 Route::resource('productor','ProductorController');
@@ -76,7 +73,9 @@ Route::resource('productor','ProductorController');
 // RUTAS PARA LOS IMPORTADORES
 Route::prefix('importador')->group(function (){
     Route::get('asociar-marca/{id}/{nombre}', 'ImportadorController@asociar_marca')->name('importador.asociar-marca');
-
+    Route::get('confirmar-distribuidores', 'ImportadorController@confirmar_distribuidores')->name('importador.confirmar-distribuidores');
+    Route::get('confirmar-distribuidor/{id}-{tipo}-{dist}', 'ImportadorController@confirmar_distribuidor')->name('importador.confirmar-distribuidor');
+    
     Route::get('ver-listado-distribuidores', 'ImportadorController@listado_distribuidores')->name('importador.listado-distribuidores');
     
     Route::post('updateAvatar', 'ImportadorController@updateAvatar')->name('importador.updateAvatar');
@@ -221,10 +220,6 @@ Route::prefix('solicitud-distribucion')->group(function () {
     ->name('solicitud-distribucion.solicitudes');
     Route::get('marcar-solicitud/{id}/{check}', 'SolicitudDistribucionController@marcar_solicitud')
     ->name('solicitud-distribucion.marcar');
-   
-
-    Route::get('demandas-de-interes', 'SolicitudDistribucionController@demandas_interes')
-    ->name('solicitud-distribucion.demandas-interes');
     Route::post('cambiar-status', 'SolicitudDistribucionController@cambiar_status')
     ->name('solicitud-distribucion.status');
 });
