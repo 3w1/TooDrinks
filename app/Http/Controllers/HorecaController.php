@@ -16,8 +16,8 @@ class HorecaController extends Controller
         $this->middleware('auth', ['except' => ['index', 'create', 'store']]);
     }
     
-    public function index()
-    {
+    // *** MÉTODOS PARA EL ADMIN WEB *** //
+    public function index(){
         $horecas = Horeca::select('id', 'nombre', 'pais_id', 'telefono', 'persona_contacto', 'email', 'reclamada')
                         ->orderBy('nombre', 'ASC')
                         ->paginate(10);
@@ -25,8 +25,7 @@ class HorecaController extends Controller
         return view('adminWeb.horeca.listado')->with(compact('horecas'));
     }
 
-    public function create()
-    {   
+    public function create(){   
         $paises = DB::table('pais')
                     ->orderBy('pais')
                     ->pluck('pais', 'id');
@@ -34,13 +33,40 @@ class HorecaController extends Controller
         return view('adminWeb.horeca.create')->with(compact('paises'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $horeca = new Horeca($request->all());
         $horeca->logo = 'usuario-icono.jpg'; 
         $horeca->save();
 
         return redirect('admin/listado-horecas')->with('msj-success', 'Se ha creado el Horeca con éxito.');
+    }
+    // *** FIN DE MÉTODOS PARA EL ADMIN WEB *** //
+
+     public function inicio(){
+        $ofertas = DB::table('horeca_oferta')
+                    ->where('horeca_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $notificaciones = DB::table('notificacion_h')
+                            ->where('horeca_id', '=', session('perfilId'))
+                            ->orderBy('fecha', 'DESC')
+                            ->take(8)
+                            ->get();
+
+        $distribuidores = Distribuidor::select('nombre', 'logo', 'provincia_region_id')
+                    ->where('provincia_region_id', '=', session('perfilProvincia'))
+                    ->orderBy('nombre', 'ASC')
+                    ->take(4)
+                    ->get();
+
+        $solicitudesProductos = DB::table('demanda_producto')
+                    ->where('tipo_creador', '=', 'H')
+                    ->where('creador_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        return view('horeca.inicio')->with(compact('ofertas', 'notificaciones', 'distribuidores', 'solicitudesProductos'));
     }
 
     public function show($id)

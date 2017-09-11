@@ -72,6 +72,7 @@ Route::resource('productor','ProductorController');
 
 // RUTAS PARA LOS IMPORTADORES
 Route::prefix('importador')->group(function (){
+    Route::get('inicio', 'ImportadorController@inicio')->name('importador.inicio');
     Route::get('asociar-marca/{id}/{nombre}', 'ImportadorController@asociar_marca')->name('importador.asociar-marca');
     Route::get('confirmar-distribuidores', 'ImportadorController@confirmar_distribuidores')->name('importador.confirmar-distribuidores');
     Route::get('confirmar-distribuidor/{id}-{tipo}-{dist}', 'ImportadorController@confirmar_distribuidor')->name('importador.confirmar-distribuidor');
@@ -86,8 +87,8 @@ Route::resource('multinacional', 'MultinacionalController');
 
 // RUTAS PARA LOS DISTRIBUIDORES
 Route::prefix('distribuidor')->group(function (){
+    Route::get('inicio', 'DistribuidorController@inicio')->name('distribuidor.inicio');
     Route::get('asociar-marca/{id}/{nombre}', 'DistribuidorController@asociar_marca')->name('distribuidor.asociar-marca');
-
     Route::post('updateAvatar', 'DistribuidorController@updateAvatar')->name('distribuidor.updateAvatar');
 });
 Route::resource('distribuidor','DistribuidorController');
@@ -95,6 +96,7 @@ Route::resource('distribuidor','DistribuidorController');
 
 // RUTAS PARA LOS HORECAS
 Route::prefix('horeca')->group(function (){
+    Route::get('inicio', 'HorecaController@inicio')->name('horeca.inicio');
     Route::get('distribuidores-locales', 'HorecaController@distribuidores_locales')->name('horeca.distribuidores');
     
     Route::post('updateAvatar', 'HorecaController@updateAvatar')->name('horeca.updateAvatar');

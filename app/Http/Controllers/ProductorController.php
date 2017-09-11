@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Productor; use App\Models\Pais; use App\Models\Marca; use App\Models\Bebida;
-use App\Models\Clase_Bebida; use App\Models\Producto; use App\Models\Oferta;
+use App\Models\Clase_Bebida; use App\Models\Producto; use App\Models\Distribuidor; use App\Models\Oferta;
 use App\Models\Destino_Oferta; use App\Models\Demanda_Importador; use App\Models\Demanda_Distribuidor;
 use App\Models\Importador; use App\Models\Importador_Marca; use App\Models\Notificacion_I; use App\Models\Notificacion_D;
 use DB; use Auth; use Session; use Redirect; use Input; use Image;
@@ -71,17 +71,61 @@ class ProductorController extends Controller
                     ->first();
 
         $notificaciones = DB::table('notificacion_p')
+                            ->where('productor_id', '=', session('perfilId'))
                             ->orderBy('fecha', 'DESC')
-                            ->take(10)
+                            ->take(8)
                             ->get();
 
-        $gastos = DB::table('deduccion_credito_productor')
-                    ->where('productor_id', '=', session('perfilId'))
-                    ->orderBy('fecha', 'DESC')
-                    ->take(6)
-                    ->get();
+        $importadores= Importador::select('importador.nombre', 'importador.logo', 'importador.pais_id', 'productor_importador.created_at')
+        			->join('productor_importador', 'importador.id', '=', 'productor_importador.importador_id')
+        			->where('productor_importador.productor_id', '=', session('perfilId'))
+        			->orderBy('productor_importador.created_at', 'DESC')
+        			->take(2)
+        			->get();
 
-        return view('productor.inicio')->with(compact('marcas', 'productos', 'ofertas', 'banners', 'notificaciones', 'gastos'));
+       	$distribuidores = Distribuidor::select('distribuidor.nombre', 'distribuidor.logo', 'distribuidor.provincia_region_id', 'productor_distribuidor.created_at')
+        			->join('productor_distribuidor', 'distribuidor.id', '=', 'productor_distribuidor.distribuidor_id')
+        			->where('productor_distribuidor.productor_id', '=', session('perfilId'))
+        			->orderBy('productor_distribuidor.created_at', 'DESC')
+        			->take(2)
+        			->get();
+
+        $solicitudesProductos = DB::table('demanda_producto')
+        			->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
+        			->join('marca', 'producto.marca_id', '=', 'marca.id')
+        			->join('productor', 'marca.productor_id', '=', 'productor.id')
+                    ->where('productor.id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $solicitudesImportacion = DB::table('solicitud_importacion')
+        			->join('marca', 'solicitud_importacion.marca_id', '=', 'marca.id')
+        			->join('productor', 'marca.productor_id', '=', 'productor.id')
+                    ->where('productor.id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $solicitudesDistribucion = DB::table('solicitud_distribucion')
+        			->join('marca', 'solicitud_distribucion.marca_id', '=', 'marca.id')
+        			->join('productor', 'marca.productor_id', '=', 'productor.id')
+                    ->where('productor.id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $ofertasMarcadas = DB::table('oferta')
+        			->where('tipo_creador', '=', 'P' )
+                    ->where('creador_id', '=', session('perfilId'))
+                    ->where('cantidad_contactos', '>', 0)
+                    ->select('cantidad_contactos')
+                    ->get();
+        $contactos=0;
+        foreach ($ofertasMarcadas as $om){
+        	$contactos = $contactos + $om->cantidad_contactos;
+        }
+
+        return view('productor.inicio')
+        ->with(compact('marcas', 'productos', 'ofertas', 'banners', 'notificaciones', 'importadores', 'distribuidores',
+         'solicitudesProductos', 'solicitudesImportacion', 'solicitudesDistribucion', 'contactos'));
     }
 
     public function show(Request $request, $id)

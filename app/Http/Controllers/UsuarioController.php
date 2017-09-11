@@ -46,6 +46,8 @@ class UsuarioController extends Controller
             session(['perfilPais' => $productor->pais_id]);
             session(['perfilProvincia' => $productor->provincia_region_id]);
             session(['perfilSuscripcion' => $productor->suscripcion->suscripcion]);
+
+            return redirect('productor/inicio')->with('msj', 'Se ha cambiado a su perfil '.session('perfilNombre').' con éxito.');
         }elseif ($entidad[0] == 'I'){
             $importador = Importador::where('id', '=', $entidad[1])
                                     ->first();
@@ -58,19 +60,8 @@ class UsuarioController extends Controller
             session(['perfilProvincia' => $importador->provincia_region_id]);
             session(['perfilTipo' => 'I']);
             session(['perfilSuscripcion' => $importador->suscripcion->suscripcion]);
-        }elseif ($entidad[0] == 'M'){
-            $multinacional = Multinacional::where('id', '=', $entidad[1])
-                                    ->first();
 
-            session(['perfilId' => $multinacional->id]);
-            session(['perfilNombre' => $multinacional->nombre]);
-            session(['perfilLogo' => $multinacional->logo]);
-            session(['perfilSaldo' => $multinacional->saldo]);
-            session(['perfilPais' => $multinacional->pais_id]);
-            session(['perfilProvincia' => $multinacional->provincia_region_id]);
-            session(['perfilTipo' => 'M']);
-            session(['perfilSuscripcion' => $multinacional->suscripcion->suscripcion]);
-            session(['perfilPadre' => $multinacional->productor_id]);
+            return redirect('importador/inicio')->with('msj', 'Se ha cambiado a su perfil '.session('perfilNombre').' con éxito.');
         }elseif ($entidad[0] == 'D'){
             $distribuidor = Distribuidor::where('id', '=', $entidad[1])
                                         ->first();
@@ -83,6 +74,8 @@ class UsuarioController extends Controller
             session(['perfilProvincia' => $distribuidor->provincia_region_id]);
             session(['perfilTipo' => 'D']);
             session(['perfilSuscripcion' => $distribuidor->suscripcion->suscripcion]);
+
+            return redirect('distribuidor/inicio')->with('msj', 'Se ha cambiado a su perfil '.session('perfilNombre').' con éxito.');
         }elseif ($entidad[0] == 'H'){
             $horeca = DB::table('horeca')
                             ->where('id', '=', $entidad[1])
@@ -97,13 +90,9 @@ class UsuarioController extends Controller
             session(['perfilPais' => $horeca->pais_id]);
             session(['perfilProvincia' => $horeca->provincia_region_id]);
             session(['perfilTipo' => 'H']);
+
+            return redirect('horeca/inicio')->with('msj', 'Se ha cambiado a su perfil '.session('perfilNombre').' con éxito.');
         }
-
-        return redirect('notificacion')->with('msj', 'Se ha cambiado de perfil con éxito.');
-    }
-
-    public function inicio(){
-        return view('usuario.index');
     }
 
     public function index()
@@ -122,12 +111,6 @@ class UsuarioController extends Controller
                         ->first();
 
             session(['perfilTipo' => 'I']);
-        }elseif (Auth::user()->entidad_predefinida == 'M'){
-            $entidad = Multinacional::select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
-                        ->where('id', '=', Auth::user()->id_entidad_predefinida)
-                        ->first();
-
-            session(['perfilTipo' => 'M']);
         }elseif (Auth::user()->entidad_predefinida == 'D'){
             $entidad = Distribuidor::select('id', 'nombre', 'logo', 'saldo', 'pais_id', 'provincia_region_id', 'suscripcion_id')
                         ->where('id', '=', Auth::user()->id_entidad_predefinida)
@@ -153,7 +136,17 @@ class UsuarioController extends Controller
         if (session('perfilTipo') != 'H'){
             session(['perfilSuscripcion' => $entidad->suscripcion->suscripcion]);
         }
-        return redirect('notificacion');
+
+        if (session('perfilTipo') == 'P'){
+            $url = "productor/inicio";
+        }elseif (session('perfilTipo') == 'I'){
+            $url = "importador/inicio";
+        }elseif (session('perfilTipo') == 'D'){
+            $url = "distribuidor/inicio";
+        }elseif (session('perfilTipo') == 'H'){
+            $url = "horeca/inicio";
+        }
+        return redirect($url)->with('msj', 'Se ha cambiado a su perfil '.session('perfilNombre').' con éxito.');
     }
 
     public function create()

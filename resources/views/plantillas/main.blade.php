@@ -43,21 +43,6 @@
    ?>
 @endif
 
-@if (Auth::user()->multinacional == '1')
-   <?php 
-      $multinacionales = DB::table('multinacional')
-                             ->select('id', 'nombre')
-                             ->where('user_id', '=', Auth::user()->id)
-                             ->get();
-
-      foreach ($multinacionales as $multinacional){
-         $id_entidad[] = $multinacional->id; 
-         $nombre_entidad[] = $multinacional->nombre;
-         $tipo_entidad[] = 'M';  
-      }      
-   ?>
-@endif
-
 @if (Auth::user()->horeca == '1')
    <?php 
       $horecas = DB::table('horeca')
@@ -105,14 +90,12 @@
                   {!! Form::open(['route' => 'usuario.cambiar-perfil', 'method' => 'POST']) !!}
                      <div class="form-group">
                         <select class="form-control" name="entidad">
-                           @if ( (Auth::user()->rol != 'AD') && (Auth::user()->rol != 'US') )
-                              <?php 
-                                 $longitud = count($id_entidad);
-                                 for ($i=0; $i<$longitud; $i++ ){
-                                    echo "<option value='".$tipo_entidad[$i].".".$id_entidad[$i]."'>".$tipo_entidad[$i]." - ".$nombre_entidad[$i]."</option>";
-                                 }
-                              ?>
-                           @endif
+                          <?php 
+                            $longitud = count($id_entidad);
+                            for ($i=0; $i<$longitud; $i++ ){
+                              echo "<option value='".$tipo_entidad[$i].".".$id_entidad[$i]."'>".$tipo_entidad[$i]." - ".$nombre_entidad[$i]."</option>";
+                            }
+                          ?>
                         </select>
                      </div>  
                </div>

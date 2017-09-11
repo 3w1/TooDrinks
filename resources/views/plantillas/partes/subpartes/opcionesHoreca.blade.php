@@ -1,4 +1,6 @@
-<li class="li"><a href="{{route('demanda-producto.create')}}"><i class="fa fa-shopping-bag"></i> Comercialización</a></li>
+<li class="li"><a href="{{ route('horeca.inicio') }}"><i class="fa fa-home"></i> Inicio</a></li>
+
+<li class="li"><a href="{{route('demanda-producto.index')}}"><i class="fa fa-shopping-bag"></i> Comercialización</a></li>
 
 <li class="li"><a href="{{route('oferta.disponibles')}}"><i class="fa fa-shopping-cart"></i> Ofertas</a></li>
 

@@ -44,6 +44,87 @@ class ImportadorController extends Controller
         return redirect('admin/listado-importadores')->with('msj-success', 'Se ha creado el Importador con éxito.');
     }
     // *** FIN DE MÉTODOS DEL ADMIN WEB ***/
+    
+    public function inicio(){
+        $marcas = DB::table('marca')
+                    ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                    ->where('importador_marca.importador_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $productos = DB::table('producto')
+                    ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
+                    ->where('importador_producto.importador_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $ofertas = DB::table('oferta')
+                    ->where('tipo_creador', '=', 'I')
+                    ->where('creador_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $banners = DB::table('banner')
+                    ->where('tipo_creador', '=', 'I')
+                    ->where('creador_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $notificaciones = DB::table('notificacion_i')
+                            ->where('importador_id', '=', session('perfilId'))
+                            ->orderBy('fecha', 'DESC')
+                            ->take(8)
+                            ->get();
+
+        $productores = Productor::select('productor.nombre', 'productor.logo', 'productor.pais_id', 'productor_importador.created_at')
+                    ->join('productor_importador', 'productor.id', '=', 'productor_importador.productor_id')
+                    ->where('productor_importador.importador_id', '=', session('perfilId'))
+                    ->orderBy('productor_importador.created_at', 'DESC')
+                    ->take(2)
+                    ->get();
+
+        $distribuidores = Distribuidor::select('distribuidor.nombre', 'distribuidor.logo', 'distribuidor.provincia_region_id', 'importador_distribuidor.created_at')
+                    ->join('importador_distribuidor', 'distribuidor.id', '=', 'importador_distribuidor.distribuidor_id')
+                    ->where('importador_distribuidor.importador_id', '=', session('perfilId'))
+                    ->orderBy('importador_distribuidor.created_at', 'DESC')
+                    ->take(2)
+                    ->get();
+
+        $solicitudesProductos = DB::table('demanda_producto')
+                    ->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
+                    ->join('importador_producto', 'producto.id', '=', 'importador_producto.id')
+                    ->where('importador_producto.importador_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $solicitudesImportador = DB::table('demanda_importador')
+                    ->join('importador', 'demanda_importador.pais_id', '=', 'importador.pais_id')
+                    ->where('importador.id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $solicitudesDistribucion = DB::table('solicitud_distribucion')
+                    ->join('marca', 'solicitud_distribucion.marca_id', '=', 'marca.id')
+                    ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
+                    ->where('importador_marca.importador_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $ofertasMarcadas = DB::table('oferta')
+                    ->where('tipo_creador', '=', 'I' )
+                    ->where('creador_id', '=', session('perfilId'))
+                    ->where('cantidad_contactos', '>', 0)
+                    ->select('cantidad_contactos')
+                    ->get();
+        $contactos=0;
+        foreach ($ofertasMarcadas as $om){
+            $contactos = $contactos + $om->cantidad_contactos;
+        }
+
+        return view('importador.inicio')
+        ->with(compact('marcas', 'productos', 'ofertas', 'banners', 'notificaciones', 'productores', 'distribuidores',
+         'solicitudesProductos', 'solicitudesImportador', 'solicitudesDistribucion', 'contactos'));
+    }
 
     public function show($id){
         $importador = Importador::find($id);

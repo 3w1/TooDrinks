@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Distribuidor;
+use App\Models\Distribuidor; use App\Models\Importador;
 use App\Models\Pais;
 use App\Models\Provincia_Region;
 use App\Models\Marca; use App\Models\Producto;
@@ -19,16 +19,15 @@ class DistribuidorController extends Controller
         $this->middleware('auth', ['except' => ['index', 'create', 'store']]);
     }
     
-    public function index()
-    {
+    // ¨*** MÉTODOS PARA EL ADMIN WEB *** //
+    public function index(){
         $distribuidores = Distribuidor::select('id', 'nombre', 'pais_id', 'telefono', 'persona_contacto', 'email', 'reclamada')                        ->orderBy('nombre', 'ASC')
                         ->paginate(10);
 
         return view('adminWeb.distribuidor.listado')->with(compact('distribuidores'));
     }
 
-    public function create()
-    {
+    public function create(){
         $paises = DB::table('pais')
                     ->orderBy('pais')
                     ->pluck('pais', 'id');
@@ -36,15 +35,82 @@ class DistribuidorController extends Controller
         return view('adminWeb.distribuidor.create')->with(compact('paises'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $distribuidor = new Distribuidor($request->all());
         $distribuidor->logo = 'usuario-icono.jpg'; 
         $distribuidor->save();
 
         return redirect('admin/listado-distribuidores')->with('msj-success', 'Se ha creado el distribuidor con éxito.');
     }
+    // *** FIN DE MÉTODOS PARA EL ADMIN WEB *** //
+    
+    public function inicio(){
+        $marcas = DB::table('marca')
+                    ->join('distribuidor_marca', 'marca.id', '=', 'distribuidor_marca.marca_id')
+                    ->where('distribuidor_marca.distribuidor_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
 
+        $productos = DB::table('producto')
+                    ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
+                    ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $ofertas = DB::table('oferta')
+                    ->where('tipo_creador', '=', 'D')
+                    ->where('creador_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $banners = DB::table('banner')
+                    ->where('tipo_creador', '=', 'D')
+                    ->where('creador_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $notificaciones = DB::table('notificacion_d')
+                            ->where('distribuidor_id', '=', session('perfilId'))
+                            ->orderBy('fecha', 'DESC')
+                            ->take(8)
+                            ->get();
+
+        $importadores = Importador::select('importador.nombre', 'importador.logo', 'importador.provincia_region_id', 'importador_distribuidor.created_at')
+                    ->join('importador_distribuidor', 'importador.id', '=', 'importador_distribuidor.importador_id')
+                    ->where('importador_distribuidor.distribuidor_id', '=', session('perfilId'))
+                    ->orderBy('importador_distribuidor.created_at', 'DESC')
+                    ->take(4)
+                    ->get();
+
+        $solicitudesProductos = DB::table('demanda_producto')
+                    ->join('producto', 'demanda_producto.producto_id', '=', 'producto.id')
+                    ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.id')
+                    ->where('distribuidor_producto.distribuidor_id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $solicitudesDistribuidor = DB::table('demanda_distribuidor')
+                    ->join('distribuidor', 'demanda_distribuidor.provincia_region_id', '=', 'distribuidor.provincia_region_id')
+                    ->where('distribuidor.id', '=', session('perfilId'))
+                    ->select(DB::raw('count(*) as cant'))
+                    ->first();
+
+        $ofertasMarcadas = DB::table('oferta')
+                    ->where('tipo_creador', '=', 'D' )
+                    ->where('creador_id', '=', session('perfilId'))
+                    ->where('cantidad_contactos', '>', 0)
+                    ->select('cantidad_contactos')
+                    ->get();
+        $contactos=0;
+        foreach ($ofertasMarcadas as $om){
+            $contactos = $contactos + $om->cantidad_contactos;
+        }
+
+        return view('distribuidor.inicio')
+        ->with(compact('marcas', 'productos', 'ofertas', 'banners', 'notificaciones', 'importadores',
+         'solicitudesProductos', 'solicitudesDistribuidor', 'contactos'));
+    }
+    
     public function show($id)
     {
         $distribuidor = Distribuidor::find($id);

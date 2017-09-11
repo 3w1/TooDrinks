@@ -6,84 +6,84 @@
 @endsection
 
 @section('items')
-		<div class="col-lg-3 col-xs-6">
-	      <div class="small-box bg-aqua">
-	         <div class="inner">
-	            <h3>{{$marcas->cant}}</h3><p>Marcas</p>
-	         </div>
-	         <div class="icon">
-	           	<i class="fa fa-diamond"></i>
-	         </div>
-	         <a href="{{ route('marca.index') }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
+	<div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-aqua">
+	      <div class="inner">
+	         <h3>{{$marcas->cant}}</h3><p>Marcas</p>
 	      </div>
-	   </div>
-
-	   <div class="col-lg-3 col-xs-6">
-	      <div class="small-box bg-green">
-	         <div class="inner">
-	            <h3>{{$productos->cant}}</h3><p>Productos</p>
-	         </div>
-	         <div class="icon">
-	            <i class="fa fa-product-hunt"></i>
-	         </div>
-	         <a href="{{route('producto.index')}}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
+	      <div class="icon">
+	         <i class="fa fa-diamond"></i>
 	      </div>
+	      <a href="{{ route('marca.index') }}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
 	   </div>
+	</div>
 
-	   <div class="col-lg-3 col-xs-6">
-	      <div class="small-box bg-yellow">
-	         <div class="inner">
-	            <h3>{{$ofertas->cant}}</h3><p>Ofertas Realizadas</p>
-	         </div>
-	         <div class="icon">
-	            <i class="fa fa-bullhorn"></i>
-	         </div>
-	         <a href="{{route('oferta.index')}}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
+   <div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-green">
+	      <div class="inner">
+	         <h3>{{$productos->cant}}</h3><p>Productos</p>
 	      </div>
+	      <div class="icon">
+	         <i class="fa fa-product-hunt"></i>
+         </div>
+	      <a href="{{route('producto.index')}}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
 	   </div>
+	</div>
 
-	   <div class="col-lg-3 col-xs-6">
-	      <div class="small-box bg-red">
-	         <div class="inner">
-	            <h3>{{$banners->cant}}</h3><p>Publicidades</p>
-	         </div>
-	         <div class="icon">
-	            <i class="fa fa-flag"></i>
-	         </div>
-	         <a href="{{route('banner-publicitario.index')}}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
+	<div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-yellow">
+	      <div class="inner">
+	         <h3>{{$ofertas->cant}}</h3><p>Ofertas Realizadas</p>
 	      </div>
+         <div class="icon">
+	         <i class="fa fa-bullhorn"></i>
+	      </div>
+	      <a href="{{route('oferta.index')}}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
 	   </div>
+	</div>
 
-   	<div class="col-md-12">
-   		<div class="box box-danger">
-            <div class="box-header with-border">
-                <h3 class="box-title">Mis Contactos Recientes</h3>
-            </div>
-            <div class="box-body no-padding">
-                <ul class="users-list clearfix">
-                	<?php $cont=0; ?>
-                	@foreach($importadores as $importador)
-                		<?php $cont++; ?>
-	                    <li>
-	                    	<img src="{{ asset('imagenes/importadores/thumbnails') }}/{{ $importador->logo}}">
-	                      	<span class="users-list-name">{{$importador->nombre}} ({{$importador->pais->pais}})</span>
-	                      	<span class="users-list-date">Desde {{ date('d-m-Y', strtotime($importador->created_at)) }}</span>
-	                    </li>
-	                @endforeach
-	                @foreach($distribuidores as $distribuidor)
-	                	<?php $cont++; ?>
-	                    <li>
-	                    	<img src="{{ asset('imagenes/distribuidores/thumbnails') }}/{{ $distribuidor->logo}}">
-	                      	<span class="users-list-name" >{{$distribuidor->nombre}} ({{$distribuidor->provincia_region->provincia}})</span>
-	                      	<span class="users-list-date">Desde {{ date('d-m-Y', strtotime($distribuidor->created_at)) }}</span>
-	                    </li>
-	                @endforeach
-	                @if ($cont == 0)
-	                	<li><center><strong>No posee ningún contacto reciente.</strong></center></li>
-	                @endif
-                </ul>
-            </div>
-        </div>
+	<div class="col-lg-3 col-xs-6">
+      <div class="small-box bg-red">
+	      <div class="inner">
+	         <h3>{{$banners->cant}}</h3><p>Publicidades</p>
+	      </div>
+	      <div class="icon">
+	         <i class="fa fa-flag"></i>
+	      </div>
+	      <a href="{{route('banner-publicitario.index')}}" class="small-box-footer">Más Información <i class="fa fa-arrow-circle-right"></i></a>
+	   </div>
+   </div>
+
+   <div class="col-md-12">
+		<div class="box box-danger">
+         <div class="box-header with-border">
+             <h3 class="box-title">Mis Contactos Recientes</h3>
+         </div>
+         <div class="box-body no-padding">
+            <ul class="users-list clearfix">
+             	<?php $cont=0; ?>
+             	@foreach($productores as $productor)
+                	<?php $cont++; ?>
+	                  <li>
+	                 	<img src="{{ asset('imagenes/productores/thumbnails') }}/{{ $productor->logo}}">
+	                  	<span class="users-list-name">{{$productor->nombre}} ({{$productor->pais->pais}})</span>
+	                   	<span class="users-list-date">Desde {{ date('d-m-Y', strtotime($productor->created_at)) }}</span>
+	                 </li>
+	            @endforeach
+	            @foreach($distribuidores as $distribuidor)
+	            	<?php $cont++; ?>
+	                  <li>
+	                	<img src="{{ asset('imagenes/distribuidores/thumbnails') }}/{{ $distribuidor->logo}}">
+	                     <span class="users-list-name" >{{$distribuidor->nombre}} ({{$distribuidor->provincia_region->provincia}})</span>
+	                  	<span class="users-list-date">Desde {{ date('d-m-Y', strtotime($distribuidor->created_at)) }}</span>
+	                  </li>
+	            @endforeach
+	            @if ($cont == 0)
+	              	<li><center><strong>No posee ningún contacto reciente.</strong></center></li>
+	           @endif
+            </ul>
+         </div>
+      </div>
    </div>
 @endsection
 
@@ -141,8 +141,8 @@
     <div class="info-box bg-green">
         <span class="info-box-icon"><i class="fa fa-diamond"></i></span>
         <div class="info-box-content">
-            <span class="info-box-text">Importación de Marcas</span>
-            <span class="info-box-number">{{$solicitudesImportacion->cant}}</span>
+            <span class="info-box-text">Solicitudes de Importador</span>
+            <span class="info-box-number">{{$solicitudesImportador->cant}}</span>
 
             <div class="progress">
       	       <div class="progress-bar" style="width: 20%"></div>
