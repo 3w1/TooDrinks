@@ -17,7 +17,7 @@ class CreateOpinionTable extends Migration
         	$table->string('comentario');
         	$table->date('fecha');
         	$table->boolean('editada');
-        	$table->date('fecha_ultima_edicion')_>nullable();
+        	$table->date('fecha_ultima_edicion')->nullable();
         	$table->boolean('publicada');
          	$table->timestamps();
 

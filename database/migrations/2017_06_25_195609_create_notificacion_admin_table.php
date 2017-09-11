@@ -12,7 +12,7 @@ class CreateNotificacionAdminTable extends Migration
         Schema::create('notificacion_admin', function (Blueprint $table){
             $table->increments('id');
             $table->integer('creador_id');
-            $table->enum('tipo_creador');
+            $table->string('tipo_creador');
             $table->integer('admin_id');
             $table->string('tipo');
             $table->string('titulo');

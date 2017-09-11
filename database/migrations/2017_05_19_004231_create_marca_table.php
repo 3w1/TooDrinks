@@ -6,8 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateMarcaTable extends Migration
 {
-    public function up()
-    {
+    public function up(){
     	Schema::create('marca', function(Blueprint $table){
             $table->increments('id');
             $table->integer('productor_id');
@@ -32,8 +31,9 @@ class CreateMarcaTable extends Migration
       			  ->references('id')->on('pais')
       			  ->onDelete('restrict')
       			  ->onUpdate('cascade');
+      });
               
-      	Schema::create('importador_marca', function (Blueprint $table){
+      Schema::create('importador_marca', function (Blueprint $table){
       		$table->increments('id');
       		$table->integer('importador_id');
       		$table->integer('marca_id');
@@ -68,7 +68,7 @@ class CreateMarcaTable extends Migration
        			  ->onDelete('restrict')
        			  ->onUpdate('cascade');
   		});
-    }
+   }
 
     public function down()
     {

@@ -12,7 +12,7 @@ class CreateClaseBebidaTable extends Migration
             $table->increments('id');
             $table->integer('bebida_id');
             $table->string('clase');
-            $table->text('caracteristicas');
+            $table->text('caracteristicas')->nullable();
             $table->timestamps();
 
             $table->foreign('bebida_id')

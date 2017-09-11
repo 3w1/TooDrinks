@@ -90,11 +90,11 @@
          <div class="panel panel-default panel-success">
             <div class="panel-heading"><h4><b> 
                @if ($demandaProducto->producto_id != '0') 
-                  Demanda de Producto: 
+                  Demanda de Producto: {{ $demandaProducto->producto->nombre }}
                @else 
-                  Demanda de Bebida: 
+                  Demanda de Bebida: {{ $demandaProducto->bebida->nombre }}
                @endif 
-               {{ $demandaProducto->bebida->nombre }}</b></h4>
+              </b></h4>
             </div>
              
             <ul class="list-group">

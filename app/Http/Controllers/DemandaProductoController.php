@@ -64,7 +64,27 @@ class DemandaProductoController extends Controller
                                     ->first();
 
                 if ($relacion == null){
-                    $cont++;
+                    if ($dp->tipo_creador == 'I'){
+                    	$cont++;
+                    }elseif ($dp->tipo_creador == 'D'){
+                        $creador = DB::table('distribuidor')
+                        			->select('pais_id')
+                          			->where('id', '=', $dp->creador_id)
+                           			->first();
+
+                        if ($creador->pais_id == session('perfilPais')){
+	                        $cont++;
+	                    }
+                    }elseif ($dp->tipo_creador == 'H'){
+                  		$creador= DB::table('horeca')
+                           			->select('pais_id')
+                           			->where('id', '=', $dp->creador_id)
+                           			->first();
+
+                        if ($creador->pais_id == session('perfilPais')){
+	                        $cont++;
+	                    }
+                    }	
                 }
             }
 
@@ -94,7 +114,21 @@ class DemandaProductoController extends Controller
                                     ->first();
 
                 if ($relacion == null){
-                    $cont++;
+                    if ($dp->tipo_creador == 'D'){
+                        $creador = DB::table('distribuidor')
+                        			->select('pais_id')
+                          			->where('id', '=', $dp->creador_id)
+                           			->first();
+                    }else{
+                  		$creador= DB::table('horeca')
+                           			->select('pais_id')
+                           			->where('id', '=', $dp->creador_id)
+                           			->first();
+                    }	
+                    
+                    if ($creador->pais_id == session('perfilPais')){
+                        $cont++;
+                    }
                 }
             }
 
@@ -127,7 +161,13 @@ class DemandaProductoController extends Controller
                                     ->first();
 
                 if ($relacion == null){
-                    $cont++;
+                	$horeca = DB::table('horeca')
+                            ->select('pais_id')
+                   			->where('id', '=', $dp->creador_id)
+                            ->first();
+                	if ($horeca->pais_id == session('perfilPais')){
+                    	$cont++;
+               		}
                 }
             }
 
@@ -164,8 +204,33 @@ class DemandaProductoController extends Controller
                             ->where('productor_id', '=', session('perfilId'))
                             ->first();
 
+                
                 if ($relacion == null){
-                    $cont++;
+                	$creadorDemanda = DB::table('demanda_producto')
+                						->select('creador_id', 'tipo_creador')
+                						->where('id', '=', $db->id)
+                						->first();
+
+                    if ($creadorDemanda->tipo_creador == 'I'){
+                    	$cont++;
+                    }elseif ($creadorDemanda->tipo_creador == 'D'){
+                        $creador = DB::table('distribuidor')
+                        			->select('pais_id')
+                          			->where('id', '=', $creadorDemanda->creador_id)
+                           			->first();
+
+                        if ($creador->pais_id == session('perfilPais')){
+	                        $cont++;
+	                    }
+                    }elseif ($creadorDemanda->tipo_creador == 'H'){
+                  		$creador= DB::table('horeca')
+                           			->select('pais_id')
+                           			->where('id', '=', $creadorDemanda->creador_id)
+                           			->first();
+                        if ($creador->pais_id == session('perfilPais')){
+	                        $cont++;
+	                    }
+                    }	
                 }
             }
 
@@ -192,7 +257,25 @@ class DemandaProductoController extends Controller
                             ->first();
 
                 if ($relacion == null){
-                    $cont++;
+                	$creadorDemanda = DB::table('demanda_producto')
+                						->select('creador_id', 'tipo_creador')
+                						->where('id', '=', $db->id)
+                						->first();
+                    if ($creadorDemanda->tipo_creador == 'D'){
+                        $creador = DB::table('distribuidor')
+                        			->select('pais_id')
+                          			->where('id', '=', $creadorDemanda->creador_id)
+                           			->first();
+                    }else{
+                  		$creador= DB::table('horeca')
+                           			->select('pais_id')
+                           			->where('id', '=', $creadorDemanda->creador_id)
+                           			->first();
+                    }	
+                    
+                    if ($creador->pais_id == session('perfilPais')){
+                        $cont++;
+                    }
                 }
             }
 
@@ -219,7 +302,18 @@ class DemandaProductoController extends Controller
                             ->first();
 
                 if ($relacion == null){
-                    $cont++;
+                	$creadorDemanda = DB::table('demanda_producto')
+                						->select('creador_id')
+                						->where('id', '=', $db->id)
+                						->first();
+
+                	$horeca = DB::table('horeca')
+                            ->select('pais_id')
+                   			->where('id', '=', $creadorDemanda->creador_id)
+                            ->first();
+                	if ($horeca->pais_id == session('perfilPais')){
+                    	$cont++;
+               		}
                 }
             }
 

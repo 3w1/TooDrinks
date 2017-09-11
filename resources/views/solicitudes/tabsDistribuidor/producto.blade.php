@@ -62,29 +62,42 @@
                                     ->where('demanda_producto_id', '=', $demandaProducto->id)
                                     ->where('distribuidor_id', '=', session('perfilId'))
                                     ->first();
+
+                            $horeca = DB::table('horeca')
+                            			->select('pais_id')
+                            			->where('id', '=', $demandaProducto->creador_id)
+                            			->first();
+
+                           	if ($horeca->pais_id == session('perfilPais')){
+                           		$disponible = '1';
+                           	}else{
+                           		$disponible = '0';
+                           	}
                         ?>
                         @if ($relacion == null)
-                           <li>
-                              <i class="fa fa-hand-pointer-o bg-blue"></i>
-                              <div class="timeline-item">
-                                 <span class="time"><i class="fa fa-clock-o"></i> {{ date('d-m-Y', strtotime($demandaProducto->created_at)) }}</span>
-                                 <h3 class="timeline-header"> Un Horeca está demandando tu producto.</h3>
-                                 
-                                 <div class="timeline-body">
-                                    Un Horeca ha demandado tu producto <strong>{{ $demandaProducto->producto->nombre }}</strong>. <br>
-                                    <strong>Descripción de la Demanda:</strong> {{ $demandaProducto->titulo }}. ({{ $demandaProducto->descripcion }}).
-                                 </div>
-                        
-                                 <div class="timeline-footer">
-                                    <a class="btn btn-primary btn-xs" href="{{ route('demanda-producto.show', $demandaProducto->id) }}">¡Más Detalles!</a>
-                                    <a class="btn btn-danger btn-xs" href="{{ route('demanda-producto.marcar', [$demandaProducto->id, '0']) }}">¡No Me Interesa!</a>
-                                 </div>
-                              </div>
-                           </li>
+                        	@if ($disponible == '1')
+	                           <li>
+	                              <i class="fa fa-hand-pointer-o bg-blue"></i>
+	                              <div class="timeline-item">
+	                                 <span class="time"><i class="fa fa-clock-o"></i> {{ date('d-m-Y', strtotime($demandaProducto->created_at)) }}</span>
+	                                 <h3 class="timeline-header"> Un Horeca está demandando tu producto.</h3>
+	                                 
+	                                 <div class="timeline-body">
+	                                    Un Horeca ha demandado tu producto <strong>{{ $demandaProducto->producto->nombre }}</strong>. <br>
+	                                    <strong>Descripción de la Demanda:</strong> {{ $demandaProducto->titulo }}. ({{ $demandaProducto->descripcion }}).
+	                                 </div>
+	                        
+	                                 <div class="timeline-footer">
+	                                    <a class="btn btn-primary btn-xs" href="{{ route('demanda-producto.show', $demandaProducto->id) }}">¡Más Detalles!</a>
+	                                    <a class="btn btn-danger btn-xs" href="{{ route('demanda-producto.marcar', [$demandaProducto->id, '0']) }}">¡No Me Interesa!</a>
+	                                 </div>
+	                              </div>
+	                           </li>
+	                        @endif
                         @endif
                      @endforeach
                   @else
-                     <strong>No existen demandas de producto disponibles.</strong>
+                     <strong>No existen demandas de producto disponibles en su zona.</strong>
                   @endif
                </ul>
             </div>

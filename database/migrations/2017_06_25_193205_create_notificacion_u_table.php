@@ -12,7 +12,7 @@ class CreateNotificacionUTable extends Migration
          Schema::create('notificacion_u', function (Blueprint $table){
             $table->increments('id');
             $table->integer('creador_id');
-            $table->enum('tipo_creador');
+            $table->string('tipo_creador');
             $table->integer('user_id');
             $table->string('tipo');
             $table->string('titulo');

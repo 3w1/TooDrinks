@@ -85,39 +85,49 @@
                                     ->where('importador_id', '=', session('perfilId'))
                                     ->first();
                
-                           $demanda = App\Models\Solicitud_Distribucion::find($demandaDistribucion->id);
+                            if ($relacion == null){
+                            	$demanda = App\Models\Solicitud_Distribucion::find($demandaDistribucion->id);
+
+                            	if ($demanda->distribuidor->pais_id == session('perfilPais')){
+                            		$disponible = '1';
+                            	}else{
+                            		$disponible = '0';
+                            	}
+                            }
                         ?>
                         @if ($relacion == null)
-                           <li>
-                              @if ($demanda->marca_id != null)
-                                 <i class="fa fa-hand-pointer-o bg-blue"></i>
-                              @else 
-                                 <i class="fa fa-hand-pointer-o bg-green"></i>
-                              @endif
+                        	@if ($disponible == '1')
+	                           <li>
+	                              @if ($demanda->marca_id != null)
+	                                 <i class="fa fa-hand-pointer-o bg-blue"></i>
+	                              @else 
+	                                 <i class="fa fa-hand-pointer-o bg-green"></i>
+	                              @endif
 
-                              <div class="timeline-item">
-                                 <span class="time"><i class="fa fa-clock-o"></i> {{ date('d-m-Y', strtotime($demanda->created_at)) }}</span>
-                                    
-                                 @if ($demanda->marca_id != null)
-                                    <h3 class="timeline-header">Un distribuidor está demandando la distribución de una marca que posees.</h3>
+	                              <div class="timeline-item">
+	                                 <span class="time"><i class="fa fa-clock-o"></i> {{ date('d-m-Y', strtotime($demanda->created_at)) }}</span>
+	                                    
+	                                 @if ($demanda->marca_id != null)
+	                                    <h3 class="timeline-header">Un distribuidor está demandando la distribución de una marca que posees.</h3>
 
-                                    <div class="timeline-body">
-                                       El distribuidor <strong>{{ $demanda->distribuidor->nombre }}</strong> ha indicado que quiere distribuir tu marca <strong>{{ $demanda->marca->nombre }}</strong> en su provincia...
-                                    </div>
-                                 @else 
-                                    <h3 class="timeline-header">Un distribuidor está demandando la distribución de un tipo de bebida que tu posees.</h3>
+	                                    <div class="timeline-body">
+	                                       El distribuidor <strong>{{ $demanda->distribuidor->nombre }}</strong> ha indicado que quiere distribuir tu marca <strong>{{ $demanda->marca->nombre }}</strong> en su provincia...
+	                                    </div>
+	                                 @else 
+	                                    <h3 class="timeline-header">Un distribuidor está demandando la distribución de un tipo de bebida que tu posees.</h3>
 
-                                    <div class="timeline-body">
-                                       El distribuidor <strong>{{ $demanda->distribuidor->nombre }}</strong> ha indicado que quiere distribuir la  bebida <strong>{{ $demanda->bebida->nombre }}</strong> en su provincia...
-                                    </div>
-                                 @endif
-                                    
-                                 <div class="timeline-footer">
-                                    <a class="btn btn-primary btn-xs" href="{{ route('solicitud-distribucion.show', $demanda->id) }}">¡Más Detalles!</a>
-                                    <a class="btn btn-danger btn-xs" href="{{ route('solicitud-distribucion.marcar', [$demanda->id, '0']) }}">¡No Me Interesa!</a>
-                                 </div>
-                              </div>
-                           </li>
+	                                    <div class="timeline-body">
+	                                       El distribuidor <strong>{{ $demanda->distribuidor->nombre }}</strong> ha indicado que quiere distribuir la  bebida <strong>{{ $demanda->bebida->nombre }}</strong> en su provincia...
+	                                    </div>
+	                                 @endif
+	                                    
+	                                 <div class="timeline-footer">
+	                                    <a class="btn btn-primary btn-xs" href="{{ route('solicitud-distribucion.show', $demanda->id) }}">¡Más Detalles!</a>
+	                                    <a class="btn btn-danger btn-xs" href="{{ route('solicitud-distribucion.marcar', [$demanda->id, '0']) }}">¡No Me Interesa!</a>
+	                                 </div>
+	                              </div>
+	                           </li>
+	                        @endif
                         @endif
                      @endforeach
                   @else

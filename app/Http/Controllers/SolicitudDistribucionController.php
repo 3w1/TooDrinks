@@ -348,7 +348,11 @@ class SolicitudDistribucionController extends Controller
                         ->first();
 
                 if ($relacion == null){
-                    $cont++;
+                    $demanda = Solicitud_Distribucion::find($dd->id);
+
+                    if ($demanda->distribuidor->pais_id == session('perfilPais')){
+                   		$cont++;
+                    }
                 }
             }
 
@@ -384,7 +388,11 @@ class SolicitudDistribucionController extends Controller
                         ->first();
 
                 if ($relacion == null){
-                    $cont++;
+                    $demanda = Solicitud_Distribucion::find($dd->id);
+
+                    if ($demanda->distribuidor->pais_id == session('perfilPais')){
+                   		$cont++;
+                    }
                 }
             }
 

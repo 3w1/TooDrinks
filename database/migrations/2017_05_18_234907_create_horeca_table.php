@@ -14,7 +14,7 @@ class CreateHorecaTable extends Migration
          $table->string('nombre_seo')->nullable();
          $table->text('descripcion')->nullable();
          $table->text('direccion')->nullable();
-         $table->integer('codigo_postal'->nullable());
+         $table->integer('codigo_postal')->nullable();
          $table->integer('pais_id');
          $table->integer('provincia_region_id');
          $table->string('logo')->nullable();
