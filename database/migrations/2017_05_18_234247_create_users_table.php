@@ -31,6 +31,8 @@ class CreateUsersTable extends Migration
             $table->boolean('multinacional');
             $table->boolean('activado');
             $table->integer('cantidad_entidades');
+            $table->string('entidad_predefinida')->nullable();
+            $table->integer('id_entidad_predefinida')->nullable();
             $table->string('codigo_confirmacion')->nullable();
             $table->rememberToken();
             $table->timestamps();

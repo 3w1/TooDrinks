@@ -10,7 +10,7 @@ class CreateOpinionTable extends Migration
     {
         Schema::create('opinion', function (Blueprint $table){
         	$table->increments('id');
-          $table->enum('tipo_creador', ['U','P','I','D','H']);
+          $table->string('tipo_creador');
         	$table->integer('creador_id');
         	$table->integer('producto_id');
         	$table->integer('valoracion');

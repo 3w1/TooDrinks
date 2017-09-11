@@ -6,6 +6,7 @@
 	{!! Form::hidden('reclamada', '0') !!}
 	{!! Form::hidden('estado_datos', '0') !!}
 	{!! Form::hidden('saldo', '0') !!}
+	{!! Form::hidden('invitacion', '0') !!}
 
 	<div class="form-group">
 		{!! Form::label('nombre', 'Nombre (*)') !!}

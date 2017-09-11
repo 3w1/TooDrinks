@@ -13,11 +13,12 @@ class CreateImpresionBannerTable extends Migration
             $table->integer('banner_id');
             $table->integer('pais_id');
             $table->integer('tiempo_publicacion');
-            $table->date('fecha_inicio')->nullable();
-            $table->date('fecha_fin')->nullable();
-            $table->double('pago', 6)->nullable();
+            $table->date('fecha_inicio');
+            $table->date('fecha_fin');
+            $table->double('precio', 6);
             $table->integer('cantidad_clics');
             $table->boolean('pagado');
+            $table->boolean('admin');
             $table->timestamps();
 
             $table->foreign('banner_id')

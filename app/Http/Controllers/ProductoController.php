@@ -210,7 +210,7 @@ class ProductoController extends Controller
             $notificaciones_admin->tipo_creador = session('perfilTipo');
             $notificaciones_admin->titulo = session('perfilNombre') . ' ha creado un nuevo producto en la marca '. $ult_producto->marca->nombre;
             $notificaciones_admin->url='admin/productos-sin-aprobar';
-            $notificaciones_admin->user_id = 0;
+            $notificaciones_admin->admin_id = 0;
             $notificaciones_admin->descripcion = 'Nuevo Producto';
             $notificaciones_admin->color = 'bg-purple';
             $notificaciones_admin->icono = 'fa fa-product-hunt';

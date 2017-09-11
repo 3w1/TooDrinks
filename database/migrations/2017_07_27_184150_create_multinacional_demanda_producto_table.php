@@ -13,6 +13,7 @@ class CreateMultinacionalDemandaProductoTable extends Migration
             $table->integer('multinacional_id');
             $table->integer('demanda_producto_id');
             $table->date('fecha');
+            $table->boolean('marcada');
             $table->timestamps();
 
             $table->foreign('multinacional_id')

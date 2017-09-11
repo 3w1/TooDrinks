@@ -9,8 +9,7 @@ class Banner_Diario extends Model
     protected $table = "banner_diario";
 
     protected $fillable = [
-        'banner_id', 'pais_id', 'fecha', 
-    ];
+        'banner_id', 'pais_id', 'fecha','imagen',    ];
 
     public function banner(){
     	return $this->belongsTo('App\Models\Banner');

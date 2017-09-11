@@ -14,11 +14,6 @@ class CreateBebidaTable extends Migration
             $table->longText('caracteristicas')->nullable();
             $table->string('imagen')->nullable();
             $table->timestamps();
-
-            $table->foreign('pais_id')
-                  ->references('id')->on('pais')
-                  ->onDelete('restrict')
-                  ->onUpdate('cascade');
         });
     }
 

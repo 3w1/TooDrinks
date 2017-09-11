@@ -9,28 +9,23 @@ class CreateProductoTable extends Migration
    public function up(){
       Schema::create('producto', function (Blueprint $table){
         	$table->increments('id');
-        	$table->enum('tipo_creador', ['U', 'P', 'I', 'D', 'H', 'AD', 'SA', 'M']);
+        	$table->string('tipo_creador');
        		$table->integer('creador_id');
         	$table->string('nombre');
-        	$table->string('nombre_seo');
-        	$table->text('descripcion');
+        	$table->string('nombre_seo')->nullable();
+        	$table->text('descripcion')->nullable();
 		   	  $table->integer('pais_id');
         	$table->integer('bebida_id');
         	$table->integer('clase_bebida_id');
         	$table->integer('marca_id');
-        	$table->string('imagen');
-        	$table->integer('ano_produccion');
+        	$table->string('imagen')->nullable();
+        	$table->integer('ano_produccion')->nullable();
        		$table->boolean('publicado');
          	$table->boolean('confirmado');
        		$table->timestamps();
 
          $table->foreign('pais_id')
                ->references('id')->on('pais')
-               ->onDelete('restrict')
-               ->onUpdate('cascade');
-
-         $table->foreign('provincia_region_id')
-               ->references('id')->on('provincia_region')
                ->onDelete('restrict')
                ->onUpdate('cascade');
 

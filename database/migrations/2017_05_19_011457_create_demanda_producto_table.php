@@ -10,15 +10,15 @@ class CreateDemandaProductoTable extends Migration
     {
         Schema::create('demanda_producto', function(Blueprint $table){
             $table->increments('id');
-            $table->integer('producto_id');
-            $table->integer('bebida_id');
-            $table->enum('tipo_creador', ['I','D','H']);
+            $table->integer('producto_id')->nullable();
+            $table->integer('bebida_id')->nullable();
+            $table->integer('pais_id')->nullable();
+            $table->string('tipo_creador');
             $table->integer('creador_id');
-            $table->integer('pais_id');
             $table->string('titulo');
             $table->text('descripcion');
-            $table->integer('cantidad_minima')->default(0);
-            $table->integer('cantidad_maxima')->defautl(0);
+            $table->integer('cantidad_minima')->nullable();
+            $table->integer('cantidad_maxima')->nullable();
             $table->date('fecha_creacion');
             $table->boolean('status');
             $table->integer('cantidad_visitas');

@@ -73,25 +73,6 @@ class CreateCreditoTable extends Migration
                   ->onDelete('restrict')
                   ->onUpdate('cascade');
         });
-
-         Schema::create('horeca_credito', function (Blueprint $table){
-            $table->increments('id');
-            $table->integer('credito_id');
-            $table->integer('horeca_id');
-            $table->double('total', 6, 2);
-            $table->date('fecha_compra');
-            $table->timestamps();
-
-            $table->foreign('credito_id')
-                  ->references('id')->on('credito')
-                  ->onDelete('restrict')
-                  ->onUpdate('cascade');
-
-            $table->foreign('horeca_id')
-                  ->references('id')->on('horeca')
-                  ->onDelete('restrict')
-                  ->onUpdate('cascade');
-        });
     }
 
     public function down()
@@ -100,6 +81,5 @@ class CreateCreditoTable extends Migration
         Schema::dropIfExists('productor_credito');
         Schema::dropIfExists('importador_credito');
         Schema::dropIfExists('distribuidor_credito');
-        Schema::dropIfExists('horeca_credito');
     }
 }

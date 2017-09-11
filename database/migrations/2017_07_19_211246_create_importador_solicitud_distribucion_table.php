@@ -13,6 +13,7 @@ class CreateImportadorSolicitudDistribucionTable extends Migration
             $table->integer('importador_id');
             $table->integer('solicitud_distribucion_id');
             $table->date('fecha');
+            $table->boolean('marcada');
             $table->timestamps();
 
             $table->foreign('importador_id')

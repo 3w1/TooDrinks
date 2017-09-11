@@ -13,7 +13,6 @@ class CreateSuscripcionTable extends Migration
             $table->string('suscripcion');
             $table->text('descripcion');
             $table->double('precio', 6, 2);
-            $table->integer('creditos_disponibles');
             $table->timestamps();
         });
 
@@ -78,5 +77,8 @@ class CreateSuscripcionTable extends Migration
     public function down()
     {
         Schema::dropIfExists('suscripcion');
+        Schema::dropIfExists('productor_suscripcion');
+        Schema::dropIfExists('importador_suscripcion');
+        Schema::dropIfExists('distribuidor_suscripcion');
     }
 }

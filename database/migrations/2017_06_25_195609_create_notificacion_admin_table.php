@@ -12,8 +12,8 @@ class CreateNotificacionAdminTable extends Migration
         Schema::create('notificacion_admin', function (Blueprint $table){
             $table->increments('id');
             $table->integer('creador_id');
-            $table->enum('tipo_creador', ['P', 'I', 'D', 'H', 'U', 'M']);
-            $table->integer('user_id');
+            $table->enum('tipo_creador');
+            $table->integer('admin_id');
             $table->string('tipo');
             $table->string('titulo');
             $table->string('url');
@@ -24,8 +24,8 @@ class CreateNotificacionAdminTable extends Migration
             $table->boolean('leida');
             $table->timestamps();
 
-             $table->foreign('user_id')
-                  ->references('id')->on('users')
+             $table->foreign('admin_id')
+                  ->references('id')->on('admin')
                   ->onDelete('restrict')
                   ->onUpdate('cascade');
         });

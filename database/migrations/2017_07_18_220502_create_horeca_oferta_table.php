@@ -14,6 +14,7 @@ class CreateHorecaOfertaTable extends Migration
             $table->integer('horeca_id');
             $table->integer('oferta_id');
             $table->date('fecha');
+            $table->boolean('marcada');
             $table->timestamps();
 
             $table->foreign('horeca_id')

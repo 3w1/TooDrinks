@@ -13,6 +13,7 @@ class CreateDistribuidorOfertaTable extends Migration
             $table->integer('distribuidor_id');
             $table->integer('oferta_id');
             $table->date('fecha');
+            $table->boolean('marcada');
             $table->timestamps();
 
             $table->foreign('distribuidor_id')

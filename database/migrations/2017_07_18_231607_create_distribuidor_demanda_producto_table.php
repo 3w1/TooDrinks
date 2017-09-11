@@ -14,6 +14,7 @@ class CreateDistribuidorDemandaProductoTable extends Migration
             $table->integer('distribuidor_id');
             $table->integer('demanda_producto_id');
             $table->date('fecha');
+            $table->boolean('marcada');
             $table->timestamps();
 
             $table->foreign('distribuidor_id')

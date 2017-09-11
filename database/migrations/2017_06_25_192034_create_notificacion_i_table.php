@@ -16,7 +16,7 @@ class CreateNotificacionITable extends Migration
         Schema::create('notificacion_i', function (Blueprint $table){
             $table->increments('id');
             $table->integer('creador_id');
-            $table->enum('tipo_creador', ['P', 'I', 'D', 'H', 'U']);
+            $table->string('tipo_creador');
             $table->integer('importador_id');
             $table->string('tipo');
             $table->string('titulo');

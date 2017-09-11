@@ -152,7 +152,7 @@ class MarcaController extends Controller
             $notificacion_admin->tipo_creador = session('perfilTipo');
             $notificacion_admin->titulo = session('perfilNombre') . ' ha creado una nueva marca.';
             $notificacion_admin->url='admin/marcas-sin-aprobar';
-            $notificacion_admin->user_id = 0;
+            $notificacion_admin->admin_id = 0;
             $notificacion_admin->descripcion = 'Nueva Marca';
             $notificacion_admin->color = 'bg-green';
             $notificacion_admin->icono = 'fa fa-diamond';

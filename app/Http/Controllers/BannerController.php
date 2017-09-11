@@ -46,7 +46,7 @@ class BannerController extends Controller
         $notificacion_admin->tipo_creador = session('perfilTipo');
         $notificacion_admin->titulo = session('perfilNombre') . ' ha modificado su banner '.$banner->titulo;
         $notificacion_admin->url= 'admin/aprobar-banners';
-        $notificacion_admin->user_id = 0;
+        $notificacion_admin->admin_id = 0;
         $notificacion_admin->descripcion = 'Banner Modificado';
         $notificacion_admin->color = 'bg-blue';
         $notificacion_admin->icono = 'fa fa-flag';
@@ -121,7 +121,7 @@ class BannerController extends Controller
         $notificacion_admin->tipo_creador = session('perfilTipo');
         $notificacion_admin->titulo = session('perfilNombre') . ' ha creado un nuevo banner.';
         $notificacion_admin->url= 'admin/aprobar-banners';
-        $notificacion_admin->user_id = 0;
+        $notificacion_admin->admin_id = 0;
         $notificacion_admin->descripcion = 'Nuevo Banner';
         $notificacion_admin->color = 'bg-purple';
         $notificacion_admin->icono = 'fa fa-flag';
@@ -154,8 +154,7 @@ class BannerController extends Controller
                 ->where('id', '=', $id)
                 ->update(['pagado' => '1']);
 
-        $impresion = DB::table('impresion_banner')
-                        ->select('fecha_inicio', 'tiempo_publicacion', 'banner_id', 'pais_id')
+        $impresion = Impresion_Banner::select('fecha_inicio', 'tiempo_publicacion', 'banner_id', 'pais_id')
                         ->where('id', '=', $id)
                         ->first();
 
@@ -163,6 +162,7 @@ class BannerController extends Controller
         $banner_diario->pais_id = $impresion->pais_id;
         $banner_diario->banner_id = $impresion->banner_id;
         $banner_diario->fecha = $impresion->fecha_inicio;
+        $banner_diario->imagen = $impresion->banner->imagen;
         $banner_diario->save();
 
         $fecha1 = new \DateTime($impresion->fecha_inicio);
@@ -174,6 +174,7 @@ class BannerController extends Controller
             $banner_diario->pais_id = $impresion->pais_id;
             $banner_diario->banner_id = $impresion->banner_id;
             $banner_diario->fecha = $fecha1;
+            $banner_diario->imagen = $impresion->banner->imagen;
             $banner_diario->save();
         }
 

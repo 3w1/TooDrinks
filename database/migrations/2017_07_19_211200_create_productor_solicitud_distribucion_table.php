@@ -14,6 +14,7 @@ class CreateProductorSolicitudDistribucionTable extends Migration
             $table->integer('productor_id');
             $table->integer('solicitud_distribucion_id');
             $table->date('fecha');
+            $table->boolean('marcada');
             $table->timestamps();
 
             $table->foreign('productor_id')
@@ -35,6 +36,6 @@ class CreateProductorSolicitudDistribucionTable extends Migration
      */
     public function down()
     {
-        //
+      Schema::dropIfExists('productor_solicitud_distribucion');
     }
 }

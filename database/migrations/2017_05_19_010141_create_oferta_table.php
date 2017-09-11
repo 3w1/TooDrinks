@@ -11,12 +11,12 @@ class CreateOfertaTable extends Migration
         Schema::create('oferta', function (Blueprint $table){
         	$table->increments('id');
         	$table->integer('producto_id');
-          $table->enum('tipo_creador', ['P','I','D','M']);
+          $table->string('tipo_creador');
         	$table->integer('creador_id');
         	$table->string('titulo');
-        	$table->text('descripcion');
+        	$table->text('descripcion')->nullable();
         	$table->double('precio_unitario', 6, 2);
-        	$table->double('precio_lote', 6, 2 );
+        	$table->double('precio_lote', 6, 2 )->nullable();
         	$table->integer('cantidad_producto')->nullable();
         	$table->integer('cantidad_caja')->nullable();
         	$table->integer('cantidad_minima')->nullable();

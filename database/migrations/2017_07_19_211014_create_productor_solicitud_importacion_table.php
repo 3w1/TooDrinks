@@ -13,6 +13,7 @@ class CreateProductorSolicitudImportacionTable extends Migration
             $table->integer('productor_id');
             $table->integer('solicitud_importacion_id');
             $table->date('fecha');
+            $table->boolean('marcada');
             $table->timestamps();
 
             $table->foreign('productor_id')

@@ -12,12 +12,12 @@ class CreateMarcaTable extends Migration
             $table->increments('id');
             $table->integer('productor_id');
             $table->integer('creador_id');
-            $table->enum('tipo_creador', ['P', 'I', 'D', 'U', 'AD', 'SA']);
+            $table->string('tipo_creador');
             $table->string('nombre');
-            $table->string('nombre_seo');
-            $table->text('descripcion');
+            $table->string('nombre_seo')->nullable();
+            $table->text('descripcion')->nullable();
             $table->integer('pais_id');
-            $table->string('logo');
+            $table->string('logo')->nullable();
             $table->string('website')->nullable();
             $table->boolean('reclamada');
             $table->boolean('publicada');
@@ -32,13 +32,7 @@ class CreateMarcaTable extends Migration
       			  ->references('id')->on('pais')
       			  ->onDelete('restrict')
       			  ->onUpdate('cascade');
-
-      		$table->foreign('provincia_region_id')
-      			  ->references('id')->on('provincia_region')
-      			  ->onDelete('restrict')
-      			  ->onUpdate('cascade');
-        });
-
+              
       	Schema::create('importador_marca', function (Blueprint $table){
       		$table->increments('id');
       		$table->integer('importador_id');

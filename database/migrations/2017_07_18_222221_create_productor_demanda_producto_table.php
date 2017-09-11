@@ -14,6 +14,7 @@ class CreateProductorDemandaProductoTable extends Migration
             $table->integer('productor_id');
             $table->integer('demanda_producto_id');
             $table->date('fecha');
+            $table->boolean('marcada');
             $table->timestamps();
 
             $table->foreign('productor_id')

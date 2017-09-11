@@ -13,6 +13,7 @@ class CreateImportadorDemandaImportadorTable extends Migration
             $table->integer('importador_id');
             $table->integer('demanda_importador_id');
             $table->date('fecha');
+            $table->boolean('marcada');
             $table->timestamps();
 
             $table->foreign('importador_id')

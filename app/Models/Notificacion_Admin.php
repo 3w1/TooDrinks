@@ -9,7 +9,7 @@ class Notificacion_Admin extends Model
     protected $table = "notificacion_admin";
 
     protected $fillable = [
-        'creador_id', 'tipo_creador', 'user_id', 'tipo', 'titulo', 'url', 'descripcion', 'color', 'icono', 'fecha', 'leida',
+        'creador_id', 'tipo_creador', 'admin_id', 'tipo', 'titulo', 'url', 'descripcion', 'color', 'icono', 'fecha', 'leida',
     ];
 
     public function user(){
