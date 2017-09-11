@@ -97,7 +97,7 @@
                             <h2>Crear Cuenta TooDrinks</h2>
                         </div>
                         <form action="{{ route('register') }}" method="POST">
-                            <div class="alert alert-danger" style="display: none;" id="error"></div>
+                            <div class="alert alert-error" style="display: none;" id="error"></div>
 
                             {{ csrf_field() }}
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -118,7 +118,7 @@
                             <div class="row form-group">
                                 <div class="col-xs-6">
                                     <label><strong>Correo Electrónico</strong></label>
-                                    <input type="text" class="input-text full-width" name="email" required>
+                                    <input type="email" class="input-text full-width" name="email" id="email" onblur="verificarCorreo();" required>
                                 </div>
                                 <div class="col-xs-6">
                                     <label><strong>Nombre de Usuario</strong></label>

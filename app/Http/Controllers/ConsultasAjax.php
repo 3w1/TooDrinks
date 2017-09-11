@@ -8,6 +8,26 @@ use DB; use Carbon\Carbon;
 
 class ConsultasAjax extends Controller
 {   
+	// *** CONSULTAS PARA REGISTRO Y LOGIN *** //
+	public function verificar_correo($correo){
+		$email = DB::table('users')
+				->select('email')
+				->where('email', 'ILIKE', $correo)
+				->first();
+
+		if ($email == null){
+			$existe[0] = '0';
+		}else{
+			$existe[0] = '1';
+		}
+
+		return response()->json(
+			$existe
+		);
+	}
+	// *** FIN DE CONSULTAS PARA REGISTRO Y LOGIN *** //
+
+
     //*** CONSULTA PARA CARGAR LAS PROVINCIAS DE UN PAÍS *** //
     public function cargar_provincias($pais){
         $estados= DB::table('provincia_region')

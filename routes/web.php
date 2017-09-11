@@ -409,6 +409,8 @@ Route::get('payment/status', array(
 
 //CONSULTAS AJAX
 Route::prefix('consulta')->group(function () {
+    //CONSULTA PARA REGISTRO Y LOGIN
+    Route::get('verificar-correo/{correo}', 'ConsultasAjax@verificar_correo');
     //CONSULTA PARA PAISES Y PROVINCIAS
     Route::get('cargar-provincias/{pais}', 'ConsultasAjax@cargar_provincias');
 

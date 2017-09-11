@@ -41,3 +41,25 @@ function verificarClaves(){
         document.getElementById("boton").disabled = false;
     }
 }
+
+function verificarCorreo(){ 
+    var correo = document.getElementById('email').value;
+    
+    //var route = "http://www.toodrinks.com/consulta/verificar-correo/"+pais+"";
+    var route = "http://localhost:8000/consulta/verificar-correo/"+correo+"";
+                    
+    jQuery.ajax({
+        url:route,
+        type:'GET',
+        success:function(ans){
+            if (ans[0] == '1'){
+                document.getElementById("error").innerHTML = "El correo que ingresó ya se encuentra registrado. Por favor, intente con otro correo.";
+                document.getElementById("error").style.display = 'block';
+                document.getElementById("boton").disabled = true;
+            }else{
+                document.getElementById("error").style.display = 'none';
+                document.getElementById("boton").disabled = false;
+            }
+        }
+    });
+}
