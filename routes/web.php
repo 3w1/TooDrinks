@@ -428,6 +428,9 @@ Route::prefix('consulta')->group(function () {
     //CONSULTAS PARA BANNERS
      Route::get('consultar-fechas-banner/{pais}/{dias}', 'ConsultasAjax@consultar_fechas_banner');
 
+    //CONSULTAS PARA LOS CRÉDITOS
+    Route::get('refrescar-creditos', 'ConsultasAjax@refrescar_creditos');
+
     Route::get('buscar-productor/{nombre}', 'ConsultasAjax@buscar_productor');
     Route::get('buscar-marca/{nombre}', 'ConsultasAjax@buscar_marca');
     Route::get('cargar-clases-bebida/{bebida}', 'ConsultasAjax@cargar_clases_bebidas');

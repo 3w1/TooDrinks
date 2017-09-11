@@ -1,3 +1,4 @@
+{!! Html::script('js/credito/refrescarCreditos.js') !!}
 <!-- INICIO BARRA DE NAVEGACION SUPERRIOR -->
 <nav class="navbar navbar-static-top">
    <!-- BOTÓN PARA EXPANDIR/CONTRAER LA BARRA LATERAL IZQUIERDA-->
@@ -7,9 +8,10 @@
       
    <div class="navbar-custom-menu">
       <ul class="nav navbar-nav">
+         <li><a href="#" onclick="refrescarCreditos();"><i class="fa fa-refresh"></i></a></li>
          <li class="active">
             <a href="#">
-               Créditos: {{session('perfilSaldo')}} <i class="fa fa-asterisk"></i>
+               Créditos: <span id="creditos"><strong>{{session('perfilSaldo')}}</span> <i class="fa fa-asterisk"></i></strong>
             </a>
          </li>
 

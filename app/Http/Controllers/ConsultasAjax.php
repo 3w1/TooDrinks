@@ -174,6 +174,33 @@ class ConsultasAjax extends Controller
     }
     // *** FIN DE CONSULTAS PARA PUBLICIDADES  ***//
 
+    // *** CONSULTAS PARA CRÉDITOS¨*** //
+    public function refrescar_creditos(){
+        if (session('perfilTipo') == 'P'){
+            $creditos = DB::table('productor')
+                    ->select('saldo')
+                    ->where('id', '=', session('perfilId'))
+                    ->first();
+        }elseif (session('perfilTipo') == 'I'){
+            $creditos = DB::table('importador')
+                    ->select('saldo')
+                    ->where('id', '=', session('perfilId'))
+                    ->first();
+        }elseif (session('perfilTipo') == 'D'){
+            $creditos = DB::table('distribuidor')
+                    ->select('saldo')
+                    ->where('id', '=', session('perfilId'))
+                    ->first();
+        }
+
+        session(['perfilSaldo' => $creditos->saldo]);
+        
+        return response()->json(
+            $creditos
+        );
+    }
+    // *** FIN DE CONSULTAS PARA CRÉDITOS
+    
     //Buscar un productor específico (Asociar Productor a Marca ADMIN)
 	public function buscar_productor($nombre){
         $productor = DB::table('productor')
