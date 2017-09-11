@@ -178,7 +178,7 @@ class ProductorController extends Controller
 
     }
 
-    //Asociar la marca al productor (Pestaña Agregar Marca)
+    //Asociar la marca al productor (Pestaña Productor / Marca / Agregar Marca)
     public function asociar_marca($id, $nombre){
         $fecha = new \DateTime();
 
@@ -250,8 +250,8 @@ class ProductorController extends Controller
             $notificaciones_importador = new Notificacion_I();
             $notificaciones_importador->creador_id = session('perfilId');
             $notificaciones_importador->tipo_creador = session('perfilTipo');
-            $notificaciones_importador->titulo = 'El productor ' . $productor->nombre  . 'lo ha confirmado como importador de la marca: '. $marca->nombre;
-            $notificaciones_importador->url='marca';
+            $notificaciones_importador->titulo = 'El productor ' . $productor->nombre  . ' lo ha confirmado como importador de la marca: '. $marca->nombre;
+            $notificaciones_importador->url = 'marca';
             $notificaciones_importador->importador_id = $imp;
             $notificaciones_importador->descripcion = "Confirmación de Importador";
             $notificaciones_importador->color = 'bg-blue';
@@ -351,8 +351,8 @@ class ProductorController extends Controller
             $notificaciones_distribuidor = new Notificacion_D();
             $notificaciones_distribuidor->creador_id = session('perfilId');
             $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
-            $notificaciones_distribuidor->titulo = 'El productor ' . $productor->nombre  . 'lo ha rechazado como distribuidor de la marca: '. $marca->nombre;
-            $notificaciones_distribuidor->url='marca';
+            $notificaciones_distribuidor->titulo = 'El productor '.$productor->nombre.' lo ha rechazado como distribuidor de la marca: '. $marca->nombre;
+            $notificaciones_distribuidor->url= 'marca';
             $notificaciones_distribuidor->distribuidor_id = $dist;
             $notificaciones_distribuidor->descripcion = "Denegación de Distribuidor";
             $notificaciones_distribuidor->color = 'bg-red';
@@ -394,7 +394,7 @@ class ProductorController extends Controller
         $fecha = new \DateTime();
         
         $producto = DB::table('producto')
-                        ->select('creador_id', 'tipo_creador', 'nombre')
+                        ->select('creador_id', 'tipo_creador', 'nombre', 'nombre_seo')
                         ->where('id', '=', $id)
                         ->first();
          
@@ -408,7 +408,7 @@ class ProductorController extends Controller
                 $notificaciones_importador->creador_id = session('perfilId');
                 $notificaciones_importador->tipo_creador = session('perfilTipo');
                 $notificaciones_importador->titulo = session('perfilNombre') . ' ha confirmado el producto '. $producto->nombre;
-                $notificaciones_importador->url='producto/detalle-de-producto/'.$id;
+                $notificaciones_importador->url= 'producto/detalle-de-producto/'.$id.'/'.$producto->nombre_seo;
                 $notificaciones_importador->importador_id = $producto->creador_id;
                 $notificaciones_importador->descripcion = "Confirmación de Producto";
                 $notificaciones_importador->color = 'bg-yellow';
@@ -422,10 +422,10 @@ class ProductorController extends Controller
                 $notificaciones_distribuidor->creador_id = session('perfilId');
                 $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
                 $notificaciones_distribuidor->titulo = session('perfilNombre') . ' ha confirmado el producto '. $producto->nombre;
-                $notificaciones_distribuidor->url='producto/detalle-de-producto/'.$id;
+                $notificaciones_distribuidor->url= 'producto/detalle-de-producto/'.$id.'/'.$producto->nombre_seo;
                 $notificaciones_distribuidor->distribuidor_id = $producto->creador_id;
                 $notificaciones_distribuidor->descripcion = "Confirmación de Producto";
-                $notificaciones_distribuidor->color = 'bg-rede';
+                $notificaciones_distribuidor->color = 'bg-yellow';
                 $notificaciones_distribuidor->icono = 'fa fa-check-square-o';
                 $notificaciones_distribuidor->fecha = $fecha;
                 $notificaciones_distribuidor->tipo = 'CP';
@@ -444,7 +444,7 @@ class ProductorController extends Controller
                 $notificaciones_importador->creador_id = session('perfilId');
                 $notificaciones_importador->tipo_creador = session('perfilTipo');
                 $notificaciones_importador->titulo = session('perfilNombre') . ' ha indicado que el producto '. $producto->nombre.' no pertenece a su marca.';
-                $notificaciones_importador->url='producto/detalle-de-producto/'.$id;
+                $notificaciones_importador->url= 'producto/detalle-de-producto/'.$id.'/'.$producto->nombre_seo;
                 $notificaciones_importador->importador_id = $producto->creador_id;
                 $notificaciones_importador->descripcion = "Denegación de Producto";
                 $notificaciones_importador->color = 'bg-red';
@@ -458,7 +458,7 @@ class ProductorController extends Controller
                 $notificaciones_distribuidor->creador_id = session('perfilId');
                 $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
                 $notificaciones_distribuidor->titulo = session('perfilNombre') . ' ha indicado que el producto '. $producto->nombre.' no pertenece a su marca.';
-                $notificaciones_distribuidor->url='producto/detalle-de-producto/'.$id;
+                $notificaciones_distribuidor->url= 'producto/detalle-de-producto/'.$id.'/'.$producto->nombre_seo;
                 $notificaciones_distribuidor->distribuidor_id = $producto->creador_id;
                 $notificaciones_distribuidor->descripcion = "Denegación de Producto";
                 $notificaciones_distribuidor->color = 'bg-red';
@@ -494,7 +494,7 @@ class ProductorController extends Controller
         $fecha = new \DateTime();
         
         $marca = DB::table('marca')
-                    ->select('creador_id', 'tipo_creador', 'nombre')
+                    ->select('creador_id', 'tipo_creador', 'nombre', 'nombre_seo')
                     ->where('id', '=', $id)
                     ->first();
          
@@ -508,13 +508,13 @@ class ProductorController extends Controller
                 $notificaciones_importador->creador_id = session('perfilId');
                 $notificaciones_importador->tipo_creador = session('perfilTipo');
                 $notificaciones_importador->titulo = session('perfilNombre') . ' ha confirmado la marca '. $marca->nombre;
-                $notificaciones_importador->url='marca/detalle-de-producto/'.$id;
+                $notificaciones_importador->url= 'marca/'.$id.'/'.$marca->nombre_seo;
                 $notificaciones_importador->importador_id = $marca->creador_id;
-                $notificaciones_importador->descripcion = "Confirmación de Producto";
+                $notificaciones_importador->descripcion = "Confirmación de Marca";
                 $notificaciones_importador->color = 'bg-yellow';
                 $notificaciones_importador->icono = 'fa fa-check-square-o';
                 $notificaciones_importador->fecha = $fecha;
-                $notificaciones_importador->tipo = 'CP';
+                $notificaciones_importador->tipo = 'CM';
                 $notificaciones_importador->leida = '0';
                 $notificaciones_importador->save(); 
             }elseif ($marca->tipo_creador == 'D'){
@@ -522,13 +522,13 @@ class ProductorController extends Controller
                 $notificaciones_distribuidor->creador_id = session('perfilId');
                 $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
                 $notificaciones_distribuidor->titulo = session('perfilNombre') . ' ha confirmado la marca '. $marca->nombre;
-                $notificaciones_distribuidor->url='producto/detalle-de-producto/'.$id;
+                $notificaciones_distribuidor->url= 'marca/'.$id.'/'.$marca->nombre_seo;
                 $notificaciones_distribuidor->distribuidor_id = $marca->creador_id;
-                $notificaciones_distribuidor->descripcion = "Confirmación de Producto";
-                $notificaciones_distribuidor->color = 'bg-rede';
+                $notificaciones_distribuidor->descripcion = "Confirmación de Marca";
+                $notificaciones_distribuidor->color = 'bg-red';
                 $notificaciones_distribuidor->icono = 'fa fa-check-square-o';
                 $notificaciones_distribuidor->fecha = $fecha;
-                $notificaciones_distribuidor->tipo = 'CP';
+                $notificaciones_distribuidor->tipo = 'CM';
                 $notificaciones_distribuidor->leida = '0';
                 $notificaciones_distribuidor->save(); 
             }
@@ -544,13 +544,13 @@ class ProductorController extends Controller
                 $notificaciones_importador->creador_id = session('perfilId');
                 $notificaciones_importador->tipo_creador = session('perfilTipo');
                 $notificaciones_importador->titulo = session('perfilNombre') . ' ha indicado que la marca '. $marca->nombre.' no le pertenece.';
-                $notificaciones_importador->url='producto/detalle-de-producto/'.$id;
+                $notificaciones_importador->url= 'marca/'.$id.'/'.$marca->nombre_seo;
                 $notificaciones_importador->importador_id = $marca->creador_id;
-                $notificaciones_importador->descripcion = "Denegación de Producto";
+                $notificaciones_importador->descripcion = "Denegación de Marca";
                 $notificaciones_importador->color = 'bg-red';
                 $notificaciones_importador->icono = 'fa fa-exclamation-circle';
                 $notificaciones_importador->fecha = $fecha;
-                $notificaciones_importador->tipo = 'CP';
+                $notificaciones_importador->tipo = 'CM';
                 $notificaciones_importador->leida = '0';
                 $notificaciones_importador->save(); 
             }elseif ($marca->tipo_creador == 'D'){
@@ -558,13 +558,13 @@ class ProductorController extends Controller
                 $notificaciones_distribuidor->creador_id = session('perfilId');
                 $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
                 $notificaciones_distribuidor->titulo = session('perfilNombre') . ' ha indicado que la marca '.$marca->nombre.' no le pertenece.';
-                $notificaciones_distribuidor->url='producto/detalle-de-producto/'.$id;
+                $notificaciones_distribuidor->url= 'marca/'.$id.'/'.$marca->nombre_seo;
                 $notificaciones_distribuidor->distribuidor_id = $marca->creador_id;
-                $notificaciones_distribuidor->descripcion = "Denegación de Producto";
+                $notificaciones_distribuidor->descripcion = "Denegación de Marca";
                 $notificaciones_distribuidor->color = 'bg-red';
                 $notificaciones_distribuidor->icono = 'fa fa-exclamation-cirlce';
                 $notificaciones_distribuidor->fecha = $fecha;
-                $notificaciones_distribuidor->tipo = 'CP';
+                $notificaciones_distribuidor->tipo = 'CM';
                 $notificaciones_distribuidor->leida = '0';
                 $notificaciones_distribuidor->save();
             }

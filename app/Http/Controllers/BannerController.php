@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Banner; use App\Models\Impresion_Banner; use App\Models\Banner_Diario;
+use App\Models\Notificacion_Admin;
 use Input; use Image; use DB; use DateInterval; use Carbon\Carbon;
 
 class BannerController extends Controller
@@ -33,15 +34,33 @@ class BannerController extends Controller
     }
 
     public function update(Request $request, $id){
+        $fecha = new \DateTime();
+        
         $banner = Banner::find($id);
         $banner->fill($request->all());
         $banner->aprobado = '0';
         $banner->save();
 
+        $notificacion_admin = new Notificacion_Admin();
+        $notificacion_admin->creador_id = session('perfilId');
+        $notificacion_admin->tipo_creador = session('perfilTipo');
+        $notificacion_admin->titulo = session('perfilNombre') . ' ha modificado su banner '.$banner->titulo;
+        $notificacion_admin->url= 'admin/aprobar-banners';
+        $notificacion_admin->user_id = 0;
+        $notificacion_admin->descripcion = 'Banner Modificado';
+        $notificacion_admin->color = 'bg-blue';
+        $notificacion_admin->icono = 'fa fa-flag';
+        $notificacion_admin->fecha = $fecha;
+        $notificacion_admin->tipo = 'BM';
+        $notificacion_admin->leida = '0';
+        $notificacion_admin->save();
+
         return redirect('banner-publicitario/'.$id)->with('msj', 'Los datos de su banner han sido actualizados con éxito. Debe esperar la revisión del Administrador.');
     }
 
     public function updateImagen(Request $request){
+        $fecha = new \DateTime();
+
         $file = Input::file('imagen');   
         $image = Image::make(Input::file('imagen'));
 
@@ -57,6 +76,20 @@ class BannerController extends Controller
                             ->where('id', '=', $request->id)
                             ->update(['imagen' => $nombre,
                                       'aprobado' => '0']);
+
+        $notificacion_admin = new Notificacion_Admin();
+        $notificacion_admin->creador_id = session('perfilId');
+        $notificacion_admin->tipo_creador = session('perfilTipo');
+        $notificacion_admin->titulo = session('perfilNombre') . ' ha modificado la imagen de su banner '.$banner->titulo;
+        $notificacion_admin->url= 'admin/aprobar-banners';
+        $notificacion_admin->user_id = 0;
+        $notificacion_admin->descripcion = 'Banner Modificado';
+        $notificacion_admin->color = 'bg-blue';
+        $notificacion_admin->icono = 'fa fa-flag';
+        $notificacion_admin->fecha = $fecha;
+        $notificacion_admin->tipo = 'BM';
+        $notificacion_admin->leida = '0';
+        $notificacion_admin->save();
 
         return redirect('banner-publicitario/'.$request->id)->with('msj', 'La imagen de su banner ha sido actualizada con éxito. Debe esperar la revisión del Administrador.');     
     }
@@ -82,6 +115,20 @@ class BannerController extends Controller
         $banner->imagen = $nombre;
         $banner->admin = 0;
         $banner->save();
+
+        $notificacion_admin = new Notificacion_Admin();
+        $notificacion_admin->creador_id = session('perfilId');
+        $notificacion_admin->tipo_creador = session('perfilTipo');
+        $notificacion_admin->titulo = session('perfilNombre') . ' ha creado un nuevo banner.';
+        $notificacion_admin->url= 'admin/aprobar-banners';
+        $notificacion_admin->user_id = 0;
+        $notificacion_admin->descripcion = 'Nuevo Banner';
+        $notificacion_admin->color = 'bg-purple';
+        $notificacion_admin->icono = 'fa fa-flag';
+        $notificacion_admin->fecha = $fecha;
+        $notificacion_admin->tipo = 'NB';
+        $notificacion_admin->leida = '0';
+        $notificacion_admin->save();
 
         return redirect('banner-publicitario')->with('msj', 'Su banner ha sido creado con éxito. Debe esperar la aprobación del Administrador para publicarlo.');
     }

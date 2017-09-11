@@ -1,20 +1,3 @@
-@if (session('perfilTipo') == 'H')
-   <?php 
-      $notificaciones_pendientes = DB::table('notificacion_h')
-                                    ->where('horeca_id', '=', session('perfilId'))
-                                    ->where('leida', '=', '0')
-                                    ->select('id', 'tipo')
-                                    ->get();
-
-      $cont_NO = 0;
-
-      foreach($notificaciones_pendientes as $notificacion){
-         if ($notificacion->tipo == 'NO'){
-            $cont_NO++;
-         }
-      }
-   ?>
-@endif
 <div class="user-panel">
    @if (session('perfilTipo') == 'P')
       <div class="pull-left image">

@@ -105,6 +105,7 @@ class ImportadorController extends Controller
 
     }
     
+    //Pestaña Importador / Marca / Agregar Marca
     public function asociar_marca($id, $nombre){
         $fecha = new \DateTime();
 
@@ -114,31 +115,15 @@ class ImportadorController extends Controller
         $marca->importadores()->attach(session('perfilId'), ['status' => '0']);
         // ... //
         
-        if ($marca->productor_id == '0'){
-            //NOTIFICAR AL ADMIN WEB
-            $notificaciones_admin = new Notificacion_Admin();
-            $notificaciones_admin->creador_id = session('perfilId');
-            $notificaciones_admin->tipo_creador = session('perfilTipo');
-            $notificaciones_admin->titulo = session('perfilNombre') . ' ha indicado que importa la marca '.$marca->nombre;
-            $notificaciones_admin->url='admin/confirmar-importadores-marcas';
-            $notificaciones_admin->user_id = 0;
-            $notificaciones_admin->descripcion = 'Asociación Importador / Marca';
-            $notificaciones_admin->color = 'bg-blue';
-            $notificaciones_admin->icono = 'fa fa-hand-pointer-o';
-            $notificaciones_admin->fecha = new \DateTime();
-            $notificaciones_admin->tipo = 'AI';
-            $notificaciones_admin->leida = '0';
-            $notificaciones_admin->save();
-            // *** //
-        }else{
+        if ($marca->productor_id != '0'){
             //NOTIFICAR AL PRODUCTOR
             $notificaciones_productor = new Notificacion_P();
             $notificaciones_productor->creador_id = session('perfilId');
             $notificaciones_productor->tipo_creador = session('perfilTipo');
             $notificaciones_productor->titulo = session('perfilNombre') . ' ha indicado que importa tu marca '.$marca->nombre;
-            $notificaciones_productor->url='productor/confirmar-importadores';
+            $notificaciones_productor->url= 'productor/confirmar-importadores';
             $notificaciones_productor->descripcion = 'Nuevo Importador';
-            $notificaciones_productor->color = 'bg-blue';
+            $notificaciones_productor->color = 'bg-orange';
             $notificaciones_productor->icono = 'fa fa-hand-pointer-o';
             $notificaciones_productor->tipo ='AI';
             $notificaciones_productor->productor_id = $marca->productor_id;
@@ -232,7 +217,7 @@ class ImportadorController extends Controller
             $notificaciones_distribuidor = new Notificacion_D();
             $notificaciones_distribuidor->creador_id = session('perfilId');
             $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
-            $notificaciones_distribuidor->titulo = 'El importador ' . $importador->nombre  . ' lo ha confirmado como distribuidor de la marca: '. $marca->nombre;
+            $notificaciones_distribuidor->titulo = 'El importador ' . $importador->nombre  . ' lo ha confirmado como distribuidor de la marca '. $marca->nombre;
             $notificaciones_distribuidor->url='marca';
             $notificaciones_distribuidor->distribuidor_id = $dist;
             $notificaciones_distribuidor->descripcion = "Confirmación de Distribuidor";

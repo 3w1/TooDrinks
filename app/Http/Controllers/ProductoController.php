@@ -181,8 +181,7 @@ class ProductoController extends Controller
         return view('producto.tabs.create')->with(compact('marcas', 'paises', 'tipos_bebidas'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $fecha = new \DateTime();
 
         $file = Input::file('imagen');   
@@ -213,8 +212,8 @@ class ProductoController extends Controller
             $notificaciones_admin->url='admin/productos-sin-aprobar';
             $notificaciones_admin->user_id = 0;
             $notificaciones_admin->descripcion = 'Nuevo Producto';
-            $notificaciones_admin->color = 'bg-yellow';
-            $notificaciones_admin->icono = 'fa fa-plus-square-o';
+            $notificaciones_admin->color = 'bg-purple';
+            $notificaciones_admin->icono = 'fa fa-product-hunt';
             $notificaciones_admin->fecha = $fecha;
             $notificaciones_admin->tipo = 'NP';
             $notificaciones_admin->leida = '0';

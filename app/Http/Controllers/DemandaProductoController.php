@@ -334,34 +334,85 @@ class DemandaProductoController extends Controller
         $demanda_producto->fecha_creacion = $fecha;
         $demanda_producto ->save();
 
-        /*$ult_demanda = DB::table('demanda_producto')
+        $ult_demanda = DB::table('demanda_producto')
                         ->select('id')
                         ->orderBy('created_at', 'DESC')
                         ->first();
 
-        $productor = DB::table('producto')
-                    ->select('productor.id', 'productor.pais_id', 'productor.provincia_region_id')
-                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
-                    ->where('producto.id', '=', $request->producto_id )
+        $distribuidores = DB::table('distribuidor_producto')
+                        ->select('distribuidor.id')
+                        ->join('distribuidor', 'distribuidor_producto.distribuidor_id', '=', 'distribuidor.id')
+                        ->where('distribuidor_producto.producto_id', '=', $request->producto_id)
+                        ->where('distribuidor.pais_id', '=', session('perfilPais'))
+                        ->get();
+
+        $producto = DB::table('producto')
+                    ->select('nombre')
+                    ->where('id', '=', $request->producto_id)
                     ->first();
 
-        $importadores = DB::table('importador_producto')
-                        ->select('importador_producto.importador_id')
+        $cont = 0;
+        foreach ($distribuidores as $dist){
+            $cont++;
+        }
+
+        if ($cont > 0){
+            //Notifico a los distribuidores
+            foreach ($distribuidores as $dist){
+                $notificacion_distribuidor = new Notificacion_D();
+                $notificacion_distribuidor->creador_id = session('perfilId');
+                $notificacion_distribuidor->tipo_creador = session('perfilTipo');
+                $notificacion_distribuidor->titulo = 'Estan demandando tu producto '. $producto->nombre;
+                $notificacion_distribuidor->url='demanda-producto/'.$ult_demanda->id;
+                $notificacion_distribuidor->descripcion = 'Demanda de Producto';
+                $notificacion_distribuidor->color = 'bg-aqua';
+                $notificacion_distribuidor->icono = 'fa fa-shopping-bag';
+                $notificacion_distribuidor->tipo ='DP';
+                $notificacion_distribuidor->distribuidor_id = $dist->id;
+                $notificacion_distribuidor->fecha = $fecha;
+                $notificacion_distribuidor->leida = '0';
+                $notificacion_distribuidor->save();
+            }
+        }else{
+            $importadores = DB::table('importador_producto')
+                        ->select('importador.id')
                         ->join('importador', 'importador_producto.importador_id', '=', 'importador.id')
                         ->where('importador_producto.producto_id', '=', $request->producto_id)
                         ->where('importador.pais_id', '=', session('perfilPais'))
                         ->get();
 
-        $distribuidores = DB::table('distribuidor_producto')
-                        ->select('distribuidor_producto.distribuidor_id')
-                        ->join('distribuidor', 'distribuidor_producto.distribuidor_id', '=', 'distribuidor.id')
-                                    ->where('distribuidor_producto.producto_id', '=', $request->producto_id)
-                                    ->where('distribuidor.pais_id', '=', session('perfilPais'))
-                                    ->get();
+            $cont = 0;
+            foreach ($importadores as $imp){
+                $cont++;
+            }
 
-            if (session('perfilTipo') == 'I'){
-                //NOTIFICAR AL PRODUCTOR
+            if ($cont > 0){
+                //Notifico a los importadores
+                foreach ($importadores as $imp){
+                    $notificacion_importador = new Notificacion_I();
+                    $notificacion_importador->creador_id = session('perfilId');
+                    $notificacion_importador->tipo_creador = session('perfilTipo');
+                    $notificacion_importador->titulo = 'Estan demandando tu producto '. $producto->nombre;
+                    $notificacion_importador->url='demanda-producto/'.$ult_demanda->id;
+                    $notificacion_importador->descripcion = 'Demanda de Producto';
+                    $notificacion_importador->color = 'bg-aqua';
+                    $notificacion_importador->icono = 'fa fa-shopping-bag';
+                    $notificacion_importador->tipo ='DP';
+                    $notificacion_importador->importador_id = $imp->id;
+                    $notificacion_importador->fecha = $fecha;
+                    $notificacion_importador->leida = '0';
+                    $notificacion_importador->save();
+                }
+            }else{
+                $productor = DB::table('producto')
+                    ->select('productor.id', 'productor.pais_id')
+                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                    ->where('producto.id', '=', $request->producto_id )
+                    ->first();
+
+                if ($productor->pais_id == session('perfilPais')){
+                    //Notifico al Productor
                     $notificaciones_productor = new Notificacion_P();
                     $notificaciones_productor->creador_id = session('perfilId');
                     $notificaciones_productor->tipo_creador = session('perfilTipo');
@@ -369,330 +420,15 @@ class DemandaProductoController extends Controller
                     $notificaciones_productor->url='demanda-producto/'.$ult_demanda->id;
                     $notificaciones_productor->descripcion = 'Demanda de Producto';
                     $notificaciones_productor->color = 'bg-aqua';
-                    $notificaciones_productor->icono = 'fa fa-clipboard';
+                    $notificaciones_productor->icono = 'fa fa-shopping-bag';
                     $notificaciones_productor->tipo ='DP';
                     $notificaciones_productor->productor_id = $productor->id;
                     $notificaciones_productor->fecha = $fecha;
                     $notificaciones_productor->leida = '0';
                     $notificaciones_productor->save();
-                // *** //
-            }elseif (session('perfilTipo') == 'D'){
-                $cont = 0;
-                foreach ($importadores as $importador){
-                    $cont++;
-                }
-
-                if ($cont > 0){
-                    //NOTIFICAR A LOS IMPORTADORES
-                    foreach ($importadores as $importador){
-                        $notificaciones_importador = new Notificacion_I();
-                        $notificaciones_importador->creador_id = session('perfilId');
-                        $notificaciones_importador->tipo_creador = session('perfilTipo');
-                        $notificaciones_importador->titulo = 'Estan solicitando tu producto '. $producto->nombre;
-                        $notificaciones_importador->url='demanda-producto/'.$ult_demanda->id;
-                        $notificaciones_importador->importador_id = $importador->importador_id;
-                        $notificaciones_importador->descripcion = 'Demanda de Producto';
-                        $notificaciones_importador->color = 'bg-aqua';
-                        $notificaciones_importador->icono = 'fa fa-clipboard';
-                        $notificaciones_importador->tipo ='DP';
-                        $notificaciones_importador->fecha = $fecha;
-                        $notificaciones_importador->leida = '0';
-                        $notificaciones_importador->save();
-                    }
-                    // *** //
-                }else{
-                    //NOTIFICAR AL PRODUCTOR
-                        $notificaciones_productor = new Notificacion_P();
-                        $notificaciones_productor->creador_id = session('perfilId');
-                        $notificaciones_productor->tipo_creador = session('perfilTipo');
-                        $notificaciones_productor->titulo = 'Estan demandando tu producto '. $producto->nombre;
-                        $notificaciones_productor->url='demanda-producto/'.$ult_demanda->id;
-                        $notificaciones_productor->descripcion = 'Demanda de Producto';
-                        $notificaciones_productor->color = 'bg-aqua';
-                        $notificaciones_productor->icono = 'fa fa-clipboard';
-                        $notificaciones_productor->tipo ='DP';
-                        $notificaciones_productor->productor_id = $productor->id;
-                        $notificaciones_productor->fecha = $fecha;
-                        $notificaciones_productor->leida = '0';
-                        $notificaciones_productor->save();
-                    // *** //
-                }
-            }else{
-                $cont = 0;
-                foreach ($distribuidores as $distribuidor){
-                    $cont++;
-                }
-
-                if ($cont > 0 ){
-                    // NOTIFICAR A LOS DISTRIBUIDORES
-                    foreach ($distribuidores as $distribuidor){
-                        $notificaciones_distribuidor = new Notificacion_D();
-                        $notificaciones_distribuidor->creador_id = session('perfilId');
-                        $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
-                        $notificaciones_distribuidor->titulo = 'Estan solicitando tu producto '. $producto->nombre;
-                        $notificaciones_distribuidor->url='demanda-producto/'.$ult_demanda->id;
-                        $notificaciones_distribuidor->distribuidor_id = $distribuidor->distribuidor_id;
-                        $notificaciones_distribuidor->descripcion = 'Demanda de Producto';
-                        $notificaciones_distribuidor->color = 'bg-aqua';
-                        $notificaciones_distribuidor->icono = 'fa fa-clipboard';
-                        $notificaciones_distribuidor->tipo ='DP';
-                        $notificaciones_distribuidor->fecha = $fecha;
-                        $notificaciones_distribuidor->leida = '0';
-                        $notificaciones_distribuidor->save();
-                    }
-                    // *** //
-                }else{
-                    $cont2 = 0;
-                    foreach ($importadores as $importador){
-                        $cont2++;
-                    }
-
-                    if ($cont2 > 0 ){
-                        //NOTIFICAR A LOS IMPORTADORES SI NO EXISTEN DISTRIBUIDORES
-                        foreach ($importadores as $importador){
-                            $notificaciones_importador = new Notificacion_I();
-                            $notificaciones_importador->creador_id = session('perfilId');
-                            $notificaciones_importador->tipo_creador = session('perfilTipo');
-                            $notificaciones_importador->titulo = 'Estan solicitando tu producto '. $producto->nombre;
-                            $notificaciones_importador->url='demanda-producto/'.$ult_demanda->id;
-                            $notificaciones_importador->importador_id = $importador->importador_id;
-                            $notificaciones_importador->descripcion = 'Demanda de Producto';
-                            $notificaciones_importador->color = 'bg-aqua';
-                            $notificaciones_importador->icono = 'fa fa-clipboard';
-                            $notificaciones_importador->tipo ='DP';
-                            $notificaciones_importador->fecha = $fecha;
-                            $notificaciones_importador->leida = '0';
-                            $notificaciones_importador->save();
-                        }
-                        // *** //
-                    }else{
-                        //NOTIFICAR AL PRODUCTOR COMO ÚLTIMO RECURSO
-                            $notificaciones_productor = new Notificacion_P();
-                            $notificaciones_productor->creador_id = session('perfilId');
-                            $notificaciones_productor->tipo_creador = session('perfilTipo');
-                            $notificaciones_productor->titulo = 'Estan demandando tu producto '. $producto->nombre;
-                            $notificaciones_productor->url='demanda-producto/'.$ult_demanda->id;
-                            $notificaciones_productor->descripcion = 'Demanda de Producto';
-                            $notificaciones_productor->color = 'bg-aqua';
-                            $notificaciones_productor->icono = 'fa fa-clipboard';
-                            $notificaciones_productor->tipo ='DP';
-                            $notificaciones_productor->productor_id = $productor->id;
-                            $notificaciones_productor->fecha = $fecha;
-                            $notificaciones_productor->leida = '0';
-                            $notificaciones_productor->save();
-                        // *** //
-                    }
                 }
             }
-        }else{
-            if (session('perfilTipo') == 'I'){
-                //SELECCIONAR PRODUCTORES QUE TENGAN ESE TIPO DE BEBIDA
-                $productores = DB::table('productor')
-                                ->select('productor.id')
-                                ->join('marca', 'productor.id', '=', 'marca.productor_id')
-                                ->join('producto', 'marca.id', '=', 'producto.marca_id')
-                                ->where('producto.bebida_id', '=', $request->bebida_id)
-                                ->where('productor.pais_id', '=', session('perfilPais'))
-                                ->groupBy('productor.id', 'producto.bebida_id')
-                                ->get();
-
-                $cont = 0;
-                foreach ($productores as $productor){
-                    $cont++;
-                }
-
-                if ($cont > 0 ){
-                    //NOTIFICAR A LOS PRODUCTORES
-                    foreach ($productores as $productor){
-                        $notificaciones_productor = new Notificacion_P();
-                        $notificaciones_productor->creador_id = session('perfilId');
-                        $notificaciones_productor->tipo_creador = session('perfilTipo');
-                        $notificaciones_productor->titulo = 'Estan solicitando un tipo bebida que tu posees.';
-                        $notificaciones_productor->url='demanda-bebida/'.$ult_demanda->id;
-                        $notificaciones_productor->productor_id = $productor->id;
-                        $notificaciones_productor->descripcion = 'Demanda de Bebida';
-                        $notificaciones_productor->color = 'bg-aqua';
-                        $notificaciones_productor->icono = 'fa fa-clipboard';
-                        $notificaciones_productor->tipo ='DB';
-                        $notificaciones_productor->fecha = new \DateTime();
-                        $notificaciones_productor->leida = '0';
-                        $notificaciones_productor->save();
-                    }
-                    // *** //
-                }
-            }elseif ( session('perfilTipo') == 'D'){
-                $importadores = DB::table('importador_producto')
-                                ->select('importador_producto.importador_id')
-                                ->join('importador', 'importador_producto.importador_id', '=', 'importador.id')
-                                ->join('producto', 'importador_producto.producto_id', '=', 'producto.id')
-                                ->where('producto.bebida_id', '=', $request->bebida_id)
-                                ->where('importador.pais_id', '=', session('perfilPais'))
-                                ->groupBy('importador_producto.importador_id', 'producto.bebida_id')
-                                ->get();
-
-                $cont = 0;
-                foreach ($importadores as $importador){
-                    $cont++;
-                }
-
-                if ($cont > 0 ){
-                    //NOTIFICAR A LOS IMPORTADORES QUE TENGAN ESE TIPO DE BEBIDA
-                    foreach ($importadores as $importador){
-                        $notificaciones_importador = new Notificacion_I();
-                        $notificaciones_importador->creador_id = session('perfilId');
-                        $notificaciones_importador->tipo_creador = session('perfilTipo');
-                        $notificaciones_importador->titulo = 'Estan solicitando un tipo bebida que tu posees.';
-                        $notificaciones_importador->url='demanda-bebida/'.$ult_demanda->id;
-                        $notificaciones_importador->importador_id = $importador->importador_id;
-                        $notificaciones_importador->descripcion = 'Demanda de Bebida';
-                        $notificaciones_importador->color = 'bg-aqua';
-                        $notificaciones_importador->icono = 'fa fa-clipboard';
-                        $notificaciones_importador->tipo ='DB';
-                        $notificaciones_importador->fecha = new \DateTime();
-                        $notificaciones_importador->leida = '0';
-                        $notificaciones_importador->save();
-                    }
-                    // *** //
-                }else{
-                    //SELECCIONAR PRODUCTORES QUE TENGAN ESE TIPO DE BEBIDA
-                    $productores = DB::table('productor')
-                                    ->select('productor.id')
-                                    ->join('marca', 'productor.id', '=', 'marca.productor_id')
-                                    ->join('producto', 'marca.id', '=', 'producto.marca_id')
-                                    ->where('producto.bebida_id', '=', $request->bebida_id)
-                                    ->where('productor.pais_id', '=', session('perfilPais'))
-                                    ->groupBy('productor.id', 'producto.bebida_id')
-                                    ->get();
-
-                    $cont2 = 0;
-                    foreach ($productores as $productor){
-                        $cont2++;
-                    }
-
-                    if ($cont2 > 0 ){
-                        //NOTIFICAR A LOS PRODUCTORES
-                        foreach ($productores as $productor){
-                            $notificaciones_productor = new Notificacion_P();
-                            $notificaciones_productor->creador_id = session('perfilId');
-                            $notificaciones_productor->tipo_creador = session('perfilTipo');
-                            $notificaciones_productor->titulo = 'Estan solicitando un tipo bebida que tu posees.';
-                            $notificaciones_productor->url='demanda-bebida/'.$ult_demanda->id;
-                            $notificaciones_productor->productor_id = $productor->id;
-                            $notificaciones_productor->descripcion = 'Demanda de Bebida';
-                            $notificaciones_productor->color = 'bg-aqua';
-                            $notificaciones_productor->icono = 'fa fa-clipboard';
-                            $notificaciones_productor->tipo ='DB';
-                            $notificaciones_productor->fecha = new \DateTime();
-                            $notificaciones_productor->leida = '0';
-                            $notificaciones_productor->save();
-                        }
-                        // *** //
-                    }
-                }
-            }elseif (session('perfilTipo') == 'H'){
-                $distribuidores = DB::table('distribuidor_producto')
-                                ->select('distribuidor_producto.distribuidor_id')
-                                ->join('distribuidor', 'distribuidor_producto.distribuidor_id', '=', 'distribuidor.id')
-                                ->join('producto', 'distribuidor_producto.producto_id', '=', 'producto.id')
-                                ->where('producto.bebida_id', '=', $request->bebida_id)
-                                ->where('distribuidor.pais_id', '=', session('perfilPais'))
-                                ->groupBy('distribuidor_producto.distribuidor_id', 'producto.bebida_id')
-                                ->get(); 
-
-                $cont = 0;
-                foreach ($distribuidores as $distribuidor){
-                    $cont++;
-                }
-
-                if ($cont > 0 ){
-                    // NOTIFICAR A LOS DISTRIBUIDORES
-                    foreach ($distribuidores as $distribuidor){
-                        $notificaciones_distribuidor = new Notificacion_D();
-                        $notificaciones_distribuidor->creador_id = session('perfilId');
-                        $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
-                        $notificaciones_distribuidor->titulo = 'Estan solicitando un tipo de bebida que tu posees.';
-                        $notificaciones_distribuidor->url='demanda-bebida/'.$ult_demanda->id;
-                        $notificaciones_distribuidor->distribuidor_id = $distribuidor->distribuidor_id;
-                        $notificaciones_distribuidor->descripcion = 'Demanda de Bebida';
-                        $notificaciones_distribuidor->color = 'bg-aqua';
-                        $notificaciones_distribuidor->icono = 'fa fa-clipboard';
-                        $notificaciones_distribuidor->tipo ='DB';
-                        $notificaciones_distribuidor->fecha = new \DateTime();
-                        $notificaciones_distribuidor->leida = '0';
-                        $notificaciones_distribuidor->save();
-                    }
-                    // *** //
-                }else{
-                    $importadores = DB::table('importador_producto')
-                                ->select('importador_producto.importador_id')
-                                ->join('importador', 'importador_producto.importador_id', '=', 'importador.id')
-                                ->join('producto', 'importador_producto.producto_id', '=', 'producto.id')
-                                ->where('producto.bebida_id', '=', $request->bebida_id)
-                                ->where('importador.pais_id', '=', session('perfilPais'))
-                                ->groupBy('importador_producto.importador_id', 'producto.bebida_id')
-                                ->get();
-
-                    $cont2 = 0;
-                    foreach ($importadores as $importador){
-                        $cont2++;
-                    }
-
-                    if ($cont2 > 0 ){
-                        // NOTIFICAR A LOS IMPORTADORES
-                        foreach ($distribuidores as $distribuidor){
-                            $notificaciones_importador = new Notificacion_I();
-                            $notificaciones_importador->creador_id = session('perfilId');
-                            $notificaciones_importador->tipo_creador = session('perfilTipo');
-                            $notificaciones_importador->titulo = 'Estan solicitando un tipo bebida que tu posees.';
-                            $notificaciones_importador->url='demanda-bebida/'.$ult_demanda->id;
-                            $notificaciones_importador->importador_id = $importador->importador_id;
-                            $notificaciones_importador->descripcion = 'Demanda de Bebida';
-                            $notificaciones_importador->color = 'bg-aqua';
-                            $notificaciones_importador->icono = 'fa fa-clipboard';
-                            $notificaciones_importador->tipo ='DB';
-                            $notificaciones_importador->fecha = new \DateTime();
-                            $notificaciones_importador->leida = '0';
-                            $notificaciones_importador->save();
-                        }
-                    }else{
-                        //SELECCIONAR PRODUCTORES QUE TENGAN ESE TIPO DE BEBIDA
-                        $productores = DB::table('productor')
-                                        ->select('productor.id')
-                                        ->join('marca', 'productor.id', '=', 'marca.productor_id')
-                                        ->join('producto', 'marca.id', '=', 'producto.marca_id')
-                                        ->where('producto.bebida_id', '=', $request->bebida_id)
-                                        ->where('productor.pais_id', '=', session('perfilPais'))
-                                        ->groupBy('productor.id', 'producto.bebida_id')
-                                        ->get();
-
-                        $cont3 = 0;
-                        foreach ($productores as $productor){
-                            $cont3++;
-                        }
-
-                        if ($cont3 > 0 ){
-                            //NOTIFICAR A LOS PRODUCTORES
-                            foreach ($productores as $productor){
-                                $notificaciones_productor = new Notificacion_P();
-                                $notificaciones_productor->creador_id = session('perfilId');
-                                $notificaciones_productor->tipo_creador = session('perfilTipo');
-                                $notificaciones_productor->titulo = 'Estan solicitando un tipo bebida que tu posees.';
-                                $notificaciones_productor->url='demanda-bebida/'.$ult_demanda->id;
-                                $notificaciones_productor->productor_id = $productor->id;
-                                $notificaciones_productor->descripcion = 'Demanda de Bebida';
-                                $notificaciones_productor->color = 'bg-aqua';
-                                $notificaciones_productor->icono = 'fa fa-clipboard';
-                                $notificaciones_productor->tipo ='DB';
-                                $notificaciones_productor->fecha = new \DateTime();
-                                $notificaciones_productor->leida = '0';
-                                $notificaciones_productor->save();
-                            }
-                            // *** //
-                        }
-                    } 
-                } 
-            }
-        }*/
+        }
         
         return redirect('demanda-producto')->with('msj', 'Se ha almacenado su solicitud de producto con éxito.');
     }
@@ -737,6 +473,199 @@ class DemandaProductoController extends Controller
         $demanda_producto  = new Demanda_Producto($request->all());         
         $demanda_producto->fecha_creacion = $fecha;
         $demanda_producto ->save();
+
+        $ult_demanda = DB::table('demanda_producto')
+                        ->select('id')
+                        ->orderBy('created_at', 'DESC')
+                        ->first();
+
+        if ($request->pais_id == null){
+            $distribuidores = DB::table('bebida')
+                        ->select('bebida.nombre', 'distribuidor.id')
+                        ->join('producto', 'bebida.id', '=', 'producto.bebida_id')
+                        ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
+                        ->join('distribuidor', 'distribuidor_producto.distribuidor_id', '=', 'distribuidor.id')
+                        ->where('bebida.id', '=', $request->bebida_id)
+                        ->where('distribuidor.pais_id', '=', session('perfilPais'))
+                        ->groupBy('producto.bebida_id', 'bebida.nombre', 'distribuidor.id')
+                        ->get();
+            $cont=0;
+            foreach ($distribuidores as $dist){
+                $cont++;
+            }
+
+            if ($cont > 0){
+                foreach ($distribuidores as $dist){
+                    $notificacion_distribuidor = new Notificacion_D();
+                    $notificacion_distribuidor->creador_id = session('perfilId');
+                    $notificacion_distribuidor->tipo_creador = session('perfilTipo');
+                    $notificacion_distribuidor->titulo = 'Estan demandando la bebida '. $dist->nombre. ' que tu posees.';
+                    $notificacion_distribuidor->url='demanda-producto/'.$ult_demanda->id;
+                    $notificacion_distribuidor->descripcion = 'Demanda de Producto';
+                    $notificacion_distribuidor->color = 'bg-aqua';
+                    $notificacion_distribuidor->icono = 'fa fa-shopping-bag';
+                    $notificacion_distribuidor->tipo ='DP';
+                    $notificacion_distribuidor->distribuidor_id = $dist->id;
+                    $notificacion_distribuidor->fecha = $fecha;
+                    $notificacion_distribuidor->leida = '0';
+                    $notificacion_distribuidor->save();
+                }
+            }else{
+                $importadores = DB::table('bebida')
+                        ->select('bebida.nombre', 'importador.id')
+                        ->join('producto', 'bebida.id', '=', 'producto.bebida_id')
+                        ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
+                        ->join('importador', 'importador_producto.importador_id', '=', 'importador.id')
+                        ->where('bebida.id', '=', $request->bebida_id)
+                        ->where('importador.pais_id', '=', session('perfilPais'))
+                        ->groupBy('producto.bebida_id', 'bebida.nombre', 'importador.id')
+                        ->get();
+                $cont=0;
+                foreach ($importadores as $imp){
+                    $cont++;
+                }
+
+                if ($cont > 0){
+                    foreach ($importadores as $imp){
+                        $notificacion_importador = new Notificacion_I();
+                        $notificacion_importador->creador_id = session('perfilId');
+                        $notificacion_importador->tipo_creador = session('perfilTipo');
+                        $notificacion_importador->titulo = 'Estan demandando la bebida '. $imp->nombre. ' que tu posees.';
+                        $notificacion_importador->url='demanda-producto/'.$ult_demanda->id;
+                        $notificacion_importador->descripcion = 'Demanda de Producto';
+                        $notificacion_importador->color = 'bg-aqua';
+                        $notificacion_importador->icono = 'fa fa-shopping-bag';
+                        $notificacion_importador->tipo ='DP';
+                        $notificacion_importador->importador_id = $imp->id;
+                        $notificacion_importador->fecha = $fecha;
+                        $notificacion_importador->leida = '0';
+                        $notificacion_importador->save();
+                    }
+                }else{
+                    $productores = DB::table('bebida')
+                            ->select('bebida.nombre', 'productor.id')
+                            ->join('producto', 'bebida.id', '=', 'producto.bebida_id')
+                            ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                            ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                            ->where('bebida.id', '=', $request->bebida_id)
+                            ->where('productor.pais_id', '=', session('perfilPais'))
+                            ->groupBy('producto.bebida_id', 'bebida.nombre', 'productor.id')
+                            ->get();
+
+                    $cont = 0;
+                    foreach ($productores as $prod){
+                        $notificacion_productor = new Notificacion_P();
+                        $notificacion_productor->creador_id = session('perfilId');
+                        $notificacion_productor->tipo_creador = session('perfilTipo');
+                        $notificacion_productor->titulo = 'Estan demandando la bebida '. $prod->nombre. ' que tu posees.';
+                        $notificacion_productor->url='demanda-producto/'.$ult_demanda->id;
+                        $notificacion_productor->descripcion = 'Demanda de Producto';
+                        $notificacion_productor->color = 'bg-aqua';
+                        $notificacion_productor->icono = 'fa fa-shopping-bag';
+                        $notificacion_productor->tipo ='DP';
+                        $notificacion_productor->productor_id = $prod->id;
+                        $notificacion_productor->fecha = $fecha;
+                        $notificacion_productor->leida = '0';
+                        $notificacion_productor->save();
+                    }
+                }
+            }
+        }else{
+            $distribuidores = DB::table('bebida')
+                        ->select('bebida.nombre', 'distribuidor.id')
+                        ->join('producto', 'bebida.id', '=', 'producto.bebida_id')
+                        ->join('distribuidor_producto', 'producto.id', '=', 'distribuidor_producto.producto_id')
+                        ->join('distribuidor', 'distribuidor_producto.distribuidor_id', '=', 'distribuidor.id')
+                        ->where('bebida.id', '=', $request->bebida_id)
+                        ->where('producto.pais_id', '=', $request->pais_id)
+                        ->where('distribuidor.pais_id', '=', session('perfilPais'))
+                        ->groupBy('producto.bebida_id', 'bebida.nombre', 'distribuidor.id')
+                        ->get();
+
+            $cont=0;
+            foreach ($distribuidores as $dist){
+                $cont++;
+            }
+
+            if ($cont > 0){
+                foreach ($distribuidores as $dist){
+                    $notificacion_distribuidor = new Notificacion_D();
+                    $notificacion_distribuidor->creador_id = session('perfilId');
+                    $notificacion_distribuidor->tipo_creador = session('perfilTipo');
+                    $notificacion_distribuidor->titulo = 'Estan demandando la bebida '. $dist->nombre. ' que tu posees.';
+                    $notificacion_distribuidor->url='demanda-producto/'.$ult_demanda->id;
+                    $notificacion_distribuidor->descripcion = 'Demanda de Producto';
+                    $notificacion_distribuidor->color = 'bg-aqua';
+                    $notificacion_distribuidor->icono = 'fa fa-shopping-bag';
+                    $notificacion_distribuidor->tipo ='DP';
+                    $notificacion_distribuidor->distribuidor_id = $dist->id;
+                    $notificacion_distribuidor->fecha = $fecha;
+                    $notificacion_distribuidor->leida = '0';
+                    $notificacion_distribuidor->save();
+                }
+            }else{
+                $importadores = DB::table('bebida')
+                        ->select('bebida.nombre', 'importador.id')
+                        ->join('producto', 'bebida.id', '=', 'producto.bebida_id')
+                        ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
+                        ->join('importador', 'importador_producto.importador_id', '=', 'importador.id')
+                        ->where('bebida.id', '=', $request->bebida_id)
+                        ->where('producto.pais_id', '=', $request->pais_id)
+                        ->where('importador.pais_id', '=', session('perfilPais'))
+                        ->groupBy('producto.bebida_id', 'bebida.nombre', 'importador.id')
+                        ->get();
+                $cont=0;
+                foreach ($importadores as $imp){
+                    $cont++;
+                }
+
+                if ($cont > 0){
+                    foreach ($importadores as $imp){
+                        $notificacion_importador = new Notificacion_I();
+                        $notificacion_importador->creador_id = session('perfilId');
+                        $notificacion_importador->tipo_creador = session('perfilTipo');
+                        $notificacion_importador->titulo = 'Estan demandando la bebida '. $imp->nombre. ' que tu posees.';
+                        $notificacion_importador->url='demanda-producto/'.$ult_demanda->id;
+                        $notificacion_importador->descripcion = 'Demanda de Producto';
+                        $notificacion_importador->color = 'bg-aqua';
+                        $notificacion_importador->icono = 'fa fa-shopping-bag';
+                        $notificacion_importador->tipo ='DP';
+                        $notificacion_importador->importador_id = $imp->id;
+                        $notificacion_importador->fecha = $fecha;
+                        $notificacion_importador->leida = '0';
+                        $notificacion_importador->save();
+                    }
+                }else{
+                    $productores = DB::table('bebida')
+                            ->select('bebida.nombre', 'productor.id')
+                            ->join('producto', 'bebida.id', '=', 'producto.bebida_id')
+                            ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                            ->join('productor', 'marca.productor_id', '=', 'productor.id')
+                            ->where('bebida.id', '=', $request->bebida_id)
+                            ->where('producto.pais_id', '=', $request->pais_id)
+                            ->where('productor.pais_id', '=', session('perfilPais'))
+                            ->groupBy('producto.bebida_id', 'bebida.nombre', 'productor.id')
+                            ->get();
+
+                    $cont = 0;
+                    foreach ($productores as $prod){
+                        $notificacion_productor = new Notificacion_P();
+                        $notificacion_productor->creador_id = session('perfilId');
+                        $notificacion_productor->tipo_creador = session('perfilTipo');
+                        $notificacion_productor->titulo = 'Estan demandando la bebida '. $prod->nombre. ' que tu posees.';
+                        $notificacion_productor->url='demanda-producto/'.$ult_demanda->id;
+                        $notificacion_productor->descripcion = 'Demanda de Producto';
+                        $notificacion_productor->color = 'bg-aqua';
+                        $notificacion_productor->icono = 'fa fa-shopping-bag';
+                        $notificacion_productor->tipo ='DP';
+                        $notificacion_productor->productor_id = $prod->id;
+                        $notificacion_productor->fecha = $fecha;
+                        $notificacion_productor->leida = '0';
+                        $notificacion_productor->save();
+                    }
+                }
+            }
+        }
 
         return redirect('demanda-producto')->with('msj', 'Su solicitud de bebida ha sido almacenada con éxito.');
     }

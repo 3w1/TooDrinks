@@ -173,8 +173,7 @@ class OfertaController extends Controller
         return view('oferta.create')->with(compact('id', 'producto', 'paises', 'tipo'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $fecha = new \DateTime();
 
         if ( session('perfilSuscripcion') != 'Oro' ){
@@ -221,6 +220,7 @@ class OfertaController extends Controller
                     ->where('id', '=', $request->producto_id)
                     ->first();
 
+        //ENVÍO DE NOTIFICACIONES
         if ($request->visible_importadores == '1'){
             $importadores = DB::table('importador')
                                 ->select('id')
@@ -237,11 +237,11 @@ class OfertaController extends Controller
                     $notificaciones_importador->creador_id = session('perfilId');
                     $notificaciones_importador->tipo_creador = session('perfilTipo');
                     $notificaciones_importador->titulo = 'Hay una nueva oferta disponible de '.$producto->nombre.' para tu país.';
-                    $notificaciones_importador->url='oferta/'.$ult_oferta->id;
+                    $notificaciones_importador->url= 'oferta/detalles-de-oferta?oferta_id='.$ult_oferta->id;
                     $notificaciones_importador->importador_id = $importador->id;
                     $notificaciones_importador->descripcion = 'Nueva Oferta';
                     $notificaciones_importador->color = 'bg-purple';
-                    $notificaciones_importador->icono = 'fa fa-asterisk';
+                    $notificaciones_importador->icono = 'fa fa-shopping-cart';
                     $notificaciones_importador->tipo ='NO';
                     $notificaciones_importador->fecha = $fecha;
                     $notificaciones_importador->leida = '0';
@@ -252,9 +252,11 @@ class OfertaController extends Controller
 
         if ($request->visible_distribuidores == '1'){
             $distribuidores = DB::table('distribuidor')
-                                ->select('id')
-                                ->where('pais_id', '=', $request->pais_id)
-                                ->get();
+                        ->select('distribuidor.id')
+                        ->join('destino_oferta', 'distribuidor.provincia_region_id', '=', 'destino_oferta.provincia_region_id')
+                        ->where('destino_oferta.oferta_id', '=', $ult_oferta->id)
+                        ->get();
+
             $cont=0;
             foreach ($distribuidores as $distribuidor){
                 $cont++;
@@ -266,11 +268,11 @@ class OfertaController extends Controller
                     $notificaciones_distribuidor->creador_id = session('perfilId');
                     $notificaciones_distribuidor->tipo_creador = session('perfilTipo');
                     $notificaciones_distribuidor->titulo = 'Hay una nueva oferta disponible de '.$producto->nombre.' para tu país.';
-                    $notificaciones_distribuidor->url='oferta/'.$ult_oferta->id;
+                    $notificaciones_distribuidor->url= 'oferta/detalles-de-oferta?oferta_id='.$ult_oferta->id;
                     $notificaciones_distribuidor->distribuidor_id = $distribuidor->id;
                     $notificaciones_distribuidor->descripcion = 'Nueva Oferta';
                     $notificaciones_distribuidor->color = 'bg-purple';
-                    $notificaciones_distribuidor->icono = 'fa fa-asterisk';
+                    $notificaciones_distribuidor->icono = 'fa fa-shopping-cart';
                     $notificaciones_distribuidor->tipo ='NO';
                     $notificaciones_distribuidor->fecha = $fecha;
                     $notificaciones_distribuidor->leida = '0';
@@ -281,9 +283,11 @@ class OfertaController extends Controller
 
         if ($request->visible_horecas == '1'){
             $horecas = DB::table('horeca')
-                                ->select('id')
-                                ->where('pais_id', '=', $request->pais_id)
-                                ->get();
+                        ->select('horeca.id')
+                        ->join('destino_oferta', 'horeca.provincia_region_id', '=', 'destino_oferta.provincia_region_id')
+                        ->where('destino_oferta.oferta_id', '=', $ult_oferta->id)
+                        ->get();
+
             $cont=0;
             foreach ($horecas as $horeca){
                 $cont++;
@@ -295,11 +299,11 @@ class OfertaController extends Controller
                     $notificaciones_horeca->creador_id = session('perfilId');
                     $notificaciones_horeca->tipo_creador = session('perfilTipo');
                     $notificaciones_horeca->titulo = 'Hay una nueva oferta disponible de '.$producto->nombre.' para tu país.';
-                    $notificaciones_horeca->url='oferta/'.$ult_oferta->id;
+                    $notificaciones_horeca->url= 'oferta/detalles-de-oferta?oferta_id='.$ult_oferta->id;
                     $notificaciones_horeca->horeca_id = $horeca->id;
                     $notificaciones_horeca->descripcion = 'Nueva Oferta';
                     $notificaciones_horeca->color = 'bg-purple';
-                    $notificaciones_horeca->icono = 'fa fa-asterisk';
+                    $notificaciones_horeca->icono = 'fa fa-shopping-cart';
                     $notificaciones_horeca->tipo ='NO';
                     $notificaciones_horeca->fecha = $fecha;
                     $notificaciones_horeca->leida = '0';
