@@ -26,7 +26,33 @@ class RegisterController extends Controller
     }
 
     public function registrarse_invitacion($tipo, $id, $token){
-        return view('auth.register2')->with(compact('id', 'tipo'));
+        if ($tipo == 'P'){
+            $entidad = DB::table('productor')
+                    ->select('user_id')
+                    ->where('id', '=', $id)
+                    ->first();
+        }elseif ($tipo == 'I'){
+            $entidad = DB::table('importador')
+                    ->select('user_id')
+                    ->where('id', '=', $id)
+                    ->first();
+        }elseif ($tipo == 'D'){
+            $entidad = DB::table('distribuidor')
+                    ->select('user_id')
+                    ->where('id', '=', $id)
+                    ->first();
+        }elseif ($tipo == 'H'){
+            $entidad = DB::table('horeca')
+                    ->select('user_id')
+                    ->where('id', '=', $id)
+                    ->first();
+        }
+
+        if ($entidad->user_id == '0'){
+            return view('auth.register2')->with(compact('id', 'tipo'));
+        }else{
+            return redirect('login')->with('msj', 'Error');
+        }   
     }
 
     protected function validator(array $data)

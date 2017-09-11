@@ -53,6 +53,13 @@
                             <img src="{{ asset('templateFrontend/images/logo.png')}}" alt="TooDrinks" />
                         </a>
                     </h1>
+                    
+                    @if (Session::has('msj'))
+                        <div class="alert alert-success">
+                            <strong>La entidad ya se encuentra asociada a un usuario. Por favor, inicia sesión.</strong>
+                        </div>
+                    @endif
+
                     <div class="welcome-text box" style="">¡Bienvenido de Vuelta!</div>
                     <p class="white-color block" style="font-size: 1.5em;">Por favor, inicia sesión con tu cuenta.</p>
                     <div class="col-sm-8 col-md-6 col-lg-5 no-float no-padding center-block">
@@ -72,7 +79,10 @@
                             <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                                 <input type="password" class="input-text input-large full-width" name="password" id="password" placeholder="ingresa tu contraseña" required>
                             </div>
-                            <button type="submit" class="btn-large full-width yellow">Iniciar Sesión</button>
+                            <button type="submit" class="btn-large full-width yellow">Iniciar Sesión</button><hr/>
+                            <div class="form-group">
+                                <p class="white-color block" style="font-size: 1.5em;">¿No tienes una cuenta? <a href="{{ route('registrarse') }}">Regístrate aquí</a></p>
+                            </div>
                         </form>
                     </div>
                 </div>
