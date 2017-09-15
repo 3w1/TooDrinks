@@ -2,7 +2,7 @@ function consultarDisponibilidad(){
 	var pais = document.getElementById("pais").value;
 	var semanas = document.getElementById("semanas").value;
 
-    //var route = "http://www.toodrinks.com/consulta/consultar-fechas-banner/"+pais+"/"+dias;
+    //var route = "http://www.toodrinks.com/consulta/consultar-fechas-banner/"+pais+"/"+semanas;
 	var route = "http://localhost:8000/consulta/consultar-fechas-banner/"+pais+"/"+semanas;
                     
     $.ajax({

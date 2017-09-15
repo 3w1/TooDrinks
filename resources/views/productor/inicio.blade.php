@@ -102,7 +102,7 @@
                		<?php $cont++; ?>
 	                  <tr>
 	                  	<td><strong>{{$cont}}</strong></td>
-	                    	<td><a href="{{$notificacion->url}}">{{$notificacion->titulo}}</a></td>
+	                    	<td><a href="{{ url($notificacion->url) }}">{{$notificacion->titulo}}</a></td>
 	                    	<td>{{ date('d-m-Y', strtotime($notificacion->fecha)) }}</td>
 	                    	@if ($notificacion->leida == '0')
 	                    		<td><span class="label label-danger">Sin Leer</span></td>

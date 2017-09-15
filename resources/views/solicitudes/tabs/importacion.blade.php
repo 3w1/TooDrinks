@@ -52,6 +52,10 @@
             <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
          </div>
       @endif
+
+      <div class="alert alert-info">
+         <strong>Elija el tipo "Marca / Bebida" en el filtro de Búsqueda para ver las solicitudes de distribución de marcas o bebidas disponibles.</strong>
+      </div>
    @endsection  
    
    <ul class="nav nav-pills">
@@ -138,7 +142,7 @@
          <div class="panel-body">
             <div class="tab-content">
                <div class="tab-pane fade in active">
-                  @include('solicitudes.tabs.filtroDistribucion')
+                  @include('solicitudes.tabs.filtroImportacion')
                </div>
             </div>
          </div>

@@ -2,7 +2,8 @@ function verificarNombre(){
 	var nombre = document.getElementById('nombre').value
 	var id_marca = document.getElementById('id_marca').value
 
-	var route = "http://localhost:8000/consulta/verificar-nombre-marca/"+nombre+"/"+id_marca+"";
+	//var route = "http://www.toodrinks.com/consulta/verificar-nombre-marca/"+nombre+"/"+id_marca+"";
+    var route = "http://localhost:8000/consulta/verificar-nombre-marca/"+nombre+"/"+id_marca+"";
                     
     $.ajax({
         url:route,

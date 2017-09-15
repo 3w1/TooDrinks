@@ -212,7 +212,7 @@ class SolicitudImportacionController extends Controller{
                                 ->join('productor', 'marca.productor_id', '=', 'productor.id')
                                 ->where('productor.id', '=', session('perfilId'))
                                 ->where('solicitud_importacion.status', '=', '1')
-                                ->groupBy('solicitud_importacion.id', 'producto.bebida_id')
+                                ->groupBy('solicitud_importacion.id', 'producto.bebida_id', 'solicitud_importacion.created_at')
                                 ->orderBy('solicitud_importacion.created_at', 'DESC')
                                 ->paginate(8);
         }

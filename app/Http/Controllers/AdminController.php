@@ -380,23 +380,30 @@ class AdminController extends Controller
     }
 
     public function asociar_marca_productor(Request $request){
+        $fecha = new \DateTime();
+
         $actualizacion = DB::table('marca')
                             ->where('id', '=', $request->marca_id)
                             ->update([ 'productor_id' => $request->productor_id ]);
 
-        $importadores = DB::table('importador_marca')
-                            ->where('marca_id', '=', $request->marca_id)
-                            ->get();
+        $marca = DB::table('marca')
+                ->select('nombre')
+                ->where('id', '=', $request->marca_id)
+                ->first();
 
-        foreach ($importadores as $importador)
-            Productor::find($request->productor_id)->importadores()->attach($importador->importador_id);
-
-        $distribuidores = DB::table('distribuidor_marca')
-                            ->where('marca_id', '=', $request->marca_id)
-                            ->get();
-
-        foreach ($distribuidores as $distribuidor)
-            Productor::find($request->productor_id)->distribuidores()->attach($distribuidor->distribuidor_id);
+        $notificacion = new Notificacion_P();
+        $notificacion->productor_id = $request->productor_id;
+        $notificacion->creador_id = session('adminId');
+        $notificacion->tipo_creador = session('adminRol');
+        $notificacion->titulo = 'El Administrador ha indicado que eres el propietario de la marca '.$marca->nombre.'.';
+        $notificacion->url= 'productor/confirmar-marcas';
+        $notificacion->descripcion = 'Nueva Marca';
+        $notificacion->color = 'bg-green';
+        $notificacion->icono = 'fa fa-diamond';
+        $notificacion->tipo ='NM';
+        $notificacion->fecha = new \DateTime();
+        $notificacion->leida = '0';
+        $notificacion->save();
 
         return redirect('admin/marcas-sin-propietario')->with('msj-success', 'Se ha asociado el productor a la marca con éxito.');
     }
@@ -421,8 +428,7 @@ class AdminController extends Controller
         return view('adminWeb.producto.create')->with(compact('paises', 'marcas', 'tipos_bebidas'));
     }
 
-    public function producto_store(Request $request)
-    {
+    public function producto_store(Request $request){
         $fecha = new \DateTime();
 
         $file = Input::file('imagen');   
@@ -438,7 +444,31 @@ class AdminController extends Controller
 
         $producto = new Producto($request->all());
         $producto->imagen = $nombre;
-        $producto->save();    
+        $producto->save();
+
+        if ($request->marca_id != '0'){
+
+            $marca = DB::table('marca')
+                    ->select('nombre', 'productor_id')
+                    ->where('id', '=', $request->marca_id)
+                    ->first();
+
+            if ($marca->productor_id != '0'){
+                $notificacion = new Notificacion_P();
+                $notificacion->productor_id = $marca->productor_id;
+                $notificacion->creador_id = session('adminId');
+                $notificacion->tipo_creador = session('adminRol');
+                $notificacion->titulo = 'El Administrador ha asociado un producto a tu marca '.$marca->nombre.'.';
+                $notificacion->url= 'productor/confirmar-productos';
+                $notificacion->descripcion = 'Nuevo Producto';
+                $notificacion->color = 'bg-yellow';
+                $notificacion->icono = 'fa fa-product-hunt';
+                $notificacion->tipo ='NP';
+                $notificacion->fecha = new \DateTime();
+                $notificacion->leida = '0';
+                $notificacion->save(); 
+            }
+        }   
     
         return redirect('admin/listado-productos')->with('msj-success', 'El producto '.$request->nombre.' ha sido creado con éxito.');        
     }
@@ -454,32 +484,31 @@ class AdminController extends Controller
     }
 
     public function asociar_producto_marca(Request $request){
+        $fecha = new \DateTime();
+        
         $actualizacion = DB::table('producto')
                             ->where('id', '=', $request->producto_id)
                             ->update([ 'marca_id' => $request->marca_id ]);
 
-        $importadores = DB::table('importador_marca')
-                            ->where('marca_id', '=', $request->marca_id)
-                            ->get();
-
         $producto = Producto::find($request->producto_id);
 
-        foreach ($importadores as $importador)
-            $producto->importadores()->attach($importador->importador_id);
+        if ($producto->marca->productor_id != '0'){
+            $notificacion = new Notificacion_P();
+            $notificacion->productor_id = $producto->marca->productor_id;
+            $notificacion->creador_id = session('adminId');
+            $notificacion->tipo_creador = session('adminRol');
+            $notificacion->titulo = 'El Administrador ha asociado un producto a tu marca '.$producto->marca->nombre.'.';
+            $notificacion->url='productor/confirmar-productos';
+            $notificacion->descripcion = 'Nuevo Producto';
+            $notificacion->color = 'bg-purple';
+            $notificacion->icono = 'fa fa-product-hunt';
+            $notificacion->tipo ='NP';
+            $notificacion->fecha = new \DateTime();
+            $notificacion->leida = '0';
+            $notificacion->save();
+        }
 
-        $distribuidores = DB::table('distribuidor_marca')
-                            ->where('marca_id', '=', $request->marca_id)
-                            ->get();
-
-        foreach ($distribuidores as $distribuidor)
-            $producto->distribuidores()->attach($distribuidor->distribuidor_id);
-
-        $marca = DB::table('marca')
-                    ->select('nombre')
-                    ->where('id', '=', $request->marca_id)
-                    ->first();
-
-        return redirect('admin/productos-sin-marca')->with('msj-success', 'El producto '.$producto->nombre.' ha sido asociado a la marca '.$marca->nombre.' con éxito.');
+        return redirect('admin/productos-sin-marca')->with('msj-success', 'El producto '.$producto->nombre.' ha sido asociado a la marca '.$producto->marca->nombre.' con éxito.');
     }
 
     public function listado_productos(){
@@ -536,6 +565,8 @@ class AdminController extends Controller
     }
 
     public function aprobar_marca($id, Request $request){
+        $fecha = new \DateTime();
+
         //Aprobar Marca desde la página general
         if ($id != '0'){
             $actualizacion = DB::table('marca')
@@ -576,13 +607,13 @@ class AdminController extends Controller
         }
 
         if ( ($marca->tipo_creador != 'AD') && ($marca->tipo_creador != 'SA')){
-            $notificacion->creador_id = '0';
-            $notificacion->tipo_creador = 'U';
-            $notificacion->titulo = 'La publicación de la marca '.$marca->nombre.' ha sido aprobado por el administrador.';
-            $notificacion->url='marca/'.$marca->id;
+            $notificacion->creador_id = session('adminId');
+            $notificacion->tipo_creador = session('adminRol');
+            $notificacion->titulo = 'La publicación de la marca '.$marca->nombre.' que creaste ha sido aprobado por el administrador.';
+            $notificacion->url= 'marca/'.$marca->id;
             $notificacion->descripcion = 'Nueva Marca';
-            $notificacion->color = 'bg-purple';
-            $notificacion->icono = 'fa fa-plus-circle';
+            $notificacion->color = 'bg-green';
+            $notificacion->icono = 'fa fa-diamond';
             $notificacion->tipo ='NM';
             $notificacion->fecha = new \DateTime();
             $notificacion->leida = '0';
@@ -602,16 +633,15 @@ class AdminController extends Controller
     }
 
     public function aprobar_producto($id, Request $request){
+        $fecha = new \DateTime();
         //Aprobar Producto desde la página general
         if ($id != '0'){
             $actualizacion = DB::table('producto')
                             ->where('id', '=', $id)
                             ->update(['publicado' => '1']);
 
-            $producto = DB::table('producto')
-                        ->select('producto.tipo_creador', 'producto.creador_id', 'producto.nombre', 'producto.id', 'producto.marca_id', 'marca.productor_id')
-                        ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                        ->where('producto.id', '=', $id)
+            $producto = Producto::select('tipo_creador', 'creador_id', 'nombre', 'nombre_seo', 'id', 'marca_id')
+                        ->where('id', '=', $id)
                         ->first();
         }else{
             //Aprobar Producto desde la modal
@@ -619,20 +649,13 @@ class AdminController extends Controller
                             ->where('id', '=', $request->producto_id)
                             ->update(['publicado' => '1']);
 
-            $producto = DB::table('producto')
-                        ->select('producto.tipo_creador', 'producto.creador_id', 'producto.nombre', 'producto.id', 'marca.productor_id')
-                        ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                        ->where('producto.id', '=', $request->producto_id)
+            $producto = Producto::select('tipo_creador', 'creador_id', 'nombre', 'nombre_seo', 'id', 'marca_id')
+                        ->where('id', '=', $request->producto_id)
                         ->first();
         }
 
         //ENVIAR NOTIFICACIÓN DE APROBACIÓN AL CREADOR DEL PRODUCTO
-        if ($producto->tipo_creador == 'P'){
-            //CREAR NOTIFICACIÓN AL PRODUCTOR
-            $notificacion = new Notificacion_P();
-            $notificacion->productor_id = $producto->productor_id;
-            // *** //
-        }elseif ($producto->tipo_creador == 'I'){
+       if ($producto->tipo_creador == 'I'){
             //CREAR NOTIFICACIÓN AL IMPORTADOR
             $notificacion = new Notificacion_I();
             $notificacion->importador_id = $producto->creador_id;
@@ -644,34 +667,31 @@ class AdminController extends Controller
             // *** //
         }
 
-        if ( ($producto->tipo_creador != 'AD') && ($producto->tipo_creador != 'SA')){
-            $notificacion->creador_id = '0';
-            $notificacion->tipo_creador = 'U';
-            $notificacion->titulo = 'La publicación del producto '.$producto->nombre.' ha sido aprobada por el administrador.';
-            $notificacion->url='producto/'.$producto->id;
-            $notificacion->descripcion = 'Nuevo Producto';
-            $notificacion->color = 'bg-yellow';
-            $notificacion->icono = 'fa fa-plus-square-o';
-            $notificacion->tipo ='NP';
-            $notificacion->fecha = new \DateTime();
-            $notificacion->leida = '0';
-            $notificacion->save();
-        }
-        
+        $notificacion->creador_id = session('adminId');
+        $notificacion->tipo_creador = session('adminRol');
+        $notificacion->titulo = 'La publicación del producto '.$producto->nombre.' que creaste ha sido aprobada por el administrador.';
+        $notificacion->url='producto/detalle-de-producto/'.$producto->id.'/'.$producto->nombre_seo;
+        $notificacion->descripcion = 'Nuevo Producto';
+        $notificacion->color = 'bg-purple';
+        $notificacion->icono = 'fa fa-product-hunt';
+        $notificacion->tipo ='NP';
+        $notificacion->fecha = new \DateTime();
+        $notificacion->leida = '0';
+        $notificacion->save();
         // *** //
         
         //ENVIAR NOTIFICACIÓN AL PRODUCTOR PARA QUE CONFIRME EL NUEVO PRODUCTO
         //EN CASO DE QUE EL PRODUCTO SE ENCUENTRE ASIGNADO A UNA MARCA
         if ($producto->marca_id != '0'){
             $notificacion = new Notificacion_P();
-            $notificacion->productor_id = $producto->productor_id;
+            $notificacion->productor_id = $producto->marca->productor_id;
             $notificacion->creador_id = $producto->creador_id;
             $notificacion->tipo_creador = $producto->tipo_creador;
             $notificacion->titulo = 'El producto '.$producto->nombre.' ha sido agregado a tu marca.';
             $notificacion->url='productor/confirmar-productos';
             $notificacion->descripcion = 'Nuevo Producto';
-            $notificacion->color = 'bg-yellow';
-            $notificacion->icono = 'fa fa-plus-square-o';
+            $notificacion->color = 'bg-purple';
+            $notificacion->icono = 'fa fa-product-hunt';
             $notificacion->tipo ='NP';
             $notificacion->fecha = new \DateTime();
             $notificacion->leida = '0';
@@ -688,6 +708,8 @@ class AdminController extends Controller
     } 
 
     public function banner_store(Request $request){
+        $fecha = new \DateTime();
+
         $file = Input::file('imagen');   
         $image = Image::make(Input::file('imagen'));
 
@@ -703,7 +725,30 @@ class AdminController extends Controller
         $banner->imagen = $nombre;
         $banner->save();
 
-        return redirect('admin/banners-por-entidad')->with('msj', 'El banner '.$request->titulo.' ha sido agregado exitosamente');
+        if ($request->tipo_creador == 'P'){
+            $notificacion = new Notificacion_P();
+            $notificacion->productor_id = $request->creador_id;
+        }elseif ($request->tipo_creador == 'I'){
+            $notificacion = new Notificacion_I();
+            $notificacion->importador_id = $request->creador_id;
+        }elseif ($request->tipo_creador == 'D'){
+            $notificacion = new Notificacion_D();
+            $notificacion->distribuidor_id = $request->creador_id;
+        }
+        
+        $notificacion->creador_id = session('adminId');
+        $notificacion->tipo_creador = session('adminRol');
+        $notificacion->titulo = 'El administrado ha creado un nuevo banner de su propiedad.';
+        $notificacion->url='banner-publicitario';
+        $notificacion->descripcion = 'Nuevo Banner';
+        $notificacion->color = 'bg-orange';
+        $notificacion->icono = 'fa fa-flag';
+        $notificacion->tipo ='NB';
+        $notificacion->fecha = new \DateTime();
+        $notificacion->leida = '0';
+        $notificacion->save();
+
+        return redirect('admin/publicar-banner')->with('msj', 'El banner '.$request->titulo.' ha sido agregado exitosamente. Ahora puede publicarlo.');
     } 
 
     public function editar_banner(Request $request){
@@ -751,6 +796,8 @@ class AdminController extends Controller
     }
 
     public function aprobar_banner($id, Request $request){
+        $fecha = new \DateTime();
+
         $actualizacion = DB::table('banner')
                             ->where('id', '=', $id)
                             ->update(['aprobado' => '1',
@@ -776,20 +823,15 @@ class AdminController extends Controller
             $notificacion = new Notificacion_D();
             $notificacion->distribuidor_id = $banner->creador_id;
             // *** //
-        }elseif ($banner->tipo_creador == 'H'){
-            //CREAR NOTIFICACIÓN AL HORECA
-            $notificacion = new Notificacion_H();
-            $notificacion->horeca_id = $banner->creador_id;
-            // *** //
         }
 
         $notificacion->creador_id = session('adminId');
         $notificacion->tipo_creador = session('adminRol');
         $notificacion->titulo = 'El administrador Web ha aprobado el contenido de tu banner '.$banner->titulo;
-        $notificacion->url='banner-publicitario/'.$banner->id;
+        $notificacion->url= 'banner-publicitario/'.$banner->id;
         $notificacion->descripcion = 'Aprobación de Banner';
         $notificacion->color = 'bg-aqua';
-        $notificacion->icono = 'fa fa-plus-circle';
+        $notificacion->icono = 'fa fa-flag';
         $notificacion->tipo ='AB';
         $notificacion->fecha = new \DateTime();
         $notificacion->leida = '0';
@@ -805,6 +847,8 @@ class AdminController extends Controller
     }
 
     public function guardar_sugerencias_banner(Request $request){
+        $fecha = new \DateTime();
+
         DB::table('banner')
             ->where('id', '=', $request->banner_id)
             ->update(['aprobado' => '2',
@@ -837,9 +881,9 @@ class AdminController extends Controller
         $notificacion->titulo = 'El administrador Web ha sugerido cambios para el contenido de tu banner '.$banner->titulo;
         $notificacion->url='banner-publicitario/'.$banner->id;
         $notificacion->descripcion = 'Sugerencias de Banner';
-        $notificacion->color = 'bg-orange';
+        $notificacion->color = 'bg-red';
         $notificacion->icono = 'fa fa-edit';
-        $notificacion->tipo ='CB';
+        $notificacion->tipo ='SB';
         $notificacion->fecha = new \DateTime();
         $notificacion->leida = '0';
         $notificacion->save();
@@ -858,16 +902,24 @@ class AdminController extends Controller
     }
 
     public function guardar_publicacion(Request $request){
+        $fecha = new \DateTime();
+
         $publicacion = new Impresion_Banner($request->all());
         $publicacion->cantidad_clics = 0;
         $publicacion->pagado = 1;
         $publicacion->admin = 1;
         $publicacion->save();
 
+        $banner = DB::table('banner')
+                ->select('tipo_creador', 'creador_id', 'imagen', 'titulo')
+                ->where('id', '=', $publicacion->banner_id)
+                ->first();
+
         $banner_diario = new Banner_Diario();
         $banner_diario->pais_id = $publicacion->pais_id;
         $banner_diario->banner_id = $publicacion->banner_id;
         $banner_diario->fecha = $publicacion->fecha_inicio;
+        $banner_diario->imagen = $banner->imagen;
         $banner_diario->save();
 
         $fecha1 = new \DateTime($publicacion->fecha_inicio);
@@ -879,6 +931,7 @@ class AdminController extends Controller
             $banner_diario->pais_id = $publicacion->pais_id;
             $banner_diario->banner_id = $publicacion->banner_id;
             $banner_diario->fecha = $fecha1;
+            $banner_diario->imagen = $banner->imagen;
             $banner_diario->save();
         }
 
@@ -912,6 +965,36 @@ class AdminController extends Controller
                     ->update([ 'saldo' => ($saldo->saldo - $request->precio) ]);
             }
         }
+
+        if ($banner->tipo_creador == 'P'){
+            //CREAR NOTIFICACIÓN AL PRODUCTOR
+            $notificacion = new Notificacion_P();
+            $notificacion->productor_id = $banner->creador_id;
+            // *** //
+        }elseif ($banner->tipo_creador == 'I'){
+            //CREAR NOTIFICACIÓN AL IMPORTADOR
+            $notificacion = new Notificacion_I();
+            $notificacion->importador_id = $banner->creador_id;
+            // *** //
+        }elseif ($banner->tipo_creador == 'D'){
+            //CREAR NOTIFICACIÓN AL DISTRIBUIDOR
+            $notificacion = new Notificacion_D();
+            $notificacion->distribuidor_id = $banner->creador_id;
+            // *** //
+        }
+
+        $notificacion->creador_id = session('adminId');
+        $notificacion->tipo_creador = session('adminRol');
+        $notificacion->titulo = 'El administrador Web ha realizado una nueva publicación de tu banner '.$banner->titulo;
+        $notificacion->url='banner-publicitario/historial';
+        $notificacion->descripcion = 'Publicación de Banner';
+        $notificacion->color = 'bg-blue';
+        $notificacion->icono = 'fa fa-flag';
+        $notificacion->tipo ='PB';
+        $notificacion->fecha = new \DateTime();
+        $notificacion->leida = '0';
+        $notificacion->save();
+        
         return redirect('admin/publicar-banner')->with('msj-success', 'La publicidad ha sido registrada con éxito.');
     }
 
@@ -957,7 +1040,7 @@ class AdminController extends Controller
     // *** MÉTODOS PARA LAS NOTIFICACIONES *** //
     public function notificaciones(){
         $notificaciones = DB::table('notificacion_admin')
-                               ->where('user_id', '=', session('adminId'))
+                               ->where('admin_id', '=', session('adminId'))
                                ->orderBy('created_at', 'DESC')
                                ->paginate(10);
 

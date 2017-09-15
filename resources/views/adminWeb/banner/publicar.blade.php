@@ -1,6 +1,17 @@
 @extends('adminWeb.plantillas.main')
 @section('title', 'Banners por Entidad')
 
+<script>
+   window.onload=function() {
+      var select = document.getElementById("tipo_entidad");
+      for (var j = 0, l = select.length; j < l; j++) {
+         if (select[j].value == ''){
+            select[j].selected = true;
+         }
+      }
+   }
+</script>
+
 {!! Html::script('js/adminWeb/cargarEntidades.js') !!}
 {!! Html::script('js/adminWeb/detallesBanner.js') !!}
 {!! Html::script('js/adminWeb/publicarBanner.js') !!}
@@ -64,7 +75,7 @@
 	   		{!! Form::open([ 'route' => 'admin.publicar-banner', 'method' => 'GET']) !!}
 	      		<div class="form-group">
 	         		{!! Form::label('tipo', 'Tipo de Entidad')!!}
-					{!! Form::select('tipo_entidad', ['P' => 'Productor', 'I' => 'Importador', 'D' => 'Distribuidor'], null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción...', 'required', 'onchange' => 'cargarEntidades();', 'id' => 'tipo_entidad']) !!}
+					{!! Form::select('tipo_entidad', ['' => 'Seleccione una entidad', 'P' => 'Productor', 'I' => 'Importador', 'D' => 'Distribuidor'], null, ['class' => 'form-control', 'placeholder' => 'Seleccione una opción...', 'required', 'onchange' => 'cargarEntidades();', 'id' => 'tipo_entidad']) !!}
 				</div>
 				<div class="form-group">
 					{!!Form::label('entidad', 'Entidad')!!}

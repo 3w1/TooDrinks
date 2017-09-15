@@ -16,7 +16,7 @@
 
 	<div class="form-group">
 		{!! Form::label('precio_unitario', 'Precio por Unidad (*)') !!}
-		{!! Form::text('precio_unitario', $oferta->precio_unitario, ['class' => 'form-control', 'required'] ) !!}
+		{!! Form::text('precio_unitario', $oferta->precio_unitario, ['class' => 'form-control'] ) !!}
 	</div>
 
 	<div class="form-group">
@@ -26,17 +26,17 @@
 
 	<div class="form-group">
 		{!! Form::label('cantidad_producto', 'Cantidad de Productos') !!}
-		{!! Form::number('cantidad_producto', $oferta->cantidad_producto, ['class' => 'form-control'] ) !!}
+		{!! Form::number('cantidad_producto', $oferta->cantidad_producto, ['class' => 'form-control', 'min' => '0'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('cantidad_caja', 'Cantidad de Cajas') !!}
-		{!! Form::number('cantidad_caja', $oferta->cantidad_caja, ['class' => 'form-control'] ) !!}
+		{!! Form::number('cantidad_caja', $oferta->cantidad_caja, ['class' => 'form-control', 'min' => '0'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('cantidad_minima', 'Cantidad Mínima de Venta') !!}
-		{!! Form::number('cantidad_minima', $oferta->cantidad_minima, ['class' => 'form-control'] ) !!}
+		{!! Form::number('cantidad_minima', $oferta->cantidad_minima, ['class' => 'form-control', 'min' => '0'] ) !!}
 	</div>
 
 	<div class="form-group">

@@ -20,7 +20,6 @@
 		{!! Form::hidden('creador_id', session('adminId')) !!}
 		{!! Form::hidden('productor_id', '0') !!}
 		{!! Form::hidden('reclamada', '0') !!}
-		{!! Form::hidden('aprobada', '0') !!}
 		{!! Form::hidden('publicada', '1') !!}
 
 		<div class="form-group">

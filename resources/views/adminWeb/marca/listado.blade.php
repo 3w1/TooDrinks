@@ -52,7 +52,7 @@
                      @else
                         <label class="label label-success">Publicada (Admin)</label>
                      @endif
-                     @if ($marca->aprobada == '0')
+                     @if ($marca->reclamada == '0')
                         <label class="label label-danger">Sin Confirmar (Productor)</label>
                      @else
                         <label class="label label-success">Confirmada (Productor)</label>

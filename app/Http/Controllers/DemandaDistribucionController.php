@@ -184,29 +184,32 @@ class DemandaDistribucionController extends Controller
     }
 
      public function demandas_disponibles(){
-        $notificaciones_pendientes_DD = DB::table('notificacion_d')
-                                        ->where('leida', '=', '0')
-                                        ->where('tipo', '=', 'DD')
-                                        ->get();
-
-        foreach ($notificaciones_pendientes_DD as $notificacion){
-            $act = DB::table('notificacion_d')
-                    ->where('id', '=', $notificacion->id)
-                    ->update(['leida' => '1']);
-        }
-
-        $provincia_origen = DB::table('distribuidor')
-                        ->where('id', '=', session('perfilId'))
-                        ->select('provincia_region_id')
-                        ->get()
-                        ->first();
-
         $demandasDistribuidores = Demanda_Distribuidor::orderBy('created_at', 'DESC')
-                                    ->where('provincia_region_id', '=', $provincia_origen->provincia_region_id)
+                                    ->where('provincia_region_id', '=', session('perfilProvincia'))
                                     ->where('status', '=', '1')
                                     ->paginate(10);
 
-        return view('demandaDistribucion.demandasDisponibles')->with(compact('demandasDistribuidores'));
+        $cont=0;
+        foreach ($demandasDistribuidores as $demandaDistribuidor){
+            $existe = DB::table('distribuidor_marca')
+                    ->where('distribuidor_id', '=', session('perfilId'))
+                    ->where('marca_id', '=', $demandaDistribuidor->marca_id)
+                    ->first();
+
+            if ($existe == null){
+                $relacion = DB::table('distribuidor_demanda_distribuidor')
+                            ->select('demanda_distribuidor_id')
+                            ->where('demanda_distribuidor_id', '=', $demandaDistribuidor->id)
+                            ->where('distribuidor_id', '=', session('perfilId'))
+                            ->first();
+
+                if ($relacion == null){
+                    $cont++;
+                }
+            }
+        } 
+
+        return view('solicitudes.tabsDistribuidor.distribucion')->with(compact('demandasDistribuidores', 'cont'));
     }
 
     public function show($id)

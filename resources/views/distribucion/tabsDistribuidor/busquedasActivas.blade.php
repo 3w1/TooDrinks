@@ -8,6 +8,15 @@
 @endsection
 
 @section('content-left')
+   @section('alertas')
+      @if (Session::has('msj'))
+         <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
+         </div>
+      @endif
+   @endsection
+   
    <ul class="nav nav-pills">
       <li class="active btn btn-default"><a href="{{ route('solicitud-distribucion.index') }}"><strong>MIS BÚSQUEDAS ACTIVAS</strong></a></li>
    	<li class="btn btn-default"><a href="{{ route('solicitud-distribucion.create') }}"><strong>SOLICITAR MARCA</strong></a></li>

@@ -77,12 +77,17 @@ class BannerController extends Controller
                             ->update(['imagen' => $nombre,
                                       'aprobado' => '0']);
 
+        $banner = DB::table('banner')
+            ->select('titulo')
+            ->where('id', '=', $request->id)
+            ->first();
+
         $notificacion_admin = new Notificacion_Admin();
         $notificacion_admin->creador_id = session('perfilId');
         $notificacion_admin->tipo_creador = session('perfilTipo');
         $notificacion_admin->titulo = session('perfilNombre') . ' ha modificado la imagen de su banner '.$banner->titulo;
         $notificacion_admin->url= 'admin/aprobar-banners';
-        $notificacion_admin->user_id = 0;
+        $notificacion_admin->admin_id = 0;
         $notificacion_admin->descripcion = 'Banner Modificado';
         $notificacion_admin->color = 'bg-blue';
         $notificacion_admin->icono = 'fa fa-flag';
@@ -100,6 +105,7 @@ class BannerController extends Controller
     }
 
     public function store(Request $request){
+        $fecha = new \DateTime();
         $file = Input::file('imagen');   
         $image = Image::make(Input::file('imagen'));
 
@@ -178,7 +184,7 @@ class BannerController extends Controller
             $banner_diario->save();
         }
 
-        return redirect('banner-publicitario/mis-publicidades')->with('msj', 'Su publicidad ha sido registrada con éxito.');
+        return redirect('banner-publicitario')->with('msj', 'Su publicidad ha sido registrada con éxito.');
     }
 
     //Pestaña Publicidad / Publicaciones en Curso

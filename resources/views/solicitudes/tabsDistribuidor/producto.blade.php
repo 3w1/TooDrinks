@@ -27,6 +27,14 @@
       foreach($not_db as $ndb){
          $db++;
       }
+
+       $not_dd = DB::table('notificacion_d')->select('id')
+               ->where('distribuidor_id', '=', session('perfilId'))
+               ->where('tipo', '=', 'DD')->where('leida', '=', '0')->get();
+      $dd=0;
+      foreach($not_dd as $ndd){
+         $dd++;
+      }
    ?>
 
    @section('alertas')
@@ -45,6 +53,9 @@
       </li>
       <li class="btn btn-default">
          <a href="{{ route('demanda-producto.demandas-bebidas-disponibles') }}"><strong>BEBIDA | <small class="label bg-red">{{ $db }}</small></strong></a>
+      </li>
+      <li class="btn btn-default">
+         <a href="{{ route('demanda-distribuidor.demandas-disponibles') }}"><strong>DISTRIBUCIÓN | <small class="label bg-orange">{{ $dd }}</small></strong></a>
       </li>
    </ul>
 

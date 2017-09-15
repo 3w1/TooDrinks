@@ -48,17 +48,17 @@
 
 	<div class="form-group">
 		{!! Form::label('cantidad_producto', 'Cantidad de Productos') !!}
-		{!! Form::number('cantidad_producto', null, ['class' => 'form-control'] ) !!}
+		{!! Form::number('cantidad_producto', null, ['class' => 'form-control', 'min' => '0'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('cantidad_caja', 'Cantidad de Cajas)') !!}
-		{!! Form::number('cantidad_caja', null, ['class' => 'form-control'] ) !!}
+		{!! Form::number('cantidad_caja', null, ['class' => 'form-control', 'min' => '0'] ) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('cantidad_minima', 'Cantidad Mínima de Venta') !!}
-		{!! Form::number('cantidad_minima', null, ['class' => 'form-control'] ) !!}
+		{!! Form::number('cantidad_minima', null, ['class' => 'form-control', 'min' => '0'] ) !!}
 	</div>
 
 	<div class="form-group">

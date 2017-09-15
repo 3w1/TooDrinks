@@ -1,7 +1,7 @@
 @extends('adminWeb.plantillas.main')
 @section('title', 'Crear Marca')
 
-{!! Html::script('js/productos/create.js') !!}
+{!! Html::script('js/productos/cargarClases.js') !!}
 
 @section('title-header')
    Nuevo Producto

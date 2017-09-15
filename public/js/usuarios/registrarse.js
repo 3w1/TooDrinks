@@ -45,7 +45,7 @@ function verificarClaves(){
 function verificarCorreo(){ 
     var correo = document.getElementById('email').value;
     
-    //var route = "http://www.toodrinks.com/consulta/verificar-correo/"+pais+"";
+    //var route = "http://www.toodrinks.com/consulta/verificar-correo/"+correo+"";
     var route = "http://localhost:8000/consulta/verificar-correo/"+correo+"";
                     
     jQuery.ajax({

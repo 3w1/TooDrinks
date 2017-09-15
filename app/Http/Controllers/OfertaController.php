@@ -322,7 +322,7 @@ class OfertaController extends Controller
     //Pestaña Ofertas Disponibles
     public function ofertas_disponibles(Request $request){
         if (session('perfilTipo') == 'I'){
-            $ofertas = Oferta::select('oferta.*')
+            $ofertas = Oferta::select('oferta.id')
                         ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
                         ->where('destino_oferta.pais_id', '=', session('perfilPais'))
                         ->where('oferta.visible_importadores', '=', '1')
@@ -332,7 +332,7 @@ class OfertaController extends Controller
                         ->groupBy('oferta.id')
                         ->paginate(6);
         }elseif (session('perfilTipo') == 'D'){
-            $ofertas = Oferta::select('oferta.*')
+            $ofertas = Oferta::select('oferta.id')
                         ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
                         ->where('destino_oferta.provincia_region_id', '=', session('perfilProvincia'))
                         ->where('oferta.visible_distribuidores', '=', '1')
@@ -341,7 +341,7 @@ class OfertaController extends Controller
                         ->producto($request->get('producto'))
                         ->paginate(6);
         }elseif (session('perfilTipo') == 'H'){
-            $ofertas = Oferta::select('oferta.*')
+            $ofertas = Oferta::select('oferta.id')
                         ->join('destino_oferta', 'oferta.id', '=', 'destino_oferta.oferta_id')
                         ->where('destino_oferta.provincia_region_id', '=', session('perfilProvincia'))
                         ->where('oferta.visible_horecas', '=', '1')

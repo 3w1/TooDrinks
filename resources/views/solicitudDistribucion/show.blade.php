@@ -27,7 +27,7 @@
       @endif
 
       @if ($restringido == '1')
-        @if (session('perfilSuscripcion') == 'Gratis')
+         @if (session('perfilSuscripcion') == 'Gratis')
             @if (session('perfilSaldo') < $coste->cantidad_creditos)
                <div class="alert alert-danger">
                   No tiene créditos suficientes para ver la información de las demandas de distribución. Por favor compre créditos. <a href="{{ route('credito.index') }}">Ver Planes de Crédito</a> O consiga una Suscripción Bronce, Plata u Oro. <a href="">Ver Suscripciones</a> 
@@ -78,7 +78,6 @@
             </div>
              
             <ul class="list-group">
-               <li class="list-group-item"><b>Provincia:</b> {{ $demandaDistribucion->provincia_region->provincia }}</li>
                <li class="list-group-item"><b>Fecha:</b> {{ date('d-m-Y', strtotime($demandaDistribucion->fecha)) }}</li>
                @if ( $restringido == '1' )
                   <li class="list-group-item"><center>

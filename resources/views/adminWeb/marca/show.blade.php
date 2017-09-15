@@ -40,7 +40,7 @@
             <div class="panel-heading"><h4><b>Nombre SEO: {{ $marca->nombre_seo }}</b></h4></div> 
             
             <ul class="list-group">
-               <li class="list-group-item"><b>Productor:</b> @if ($marca->productor->nombre == 'master') Sin Propietario @else {{ $marca->productor->nombre }} @endif</li>
+               <li class="list-group-item"><b>Productor:</b> @if ($marca->productor_id == '0') Sin Propietario @else {{ $marca->productor->nombre }} @endif</li>
                <li class="list-group-item"><b>Descripción:</b> {{ $marca->descripcion }}</li>
                <li class="list-group-item"><b>País Originario:</b> {{ $marca->pais->pais }}</li>
                <li class="list-group-item"><b>Website:</b> {{ $marca->website }}</li>

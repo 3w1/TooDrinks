@@ -210,24 +210,24 @@ class DistribuidorController extends Controller
                 $notificacion_importador->save();
                 // *** //
             }
-        }else{
-            if ($marca->productor_id != '0'){
-                //NOTIFICAR AL PRODUCTOR
-                $notificaciones_productor = new Notificacion_P();
-                $notificaciones_productor->creador_id = session('perfilId');
-                $notificaciones_productor->tipo_creador = session('perfilTipo');
-                $notificaciones_productor->titulo = session('perfilNombre') . ' ha indicado que distribuye tu marca '.$marca->nombre;
-                $notificaciones_productor->url='productor/confirmar-distribuidores';
-                $notificaciones_productor->descripcion = 'Nuevo Distribuidor';
-                $notificaciones_productor->color = 'bg-red';
-                $notificaciones_productor->icono = 'fa fa-hand-pointer-o';
-                $notificaciones_productor->tipo ='AD';
-                $notificaciones_productor->productor_id = $marca->productor_id;
-                $notificaciones_productor->fecha = new \DateTime();
-                $notificaciones_productor->leida = '0';
-                $notificaciones_productor->save();
-                // *** //
-            }
+        }
+
+        if ( ($marca->productor_id != '0') && ($marca->productor->pais_id == session('perfilPais')) ){
+            //NOTIFICAR AL PRODUCTOR
+            $notificaciones_productor = new Notificacion_P();
+            $notificaciones_productor->creador_id = session('perfilId');
+            $notificaciones_productor->tipo_creador = session('perfilTipo');
+            $notificaciones_productor->titulo = session('perfilNombre') . ' ha indicado que distribuye tu marca '.$marca->nombre;
+            $notificaciones_productor->url='productor/confirmar-distribuidores';
+            $notificaciones_productor->descripcion = 'Nuevo Distribuidor';
+            $notificaciones_productor->color = 'bg-red';
+            $notificaciones_productor->icono = 'fa fa-hand-pointer-o';
+            $notificaciones_productor->tipo ='AD';
+            $notificaciones_productor->productor_id = $marca->productor_id;
+            $notificaciones_productor->fecha = new \DateTime();
+            $notificaciones_productor->leida = '0';
+            $notificaciones_productor->save();
+            // *** //
         }
         
         return redirect('marca')->with('msj', 'La marca '.$marca->nombre.' ha sido agregada a su lista con éxito. Debe esperar la confirmación del productor o de un importador.');

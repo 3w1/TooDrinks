@@ -52,6 +52,10 @@
             <strong>¡Enhorabuena!</strong> {{Session::get('msj')}}.
          </div>
       @endif
+
+      <div class="alert alert-info">
+         <strong>Elija el tipo "Marca / Bebida" en el filtro de Búsqueda para ver las solicitudes de distribución de marcas o bebidas disponibles.</strong>
+      </div>
    @endsection  
    
     <ul class="nav nav-pills">

@@ -247,12 +247,14 @@ class ImportadorController extends Controller
 
     //Pestaña importador / Confirmaciones / Distribuidores
     public function confirmar_distribuidores(Request $request){
-        $solicitudes = DB::table('distribuidor_marca')
+        $solicitudes = DB::table('distribuidor')
                     ->select('distribuidor_marca.*')
-                    ->join('marca', 'distribuidor_marca.marca_id', '=', 'marca.id')
-                    ->join('importador_marca', 'marca.id', '=', 'importador_marca.marca_id')
-                    ->where('importador_marca.importador_id', '=', session('perfilId'))
+                    ->join('distribuidor_marca', 'distribuidor.id', '=', 'distribuidor_marca.distribuidor_id')
+                    ->join('importador_marca', 'distribuidor_marca.marca_id', '=', 'importador_marca.marca_id')
+                    ->join('importador', 'importador_marca.importador_id', '=', 'importador.id')
                     ->where('distribuidor_marca.status', '=', '0')
+                    ->where('importador.id', '=', session('perfilId'))
+                    ->where('distribuidor.pais_id', '=', session('perfilPais'))
                     ->paginate(10);
 
         if ($request->get('marca') != null){

@@ -1,13 +1,13 @@
 <li class="dropdown notifications-menu">
    <?php 
       $notificaciones_pendientes = DB::table('notificacion_admin')
-                                    ->where('user_id', '=', session('adminId'))
+                                    ->where('admin_id', '=', session('adminId'))
                                     ->where('leida', '=', '0')
                                     ->select('id')
                                     ->get();
 
       $notificaciones = DB::table('notificacion_admin')
-                           ->where('user_id', '=', session('adminId'))
+                           ->where('admin_id', '=', session('adminId'))
                            ->select('id', 'titulo', 'url', 'color', 'icono', 'leida')
                            ->orderBy('created_at', 'DESC')
                            ->take(10)

@@ -7,8 +7,7 @@ use App\Models\Solicitud_Distribucion; use App\Models\Marca; use App\Models\Bebi
 use App\Models\Notificacion_P; use App\Models\Notificacion_I;
 use DB;
 
-class SolicitudDistribucionController extends Controller
-{
+class SolicitudDistribucionController extends Controller{
     //Pestaña Distribuidor / Distribucón / Mis Búsquedas Activas
     public function index(Request $request){
         $solicitudesDistribucion = Solicitud_Distribucion::where('distribuidor_id', '=', session('perfilId'))
@@ -103,12 +102,12 @@ class SolicitudDistribucionController extends Controller
                 ->first();
 
             $importadores = DB::table('importador')
-                    ->select('importador.id')
-                    ->join('importador_marca', 'importador.id', '=', 'importador_marca.importador_id')
-                    ->where('importador_marca.marca_id', '=', $request->marca_id)
-                    ->where('importador_marca.status', '=', '1')
-                    ->where('importador.pais_id', '=', session('perfilPais'))
-                    ->get();
+                ->select('importador.id')
+                ->join('importador_marca', 'importador.id', '=', 'importador_marca.importador_id')
+                ->where('importador_marca.marca_id', '=', $request->marca_id)
+                ->where('importador_marca.status', '=', '1')
+                ->where('importador.pais_id', '=', session('perfilPais'))
+                ->get();
 
             $cont=0;
             foreach ($importadores as $i){
@@ -133,24 +132,24 @@ class SolicitudDistribucionController extends Controller
                     $notificacion_importador->save();
                     // *** //
                 }
-            }else{
-                if ( ($marca->productor_id != '0') && ($marca->productor->pais_id == session('perfilPais')) ){
-                    //NOTIFICAR AL PRODUCTOR SI SE ENCUENTRA EN EL MISMO PAÍS
-                    $notificacion_productor = new Notificacion_P();
-                    $notificacion_productor->creador_id = session('perfilId');
-                    $notificacion_productor->tipo_creador = session('perfilTipo');
-                    $notificacion_productor->titulo = 'Estan solicitando la importación de tu marca '.$marca->nombre.' que tu posees.';
-                    $notificacion_productor->url= 'solicitud-distribucion/'.$ult_solicitud->id;
-                    $notificacion_productor->descripcion = 'Nueva Solicitud de Distribución';
-                    $notificacion_productor->color = 'bg-yellow';
-                    $notificacion_productor->icono = 'fa fa-user-plus';
-                    $notificacion_productor->tipo ='SD';
-                    $notificacion_productor->importador_id = $marca->productor_id;
-                    $notificacion_productor->fecha = new \DateTime();
-                    $notificacion_productor->leida = '0';
-                    $notificacion_productor->save();
-                    // *** //
-                }
+            }
+
+            if ( ($marca->productor_id != '0') && ($marca->productor->pais_id == session('perfilPais')) ){
+                //NOTIFICAR AL PRODUCTOR SI SE ENCUENTRA EN EL MISMO PAÍS
+                $notificacion_productor = new Notificacion_P();
+                $notificacion_productor->creador_id = session('perfilId');
+                $notificacion_productor->tipo_creador = session('perfilTipo');
+                $notificacion_productor->titulo = 'Estan solicitando la importación de tu marca '.$marca->nombre.' que tu posees.';
+                $notificacion_productor->url= 'solicitud-distribucion/'.$ult_solicitud->id;
+                $notificacion_productor->descripcion = 'Nueva Solicitud de Distribución';
+                $notificacion_productor->color = 'bg-yellow';
+                $notificacion_productor->icono = 'fa fa-user-plus';
+                $notificacion_productor->tipo ='SD';
+                $notificacion_productor->productor_id = $marca->productor_id;
+                $notificacion_productor->fecha = new \DateTime();
+                $notificacion_productor->leida = '0';
+                $notificacion_productor->save();
+                // *** //
             }
         }else{
             if ($request->pais_id == null){
@@ -187,40 +186,39 @@ class SolicitudDistribucionController extends Controller
                         $notificacion_importador->save();
                         // *** //
                     }
-                }else{
-                    $productores = DB::table('bebida')
-                        ->select('bebida.nombre', 'productor.id')
-                        ->join('producto', 'bebida.id', '=', 'producto.bebida_id')
-                        ->join('marca', 'producto.marca_id', '=', 'marca.id')
-                        ->join('productor', 'marca.productor_id', '=', 'producto.id')
-                        ->where('bebida.id', '=', $request->bebida_id)
-                        ->where('productor.id', '<>', '0')
-                        ->groupBy('producto.bebida_id', 'bebida.nombre', 'productor.id')
-                        ->get();
+                }
+                 
+               $productores = DB::table('bebida')
+                    ->select('bebida.nombre', 'productor.id')
+                    ->join('producto', 'bebida.id', '=', 'producto.bebida_id')
+                    ->join('marca', 'producto.marca_id', '=', 'marca.id')
+                    ->join('productor', 'marca.productor_id', '=', 'producto.id')
+                    ->where('bebida.id', '=', $request->bebida_id)
+                    ->where('productor.id', '<>', '0')
+                    ->groupBy('producto.bebida_id', 'bebida.nombre', 'productor.id')
+                    ->get();
 
-                    $cont = 0;
-                    foreach ($productores as $prod){
-                        $cont++;
-                    }
+                $cont = 0;
+                foreach ($productores as $prod){
+                    $cont++;
+                }
 
-                    if ($cont > 0){
-                        //NOTIFICAR A LOS IMPORTADORES QUE TENGAN LA MARCA EN EL PAÍS DEL DISTRIBUIDOR
-                        $notificacion_productor = new Notificacion_P();
-                        $notificacion_productor->creador_id = session('perfilId');
-                        $notificacion_productor->tipo_creador = session('perfilTipo');
-                        $notificacion_productor->titulo = 'Estan solicitando la importación del tipo de bebida '.$prod->nombre.' que tu posees.';
-                        $notificacion_productor->url= 'solicitud-distribucion/'.$ult_solicitud->id;
-                        $notificacion_productor->descripcion = 'Nueva Solicitud de Distribución';
-                        $notificacion_productor->color = 'bg-yellow';
-                        $notificacion_productor->icono = 'fa fa-user-plus';
-                        $notificacion_productor->tipo ='SD';
-                        $notificacion_productor->productor_id = $prod->id;
-                        $notificacion_productor->fecha = new \DateTime();
-                        $notificacion_productor->leida = '0';
-                        $notificacion_productor->save();
-                        // *** //
-                    }
-
+                if ($cont > 0){
+                    //NOTIFICAR A LOS IMPORTADORES QUE TENGAN LA MARCA EN EL PAÍS DEL DISTRIBUIDOR
+                    $notificacion_productor = new Notificacion_P();
+                    $notificacion_productor->creador_id = session('perfilId');
+                    $notificacion_productor->tipo_creador = session('perfilTipo');
+                    $notificacion_productor->titulo = 'Estan solicitando la importación del tipo de bebida '.$prod->nombre.' que tu posees.';
+                    $notificacion_productor->url= 'solicitud-distribucion/'.$ult_solicitud->id;
+                    $notificacion_productor->descripcion = 'Nueva Solicitud de Distribución';
+                    $notificacion_productor->color = 'bg-yellow';
+                    $notificacion_productor->icono = 'fa fa-user-plus';
+                    $notificacion_productor->tipo ='SD';
+                    $notificacion_productor->productor_id = $prod->id;
+                    $notificacion_productor->fecha = new \DateTime();
+                    $notificacion_productor->leida = '0';
+                    $notificacion_productor->save();
+                    // *** //
                 }
             }else{
                 $importadores = DB::table('bebida')
@@ -257,8 +255,9 @@ class SolicitudDistribucionController extends Controller
                         $notificacion_importador->leida = '0';
                         $notificacion_importador->save();
                     }
-                }else{
-                    $productores = DB::table('bebida')
+                }
+
+                $productores = DB::table('bebida')
                         ->select('bebida.nombre', 'productor.id')
                         ->join('producto', 'bebida.id', '=', 'producto.bebida_id')
                         ->join('marca', 'producto.marca_id', '=', 'marca.id')
@@ -269,29 +268,28 @@ class SolicitudDistribucionController extends Controller
                         ->groupBy('producto.bebida_id', 'bebida.nombre', 'productor.id')
                         ->get();
 
-                    $cont = 0;
-                    foreach ($productores as $prod){
-                        $cont++;
-                    }
+                $cont = 0;
+                foreach ($productores as $prod){
+                    $cont++;
+                }
 
-                    if ($cont > 0){
-                        foreach ($productores as $prod){
-                            //Notificar a los productores con ese tipo de bebida
-                            //En el mismo país del distribuidor
-                            $notificacion_productor = new Notificacion_P();
-                            $notificacion_productor->creador_id = session('perfilId');
-                            $notificacion_productor->tipo_creador = session('perfilTipo');
-                            $notificacion_productor->titulo = 'Estan solicitando la importación del tipo de bebida '.$prod->nombre.' que tu posees.';
-                            $notificacion_productor->url= 'solicitud-distribucion/'.$ult_solicitud->id;
-                            $notificacion_productor->descripcion = 'Nueva Solicitud de Distribución';
-                            $notificacion_productor->color = 'bg-yellow';
-                            $notificacion_productor->icono = 'fa fa-user-plus';
-                            $notificacion_productor->tipo ='SD';
-                            $notificacion_productor->productor_id = $prod->id;
-                            $notificacion_productor->fecha = new \DateTime();
-                            $notificacion_productor->leida = '0';
-                            $notificacion_productor->save();
-                        }
+                if ($cont > 0){
+                    foreach ($productores as $prod){
+                        //Notificar a los productores con ese tipo de bebida
+                        //En el mismo país del distribuidor
+                        $notificacion_productor = new Notificacion_P();
+                        $notificacion_productor->creador_id = session('perfilId');
+                        $notificacion_productor->tipo_creador = session('perfilTipo');
+                        $notificacion_productor->titulo = 'Estan solicitando la importación del tipo de bebida '.$prod->nombre.' que tu posees.';
+                        $notificacion_productor->url= 'solicitud-distribucion/'.$ult_solicitud->id;
+                        $notificacion_productor->descripcion = 'Nueva Solicitud de Distribución';
+                        $notificacion_productor->color = 'bg-yellow';
+                        $notificacion_productor->icono = 'fa fa-user-plus';
+                        $notificacion_productor->tipo ='SD';
+                        $notificacion_productor->productor_id = $prod->id;
+                        $notificacion_productor->fecha = new \DateTime();
+                        $notificacion_productor->leida = '0';
+                        $notificacion_productor->save();
                     }
                 }
             }
@@ -334,7 +332,7 @@ class SolicitudDistribucionController extends Controller
                                 ->join('productor', 'marca.productor_id', '=', 'productor.id')
                                 ->where('productor.id', '=', session('perfilId'))
                                 ->where('solicitud_distribucion.status', '=', '1')
-                                ->groupBy('solicitud_distribucion.id', 'producto.bebida_id')
+                                ->groupBy('solicitud_distribucion.id', 'producto.bebida_id', 'solicitud_distribucion.created_at')
                                 ->orderBy('solicitud_distribucion.created_at', 'DESC')
                                 ->paginate(8);
             }
@@ -374,7 +372,7 @@ class SolicitudDistribucionController extends Controller
                                 ->join('importador_producto', 'producto.id', '=', 'importador_producto.producto_id')
                                 ->where('importador_producto.importador_id', '=', session('perfilId'))
                                 ->where('solicitud_distribucion.status', '=', '1')
-                                ->groupBy('solicitud_distribucion.id', 'producto.bebida_id')
+                                ->groupBy('solicitud_distribucion.id', 'producto.bebida_id', 'solicitud_distribucion.created_at')
                                 ->orderBy('solicitud_distribucion.created_at', 'DESC')
                                 ->paginate(8);
             }

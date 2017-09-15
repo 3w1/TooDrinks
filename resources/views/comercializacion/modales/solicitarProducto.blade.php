@@ -27,12 +27,12 @@
 					
 					<div class="form-group">
 						{!! Form::label('cantidad_minima', 'Cantidad Mínima') !!}
-						{!! Form::number('cantidad_minima', null, ['class' => ' form-control'] ) !!}
+						{!! Form::number('cantidad_minima', null, ['class' => ' form-control', 'min' => '0'] ) !!}
 					</div>
 					
 					<div class="form-group">
 						{!! Form::label('cantidad_maxima', 'Cantidad Máxima') !!}
-						{!! Form::number('cantidad_maxima', null, ['class' => ' form-control'] ) !!}
+						{!! Form::number('cantidad_maxima', null, ['class' => ' form-control', 'min' => '0'] ) !!}
 					</div>
 			</div>
 			

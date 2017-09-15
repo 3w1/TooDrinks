@@ -329,11 +329,14 @@ class ProductorController extends Controller
 
     //Pestaña Confirmaciones / Distribuidores
     public function confirmar_distribuidores(Request $request){
-        $solicitudes = DB::table('distribuidor_marca')
+        $solicitudes = DB::table('distribuidor')
                     ->select('distribuidor_marca.*')
+                    ->join('distribuidor_marca', 'distribuidor.id', '=', 'distribuidor_marca.distribuidor_id')
                     ->join('marca', 'distribuidor_marca.marca_id', '=', 'marca.id')
-                    ->where('marca.productor_id', '=', session('perfilId'))
+                    ->join('productor', 'marca.productor_id', '=', 'productor.id')
                     ->where('distribuidor_marca.status', '=', '0')
+                    ->where('productor.id', '=', session('perfilId'))
+                    ->where('distribuidor.pais_id', '=', session('perfilPais'))
                     ->paginate(10);
 
         if ($request->get('marca') != null){

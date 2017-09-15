@@ -41,7 +41,7 @@
 
 		<div class="form-group">	
 			{!! Form::label('url', 'Enlace (*)')!!}
-			{!! Form::url('url_banner', null, ['class' => 'form-control', 'placeholder' => 'Ingrese la url a la cual redirigirá el banner', 'required']) !!}
+			{!! Form::url('url_banner', null, ['class' => 'form-control', 'placeholder' => '(http://www.enlace.com)', 'required']) !!}
 		</div>
 
 		<div class="form-group">	

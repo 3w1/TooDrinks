@@ -10,6 +10,27 @@
 @endsection
 
 @section('content-left')
+   <?php 
+      if (session('perfilTipo') == 'I'){
+         $not_od = DB::table('notificacion_i')->select('id')
+               ->where('importador_id', '=', session('perfilId'))
+               ->where('tipo', '=', 'NO')->where('leida', '=', '0')->get();
+
+         $od=0;
+         foreach($not_od as $nod){
+            $od++;
+         }
+      }elseif (session('perfilTipo') == 'D'){
+         $not_od = DB::table('notificacion_d')->select('id')
+               ->where('distribuidor_id', '=', session('perfilId'))
+               ->where('tipo', '=', 'NO')->where('leida', '=', '0')->get();
+          $od=0;
+         foreach($not_od as $nod){
+            $od++;
+         }
+      }
+   ?>
+   
    @section('alertas')
       @if (Session::has('msj'))
          <div class="alert alert-success alert-dismissable">
@@ -23,7 +44,10 @@
       <li class="active btn btn-default"><a href="{{ route('oferta.index') }}"><strong>MIS OFERTAS ACTIVAS</strong></a></li>
       <li class="btn btn-default"><a href="{{ route('oferta.create') }}"><strong>NUEVA OFERTA</strong></a></li>
       @if (session('perfilTipo') != 'P')
-         <li class="btn btn-default"><a href="{{ route('oferta.disponibles') }}"><strong>OFERTAS DISPONIBLES</strong></a></li>
+         <li class="btn btn-default">
+            <a href="{{ route('oferta.disponibles') }}"><strong>OFERTAS DISPONIBLES | 
+            <small class="label bg-red">{{ $od }}</small></strong></a>
+         </li>
       @endif
       <li class="btn btn-default"><a href="{{ route('oferta.historial')}}"><strong>HISTORIAL DE OFERTAS</strong></a></li>
    </ul>
